@@ -1,0 +1,26 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>Getting Feedback</h3>
+            <p>Now you have a list of potential goals.</p>
+        </html>
+
+        <answer name="brainstorm_goals" read-only="true" />
+
+        <html>
+            <p>Before you select from among them, consider getting input from others. People that know you well may have a different idea of what changes would benefit you most. To complete this exercise, seek input from at least 3 people who know you well. What do they think would be a valuable thing for you to get better at? You might ask them: "Given how well you know me, if I could get significantly better at just one thing, what would you suggest that one thing should be?"</p>
+            <p>If you don't wish to ask anyone for feedback at this point, you may also think about past evaluations and feedback you have received.</p>
+            <p>Use this space to describe the feedback you received. What do they think about these goals? Do they think they are relevant to you? What goals did they mention that you may not have thought of? Do those additional goals make sense to you?</p>
+        </html>
+
+        <answer name="brainstorm_goals_feedback" />
+
+        <equality name="sum_checker" left="./sum_input/@student_input" right="$c" />
+        <script>
+            import random
+            a = random.randint(2, 5)
+            b = random.randint(1, 4)
+            c = a + b
+        </script>
+    </mentoring>
+</vertical>

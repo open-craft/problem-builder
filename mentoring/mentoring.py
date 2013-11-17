@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
 
+
+# Imports ###########################################################
+
 import logging
-import pkg_resources
 
 from xblock.problem import ProblemBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
 
+from .utils import create_fragment, load_resource
+
+
+# Globals ###########################################################
+
 log = logging.getLogger(__name__)
 
+
+# Classes ###########################################################
 
 class MentoringBlock(ProblemBlock):
     """
@@ -49,56 +58,25 @@ class MentoringBlock(ProblemBlock):
         to display.
         """
 
-        log.info(self.prompt)
-        # Load the HTML fragment from within the package and fill in the template
-        html_str = pkg_resources.resource_string(__name__, "../static/html/mentoring.html")
-        frag = Fragment(unicode(html_str).format(self=self, prompt=self.prompt))
+        fragment = create_fragment('static/html/mentoring.html', {
+            'self': self,
+            'prompt': self.prompt,
+        })
+        fragment.add_css(load_resource('static/css/mentoring.css'))
+        fragment.add_javascript(load_resource('static/js/mentoring.js'))
+        fragment.initialize_js('MentoringBlock')
 
-        # Load CSS
-        css_str = pkg_resources.resource_string(__name__, "../static/css/mentoring.css")
-        frag.add_css(unicode(css_str))
-
-        # Load JS
-        js_str = pkg_resources.resource_string(__name__, "../static/js/mentoring.js")
-        frag.add_javascript(unicode(js_str))
-        frag.initialize_js('MentoringBlock')
-
-        return frag
+        return fragment
 
     def studio_view(self, context):
         return Fragment(u'Studio view body')
 
     @staticmethod
     def workbench_scenarios():
-        """Default scenario"""
+        """
+        Sample scenarios which will be displayed in the workbench
+        """
         return [
-            ("mentoring",
-            """\
-                <vertical>
-                    <mentoring>
-                        <html>
-                            <h3>Pre-Goal Brainstrom</h3>
-                            <p>What goals are you considering working on? Before choosing your goal, it’s helpful to do some reflection exercises.</p>
-                            <p>Think about what would you most like to get better at, or improve upon. The goal you choose to work on during the course--</p>
-                            <ul>
-                                <li>should be a “personal growth” goal vs. a “therapy goal”—e.g., ‘to be more decisive,’ ‘to be a better listener,’ ‘to speak up more,’ “to be more spontaneous,’ ‘to be better organized,’ ‘to be less critical.’ Not: ‘to get over my depression,’ ‘come to terms with my parents’ divorce,’ ‘work through a trauma.’</li>
-                                <li>should be something you’ve tried to succeed at in the past, but have not made the progress you wanted (or the progress has been too temporary) [this will almost ensure you are picking an ‘adaptive’ vs. a ‘technical’ improvement goal]</li>
-                                <li>should matter to you enough that you will want to stay connected to it throughout the course, but should not feel so sensitive or raw that you would be uncomfortable sharing it with the members of your online section (if you choose to do so). The teaching team will always be able to see your diary.</li>
-                                <li>Do not edit yourself at this point. There are no wrong answers. Use this space to brainstorm.</li>
-                            </ul>
-                        </html>
-
-                        <html><p>What is $a+$b?</p></html>
-                        <answer name="brainstorm_goals" />
-
-                        <equality name="sum_checker" left="./sum_input/@student_input" right="$c" />
-                        <script>
-                            import random
-                            a = random.randint(2, 5)
-                            b = random.randint(1, 4)
-                            c = a + b
-                        </script>
-                    </mentoring>
-                </vertical>
-             """)
+            ("Mentoring: Pre-Goal Brainstom", load_resource('templates/001_pre_goal_brainstorm.xml')),
+            ("Mentoring: Getting Feedback", load_resource('templates/002_getting_feedback.xml')),
         ]
