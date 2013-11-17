@@ -8,9 +8,11 @@ setup(
     entry_points={
         'xblock.v1': [
             'mentoring = mentoring:MentoringBlock',
+            'answer = mentoring:AnswerBlock',
         ],
         'xmodule.v1': [
             'mentoring = mentoring:MentoringBlock',
+            'answer = mentoring:AnswerBlock',
         ]
     }
 )
