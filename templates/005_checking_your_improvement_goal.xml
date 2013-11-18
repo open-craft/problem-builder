@@ -1,0 +1,30 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>Checking your improvement goal</h3>
+            <p>Now, let’s make sure your goal meets the criteria for a strong column 1. Here is your goal:</p>
+        </html>
+
+        <answer name="improvement_goal" read-only="yes" />
+
+        <quizz type="yes-no-unsure">
+            <question>Is this goal true for you?</question>
+            <tip>A goal that is true to you ___. Please enter a new goal that does meet these criteria.</tip>
+        </quizz>
+
+        <quizz type="yes-no-unsure">
+            <question>Does this goal implicate you?</question>
+            <tip>A goal that implicates you ____. Please enter a new goal that does meet these criteria.</tip>
+        </quizz>
+
+        <quizz type="rating" low="Far" high="Nearly there">
+            <question>How close are you to reaching this goal?</question>
+            <tip reject="5" display="4">Please enter a goal which you are less close to reach</tip>
+        </quizz>
+
+        <quizz type="rating" low="Least" high="Most">
+            <question>How important is it to you?</question>
+            <tip>Please enter a goal which is important for you.</tip>
+        </quizz>
+    </mentoring>
+</vertical>

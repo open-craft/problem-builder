@@ -14,13 +14,5 @@
         </html>
 
         <answer name="brainstorm_goals_feedback" />
-
-        <equality name="sum_checker" left="./sum_input/@student_input" right="$c" />
-        <script>
-            import random
-            a = random.randint(2, 5)
-            b = random.randint(1, 4)
-            c = a + b
-        </script>
     </mentoring>
 </vertical>

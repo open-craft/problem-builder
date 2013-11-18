@@ -1,0 +1,10 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>Reflecting on your feedback</h3>
+            <p>Now that you have received feedback from others, would you like to revise your brainstorm list? Which goals are the most interesting to you now? Which goals are you most considering pursuing?</p>
+        </html>
+
+        <answer name="brainstorm_goals2" default-from="brainstorm_goals" />
+    </mentoring>
+</vertical>
