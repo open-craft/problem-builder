@@ -9,7 +9,7 @@ from xblock.problem import ProblemBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
 
-from .utils import create_fragment, load_resource
+from .utils import load_resource, render_template
 
 
 # Globals ###########################################################
@@ -34,22 +34,17 @@ class MentoringBlock(ProblemBlock):
     completed = Integer(help="How many times the student has completed this", default=0, scope=Scope.user_state)
     has_children = True
 
-    @classmethod
-    def parse_xml(cls, node, runtime, keys):
-        log.info(u'cls={}, node={}, runtime={}, keys={}'.format(cls, node, runtime, keys))
+    def get_children_fragment(self, context):
+        fragment = Fragment()
+        named_child_frags = []
+        for child_id in self.children:  # pylint: disable=E1101
+            child = self.runtime.get_block(child_id)
+            frag = self.runtime.render_child(child, "mentoring_view", context)
+            fragment.add_frag_resources(frag)
+            named_child_frags.append((child.name, frag))
+        return fragment, named_child_frags
 
-        block = runtime.construct_xblock_from_class(cls, keys)
-
-        # Find <script> children, turn them into script content.
-        for child in node:
-            if child.tag == "script":
-                block.script += child.text
-            else:
-                block.runtime.add_node_as_child(block, child)
-
-        return block
-
-    def _TODO_student_view(self, context):
+    def student_view(self, context):
         """
         Create a fragment used to display the XBlock to a student.
         `context` is a dictionary used to configure the display (unused)
@@ -57,11 +52,12 @@ class MentoringBlock(ProblemBlock):
         Returns a `Fragment` object specifying the HTML, CSS, and JavaScript
         to display.
         """
+        fragment, named_children = self.get_children_fragment(context)
 
-        fragment = create_fragment('static/html/mentoring.html', {
+        fragment.add_content(render_template('static/html/mentoring.html', {
             'self': self,
-            'prompt': self.prompt,
-        })
+            'named_children': named_children,
+        }))
         fragment.add_css(load_resource('static/css/mentoring.css'))
         fragment.add_javascript(load_resource('static/js/mentoring.js'))
         fragment.initialize_js('MentoringBlock')
