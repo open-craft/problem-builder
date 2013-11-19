@@ -10,6 +10,7 @@ from xblock.fields import Any, Scope
 from xblock.fragment import Fragment
 
 from .models import Answer
+from .utils import load_resource
 
 
 # Globals ###########################################################
@@ -41,20 +42,9 @@ class AnswerBlock(XBlock):
         html = u'<textarea cols="100" rows="10" maxlength="{}" name="input">{}</textarea>'.format(
                 Answer._meta.get_field('student_input').max_length,
                 self.student_input)
-
+        
         fragment = Fragment(html)
-        fragment.add_javascript("""
-            function AnswerBlock(runtime, element) {
-                return {
-                    submit: function() {
-                        return $(element).find(':input').serializeArray();
-                    },
-                    handleSubmit: function(result) {
-                        $(element).find('.message').text((result || {}).error || '');
-                    }
-                }
-            }
-            """)
+        fragment.add_javascript(load_resource('static/js/answer.js'))
         fragment.initialize_js('AnswerBlock')
         return fragment
 
