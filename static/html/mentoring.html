@@ -2,10 +2,8 @@
   {% for name, c in named_children %}
   {{c.body_html|safe}}
   {% endfor %}
-  <input type='button' value='submit' class='submit'></input>
-  {% if self.completed %}
-    completed!
-  {% else %}
-    NOT completed
-  {% endif %}
+  <input type="button" value="submit" class="submit"></input>
+  <span class="progress" data-completed="{{ self.completed }}">
+    <span class='indicator'></span>
+  </span>
 </div>

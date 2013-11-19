@@ -1,4 +1,11 @@
 function MentoringBlock(runtime, element) {
+    var progress_template = _.template($('#xblock-progress-template').html());
+
+    function render_progress() {
+        var data = $('.progress', element).data();
+        $('.indicator', element).html(progress_template(data));
+    }
+
     function callIfExists(obj, fn) {
         if (typeof obj[fn] == 'function') {
             return obj[fn].apply(obj, Array.prototype.slice.call(arguments, 2));
@@ -11,6 +18,9 @@ function MentoringBlock(runtime, element) {
         $.each(results.submitResults || {}, function(input, result) {
             callIfExists(runtime.childMap(element, input), 'handleSubmit', result);
         });
+
+        $('.progress', element).data('completed', results.completed ? 'True' : 'False')
+        render_progress();
     }
 
     $(element).find('.submit').bind('click', function() {
@@ -25,4 +35,6 @@ function MentoringBlock(runtime, element) {
         var handlerUrl = runtime.handlerUrl(element, 'submit')
         $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
     });
+
+    render_progress();
 }

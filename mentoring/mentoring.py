@@ -60,7 +60,13 @@ class MentoringBlock(XBlock):
             'named_children': named_children,
         }))
         fragment.add_css(load_resource('static/css/mentoring.css'))
+        fragment.add_javascript(load_resource('static/js/vendor/underscore-min.js'))
         fragment.add_javascript(load_resource('static/js/mentoring.js'))
+
+        fragment.add_resource(load_resource('static/html/mentoring_progress.html').format(
+                completed=self.runtime.resources_url('images/correct-icon.png')),
+            "text/html")
+
         fragment.initialize_js('MentoringBlock')
 
         return fragment
