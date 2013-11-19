@@ -6,7 +6,7 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import Any, Scope
+from xblock.fields import Any, Boolean, Scope
 from xblock.fragment import Fragment
 
 from .models import Answer
@@ -28,6 +28,7 @@ class AnswerBlock(XBlock):
     to make them searchable and referenceable across xblocks.
     """
     student_input = Any(help="Last input submitted by the student", default="", scope=Scope.user_state)
+    read_only = Boolean(help="Display as a read-only field", default=False, scope=Scope.content)
 
     def __init__(self, *args, **kwargs):
         super(AnswerBlock, self).__init__(*args, **kwargs)
@@ -39,18 +40,23 @@ class AnswerBlock(XBlock):
         return Fragment(u"<p>I can only appear inside problems.</p>")
 
     def mentoring_view(self, context=None):
-        html = u'<textarea cols="100" rows="10" maxlength="{}" name="input">{}</textarea>'.format(
-                Answer._meta.get_field('student_input').max_length,
-                self.student_input)
+        if not self.read_only:
+            html = u'<textarea cols="100" rows="10" maxlength="{}" name="input">{}</textarea>'.format(
+                    Answer._meta.get_field('student_input').max_length,
+                    self.student_input)
+        else:
+            html = u'<blockquote class="answer read_only">{}</div>'.format(self.student_input)
         
         fragment = Fragment(html)
+        fragment.add_css(load_resource('static/css/answer.css'))
         fragment.add_javascript(load_resource('static/js/answer.js'))
         fragment.initialize_js('AnswerBlock')
         return fragment
 
     def submit(self, submission):
-        self.student_input = submission[0]['value']
-        log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
+        if not self.read_only:
+            self.student_input = submission[0]['value']
+            log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return self.student_input
 
     def save(self):
@@ -59,7 +65,7 @@ class AnswerBlock(XBlock):
         """
         super(AnswerBlock, self).save()
         answer_data = self.get_model_object()
-        if answer_data.student_input != self.student_input:
+        if answer_data.student_input != self.student_input and not self.read_only:
             answer_data.student_input = self.student_input
             answer_data.save()
 

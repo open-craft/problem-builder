@@ -5,7 +5,7 @@
             <p>Now you have a list of potential goals.</p>
         </html>
 
-        <answer name="brainstorm_goals" read-only="true" />
+        <answer name="brainstorm_goals" read_only="true" />
 
         <html>
             <p>Before you select from among them, consider getting input from others. People that know you well may have a different idea of what changes would benefit you most. To complete this exercise, seek input from at least 3 people who know you well. What do they think would be a valuable thing for you to get better at? You might ask them: "Given how well you know me, if I could get significantly better at just one thing, what would you suggest that one thing should be?"</p>
