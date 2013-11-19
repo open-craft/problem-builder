@@ -1,6 +1,11 @@
 <div class="mentoring">
-    {% for name, c in named_children %}
-    {{c.body_html|safe}}
-    {% endfor %}
+  {% for name, c in named_children %}
+  {{c.body_html|safe}}
+  {% endfor %}
+  <input type='button' value='submit' class='submit'></input>
+  {% if self.completed %}
+    completed!
+  {% else %}
+    NOT completed
+  {% endif %}
 </div>
-<input type='button' value='check' class='check'></input>
