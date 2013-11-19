@@ -5,7 +5,7 @@
 
 import logging
 
-from xblock.problem import ProblemBlock
+from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
 
@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringBlock(ProblemBlock):
+class MentoringBlock(XBlock):
     """
     An XBlock providing mentoring capabilities
 
