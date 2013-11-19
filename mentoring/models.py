@@ -3,6 +3,10 @@ from django.db import models
 class Answer(models.Model):
     class Meta:
         app_label = 'mentoring'
+        unique_together = (('student_id', 'name'),)
 
-    text = models.CharField(max_length=2000)
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    name = models.CharField(max_length=20, db_index=True)
+    student_id = models.CharField(max_length=20, db_index=True)
+    student_input = models.CharField(max_length=10000)
+    created_on = models.DateTimeField('created on', auto_now_add=True)
+    modified_on = models.DateTimeField('modified on', auto_now=True)
