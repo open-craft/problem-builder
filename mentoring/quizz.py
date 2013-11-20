@@ -6,10 +6,10 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import Any, List, Scope, String
+from xblock.fields import List, Scope, String
 from xblock.fragment import Fragment
 
-from .utils import load_resource
+from .utils import load_resource, render_template
 
 
 # Globals ###########################################################
@@ -37,17 +37,14 @@ class QuizzBlock(XBlock):
     """
     TODO: Description
     """
-    type = String(help="Type of quizz", scope=Scope.content, default="yes-no-unsure")
     question = String(help="Question to ask the student", scope=Scope.content, default="")
+    type = String(help="Type of quizz", scope=Scope.content, default="yes-no-unsure")
+    low = String(help="Label for low ratings", scope=Scope.content, default="Less")
+    high = String(help="Label for high ratings", scope=Scope.content, default="More")
     tip = String(help="Mentoring tip to provide if needed", scope=Scope.content, default="")
-    tip_display = List(help="List of answers to display the tip for", scope=Scope.content, default=None)
-    reject = List(help="List of answers to reject", scope=Scope.content, default=None)
-    student_input = Any(help="Last input submitted by the student", default="", scope=Scope.user_state)
-    has_children = True
-
-    def __init__(self, *args, **kwargs):
-        super(QuizzBlock, self).__init__(*args, **kwargs)
-        # TODO
+    tip_display = List(help="List of choices to display the tip for", scope=Scope.content, default=None)
+    reject = List(help="List of choices to reject", scope=Scope.content, default=None)
+    student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
 
     @classmethod
     def parse_xml(cls, node, runtime, keys):
@@ -63,6 +60,10 @@ class QuizzBlock(XBlock):
             else:
                 block.runtime.add_node_as_child(block, child)
 
+        for name, value in node.items():
+            if name in block.fields:
+                setattr(block, name, value)
+
         return block
 
     def student_view(self, context=None):  # pylint: disable=W0613
@@ -70,7 +71,15 @@ class QuizzBlock(XBlock):
         return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
-        fragment = Fragment(u'<h2>Quizz</h2>') # TODO
+        if self.type not in ('yes-no-unsure', 'rating'):
+            raise ValueError, u'Invalid value for QuizzBlock.type: `{}`'.format(self.type)
+
+        template_path = 'static/html/quizz_{}.html'.format(self.type)
+        html = render_template(template_path, {
+            'self': self,
+        })
+
+        fragment = Fragment(html)
         fragment.add_css(load_resource('static/css/quizz.css'))
         fragment.add_javascript(load_resource('static/js/quizz.js'))
         fragment.initialize_js('QuizzBlock')

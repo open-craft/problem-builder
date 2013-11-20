@@ -1,0 +1,14 @@
+<fieldset class="yes-no-unsure">
+  <legend>{{ self.question }}</legend>
+  <div class="choices">
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="yes"{% if self.student_choice == 'yes' %} checked{% endif %}> Yes</label>
+    </span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="no"{% if self.student_choice == 'yes' %} checked{% endif %}> No</label>
+    </span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="unsure"{% if self.student_choice == 'yes' %} checked{% endif %}> Unsure</label>
+    </span>
+  </div>
+</fieldset>

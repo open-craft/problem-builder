@@ -7,22 +7,22 @@
 
         <answer name="improvement_goal" read_only="true" />
 
-        <quizz type="yes-no-unsure">
+        <quizz name="goal_true" type="yes-no-unsure">
             <question>Is this goal true for you?</question>
             <tip>A goal that is true to you ___. Please enter a new goal that does meet these criteria.</tip>
         </quizz>
 
-        <quizz type="yes-no-unsure">
+        <quizz name="goal_implicate" type="yes-no-unsure">
             <question>Does this goal implicate you?</question>
             <tip>A goal that implicates you ____. Please enter a new goal that does meet these criteria.</tip>
         </quizz>
 
-        <quizz type="rating" low="Far" high="Nearly there">
+        <quizz name="goal_close" type="rating" low="Far" high="Nearly there">
             <question>How close are you to reaching this goal?</question>
             <tip reject="5" display="4">Please enter a goal which you are less close to reach</tip>
         </quizz>
 
-        <quizz type="rating" low="Least" high="Most">
+        <quizz name="goal_important" type="rating" low="Least" high="Most">
             <question>How important is it to you?</question>
             <tip>Please enter a goal which is important for you.</tip>
         </quizz>

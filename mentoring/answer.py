@@ -54,7 +54,7 @@ class AnswerBlock(XBlock):
                     Answer._meta.get_field('student_input').max_length,
                     self.student_input)
         else:
-            html = u'<blockquote class="answer read_only">{}</div>'.format(self.student_input)
+            html = u'<blockquote class="answer read_only">{}</blockquote>'.format(self.student_input)
         
         fragment = Fragment(html)
         fragment.add_css(load_resource('static/css/answer.css'))
