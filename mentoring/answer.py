@@ -44,9 +44,11 @@ class AnswerBlock(XBlock):
     
     def student_view(self, context=None):  # pylint: disable=W0613
         """Returns default student view."""
-        return Fragment(u"<p>I can only appear inside problems.</p>")
+        return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
+        # TODO: Switch to Django templates & security
+        # TODO: Keep new lines
         if not self.read_only:
             html = u'<textarea cols="100" rows="10" maxlength="{}" name="input">{}</textarea>'.format(
                     Answer._meta.get_field('student_input').max_length,
