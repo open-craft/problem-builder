@@ -106,6 +106,10 @@ class MentoringBlock(XBlock):
         Sample scenarios which will be displayed in the workbench
         """
         return [
-            ("Mentoring: Pre-Goal Brainstom", load_resource('templates/001_pre_goal_brainstorm.xml')),
-            ("Mentoring: Getting Feedback", load_resource('templates/002_getting_feedback.xml')),
+            ("Mentoring - Page 1, Pre-goal brainstom",
+                                  load_resource('templates/001_pre_goal_brainstorm.xml')),
+            ("Mentoring - Page 2, Getting feedback",
+                                  load_resource('templates/002_getting_feedback.xml')),
+            ("Mentoring - Page 3, Reflecting on your feedback",
+                                  load_resource('templates/003_reflecting_on_feedback.xml')),
         ]

@@ -6,7 +6,7 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import Any, Boolean, Scope
+from xblock.fields import Any, Boolean, Scope, String
 from xblock.fragment import Fragment
 
 from .models import Answer
@@ -29,11 +29,18 @@ class AnswerBlock(XBlock):
     """
     student_input = Any(help="Last input submitted by the student", default="", scope=Scope.user_state)
     read_only = Boolean(help="Display as a read-only field", default=False, scope=Scope.content)
+    default_from = String(help="If specified, the name of the answer to get the default value from", default=None, scope=Scope.content)
 
     def __init__(self, *args, **kwargs):
         super(AnswerBlock, self).__init__(*args, **kwargs)
+
+        # Only attempt to locate a model object for this block when the answer has a name
         if self.name:
             self.student_input = self.get_model_object().student_input
+
+        # Default value can be set from another answer's current value
+        if not self.student_input and self.default_from:
+            self.student_input = self.get_model_object(name=self.default_from).student_input
     
     def student_view(self, context=None):  # pylint: disable=W0613
         """Returns default student view."""
@@ -69,8 +76,15 @@ class AnswerBlock(XBlock):
             answer_data.student_input = self.student_input
             answer_data.save()
 
-    def get_model_object(self):
-        if not self.name:
+    def get_model_object(self, name=None):
+        """
+        Fetches the Answer model object for the answer named `name`
+        """
+        # By default, get the model object for the current answer's name
+        if not name:
+            name = self.name
+        # Consistency check - we should have a name by now
+        if not name:
             raise ValueError, 'AnswerBlock.name field need to be set to a non-null/empty value'
 
         # TODO Use a random user id
@@ -78,6 +92,6 @@ class AnswerBlock(XBlock):
 
         answer_data, created = Answer.objects.get_or_create(
             student_id=student_id,
-            name=self.name
+            name=name
         )
         return answer_data
