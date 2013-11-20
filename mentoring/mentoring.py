@@ -112,4 +112,8 @@ class MentoringBlock(XBlock):
                                   load_resource('templates/002_getting_feedback.xml')),
             ("Mentoring - Page 3, Reflecting on your feedback",
                                   load_resource('templates/003_reflecting_on_feedback.xml')),
+            ("Mentoring - Page 4, Deciding on your improvement goal",
+                                  load_resource('templates/004_deciding_on_your_improvement_goal.xml')),
+            ("Mentoring - Page 5, Checking your improvement goal",
+                                  load_resource('templates/005_checking_your_improvement_goal.xml')),
         ]

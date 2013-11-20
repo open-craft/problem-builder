@@ -2,10 +2,10 @@
     <mentoring>
         <html>
             <h3>Checking your improvement goal</h3>
-            <p>Now, let’s make sure your goal meets the criteria for a strong column 1. Here is your goal:</p>
+            <p>Now, let's make sure your goal meets the criteria for a strong column 1. Here is your goal:</p>
         </html>
 
-        <answer name="improvement_goal" read_only="yes" />
+        <answer name="improvement_goal" read_only="true" />
 
         <quizz type="yes-no-unsure">
             <question>Is this goal true for you?</question>
