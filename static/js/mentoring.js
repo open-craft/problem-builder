@@ -15,6 +15,8 @@ function MentoringBlock(runtime, element) {
     }
 
     function handleSubmitResults(results) {
+        $('.quizz-tips', element).empty();
+
         $.each(results.submitResults || {}, function(input, result) {
             callIfExists(runtime.childMap(element, input), 'handleSubmit', result);
         });

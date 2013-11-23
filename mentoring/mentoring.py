@@ -88,7 +88,7 @@ class MentoringBlock(XBlock):
             child = child_map[input_name]
             submit_results[input_name] = child.submit(submission)
             child.save()
-            completed = completed and submit_results[input_name]
+            completed = completed and submit_results[input_name]['completed']
 
         self.completed = bool(completed)
 

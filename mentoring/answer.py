@@ -66,7 +66,10 @@ class AnswerBlock(XBlock):
         if not self.read_only:
             self.student_input = submission[0]['value']
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
-        return self.student_input
+        return {
+            'student_input': self.student_input,
+            'completed': bool(self.student_input),
+        }
 
     def save(self):
         """

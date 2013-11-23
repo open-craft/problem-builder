@@ -87,7 +87,16 @@ class QuizzBlock(XBlock):
 
     def submit(self, submission):
         # TODO
+
+        log.info(u'submission: %s', submission)
+        completed = bool(submission)
+        return {
+            'submission': submission,
+            'completed': completed,
+            'tip': 'submission: {}, completed: {}'.format(submission, completed)
+        }
+
         #self.student_input = submission[0]['value']
         #log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
-        return self.student_input
+        #return self.student_choice
 
