@@ -11,10 +11,10 @@ function QuizzBlock(runtime, element) {
         },
         handleSubmit: function(result) {
             var tips_dom = $(element).parent().find('.quizz-tips'),
-                tip_text = (result || {}).tip || '';
+                tip_html = (result || {}).tip || '';
 
-            if(tip_text) {
-                tips_dom.append('<div class="quizz_tip">' + tip_text + '</div>');
+            if(tip_html) {
+                tips_dom.append(tip_html);
             }
         }
     }

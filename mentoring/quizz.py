@@ -86,14 +86,23 @@ class QuizzBlock(XBlock):
         return fragment
 
     def submit(self, submission):
-        # TODO
+        log.info(u'Received quizz submission: %s', submission)
 
-        log.info(u'submission: %s', submission)
+        # TODO
         completed = bool(submission)
+        show_tip = completed
+
+        if show_tip:
+            formatted_tip = render_template('static/html/tip.html', {
+                'self': self,
+            })
+        else:
+            formatted_tip = ''
+
         return {
             'submission': submission,
             'completed': completed,
-            'tip': 'submission: {}, completed: {}'.format(submission, completed)
+            'tip': formatted_tip,
         }
 
         #self.student_input = submission[0]['value']
