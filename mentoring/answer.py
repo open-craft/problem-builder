@@ -48,12 +48,12 @@ class AnswerBlock(XBlock):
 
     def mentoring_view(self, context=None):
         if not self.read_only:
-            html = render_template('static/html/answer_editable.html', {
+            html = render_template('templates/html/answer_editable.html', {
                 'self': self,
                 'max_length': Answer._meta.get_field('student_input').max_length,
             })
         else:
-            html = render_template('static/html/answer_read_only.html', {
+            html = render_template('templates/html/answer_read_only.html', {
                 'self': self,
             })
         

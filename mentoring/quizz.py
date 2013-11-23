@@ -75,7 +75,7 @@ class QuizzBlock(XBlock):
         if self.type not in ('yes-no-unsure', 'rating'):
             raise ValueError, u'Invalid value for QuizzBlock.type: `{}`'.format(self.type)
 
-        template_path = 'static/html/quizz_{}.html'.format(self.type)
+        template_path = 'templates/html/quizz_{}.html'.format(self.type)
         html = render_template(template_path, {
             'self': self,
         })
@@ -94,7 +94,7 @@ class QuizzBlock(XBlock):
         self.student_choice = submission
 
         if show_tip:
-            formatted_tip = render_template('static/html/tip.html', {
+            formatted_tip = render_template('templates/html/tip.html', {
                 'self': self,
             })
         else:

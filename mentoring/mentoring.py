@@ -55,7 +55,7 @@ class MentoringBlock(XBlock):
         """
         fragment, named_children = self.get_children_fragment(context)
 
-        fragment.add_content(render_template('static/html/mentoring.html', {
+        fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
         }))
@@ -63,7 +63,7 @@ class MentoringBlock(XBlock):
         fragment.add_javascript(load_resource('static/js/vendor/underscore-min.js'))
         fragment.add_javascript(load_resource('static/js/mentoring.js'))
 
-        fragment.add_resource(load_resource('static/html/mentoring_progress.html').format(
+        fragment.add_resource(load_resource('templates/html/mentoring_progress.html').format(
                 completed=self.runtime.resources_url('images/correct-icon.png')),
             "text/html")
 
@@ -88,7 +88,6 @@ class MentoringBlock(XBlock):
                 completed = completed and child_result['completed']
 
         self.completed = bool(completed)
-        self.save()
 
         return {
             'submitResults': submit_results,
@@ -105,13 +104,13 @@ class MentoringBlock(XBlock):
         """
         return [
             ("Mentoring - Page 1, Pre-goal brainstom",
-                                  load_resource('templates/001_pre_goal_brainstorm.xml')),
+                                  load_resource('templates/xml/001_pre_goal_brainstorm.xml')),
             ("Mentoring - Page 2, Getting feedback",
-                                  load_resource('templates/002_getting_feedback.xml')),
+                                  load_resource('templates/xml/002_getting_feedback.xml')),
             ("Mentoring - Page 3, Reflecting on your feedback",
-                                  load_resource('templates/003_reflecting_on_feedback.xml')),
+                                  load_resource('templates/xml/003_reflecting_on_feedback.xml')),
             ("Mentoring - Page 4, Deciding on your improvement goal",
-                                  load_resource('templates/004_deciding_on_your_improvement_goal.xml')),
+                                  load_resource('templates/xml/004_deciding_on_your_improvement_goal.xml')),
             ("Mentoring - Page 5, Checking your improvement goal",
-                                  load_resource('templates/005_checking_your_improvement_goal.xml')),
+                                  load_resource('templates/xml/005_checking_your_improvement_goal.xml')),
         ]
