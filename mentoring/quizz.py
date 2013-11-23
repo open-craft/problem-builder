@@ -3,6 +3,7 @@
 
 # Imports ###########################################################
 
+import copy
 import logging
 
 from xblock.core import XBlock
@@ -86,7 +87,7 @@ class QuizzBlock(XBlock):
         return fragment
 
     def submit(self, submission):
-        log.info(u'Received quizz submission: %s', submission)
+        log.debug(u'Received quizz submission: "%s"', submission)
 
         completed = self.is_completed(submission)
         show_tip = self.is_tip_shown(submission)
@@ -99,11 +100,16 @@ class QuizzBlock(XBlock):
         else:
             formatted_tip = ''
 
-        return {
+        result = {
             'submission': submission,
             'completed': completed,
             'tip': formatted_tip,
         }
+        log.debug(u'display_with_defaults: %s, reject_with_defaults: %s',
+                  self.display_with_defaults,
+                  self.reject_with_defaults)
+        log.debug(u'Quizz submission result: %s', result)
+        return result
 
     def is_completed(self, submission):
         return submission and submission not in self.reject_with_defaults
@@ -117,13 +123,16 @@ class QuizzBlock(XBlock):
             if self.type == 'yes-no-unsure':
                 return ['no', 'unsure']
             elif self.type == 'rating':
-                return [1, 2, 3]
+                return ['1', '2', '3']
         else:
             return self.reject
 
     @property
     def display_with_defaults(self):
-        if self.display is None:
-            return self.reject_with_defaults
+        display = copy.copy(self.display)
+        if display is None:
+            display = self.reject_with_defaults
         else:
-            return self.display
+            display += [choice for choice in self.reject_with_defaults
+                               if choice not in display]
+        return display
