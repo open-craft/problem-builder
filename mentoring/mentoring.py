@@ -76,19 +76,16 @@ class MentoringBlock(XBlock):
         log.info(u'Received submissions: {}'.format(submissions))
         self.attempted = True
 
-        child_map = {}
+        submit_results = []
+        completed = True
         for child_id in self.children:  # pylint: disable=E1101
             child = self.runtime.get_block(child_id)
-            if child.name:
-                child_map[child.name] = child
-
-        submit_results = {}
-        completed = True
-        for input_name, submission in submissions.items():
-            child = child_map[input_name]
-            submit_results[input_name] = child.submit(submission)
-            child.save()
-            completed = completed and submit_results[input_name]['completed']
+            if child.name and child.name in submissions:
+                submission = submissions[child.name]
+                child_result = child.submit(submission)
+                submit_results.append([child.name, child_result])
+                child.save()
+                completed = completed and child_result['completed']
 
         self.completed = bool(completed)
 
