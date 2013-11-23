@@ -24,9 +24,9 @@ def commas_to_list(commas_str):
     Converts a comma-separated string to a list
     """
     if commas_str is None:
-        return None
+        return None # Means default value (which can be non-empty)
     elif commas_str == '':
-        return []
+        return [] # Means empty list
     else:
         return commas_str.split(',')
 
@@ -42,7 +42,7 @@ class QuizzBlock(XBlock):
     low = String(help="Label for low ratings", scope=Scope.content, default="Less")
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
     tip = String(help="Mentoring tip to provide if needed", scope=Scope.content, default="")
-    tip_display = List(help="List of choices to display the tip for", scope=Scope.content, default=None)
+    display = List(help="List of choices to display the tip for", scope=Scope.content, default=None)
     reject = List(help="List of choices to reject", scope=Scope.content, default=None)
     student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
 
@@ -88,9 +88,9 @@ class QuizzBlock(XBlock):
     def submit(self, submission):
         log.info(u'Received quizz submission: %s', submission)
 
-        # TODO
-        completed = bool(submission)
-        show_tip = completed
+        completed = self.is_completed(submission)
+        show_tip = self.is_tip_shown(submission)
+        self.student_choice = submission
 
         if show_tip:
             formatted_tip = render_template('static/html/tip.html', {
@@ -105,7 +105,25 @@ class QuizzBlock(XBlock):
             'tip': formatted_tip,
         }
 
-        #self.student_input = submission[0]['value']
-        #log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
-        #return self.student_choice
+    def is_completed(self, submission):
+        return submission and submission not in self.reject_with_defaults
 
+    def is_tip_shown(self, submission):
+        return not submission or submission in self.display_with_defaults
+
+    @property
+    def reject_with_defaults(self):
+        if self.reject is None:
+            if self.type == 'yes-no-unsure':
+                return ['no', 'unsure']
+            elif self.type == 'rating':
+                return [1, 2, 3]
+        else:
+            return self.reject
+
+    @property
+    def display_with_defaults(self):
+        if self.display is None:
+            return self.reject_with_defaults
+        else:
+            return self.display
