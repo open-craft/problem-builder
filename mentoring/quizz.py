@@ -105,9 +105,6 @@ class QuizzBlock(XBlock):
             'completed': completed,
             'tip': formatted_tip,
         }
-        log.debug(u'display_with_defaults: %s, reject_with_defaults: %s',
-                  self.display_with_defaults,
-                  self.reject_with_defaults)
         log.debug(u'Quizz submission result: %s', result)
         return result
 

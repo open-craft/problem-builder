@@ -88,6 +88,7 @@ class MentoringBlock(XBlock):
                 completed = completed and child_result['completed']
 
         self.completed = bool(completed)
+        self.save()
 
         return {
             'submitResults': submit_results,

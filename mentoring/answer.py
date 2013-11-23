@@ -10,7 +10,7 @@ from xblock.fields import Any, Boolean, Scope, String
 from xblock.fragment import Fragment
 
 from .models import Answer
-from .utils import load_resource
+from .utils import load_resource, render_template
 
 
 # Globals ###########################################################
@@ -47,14 +47,15 @@ class AnswerBlock(XBlock):
         return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
-        # TODO: Switch to Django templates & security
-        # TODO: Keep new lines
         if not self.read_only:
-            html = u'<textarea cols="100" rows="10" maxlength="{}" name="input">{}</textarea>'.format(
-                    Answer._meta.get_field('student_input').max_length,
-                    self.student_input)
+            html = render_template('static/html/answer_editable.html', {
+                'self': self,
+                'max_length': Answer._meta.get_field('student_input').max_length,
+            })
         else:
-            html = u'<blockquote class="answer read_only">{}</blockquote>'.format(self.student_input)
+            html = render_template('static/html/answer_read_only.html', {
+                'self': self,
+            })
         
         fragment = Fragment(html)
         fragment.add_css(load_resource('static/css/answer.css'))
