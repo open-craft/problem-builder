@@ -1,0 +1,25 @@
+<fieldset class="rating">
+  <legend>{{ self.question }}</legend>
+  <div class="choices">
+    <span class="low">{{ self.low }}</span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="1"{% if self.student_choice == '1' %} checked{% endif %}>1</label>
+    </span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="2"{% if self.student_choice == '2' %} checked{% endif %}>2</label>
+    </span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="3"{% if self.student_choice == '3' %} checked{% endif %}>3</label>
+    </span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="4"{% if self.student_choice == '4' %} checked{% endif %}>4</label>
+    </span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="5"{% if self.student_choice == '5' %} checked{% endif %}>5</label>
+    </span>
+    <span class="low">{{ self.high }}</span>
+    <span class="choice">
+      <label><input type="radio" name="{{ self.name }}" value="unsure"{% if self.student_choice == 'unsure' %} checked{% endif %}>Unsure</label>
+    </span>
+  </div>
+</fieldset>
