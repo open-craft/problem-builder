@@ -11,7 +11,7 @@ function QuizzBlock(runtime, element) {
         },
         handleSubmit: function(result) {
             var tipsDom = $(element).parent().find('.messages'),
-                tipHtml = (result || {}).tip || '';
+                tipHtml = (result || {}).tips || '';
 
             if(tipHtml) {
                 tipsDom.append(tipHtml);

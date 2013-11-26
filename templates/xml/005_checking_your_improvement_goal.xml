@@ -27,7 +27,7 @@
 
         <quizz name="goal-important" type="rating-unsure" low="Not at all important to me" high="Very important to me">
             <question>How important is it to you?</question>
-            <tip reject="1 2 3">Text on why it is important to choose a goal that is important to you and instructions to go back and revise your goal to make it meet the criteria.</tip>
+            <tip reject="1,2,3">Text on why it is important to choose a goal that is important to you and instructions to go back and revise your goal to make it meet the criteria.</tip>
             <tip reject="unsure">Help on what 'important' means.</tip>
         </quizz>
 

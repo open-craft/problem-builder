@@ -3,11 +3,10 @@
 
 # Imports ###########################################################
 
-import copy
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import List, Scope, String
+from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 
 from .utils import load_resource, render_template
@@ -47,9 +46,7 @@ class QuizzBlock(XBlock):
     student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     low = String(help="Label for low ratings", scope=Scope.content, default="Less")
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
-    tip = String(help="Mentoring tip to provide if needed", scope=Scope.content, default="")
-    display = List(help="List of choices to display the tip for", scope=Scope.content, default=None)
-    reject = List(help="List of choices to reject", scope=Scope.content, default=None)
+    has_children = True
 
     @classmethod
     def parse_xml(cls, node, runtime, keys):
@@ -58,10 +55,6 @@ class QuizzBlock(XBlock):
         for child in node:
             if child.tag == "question":
                 block.question = child.text
-            elif child.tag == "tip":
-                block.tip = child.text
-                block.reject = commas_to_list(child.get('reject'))
-                block.display = commas_to_list(child.get('display'))
             else:
                 block.runtime.add_node_as_child(block, child)
 
@@ -93,47 +86,85 @@ class QuizzBlock(XBlock):
     def submit(self, submission):
         log.debug(u'Received quizz submission: "%s"', submission)
 
-        completed = self.is_completed(submission)
-        show_tip = self.is_tip_shown(submission)
-        self.student_choice = submission
+        completed = True
+        formatted_tips_list = []
+        for tip in self.get_tips():
+            completed = completed and tip.is_completed(submission)
+            if tip.is_tip_displayed(submission):
+                formatted_tips_list.append(tip.render(submission))
 
-        if show_tip:
-            formatted_tip = render_template('templates/html/tip.html', {
+        if formatted_tips_list:
+            formatted_tips = render_template('templates/html/tip_group.html', {
                 'self': self,
+                'tips': formatted_tips_list,
+                'submission': submission,
             })
         else:
-            formatted_tip = ''
+            formatted_tips = u''
 
+        self.student_choice = submission
         result = {
             'submission': submission,
             'completed': completed,
-            'tip': formatted_tip,
+            'tips': formatted_tips,
         }
         log.debug(u'Quizz submission result: %s', result)
         return result
 
+    def get_tips(self):
+        """
+        Returns the tips contained in this block
+        """
+        tips = []
+        for child_id in self.children:  # pylint: disable=E1101
+            child = self.runtime.get_block(child_id)
+            if child.xml_element_name() == 'tip':
+                tips.append(child)
+        return tips
+
+
+class QuizzTipBlock(XBlock):
+    """
+    Each quizz
+    """
+    content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
+    display = String(help="List of choices to display the tip for", scope=Scope.content, default=None)
+    reject = String(help="List of choices to reject", scope=Scope.content, default=None)
+    
+    def render(self, submission):
+        """
+        Returns a string containing the formatted tip
+        """
+        return render_template('templates/html/tip.html', {
+            'self': self,
+        })
+
     def is_completed(self, submission):
         return submission and submission not in self.reject_with_defaults
 
-    def is_tip_shown(self, submission):
+    def is_tip_displayed(self, submission):
         return not submission or submission in self.display_with_defaults
 
     @property
     def reject_with_defaults(self):
-        if self.reject is None:
-            if self.type == 'yes-no-unsure':
+        reject = commas_to_list(self.reject)
+        log.debug(reject)
+        if reject is None:
+            quizz = self.runtime.get_block(self.parent)
+            if quizz.type == 'yes-no-unsure':
                 return ['no', 'unsure']
-            elif self.type == 'rating':
-                return ['1', '2', '3']
+            elif quizz.type == 'rating-unsure':
+                return ['1', '2', '3', 'unsure']
         else:
-            return self.reject
+            return reject
 
     @property
     def display_with_defaults(self):
-        display = copy.copy(self.display)
+        display = commas_to_list(self.display)
         if display is None:
             display = self.reject_with_defaults
         else:
             display += [choice for choice in self.reject_with_defaults
                                if choice not in display]
         return display
+

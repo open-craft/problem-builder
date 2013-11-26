@@ -1,0 +1,13 @@
+<div class="quizz-tip">
+  <strong>
+    To the question <em>"{{ self.question }}"</em>,
+    {% if submission %}
+      you answered <em>"{{ submission }}"</em>.
+    {% else %}
+      you have not provided an answer.
+    {% endif %}
+  </strong>
+  {% for tip in tips %}
+    {{ tip }}
+  {% endfor %}
+</div>

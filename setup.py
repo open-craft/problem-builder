@@ -4,6 +4,7 @@ BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
     'answer = mentoring:AnswerBlock',
     'quizz = mentoring:QuizzBlock',
+    'tip = mentoring:QuizzTipBlock',
 ]
 
 setup(
