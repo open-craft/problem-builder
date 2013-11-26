@@ -1,9 +1,9 @@
 function MentoringBlock(runtime, element) {
-    var progress_template = _.template($('#xblock-progress-template').html());
+    var progressTemplate = _.template($('#xblock-progress-template').html());
 
-    function render_progress() {
+    function renderProgress() {
         var data = $('.progress', element).data();
-        $('.indicator', element).html(progress_template(data));
+        $('.indicator', element).html(progressTemplate(data));
     }
 
     function callIfExists(obj, fn) {
@@ -24,7 +24,7 @@ function MentoringBlock(runtime, element) {
         });
 
         $('.progress', element).data('completed', results.completed ? 'True' : 'False')
-        render_progress();
+        renderProgress();
     }
 
     $(element).find('.submit').bind('click', function() {
@@ -40,5 +40,5 @@ function MentoringBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
     });
 
-    render_progress();
+    renderProgress();
 }
