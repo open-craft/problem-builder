@@ -1,6 +1,11 @@
 from django.db import models
 
 class Answer(models.Model):
+    """
+    Django model used to store AnswerBlock data that need to be shared
+    and queried accross XBlock instances (workaround).
+    """
+
     class Meta:
         app_label = 'mentoring'
         unique_together = (('student_id', 'name'),)

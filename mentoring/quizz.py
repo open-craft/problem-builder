@@ -36,16 +36,20 @@ def commas_to_list(commas_str):
 
 class QuizzBlock(XBlock):
     """
-    TODO: Description
+    An XBlock used to ask multiple-choice questions
+
+    Must be a child of a MentoringBlock. Allow to display a tip/advice depending on the 
+    values entered by the student, and supports multiple types of multiple-choice
+    set, with preset choices and author-defined values.
     """
     question = String(help="Question to ask the student", scope=Scope.content, default="")
     type = String(help="Type of quizz", scope=Scope.content, default="yes-no-unsure")
+    student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     low = String(help="Label for low ratings", scope=Scope.content, default="Less")
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
     tip = String(help="Mentoring tip to provide if needed", scope=Scope.content, default="")
     display = List(help="List of choices to display the tip for", scope=Scope.content, default=None)
     reject = List(help="List of choices to reject", scope=Scope.content, default=None)
-    student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
 
     @classmethod
     def parse_xml(cls, node, runtime, keys):
