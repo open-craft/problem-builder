@@ -65,7 +65,7 @@ class AnswerBlock(XBlock):
 
     def submit(self, submission):
         if not self.read_only:
-            self.student_input = submission[0]['value']
+            self.student_input = submission[0]['value'].strip()
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
             'student_input': self.student_input,
