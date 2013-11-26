@@ -15,7 +15,7 @@ function MentoringBlock(runtime, element) {
     }
 
     function handleSubmitResults(results) {
-        $('.quizz-tips', element).empty();
+        $('.messages', element).empty();
 
         $.each(results.submitResults || [], function(index, submitResult) {
             var input = submitResult[0],
@@ -25,6 +25,9 @@ function MentoringBlock(runtime, element) {
 
         $('.progress', element).data('completed', results.completed ? 'True' : 'False')
         renderProgress();
+
+        // Messages should only be displayed upon hitting 'submit', not on page reload
+        $('.messages', element).append(results.message);
     }
 
     $(element).find('.submit').bind('click', function() {

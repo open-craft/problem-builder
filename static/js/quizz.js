@@ -10,7 +10,7 @@ function QuizzBlock(runtime, element) {
             }
         },
         handleSubmit: function(result) {
-            var tipsDom = $(element).parent().find('.quizz-tips'),
+            var tipsDom = $(element).parent().find('.messages'),
                 tipHtml = (result || {}).tip || '';
 
             if(tipHtml) {

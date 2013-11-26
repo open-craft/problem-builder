@@ -32,17 +32,27 @@ class MentoringBlock(XBlock):
     prompt = String(help="Initial text displayed with the text input", default='Your answer?', scope=Scope.content)
     attempted = Boolean(help="Has the student attempted this mentoring step?", default=False, scope=Scope.user_state)
     completed = Boolean(help="Has the student completed this mentoring step?", default=False, scope=Scope.user_state)
+    completed_message = String(help="Message to display upon completion", scope=Scope.content, default="")
     has_children = True
 
-    def get_children_fragment(self, context):
-        fragment = Fragment()
-        named_child_frags = []
-        for child_id in self.children:  # pylint: disable=E1101
-            child = self.runtime.get_block(child_id)
-            frag = self.runtime.render_child(child, "mentoring_view", context)
-            fragment.add_frag_resources(frag)
-            named_child_frags.append((child.name, frag))
-        return fragment, named_child_frags
+    @classmethod
+    def parse_xml(cls, node, runtime, keys):
+        block = runtime.construct_xblock_from_class(cls, keys)
+
+        for child in node:
+            if child.tag == 'message':
+                if child.get('type') == 'completed':
+                    block.completed_message = child.text
+                else:
+                    raise ValueError, u'Invalid value for message type: `{}`'.format(child.get('type'))
+            else:
+                block.runtime.add_node_as_child(block, child)
+
+        for name, value in node.items():
+            if name in block.fields:
+                setattr(block, name, value)
+
+        return block
 
     def student_view(self, context):
         """
@@ -70,6 +80,16 @@ class MentoringBlock(XBlock):
 
         return fragment
 
+    def get_children_fragment(self, context):
+        fragment = Fragment()
+        named_child_frags = []
+        for child_id in self.children:  # pylint: disable=E1101
+            child = self.runtime.get_block(child_id)
+            frag = self.runtime.render_child(child, "mentoring_view", context)
+            fragment.add_frag_resources(frag)
+            named_child_frags.append((child.name, frag))
+        return fragment, named_child_frags
+
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.info(u'Received submissions: {}'.format(submissions))
@@ -87,10 +107,15 @@ class MentoringBlock(XBlock):
                 completed = completed and child_result['completed']
 
         self.completed = bool(completed)
+        if self.completed:
+            message = self.completed_message
+        else:
+            message = ''
 
         return {
             'submitResults': submit_results,
             'completed': self.completed,
+            'message': message,
         }
 
     def studio_view(self, context):
