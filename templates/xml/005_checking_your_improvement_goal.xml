@@ -5,26 +5,34 @@
             <p>Now, let's make sure your goal meets the criteria for a strong column 1. Here is your goal:</p>
         </html>
 
-        <answer name="improvement_goal" read_only="true" />
+        <answer name="improvement-goal" read_only="true" />
 
-        <quizz name="goal_true" type="yes-no-unsure">
+        <quizz name="goal-true" type="yes-no-unsure">
             <question>Is this goal true for you?</question>
-            <tip>A goal that is true to you ___. Please enter a new goal that does meet these criteria.</tip>
+            <tip reject="no">Text on why it is important to choose a goal that is true for you and instructions to go back and revise your goal to make it meet the criteria.</tip>
+            <tip reject="unsure">Help on what true means.</tip>
         </quizz>
 
-        <quizz name="goal_implicate" type="yes-no-unsure">
+        <quizz name="goal-implicate" type="yes-no-unsure">
             <question>Does this goal implicate you?</question>
-            <tip>A goal that implicates you ____. Please enter a new goal that does meet these criteria.</tip>
+            <tip reject="no">Text on why it is important to choose a goal that implicates you and instructions to go back and revise your goal to make it meet the criteria.</tip>
+            <tip reject="unsure">Help on what 'implicates you' means.</tip>
         </quizz>
 
-        <quizz name="goal_close" type="rating" low="Far" high="Nearly there">
-            <question>How close are you to reaching this goal?</question>
-            <tip reject="5" display="4">Please enter a goal which you are less close to reach</tip>
+        <quizz name="goal-improvement" type="yes-no-unsure">
+            <question>Is there room for improvement?</question>
+            <tip reject="no">Text on why it is important to choose a goal that has room for improvement and instructions to go back and revise your goal to make it meet the criteria.</tip>
+            <tip reject="unsure">Help on what 'room for improvement' means.</tip>
         </quizz>
 
-        <quizz name="goal_important" type="rating" low="Least" high="Most">
+        <quizz name="goal-important" type="rating-unsure" low="Not at all important to me" high="Very important to me">
             <question>How important is it to you?</question>
-            <tip>Please enter a goal which is important for you.</tip>
+            <tip reject="1 2 3">Text on why it is important to choose a goal that is important to you and instructions to go back and revise your goal to make it meet the criteria.</tip>
+            <tip reject="unsure">Help on what 'important' means.</tip>
         </quizz>
+
+        <message type="completed">
+            Great! You have indicated that you have chosen a goal that is true for you, implicates you, has room for improvement, and is important to you. You are now ready to move onto the next step.
+        </message>
     </mentoring>
 </vertical>

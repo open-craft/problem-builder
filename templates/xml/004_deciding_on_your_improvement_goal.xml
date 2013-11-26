@@ -5,11 +5,11 @@
             <p>Now it's time to make your decision on which improvement goal you will pursue.</p>
             <h4>(1) Write your goal in a sentence or phrase.</h4>
         </html>
-        <answer name="improvement_goal" />
+        <answer name="improvement-goal" />
 
         <html>
             <h4>(2) Say why this goal is important.</h4>
         </html>
-        <answer name="improvement_goal_importance" />
+        <answer name="improvement-goal-importance" />
     </mentoring>
 </vertical>
