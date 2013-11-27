@@ -14,6 +14,5 @@ setup(
     packages=['mentoring'],
     entry_points={
         'xblock.v1': BLOCKS,
-        'xmodule.v1': BLOCKS,
     }
 )
