@@ -14,7 +14,3 @@ blockquote.answer.read_only:before {
     margin-right: 0.25em;
     vertical-align: -0.4em;
 }
-
-blockquote.answer.read_only p {
-    display inline;
-}

@@ -1,0 +1,9 @@
+<div class="mentoring-table {{ self.type }}">
+  <table>
+    <tr>
+      {% for name, c in named_children %}
+      {{c.body_html|safe}}
+      {% endfor %}
+    </tr>
+  </table>
+</div>

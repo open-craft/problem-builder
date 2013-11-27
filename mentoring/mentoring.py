@@ -8,7 +8,7 @@ from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
 
-from .utils import load_resource, render_template
+from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
 
 
 # Globals ###########################################################
@@ -18,18 +18,15 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringBlock(XBlock):
+class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     """
     An XBlock providing mentoring capabilities
 
-    Each block is composed of a text prompt, an input field for a free answer from the student,
-    and a set of multiple choice questions. The student submits his text answer, and is then asked
-    the multiple-choice questions. A set of conditions on the answers provided to the multiple-
-    choices will determine if the student is a) provided mentoring advices and asked to alter
-    his answer, or b) is given the ok to continue.
+    Composed of text, answers input fields, and a set of multiple choice quizzes with advices. 
+    A set of conditions on the provided answers and quizzes choices will determine if the
+    student is a) provided mentoring advices and asked to alter his answer, or b) is given the
+    ok to continue.
     """
-
-    prompt = String(help="Initial text displayed with the text input", default='Your answer?', scope=Scope.content)
     attempted = Boolean(help="Has the student attempted this mentoring step?", default=False, scope=Scope.user_state)
     completed = Boolean(help="Has the student completed this mentoring step?", default=False, scope=Scope.user_state)
     completed_message = String(help="Message to display upon completion", scope=Scope.content, default="")
@@ -55,14 +52,7 @@ class MentoringBlock(XBlock):
         return block
 
     def student_view(self, context):
-        """
-        Create a fragment used to display the XBlock to a student.
-        `context` is a dictionary used to configure the display (unused)
-
-        Returns a `Fragment` object specifying the HTML, CSS, and JavaScript
-        to display.
-        """
-        fragment, named_children = self.get_children_fragment(context)
+        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
@@ -79,16 +69,6 @@ class MentoringBlock(XBlock):
         fragment.initialize_js('MentoringBlock')
 
         return fragment
-
-    def get_children_fragment(self, context):
-        fragment = Fragment()
-        named_child_frags = []
-        for child_id in self.children:  # pylint: disable=E1101
-            child = self.runtime.get_block(child_id)
-            frag = self.runtime.render_child(child, "mentoring_view", context)
-            fragment.add_frag_resources(frag)
-            named_child_frags.append((child.name, frag))
-        return fragment, named_child_frags
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):

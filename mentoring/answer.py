@@ -63,6 +63,14 @@ class AnswerBlock(XBlock):
         fragment.initialize_js('AnswerBlock')
         return fragment
 
+    def mentoring_table_view(self, context=None):
+        html = render_template('templates/html/answer_table.html', {
+            'self': self,
+        })
+        fragment = Fragment(html)
+        fragment.add_css(load_resource('static/css/answer_table.css'))
+        return fragment
+
     def submit(self, submission):
         if not self.read_only:
             self.student_input = submission[0]['value'].strip()
