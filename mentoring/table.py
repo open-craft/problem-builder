@@ -36,6 +36,9 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
             'named_children': named_children,
         }))
         fragment.add_css(load_resource('static/css/mentoring-table.css'))
+        fragment.add_javascript(load_resource('static/js/vendor/jquery.shorten.js'))
+        fragment.add_javascript(load_resource('static/js/mentoring-table.js'))
+        fragment.initialize_js('MentoringTableBlock')
 
         return fragment
 
