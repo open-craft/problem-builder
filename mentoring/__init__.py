@@ -1,5 +1,5 @@
 from .answer import AnswerBlock
-from .dataviewer import MentoringDataViewerBlock
+from .dataexport import MentoringDataExportBlock
 from .quizz import QuizzBlock, QuizzTipBlock
 from .mentoring import MentoringBlock
 from .table import MentoringTableBlock, MentoringTableColumnBlock
