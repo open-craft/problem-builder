@@ -39,7 +39,7 @@ function MentoringBlock(runtime, element) {
                 data[child.name] = callIfExists(child, 'submit');
             }
         }
-        var handlerUrl = runtime.handlerUrl(element, 'submit')
+        var handlerUrl = runtime.handlerUrl(element, 'submit');
         $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
     });
 

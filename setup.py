@@ -2,6 +2,7 @@ from setuptools import setup
 
 BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
+    'mentoring-dataviewer = mentoring:MentoringDataViewerBlock',
     'mentoring-table = mentoring:MentoringTableBlock',
     'column = mentoring:MentoringTableColumnBlock',
     'answer = mentoring:AnswerBlock',

@@ -101,7 +101,7 @@ class AnswerBlock(XBlock):
         if not name:
             raise ValueError, 'AnswerBlock.name field need to be set to a non-null/empty value'
 
-        # TODO Use a random user id
+        # TODO Use anonymous_user_id
         student_id = self.scope_ids.user_id
 
         answer_data, created = Answer.objects.get_or_create(
