@@ -29,7 +29,8 @@ class AnswerBlock(XBlock):
     """
     student_input = Any(help="Last input submitted by the student", default="", scope=Scope.user_state)
     read_only = Boolean(help="Display as a read-only field", default=False, scope=Scope.content)
-    default_from = String(help="If specified, the name of the answer to get the default value from", default=None, scope=Scope.content)
+    default_from = String(help="If specified, the name of the answer to get the default value from",
+                          default=None, scope=Scope.content)
 
     def __init__(self, *args, **kwargs):
         super(AnswerBlock, self).__init__(*args, **kwargs)
