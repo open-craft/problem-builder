@@ -78,6 +78,6 @@ class MentoringDataExportBlock(XBlock):
         Sample scenarios which will be displayed in the workbench
         """
         return [
-            ("990) Intructors data export",
+            ("900) Intructors data export",
                                     load_resource('templates/xml/999_dataexport.xml')),
         ]

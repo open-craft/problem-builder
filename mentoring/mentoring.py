@@ -141,6 +141,10 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                                   load_resource('templates/xml/016_revising_your_entire_map.xml')),
             ("017) Checking the entire map",
                                   load_resource('templates/xml/017_checking_the_entire_map.xml')),
+            ("700) Change diary - Map",
+                                  load_resource('templates/xml/700_change_diary_map.xml')),
+            ("701) Change diary - Other fields",
+                                  load_resource('templates/xml/701_change_diary_other_fields.xml')),
             ("800) Help on revising immunity to change maps",
                                   load_resource('templates/xml/800_help_on_revising_immunity_to_change_maps.xml')),
         ]

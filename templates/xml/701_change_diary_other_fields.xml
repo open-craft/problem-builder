@@ -1,0 +1,37 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>My Change Diary - Other Fields</h3>
+        </html>
+
+        <html>
+            <h4>Your preliminary Pre-Goal Brainstorm</h4>
+        </html>
+
+        <answer name="pre-goal-brainstorm" read_only="true" />
+
+        <html>
+            <h4>Feedback from others on your possible goals:</h4>
+        </html>
+
+        <answer name="pre-goal-feedback" read_only="true" />
+
+        <html>
+            <h4>The importance of your improvement goal:</h4>
+        </html>
+
+        <answer name="improvement-goal-importance" read_only="true" />
+
+        <html>
+            <h4>Your past attempts at change:</h4>
+        </html>
+
+        <answer name="past-attempts" read_only="true" />
+
+        <html>
+            <h4>Your description of how your immune system works:</h4>
+        </html>
+
+        <answer name="immune-system-description" read_only="true" />
+    </mentoring>
+</vertical>

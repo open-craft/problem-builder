@@ -49,15 +49,6 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         # Allow to render within mentoring blocks, or outside
         return self.student_view(context)
 
-    @staticmethod
-    def workbench_scenarios():
-        """
-        Sample scenarios which will be displayed in the workbench
-        """
-        return [
-            ("900) Table - Test", load_resource('templates/xml/900_map.xml')),
-        ]
-
 
 class MentoringTableColumnBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     """
