@@ -3,7 +3,7 @@
   <div class="choices">
     {% for choice in custom_choices %}
     <span class="choice">
-      <label><input type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == '{{ choice.value }}' %} checked{% endif %}> {{ choice.content }}</label>
+      <label><input type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %}> {{ choice.content }}</label>
     </span>
     {% endfor %}
   </div>
