@@ -1,1 +1,4 @@
-<p>{{ self.content }}</p>
+{% if self.content %}<p>{{ self.content }}</p>{% endif %}
+{% for name, c in named_children %}
+{{c.body_html|safe}}
+{% endfor %}

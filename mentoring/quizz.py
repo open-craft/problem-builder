@@ -9,7 +9,7 @@ from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 
-from .utils import load_resource, render_template
+from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
 
 
 # Globals ###########################################################
@@ -97,16 +97,16 @@ class QuizzBlock(XBlock):
         log.debug(u'Received quizz submission: "%s"', submission)
 
         completed = True
-        formatted_tips_list = []
+        tips_fragments = []
         for tip in self.get_tips():
             completed = completed and tip.is_completed(submission)
             if tip.is_tip_displayed(submission):
-                formatted_tips_list.append(tip.render(submission))
+                tips_fragments.append(tip.render(submission))
 
-        if formatted_tips_list:
+        if tips_fragments:
             formatted_tips = render_template('templates/html/tip_group.html', {
                 'self': self,
-                'tips': formatted_tips_list,
+                'tips_fragments': tips_fragments,
                 'submission': submission,
                 'submission_display': self.get_submission_display(submission),
             })
@@ -143,7 +143,7 @@ class QuizzBlock(XBlock):
         return tips
 
 
-class QuizzTipBlock(XBlock):
+class QuizzTipBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     """
     Each quizz
     """
@@ -154,11 +154,14 @@ class QuizzTipBlock(XBlock):
     
     def render(self, submission):
         """
-        Returns a string containing the formatted tip
+        Returns a fragment containing the formatted tip
         """
-        return render_template('templates/html/tip.html', {
+        fragment, named_children = self.get_children_fragment({})
+        fragment.add_content(render_template('templates/html/tip.html', {
             'self': self,
-        })
+            'named_children': named_children,
+        }))
+        return fragment
 
     def is_completed(self, submission):
         return submission and submission not in self.reject_with_defaults
@@ -180,7 +183,7 @@ class QuizzTipBlock(XBlock):
     def reject_with_defaults(self):
         reject = commas_to_list(self.reject)
         log.debug(reject)
-        return reject
+        return reject or []
 
 
 class QuizzChoiceBlock(XBlock):
