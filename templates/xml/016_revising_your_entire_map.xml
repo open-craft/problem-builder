@@ -1,0 +1,71 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>Revising your entire map</h3>
+        </html>
+
+        <mentoring-table name="TODO-MAP with big assumptions" />
+
+        <html>
+            <p>This is your completed map. Congratulations on finishing it! At this point, you may wish to edit it to reflect the goals, commitments, and assumptions that you will be focusing on during the next few months. It's fairly common for your first draft map to have lots of goals, commitments, and assumptions, but when we move into the experiment phase, it can be helpful to focus only one, single, coherent story. You may also want to review the extra tips in the "Help on Revising Immunity to Change Maps" section (TODO-LINK). You are welcome to edit your map here. You will not lose your original map.</p>
+
+            <h4>Improvement goal:</h4>
+        </html>
+
+        <answer name="improvement-goal" read_only="true" />
+
+        <html>
+            <p>Revise here:</p>
+        </html>
+ 
+        <answer name="improvement-goal-revised" />
+
+        <html>
+            <h4>Doing / Not Doing Instead:</h4>
+        </html>
+
+        <answer name="doing-not-doing-instead" read_only="true" />
+
+        <html>
+            <p>Revise here:</p>
+        </html>
+ 
+        <answer name="doing-not-doing-instead-revised" />
+
+        <html>
+            <h4>Worry box:</h4>
+        </html>
+
+        <answer name="worry-box" read_only="true" />
+
+        <html>
+            <p>Revise here:</p>
+        </html>
+ 
+        <answer name="worry-box-revised" />
+
+        <html>
+            <h4>Hidden commitments:</h4>
+        </html>
+
+        <answer name="hidden-commitments" read_only="true" />
+
+        <html>
+            <p>Revise here:</p>
+        </html>
+ 
+        <answer name="hidden-commitments-revised" />
+
+        <html>
+            <h4>Big assumptions:</h4>
+        </html>
+
+        <answer name="big-assumptions" read_only="true" />
+
+        <html>
+            <p>Revise here:</p>
+        </html>
+ 
+        <answer name="big-assumptions-revised" />
+    </mentoring>
+</vertical>

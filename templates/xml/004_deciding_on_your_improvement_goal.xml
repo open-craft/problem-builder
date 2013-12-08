@@ -2,13 +2,13 @@
     <mentoring>
         <html>
             <h3>Deciding on your improvement goal</h3>
-            <p>Now it's time to make your decision on which improvement goal you will pursue.</p>
-            <h4>(1) Write your goal in a sentence or phrase.</h4>
+            <p>Now it's time to make your decision on which Improvement Goal you will pursue. If you wish to begin by reviewing your pre-goal brainstorm work, you can TODO-LINK (instructions on how to access the Diary area).</p>
+            <p>(1) Write your goal in a sentence or phrase. Begin with "I am committed to getting better at&#x2026;" and complete the sentence.</p>
         </html>
         <answer name="improvement-goal" />
 
         <html>
-            <h4>(2) Say why this goal is important.</h4>
+            <p>(2) Explain why this goal is important to you. It may seem odd that we are asking you to explain your goal. But what you choose for your Improvement Goal is a crucial part of this process because the entire course hinges on it. No matter how powerful the immunity-to-change process may be, if you are working with a goal that you haven't fully thought through or is not highly important to you, your whole experience is likely to be much weaker.</p>
         </html>
         <answer name="improvement-goal-importance" />
     </mentoring>

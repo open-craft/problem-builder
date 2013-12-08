@@ -1,0 +1,32 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>Your Immune System</h3>
+            <p>Now, let's take a look at the picture that is emerging in your map. It is a picture of your immune system:</p>
+        </html>
+
+        <mentoring-table name="TODO-MAP" />
+
+        <html>
+            <p>The arrows you see in your map represent two powerful forces working in opposition. Each force is generating lots of energy, with the net effect of keeping you in the exact same place: immune to change. The arrows suggest there is a single "system" at work across the three columns. We call this system an "immune system" because we believe the mind, like the body, has an immune system &#x2014; an invisible, ceaseless dynamic that exists for one purpose: to keep us out of trouble, to protect us, even to save our lives. However, our immune systems &#x2014; physical or mental &#x2014; can still get us in trouble, even when they are working on our behalf. When the immune system is in error, when it sees a danger that is not there, it will go to work "protecting" us from the very thing we may need in order to thrive.</p>
+            <p>Now, describe how your own immune system is working both to protect you from and danger AND is simultaneously preventing you from making progress on your Improvement Goal.</p>
+        </html>
+
+        <answer name="immune-system-description" />
+
+        <quizz name="immune-system-described" type="yes-maybenot-understand">
+            <question>Were you able to describe how your own immune system is working?</question>
+            <tip reject="maybenot">
+                <html>
+                    <p>Your entries in column 3 should show you why simply trying to change your column 2 behaviors (your "doing/not doing insteads") doesn't work. You can't just will yourself to change your behavior and make progress on your Improvement Goal, because the more you do change, the more uncomfortable you will actually get. It is as if you are sitting behind the wheel of a car with your right foot on the gas. Your right foot is working on your Improvement Goal. You step on the gas, trying to speed up, to get more momentum going in the direction you'd like to be moving. You step on the gas even harder. The car engine is revving. The car is even shaking as it holds this increased force. But the car isn't actually going anywhere. Why?</p>
+                    <p>The car isn't going anywhere because your left foot is on the brake. The harder your right foot presses on the gas (by making plans and resolutions to go to the gym), the harder your left foot steps on the brake. The foot on the brake is working to make sure you don't take yourself into the dangerous territory where your fears and worries live.</p>
+                </html>
+            </tip>
+            <tip reject="understand">Your Improvement Goal is how you pull in one direction. Your Hidden Commitments show you how you also pull in the opposite direction. Your immune system shows you how you have been working very hard to move in both directions at the same time. Can you describe in your own words how your own specific immune system is working using your column 1 goal and your Hidden Commitments?</tip>
+        </quizz>
+
+        <message type="completed">
+            Great! You have indicated that you can see and describe how your immune system functions to protect you from danger AND is also preventing you from making progress on your Improvement Goal. You are ready to move on to the next step.
+        </message>
+    </mentoring>
+</vertical>

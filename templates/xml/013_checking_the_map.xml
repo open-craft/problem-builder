@@ -1,0 +1,37 @@
+<vertical>
+    <mentoring>
+        <html>
+            <h3>Checking the map</h3>
+            <p>Let's make sure your entries so far meet the criteria for a successful map. Here is your current map:</p>
+        </html>
+
+        <mentoring-table name="TODO-MAP" />
+
+        <quizz name="map-interesting" type="yes-maybenot-understand">
+            <question>Does this map look a least a little bit interesting to you?</question>
+            <tip reject="maybenot">Identifying your own Hidden Commitments provides you with a picture of your personal immunity to change. At this point, you should have arrived at something that intrigues you because it sheds new light on the struggles you have been having in making progress on your Improvement Goal. Understanding your immune system should help you better understand how and why you get stuck. If you are not intrigued, it might be that you have misunderstood some aspects of the directions for how to make your immunity map. Or, maybe you understood, but need to reflect more deeply to see if there are new insights you could come to that would be more interesting for you to consider.</tip>
+            <tip reject="understand">Does your map help you understand yourself?  Does it get and keep your attention?  Can you see why and how you have been struggling to change?</tip>
+        </quizz>
+
+        <quizz name="map-powerful" type="rating-understand" low="Least" high="Most">
+            <question>Does this map, as a whole, feel powerful to you?</question>
+            <tip reject="1,2,3">If your map doesn't yet feel powerful to you, we suggest you do some more reflection to see if you can increase its power. Our immune systems, when they are functioning, can be enormously powerful because they show us how and why we may be spending a great deal of energy keeping things exactly the way they are. We are spending a great deal of energy to change nothing. If that is the case, there is very likely a powerful dynamic in play. Seeing that dynamic clearly allows us a much better chance of altering it. If the immune system you have sketched across your first three columns does not feel powerful to you, it might be that you have misunderstood some aspects of the directions for how to make your immunity map. Or, maybe you understood but need to reflect more deeply to see if there are new insights you could come to that would be more interesting for you to consider.</tip>
+            <tip reject="understand">Does seeing your map (your immunity to change) have a strong effect on you?  Does it show you how your immune system has been influencing you, controlling you?</tip>
+        </quizz>
+
+        <quizz name="map-explore-more" type="rating-understand" low="Least" high="Most">
+            <question>Is this a map that you'd like to spend more time exploring?</question>
+            <tip reject="1,2,3">Your Immunity-to-Change will form the basis for all the learning you will do in this online course. If you haven't diagnosed an immune system that you want to spend time exploring, you are going to have a hard time doing the work to overturn your immune system. At this point, you won't yet know how to solve your problem and overturn your immunity. That will come later. We can't get to the right solution if we don't truly understand the problem. We will come to a solution, but only after you have "gotten the problem right." If you aren't interested in the immunity you have sketched out so far, we would advise you to spend some more time with your map until you have a picture of an immune system that you would like to explore further to eventually solve. You might even consider starting over again from the beginning.</tip>
+            <tip reject="understand">Would you like to learn more about your immune system?  In this course, you will learn more about why you have this immune system. You will learn more about how your immune system has been working. And you will learn more about how you can change your immune system.</tip>
+        </quizz>
+
+        <quizz name="map-interesting-more-ideas" type="yes-no">
+            <question>Do you want some more ideas about how to revise your map to make it more interesting to you?</question>
+            <tip reject="yes">TODO-LINK to "Help on Revising Immunity to Change Maps."</tip>
+        </quizz>
+
+        <message type="completed">
+            Fantastic. You have indicated that you find your map to be interesting, powerful, and is something you'd like to explore more. You have also indicated that you do not wish to see additional resources on revising your map (TODO-LINK though you can access these resources at any time by clicking here). You have the chance to explore your map further in the next steps and throughout the course.
+        </message>
+    </mentoring>
+</vertical>
