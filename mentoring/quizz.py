@@ -69,7 +69,7 @@ class QuizzBlock(XBlock):
         return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
-        if self.type not in ('yes-no-unsure', 'rating-understand'):
+        if self.type not in ('yes-maybenot-understand', 'rating-understand'):
             raise ValueError, u'Invalid value for QuizzBlock.type: `{}`'.format(self.type)
 
         template_path = 'templates/html/quizz_{}.html'.format(self.type)
@@ -152,8 +152,8 @@ class QuizzTipBlock(XBlock):
         log.debug(reject)
         if reject is None:
             quizz = self.runtime.get_block(self.parent)
-            if quizz.type == 'yes-no-unsure':
-                return ['no', 'unsure']
+            if quizz.type == 'yes-maybenot-understand':
+                return ['maybenot', 'understand']
             elif quizz.type == 'rating-understand':
                 return ['1', '2', '3', 'understand']
         else:
