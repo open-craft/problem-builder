@@ -33,10 +33,14 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                                                              view_name='mentoring_table_view')
         f, header_frags = self.get_children_fragment(context, view_name='mentoring_table_header_view')
 
+        # TODO: What's the right way to link to images from CSS? This hack won't work in prod
+        bg_image_url = self.runtime.resources_url('mentoring/img/{}-bg.png'.format(self.type))
+
         fragment.add_content(render_template('templates/html/mentoring-table.html', {
             'self': self,
             'columns_frags': columns_frags,
             'header_frags': header_frags,
+            'bg_image_url': bg_image_url,
         }))
         fragment.add_css(load_resource('static/css/mentoring-table.css'))
         fragment.add_javascript(load_resource('static/js/vendor/jquery.shorten.js'))

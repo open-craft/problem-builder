@@ -1,3 +1,9 @@
+.mentoring-table {
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .mentoring-table table {
     width: 100%;
     border: 1px solid;
@@ -17,6 +23,10 @@
 }
 .mentoring-table.immunity-map-assumptions td {
     width: 20%;
+}
+
+.mentoring-table td:first-of-type > div {
+    min-height: 500px;
 }
 
 .mentoring-table h3, .mentoring-table h4 {
