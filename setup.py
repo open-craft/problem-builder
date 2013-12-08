@@ -8,6 +8,7 @@ BLOCKS = [
     'answer = mentoring:AnswerBlock',
     'quizz = mentoring:QuizzBlock',
     'tip = mentoring:QuizzTipBlock',
+    'choice = mentoring:QuizzChoiceBlock',
 ]
 
 setup(

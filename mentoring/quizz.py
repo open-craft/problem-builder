@@ -69,12 +69,13 @@ class QuizzBlock(XBlock):
         return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
-        if self.type not in ('yes-maybenot-understand', 'rating-understand'):
+        if self.type not in ('yes-maybenot-understand', 'rating-understand', 'choices'):
             raise ValueError, u'Invalid value for QuizzBlock.type: `{}`'.format(self.type)
 
         template_path = 'templates/html/quizz_{}.html'.format(self.type)
         html = render_template(template_path, {
             'self': self,
+            'custom_choices': self.custom_choices,
         })
 
         fragment = Fragment(html)
@@ -82,6 +83,15 @@ class QuizzBlock(XBlock):
         fragment.add_javascript(load_resource('static/js/quizz.js'))
         fragment.initialize_js('QuizzBlock')
         return fragment
+
+    @property
+    def custom_choices(self):
+        custom_choices = []
+        for child_id in self.children:  # pylint: disable=E1101
+            child = self.runtime.get_block(child_id)
+            if isinstance(child, QuizzChoiceBlock):
+                custom_choices.append(child)
+        return custom_choices
 
     def submit(self, submission):
         log.debug(u'Received quizz submission: "%s"', submission)
@@ -98,6 +108,7 @@ class QuizzBlock(XBlock):
                 'self': self,
                 'tips': formatted_tips_list,
                 'submission': submission,
+                'submission_display': self.get_submission_display(submission),
             })
         else:
             formatted_tips = u''
@@ -110,6 +121,15 @@ class QuizzBlock(XBlock):
         }
         log.debug(u'Quizz submission result: %s', result)
         return result
+
+    def get_submission_display(self, submission):
+        """
+        Get the human-readable version of a submission value
+        """
+        for choice in self.custom_choices:
+            if choice.value == submission:
+                return choice.content
+        return submission.upper()
 
     def get_tips(self):
         """
@@ -156,6 +176,10 @@ class QuizzTipBlock(XBlock):
                 return ['maybenot', 'understand']
             elif quizz.type == 'rating-understand':
                 return ['1', '2', '3', 'understand']
+            elif quizz.type == 'choice':
+                return []
+            else:
+                raise ValueError, 'Unknown quizz type, could not determine defaults'
         else:
             return reject
 
@@ -169,3 +193,10 @@ class QuizzTipBlock(XBlock):
                                if choice not in display]
         return display
 
+
+class QuizzChoiceBlock(XBlock):
+    """
+    Custom choice of an answer for a quizz
+    """
+    value = String(help="Value of the choice when selected", scope=Scope.content, default="")
+    content = String(help="Human-readable version of the choice value", scope=Scope.content, default="")
