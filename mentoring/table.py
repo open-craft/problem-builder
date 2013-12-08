@@ -48,7 +48,7 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         Sample scenarios which will be displayed in the workbench
         """
         return [
-            ("Mentoring - Table 1, Test", load_resource('templates/xml/900_map.xml')),
+            ("900) Table - Test", load_resource('templates/xml/900_map.xml')),
         ]
 
 
