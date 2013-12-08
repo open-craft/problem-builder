@@ -69,7 +69,7 @@ class QuizzBlock(XBlock):
         return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
-        if self.type not in ('yes-maybenot-understand', 'rating-understand', 'choices'):
+        if self.type not in ('rating', 'choices'):
             raise ValueError, u'Invalid value for QuizzBlock.type: `{}`'.format(self.type)
 
         template_path = 'templates/html/quizz_{}.html'.format(self.type)
@@ -167,23 +167,6 @@ class QuizzTipBlock(XBlock):
         return not submission or submission in self.display_with_defaults
 
     @property
-    def reject_with_defaults(self):
-        reject = commas_to_list(self.reject)
-        log.debug(reject)
-        if reject is None:
-            quizz = self.runtime.get_block(self.parent)
-            if quizz.type == 'yes-maybenot-understand':
-                return ['maybenot', 'understand']
-            elif quizz.type == 'rating-understand':
-                return ['1', '2', '3', 'understand']
-            elif quizz.type == 'choice':
-                return []
-            else:
-                raise ValueError, 'Unknown quizz type, could not determine defaults'
-        else:
-            return reject
-
-    @property
     def display_with_defaults(self):
         display = commas_to_list(self.display)
         if display is None:
@@ -192,6 +175,12 @@ class QuizzTipBlock(XBlock):
             display += [choice for choice in self.reject_with_defaults
                                if choice not in display]
         return display
+
+    @property
+    def reject_with_defaults(self):
+        reject = commas_to_list(self.reject)
+        log.debug(reject)
+        return reject
 
 
 class QuizzChoiceBlock(XBlock):

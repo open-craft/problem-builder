@@ -37,8 +37,10 @@
             <tip reject="understand">Room for improvement means that you have not yet come close to fully accomplishing your goal. You are not even close to having 100% success. You probably don't even have 50% success. You could not accomplish this change in a weekend. There is room for improvement if you have made a little progress but then gotten stuck in your efforts to change. Or, it maybe you reached your goal temporarily but were unable to sustain that improvement. Or, maybe you feel you have gotten stuck before you even began to make improvements.</tip>
         </quizz>
 
-        <quizz name="goal-important" type="rating-understand" low="Not at all important to me" high="Very important to me">
+        <quizz name="goal-important" type="rating" low="Not at all important to me" high="Very important to me">
             <question>How important is it to you?</question>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="1,2,3">The Immunity-to-Change process helps you uncover some of the core beliefs and assumptions you have held that are preventing you from making change. While the insights and changes that come from uncovering these beliefs and exploring them can be transformational, you will probably only be willing to undertake this work if your Improvement Goal is quite important you. If yours isn't, go back and identify one that feels very important to you. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">A goal is important if it is one that could make a big difference in helping you reach your goals in your work life or your personal life (or both). You are willing to work hard on it. You are interesting in spending some time and energy on it and doing some thinking about why you haven't been able to improve before now. For most people, an Improvement Goal does not focus only a small detail of your life (e.g., remembering to say thank you sometimes when the bus driver is nice to me) but on something that feels pretty central, something that deserves some serious attention (e.g., being more compassionate to my wife).</tip>
         </quizz>

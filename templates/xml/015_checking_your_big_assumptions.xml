@@ -37,8 +37,10 @@
             <tip reject="understand">Do your Big Assumptions limit what you do? Do they limit what you can choose?  Do they limit how you can think?  If I assume that a good mother must always put her children's wants and needs before her own, then I am limiting myself. I don't allow myself to wonder whether a good mother can meet both her needs and her children's needs. I don't allow myself to say no to my children if they want something that I do not want. I don't even see that I am making choices because my Big Assumptions tell me I must think and behave in these ways.</tip>
         </quizz>
 
-        <quizz name="big-assumptions-real" type="rating-understand" low="Least" high="Most">
+        <quizz name="big-assumptions-real" type="rating" low="Least" high="Most">
             <question>Do your Big Assumptions feel real to you?</question>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="1,2,3">Some of your Big Assumptions may feel undeniably true ("What do you mean, "an assumption"?  I think this is exactly the awful thing that would happen!"). Some assumptions you may know aren't really true (although you act and feel as if they were true); and some you may feel are only partially or sometimes true. Maybe there are some assumptions where you are unsure if they are true or not. All of these types of Big Assumptions should go in your 4th column, and will be valuable resources when you begin to do the work on overturning your immune system. But all of your Big Assumptions should feel like they have some degree of truth for you. Even if you can intellectually argue with yourself that your Big Assumption doesn't make sense, you should also be able to see that on some level, you are not convinced of that or you would be doing things differently than you are. If your Big Assumptions don't seem to feel real or true to you on some level, go back and revise them by TODO-LINK</tip>
             <tip reject="understand">Do some of your Big Assumptions feel like they are true?  Do they feel like they are not assumptions, but are just facts?  Is it hard to imagine that they might not be true?  That you could change your mind about any (or all) of them? Then your Big Assumptions feel real to you.</tip>
         </quizz>
