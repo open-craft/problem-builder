@@ -129,7 +129,7 @@ class QuizzBlock(XBlock):
         for choice in self.custom_choices:
             if choice.value == submission:
                 return choice.content
-        return submission.upper()
+        return submission
 
     def get_tips(self):
         """
