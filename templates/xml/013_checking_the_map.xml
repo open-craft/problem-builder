@@ -7,8 +7,12 @@
 
         <mentoring-table name="TODO-MAP" />
 
-        <quizz name="map-interesting" type="yes-maybenot-understand">
+        <quizz name="map-interesting" type="choices">
             <question>Does this map look a least a little bit interesting to you?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">Identifying your own Hidden Commitments provides you with a picture of your personal immunity to change. At this point, you should have arrived at something that intrigues you because it sheds new light on the struggles you have been having in making progress on your Improvement Goal. Understanding your immune system should help you better understand how and why you get stuck. If you are not intrigued, it might be that you have misunderstood some aspects of the directions for how to make your immunity map. Or, maybe you understood, but need to reflect more deeply to see if there are new insights you could come to that would be more interesting for you to consider.</tip>
             <tip reject="understand">Does your map help you understand yourself?  Does it get and keep your attention?  Can you see why and how you have been struggling to change?</tip>
         </quizz>
@@ -25,8 +29,11 @@
             <tip reject="understand">Would you like to learn more about your immune system?  In this course, you will learn more about why you have this immune system. You will learn more about how your immune system has been working. And you will learn more about how you can change your immune system.</tip>
         </quizz>
 
-        <quizz name="map-interesting-more-ideas" type="yes-no">
+        <quizz name="map-interesting-more-ideas" type="choices">
             <question>Do you want some more ideas about how to revise your map to make it more interesting to you?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="no">No</choice>
+
             <tip reject="yes">TODO-LINK to "Help on Revising Immunity to Change Maps."</tip>
         </quizz>
 

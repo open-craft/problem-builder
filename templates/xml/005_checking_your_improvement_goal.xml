@@ -7,20 +7,32 @@
 
         <answer name="improvement-goal" read_only="true" />
 
-        <quizz name="goal-true" type="yes-maybenot-understand">
+        <quizz name="goal-true" type="choices">
             <question>Is this goal true for you?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">In the end, all the feedback you have gotten from others should not lead you to choose an Improvement Goal that does not also feel true and important to you. If you have chosen a goal that is based on what others want for you, but at the end of the day, it is not something you are really committed to for yourself, you are going to find it hard to have a powerful experience diagnosing and overturning your immunities. While we think the Immunity-to-Change technology is an amazing tool for people to use to make lasting change in their lives, you must put the tool to work. And the work is not easy. If your starting goal doesn't feel true for you, it is unlikely you will feel motivated enough to do the work necessary to make lasting change. We suggest you choose a new goal. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">If a goal is true for you, that means it is one that you genuinely feel in your own heart to be something that you want to improve. For example, maybe others have told you that you should get better at staying organized and meeting deadlines. The question is, do you really want that for yourself? Try to be as honest as you can about what you really want. Maybe you know that the reason you are disorganized and not meeting deadlines is because you hate your work. The goal that feels true to you would then be I am committed to getting better at finding a career I will love. What is in your heart?</tip>
         </quizz>
 
-        <quizz name="goal-implicate" type="yes-maybenot-understand">
+        <quizz name="goal-implicate" type="choices">
             <question>Does this goal implicate you?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">Since the Immunity-to-Change process focuses on your own growth and change, it is important to be clear about the ways you are hoping to change and improve. Your goal implicates you if it is clear that you will need to change in some way (not just that others need to shape up). If you don't have any control over your goal, it doesn't implicate you. If your goal is so vague that it isn't clear what about it you will need to change, it doesn't implicate you. For example, if you are thinking of a commitment such as "I am committed to everyone on my team being honest with each other," consider what you need to get better at to help your team be more honest. A commitment that implicates you might be, "I am committed to being more honest with my team members to encourage them to be more honest with me and each other." If your starting commitment doesn't make clear how you are implicated in the change you hope to see, go back and revise your goal before continuing. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">Your goal implicates you if it is clear that you must get better at something. Your goal should focus on something you can control. It should focus on something specific about yourself that you want to improve. If your goal is about changes you are hoping others will make, think about what your own role in that might be. For example, if you are thinking of a commitment such as, "I am committed to everyone in my team being honest with each other," consider what you need to get better at to help your team be more honest. A commitment that implicates you might be, "I am committed to being more honest with my team members to encourage them to be more honest with me and each other.</tip>
         </quizz>
 
-        <quizz name="goal-improvement" type="yes-maybenot-understand">
+        <quizz name="goal-improvement" type="choices">
             <question>Is there room for improvement?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">If you have already realized your goal or are quite close to realizing your goal, you are unlikely to have a powerful learning experience in this course. The Immunity-to-Change process is designed to help you uncover how you are stuck and unable to make change on an important goal. If you are not stuck in your progress toward a goal, go back and choose a new goal where there is lots of room for improvement. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">Room for improvement means that you have not yet come close to fully accomplishing your goal. You are not even close to having 100% success. You probably don't even have 50% success. You could not accomplish this change in a weekend. There is room for improvement if you have made a little progress but then gotten stuck in your efforts to change. Or, it maybe you reached your goal temporarily but were unable to sustain that improvement. Or, maybe you feel you have gotten stuck before you even began to make improvements.</tip>
         </quizz>

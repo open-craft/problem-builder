@@ -23,8 +23,10 @@
             </blockquote>
         </html>
 
-        <quizz name="display-common-hidden-commitments" type="yes-no">
+        <quizz name="display-common-hidden-commitments" type="choices">
             <question>You can enter your Hidden Commitments below, or you can view some common commitments first. Would you like to see a list of some of the most common Hidden Commitments?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="no">No</choice>
 
             <tip display="yes">
                 <html>

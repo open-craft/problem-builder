@@ -7,14 +7,22 @@
 
         <answer name="doing-not-doing-instead" read_only="true" />
 
-        <quizz name="doing-not-doing-behavior" type="yes-maybenot-understand">
+        <quizz name="doing-not-doing-behavior" type="choices">
             <question>Is each item you entered a behavior?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">You might have something in your list that isn't clearly a behavior, but instead is more like an inner state-something that is a description of a feeling or attitude you have. For example, you might have written something like "Don't like deadlines."  If so, you should be able to convert that entry easily into a behavior. Ask yourself how that inner experience show up as behavior. You might list: "I don't meet deadlines" or "I complain to my colleagues about the deadlines we have to meet."  When we get to column 3, it will make your work and learning much easier if you have been very specific and thorough in listing behaviors in column 2. If your list doesn't include a handful of behaviors that undermine your Improvement Goal, go back and revise that list to make it meet the criteria. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">Behaviors include what you do (your actions, what you say, as well as how you say or do things). Behaviors include whatever would be captured by a video camera filming you (with sound). Behaviors can also include what you say to yourself in your own head. For example, if you often silently tell yourself "Don't be selfish!" (and that self-talk undermines your column 1 Improvement Goal) you can list that as a behavior. If there are behaviors you should be doing to make progress on your column 1 Improvement Goal and you aren't currently or regularly doing them, you can list those too as examples of what you are "not doing."</tip>
         </quizz>
 
-        <quizz name="doing-not-doing-work-against" type="yes-maybenot-understand">
+        <quizz name="doing-not-doing-work-against" type="choices">
             <question>Do these behaviors work against achieving your goal?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">While it may be tempting to include all the things you are doing on behalf of your Improvement Goal, we aren't asking for that list. Just make as long and juicy a list as you can of the things you do and don't do that undermine your column 1 goal. This probably won't feel so good because you will feel like you are "telling on" yourself and admitting to all of the ways you are "naughty."  But as you'll see, this list of behaviors will be a very valuable resource to you in helping you learn something new and important about yourself. If your list of "doing/not doing insteads" isn't a list of a handful of behaviors that undermine your column 1, go back and revise that list to make it meets the criteria. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">Behaviors that work against achieving your goal are the things that you do that do not move your closer to your goal. Instead, they move you further away. For example, if my Improvement Goal is "to get better at listening to my employees," some behaviors that work against that might be:  "I don't ask my employees to tell me what they think. I do all the talking. When employees do talk, I often interrupt them."  All of those behaviors take me further away from my Improvement Goal.</tip>
         </quizz>
@@ -24,6 +32,7 @@
             <choice value="yes">Yes, I don't explain why</choice>
             <choice value="maybe">Maybe I do explain a little</choice>
             <choice value="understand">I don't understand</choice>
+
             <tip reject="maybe">It may be tempting to include all the reasons why you are doing things that run counter to your column 1 Improvement Goal and to start identifying how you could start making changes to your behavior. But please don't include these reasons. Just make as long and juicy a list as you can of the things you do and don't do that undermine your column 1 goal. This probably won't feel so good, because you will feel like you are "telling on" yourself and admitting to all of the ways you are "naughty."  But as you'll see, this list of behaviors will be a very valuable resource to you in helping you learn something new and important about yourself. If your list of "doing/not doing insteads" isn't a list of a handful of behaviors that undermine your column 1, go back and revise that list to make it meets the criteria. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">Explaining why you are doing these things means you are including the reasons for the things you do (or don't do) that undermine your column 1 Improvement Goal. For example, if my Improvement Goal is "to get better at taking care of myself," and I wrote in column 2 "I don't take enough time to relax at the end of the day," I should not include explanations about why I don't take enough time at the end of the day. We are sure you have good reasons!  But don't include them here.</tip>
         </quizz>
@@ -33,6 +42,7 @@
             <choice value="yes">Yes, I don't explain how I will change</choice>
             <choice value="maybe">Maybe I do explain a little</choice>
             <choice value="understand">I don't understand</choice>
+
             <tip reject="maybe">You may want to start explaining what you now plan to do to eliminate, stop, or cut out these behaviors. But that means that you're trying to engage in improvement by assuming you can just cut out your bad behaviors or just start doing new, more productive things. You are taking what we call a New Year's Resolution approach to change, assuming that when you know that what you are doing is "naughty," you can will yourself to make those changes. As with New Year's Resolutions, we find that this approach does not often lead to success. Maybe you have had that experience too?  Immunity to Change presents a different approach to change, so please put your attempts to start solving your problems on hold for a while longer. We're still getting a clear picture of the problem, and that is our focus for now. We think you'll find it worth the wait! If your list of "doing/not doing insteads" isn't a list of a handful of behaviors that undermine your column 1, go back and revise that list so that each entry meets the criteria. You can revise your work by TODO-LINK.</tip>
             <tip reject="understand">If you are explaining how you will change, you are coming up with ideas and plans for how to stop doing these "bad" behaviors. You are seeing that you are working against your goal, and you probably want to stop doing that!  But, we find that simply trying to change bad behaviors does not often lead to success for many people. Maybe you have had that experience too?  Immunity to Change presents a different approach to change, so please put don't start trying to solve your problems yet. We're still getting a clear picture of the problem, and that is our focus for now. We think you'll find it worth the wait!</tip>
         </quizz>

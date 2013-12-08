@@ -17,8 +17,10 @@
             </blockquote>
         </html>
 
-        <quizz name="list-common-worries" type="yes-no">
+        <quizz name="list-common-worries" type="choices">
             <question>You can enter your worries below, or you can view some common worries first. Would you like to see a list of some of the most common fears and worries people list?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="no">No</choice>
 
             <tip display="yes">
                 <html>

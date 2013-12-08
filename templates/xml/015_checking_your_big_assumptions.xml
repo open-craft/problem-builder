@@ -7,20 +7,32 @@
 
             <answer name="big-assumptions" read_only="true" />
 
-        <quizz name="big-assumptions-necessary" type="yes-maybenot-understand">
+        <quizz name="big-assumptions-necessary" type="choices">
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <question>Do your Big Assumptions make your column 3 commitments absolutely necessary?</question>
             <tip reject="maybenot">Your Big Assumptions should show why one or more of your Hidden Commitments feel absolutely necessary. Big Assumptions are beliefs about ourselves, others, or the world that provide the reasons why we are committed to things we have named in column 3. You should be able to follow your map backwards &#x2014; to see how the Big Assumptions make your third column commitments necessary; how the third column commitments lead to your second column behaviors; and how these behaviors undermine your column 1 goals. If your Big Assumptions don't explain why your Hidden Commitments are necessary, go back and revise your entry to make it meet the criteria by TODO-LINK</tip>
             <tip reject="understand">Big Assumptions are beliefs that lead us to hold tightly to our column 3 commitments. If I assume that if others don't always like me, then I am not a good person and cannot like myself (a Big Assumption), then I will stay committed to having everyone like me (a Hidden Commitment). In fact, I must have everyone like me so that I will never have to experience the possibility that I am not a good person or that I cannot like myself.</tip>
         </quizz>
 
-        <quizz name="big-assumptions-bad" type="yes-maybenot-understand">
+        <quizz name="big-assumptions-bad" type="choices">
             <question>Do your Big Assumptions have a "big time bad" conclusion for you?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">The world is bigger than what our Big Assumptions have allowed us to see. We could explore this bigger world and have more choices about how to live and behave, but we don't, because our Big Assumptions haven't let us. They warn us of the danger, the dire consequences, the catastrophe that awaits us if we don't live according to their rules. If at least some of your Big Assumptions don't suggest that some terrible fate awaits you if you violate your Hidden Commitments, go back and revise your entries to include that sense of danger by TODO-LINK</tip>
             <tip reject="understand">It would be much easier to change the beliefs and behaviors that work against our goals if we didn't worry that these changes might very likely lead to bad results. The bad results are the things we fear and worry about in column 3. And if we had to actually experience those bad results, then something even worse might happen!  At least some of your Big Assumptions should tell you what you believe that even worse thing would be.</tip>
         </quizz>
 
-        <quizz name="big-assumptions-contracted-world" type="yes-maybenot-understand">
+        <quizz name="big-assumptions-contracted-world" type="choices">
             <question>Do your Big Assumptions display a contracted world?</question>
+            <choice value="yes">Yes</choice>
+            <choice value="maybenot">Maybe not</choice>
+            <choice value="understand">I don't understand</choice>
+
             <tip reject="maybenot">Your Big Assumptions set clear limits on what you must do and what you must not do. That is, you should be able to see that your Big Assumptions are rules you have for how to live your life, rules you must always follow if you want to avoid danger and disaster and defeat. But you might also be able to see (at least hypothetically) that like any other rule, they could be broken. When we treat an assumption as if it is the absolute truth, we allow it to rule our actions. We allow it to shape everything we see. We don't consider or explore any other possibilities, and so it continues to hold enormous power over us. That is why it is a Big Assumption. But if and when we are able to name the Big Assumptions underlying our immunities to change, we are able to consider that they may not actually be 100% true, that they limit our choices, our view of what is possible. If you are having a hard time determining if your Big Assumptions do display a contracted world, you might ask someone else to look at them and see if he or she believes they are always and necessarily 100% accurate in his/her view.  If you don't have at least one Big Assumption that you can see might not be 100% true 100% of the time, see if you can identify others that you can see might feel true but also might not actually be true. You can go back and revise your entry by TODO-LINK</tip>
             <tip reject="understand">Do your Big Assumptions limit what you do? Do they limit what you can choose?  Do they limit how you can think?  If I assume that a good mother must always put her children's wants and needs before her own, then I am limiting myself. I don't allow myself to wonder whether a good mother can meet both her needs and her children's needs. I don't allow myself to say no to my children if they want something that I do not want. I don't even see that I am making choices because my Big Assumptions tell me I must think and behave in these ways.</tip>
         </quizz>
