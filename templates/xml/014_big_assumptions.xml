@@ -24,7 +24,30 @@
             <p>Please review your map so far, especially your Hidden Commitments, before entering your Big Assumptions.</p>
         </html>
 
-        <mentoring-table name="TODO-MAP" />
+        <mentoring-table type="immunity-map">
+            <column>
+                <header>Column 0: Pre-Goal Brainstorm</header>
+                <answer name="pre-goal-brainstorm2" />
+            </column>
+
+            <column>
+                <header>Column 1: My Improvement Goal</header>
+                <answer name="improvement-goal" />
+            </column>
+
+            <column>
+                <header>Column 2: Doing / Not Doing Instead</header>
+                <answer name="doing-not-doing-instead" />
+            </column>
+
+            <column>
+                <header>Column 3: My Hidden Commitments</header>
+                <html><h4>My Worry box</h4></html>
+                <answer name="worry-box" />
+                <html><h4>My Hidden Commitments</h4></html>
+                <answer name="hidden-commitments" />
+            </column>
+        </mentoring-table>
 
         <html>
             <p>Enter your Big Assumptions here.</p>

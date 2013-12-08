@@ -7,10 +7,16 @@
 
 .mentoring-table td,
 .mentoring-table th {
-    width: 25%;
     padding: 10px;
     vertical-align: top;
     border: 1px solid;
+}
+
+.mentoring-table.immunity-map td {
+    width: 25%;
+}
+.mentoring-table.immunity-map-assumptions td {
+    width: 20%;
 }
 
 .mentoring-table h3, .mentoring-table h4 {

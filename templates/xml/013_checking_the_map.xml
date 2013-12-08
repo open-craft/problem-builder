@@ -5,7 +5,30 @@
             <p>Let's make sure your entries so far meet the criteria for a successful map. Here is your current map:</p>
         </html>
 
-        <mentoring-table name="TODO-MAP" />
+        <mentoring-table type="immunity-map">
+            <column>
+                <header>Column 0: Pre-Goal Brainstorm</header>
+                <answer name="pre-goal-brainstorm2" />
+            </column>
+
+            <column>
+                <header>Column 1: My Improvement Goal</header>
+                <answer name="improvement-goal" />
+            </column>
+
+            <column>
+                <header>Column 2: Doing / Not Doing Instead</header>
+                <answer name="doing-not-doing-instead" />
+            </column>
+
+            <column>
+                <header>Column 3: My Hidden Commitments</header>
+                <html><h4>My Worry box</h4></html>
+                <answer name="worry-box" />
+                <html><h4>My Hidden Commitments</h4></html>
+                <answer name="hidden-commitments" />
+            </column>
+        </mentoring-table>
 
         <quizz name="map-interesting" type="choices">
             <question>Does this map look a least a little bit interesting to you?</question>

@@ -5,7 +5,7 @@
             <p>Now, let's take a look at the picture that is emerging in your map. It is a picture of your immune system:</p>
         </html>
 
-        <mentoring-table type="immunity-map1">
+        <mentoring-table type="immunity-map">
             <column>
                 <header>Column 0: Pre-Goal Brainstorm</header>
                 <answer name="pre-goal-brainstorm2" />
