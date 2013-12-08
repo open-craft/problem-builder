@@ -5,7 +5,8 @@
     border-collapse: collapse;
 }
 
-.mentoring-table td {
+.mentoring-table td,
+.mentoring-table th {
     width: 25%;
     padding: 10px;
     vertical-align: top;

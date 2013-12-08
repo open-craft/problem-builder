@@ -5,7 +5,30 @@
             <p>Now, let's take a look at the picture that is emerging in your map. It is a picture of your immune system:</p>
         </html>
 
-        <mentoring-table name="TODO-MAP" />
+        <mentoring-table type="immunity-map1">
+            <column>
+                <header>Column 0: Pre-Goal Brainstorm</header>
+                <answer name="pre-goal-brainstorm2" />
+            </column>
+
+            <column>
+                <header>Column 1: My Improvement Goal</header>
+                <answer name="improvement-goal" />
+            </column>
+
+            <column>
+                <header>Column 2: Doing / Not Doing Instead</header>
+                <answer name="doing-not-doing-instead" />
+            </column>
+
+            <column>
+                <header>Column 3: My Hidden Commitments</header>
+                <html><h4>My Worry box</h4></html>
+                <answer name="worry-box" />
+                <html><h4>My Hidden Commitments</h4></html>
+                <answer name="hidden-commitments" />
+            </column>
+        </mentoring-table>
 
         <html>
             <p>The arrows you see in your map represent two powerful forces working in opposition. Each force is generating lots of energy, with the net effect of keeping you in the exact same place: immune to change. The arrows suggest there is a single "system" at work across the three columns. We call this system an "immune system" because we believe the mind, like the body, has an immune system &#x2014; an invisible, ceaseless dynamic that exists for one purpose: to keep us out of trouble, to protect us, even to save our lives. However, our immune systems &#x2014; physical or mental &#x2014; can still get us in trouble, even when they are working on our behalf. When the immune system is in error, when it sees a danger that is not there, it will go to work "protecting" us from the very thing we may need in order to thrive.</p>

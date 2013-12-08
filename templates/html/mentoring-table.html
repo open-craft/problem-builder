@@ -1,7 +1,14 @@
 <div class="mentoring-table {{ self.type }}">
   <table>
+    {% if header_frags %}
+    <thead>
+      {% for name, c in header_frags %}
+      {{c.body_html|safe}}
+      {% endfor %}
+    </thead>
+    {% endif %}
     <tr>
-      {% for name, c in named_children %}
+      {% for name, c in columns_frags %}
       {{c.body_html|safe}}
       {% endfor %}
     </tr>

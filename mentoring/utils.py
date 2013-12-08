@@ -50,13 +50,36 @@ def list2csv(row):
 # Classes ###########################################################
 
 class XBlockWithChildrenFragmentsMixin(object):
-    def get_children_fragment(self, context, view_name='student_view'):
+    def get_children_fragment(self, context, view_name='student_view', instance_of=None,
+                              not_instance_of=None):
+        """
+        Returns a global fragment containing the resources used by the children views,
+        and a list of fragments, one per children
+
+        - `view_name` allows to select a specific view method on the children
+        - `instance_of` allows to only return fragments for children which are instances of 
+          the provided class
+        - `not_instance_of` allows to only return fragments for children which are *NOT* 
+          instances of the provided class
+        """
         fragment = Fragment()
         named_child_frags = []
         for child_id in self.children:  # pylint: disable=E1101
             child = self.runtime.get_block(child_id)
+            if instance_of is not None and not isinstance(child, instance_of):
+                continue
+            if not_instance_of is not None and isinstance(child, not_instance_of):
+                continue
             frag = self.runtime.render_child(child, view_name, context)
             fragment.add_frag_resources(frag)
             named_child_frags.append((child.name, frag))
         return fragment, named_child_frags
 
+    def children_view(self, context, view_name='children_view'):
+        """
+        Returns a fragment with the content of all the children's content, concatenated
+        """
+        fragment, named_children = self.get_children_fragment(context)
+        for name, child_fragment in named_children:
+            fragment.add_content(child_fragment.content)
+        return fragment

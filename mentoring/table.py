@@ -29,11 +29,14 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     has_children = True
 
     def student_view(self, context):
-        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_table_view')
+        fragment, columns_frags = self.get_children_fragment(context,
+                                                             view_name='mentoring_table_view')
+        f, header_frags = self.get_children_fragment(context, view_name='mentoring_table_header_view')
 
         fragment.add_content(render_template('templates/html/mentoring-table.html', {
             'self': self,
-            'named_children': named_children,
+            'columns_frags': columns_frags,
+            'header_frags': header_frags,
         }))
         fragment.add_css(load_resource('static/css/mentoring-table.css'))
         fragment.add_javascript(load_resource('static/js/vendor/jquery.shorten.js'))
@@ -41,6 +44,10 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         fragment.initialize_js('MentoringTableBlock')
 
         return fragment
+
+    def mentoring_view(self, context):
+        # Allow to render within mentoring blocks, or outside
+        return self.student_view(context)
 
     @staticmethod
     def workbench_scenarios():
@@ -56,6 +63,7 @@ class MentoringTableColumnBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     """
     Individual column of a mentoring table
     """
+    header = String(help="Header of the column", scope=Scope.content, default=None)
     has_children = True
 
     def student_view(self, context=None):  # pylint: disable=W0613
@@ -63,10 +71,45 @@ class MentoringTableColumnBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         return Fragment(u"<p>I can only appear inside mentoring-table blocks.</p>")
 
     def mentoring_table_view(self, context):
-        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_table_view')
+        """
+        The content of the column
+        """
+        fragment, named_children = self.get_children_fragment(context,
+                                              view_name='mentoring_table_view',
+                                              not_instance_of=MentoringTableColumnHeaderBlock)
         fragment.add_content(render_template('templates/html/mentoring-table-column.html', {
             'self': self,
             'named_children': named_children,
         }))
+        return fragment
+
+    def mentoring_table_header_view(self, context):
+        """
+        The content of the column's header
+        """
+        fragment, named_children = self.get_children_fragment(context,
+                                              view_name='mentoring_table_header_view',
+                                              instance_of=MentoringTableColumnHeaderBlock)
+        fragment.add_content(render_template('templates/html/mentoring-table-header.html', {
+            'self': self,
+            'named_children': named_children,
+        }))
+        return fragment
+
+
+class MentoringTableColumnHeaderBlock(XBlock, XBlockWithChildrenFragmentsMixin):
+    """
+    Header content for a given column
+    """
+    content = String(help="Body of the header", scope=Scope.content, default='')
+    has_children = True
+    
+    def student_view(self, context=None):  # pylint: disable=W0613
+        """Returns default student view."""
+        return Fragment(u"<p>I can only appear inside mentoring-table blocks.</p>")
+
+    def mentoring_table_header_view(self, context):
+        fragment = super(MentoringTableColumnHeaderBlock, self).children_view(context)
+        fragment.add_content(unicode(self.content))
         return fragment
 

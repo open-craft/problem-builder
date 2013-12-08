@@ -5,6 +5,7 @@ BLOCKS = [
     'mentoring-dataexport = mentoring:MentoringDataExportBlock',
     'mentoring-table = mentoring:MentoringTableBlock',
     'column = mentoring:MentoringTableColumnBlock',
+    'header = mentoring:MentoringTableColumnHeaderBlock',
     'answer = mentoring:AnswerBlock',
     'quizz = mentoring:QuizzBlock',
     'tip = mentoring:QuizzTipBlock',
