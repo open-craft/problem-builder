@@ -17,7 +17,7 @@
             <tip reject="understand">What we mean when we say that Hidden Commitments should follow from the fear is that they should include the fear somehow. They are commitments to prevent this fear from happening, so you should still be able to see the fear in them. An easy way to do this is to create a Hidden Commitment is to change the wording of your fear. For example, the fear "I worry that people will think I'm stupid" can easily be changed to the Hidden Commitment, "I am committed to not looking stupid."</tip>
         </quizz>
 
-        <quizz name="hidden-commitments-noble" type="choice">
+        <quizz name="hidden-commitments-noble" type="choices">
             <question>Do any of your Hidden Commitments sound "noble"?</question>
             <choice value="maybe">Maybe</choice>
             <choice value="no">No</choice>
