@@ -1,4 +1,14 @@
 
+Installing dependencies
+-----------------------
+
+Within the Python virtual environment you used to setup the XBlock workbench or the LMS, install the
+requirements:
+
+```
+$ pip install -r requirements.txt
+```
+
 Custom workbench settings
 -------------------------
 
