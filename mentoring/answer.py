@@ -86,10 +86,13 @@ class AnswerBlock(XBlock):
         Replicate data changes on the related Django model used for sharing of data accross XBlocks
         """
         super(AnswerBlock, self).save()
-        answer_data = self.get_model_object()
-        if answer_data.student_input != self.student_input and not self.read_only:
-            answer_data.student_input = self.student_input
-            answer_data.save()
+
+        # Only attempt to locate a model object for this block when the answer has a name
+        if self.name:
+            answer_data = self.get_model_object()
+            if answer_data.student_input != self.student_input and not self.read_only:
+                answer_data.student_input = self.student_input
+                answer_data.save()
 
     def get_model_object(self, name=None):
         """
