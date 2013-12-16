@@ -5,6 +5,8 @@
 
 import logging
 
+from lazy import lazy
+
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
@@ -27,22 +29,28 @@ class AnswerBlock(XBlock):
     Must be included as a child of a mentoring block. Answers are persisted as django model instances
     to make them searchable and referenceable across xblocks.
     """
-    student_input = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     read_only = Boolean(help="Display as a read-only field", default=False, scope=Scope.content)
     default_from = String(help="If specified, the name of the answer to get the default value from",
                           default=None, scope=Scope.content)
 
-    def __init__(self, *args, **kwargs):
-        super(AnswerBlock, self).__init__(*args, **kwargs)
+    @lazy
+    def student_input(self):
+        """
+        Use lazy property instead of XBlock field, as __init__() doesn't support 
+        overwriting field values
+        """
+        student_input = ''
 
         # Only attempt to locate a model object for this block when the answer has a name
         if self.name:
-            self.student_input = self.get_model_object().student_input
+            student_input = self.get_model_object().student_input
 
         # Default value can be set from another answer's current value
-        if not self.student_input and self.default_from:
-            self.student_input = self.get_model_object(name=self.default_from).student_input
-    
+        if not student_input and self.default_from:
+            student_input = self.get_model_object(name=self.default_from).student_input
+
+        return student_input
+
     def student_view(self, context=None):  # pylint: disable=W0613
         """Returns default student view."""
         return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
