@@ -6,7 +6,7 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import Any, Boolean, Scope, String
+from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
 
 from .models import Answer
@@ -27,7 +27,7 @@ class AnswerBlock(XBlock):
     Must be included as a child of a mentoring block. Answers are persisted as django model instances
     to make them searchable and referenceable across xblocks.
     """
-    student_input = Any(help="Last input submitted by the student", default="", scope=Scope.user_state)
+    student_input = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     read_only = Boolean(help="Display as a read-only field", default=False, scope=Scope.content)
     default_from = String(help="If specified, the name of the answer to get the default value from",
                           default=None, scope=Scope.content)
