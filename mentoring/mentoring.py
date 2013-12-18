@@ -6,7 +6,6 @@ import logging
 
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
-from xblock.fragment import Fragment
 
 from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
 
@@ -98,9 +97,6 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
             'completed': self.completed,
             'message': message,
         }
-
-    def studio_view(self, context):
-        return Fragment(u'Studio view body')
 
     @staticmethod
     def workbench_scenarios():
