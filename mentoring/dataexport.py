@@ -71,13 +71,3 @@ class MentoringDataExportBlock(XBlock):
             cur_col += 1
         if row:
             yield list2csv(row)
-
-    @staticmethod
-    def workbench_scenarios():
-        """
-        Sample scenarios which will be displayed in the workbench
-        """
-        return [
-            ("900) Intructors data export",
-                                    load_resource('templates/xml/999_dataexport.xml')),
-        ]

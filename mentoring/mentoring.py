@@ -3,6 +3,7 @@
 # Imports ###########################################################
 
 import logging
+import os
 
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
@@ -101,47 +102,18 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     @staticmethod
     def workbench_scenarios():
         """
-        Sample scenarios which will be displayed in the workbench
+        Scenarios displayed by the workbench. Load them from external (private) repository
         """
-        return [
-            ("001) Pre-goal brainstom",
-                                  load_resource('templates/xml/001_pre_goal_brainstorm.xml')),
-            ("002) Getting feedback",
-                                  load_resource('templates/xml/002_getting_feedback.xml')),
-            ("003) Reflecting on your feedback",
-                                  load_resource('templates/xml/003_reflecting_on_feedback.xml')),
-            ("004) Deciding on your improvement goal",
-                                  load_resource('templates/xml/004_deciding_on_your_improvement_goal.xml')),
-            ("005) Checking your improvement goal",
-                                  load_resource('templates/xml/005_checking_your_improvement_goal.xml')),
-            ("006) Past attempts at change",
-                                  load_resource('templates/xml/006_past_attempts_at_change.xml')),
-            ("007) Doing / not doing instead",
-                                  load_resource('templates/xml/007_doing_not_doing_instead.xml')),
-            ("008) Checking your doing / not doing instead",
-                                  load_resource('templates/xml/008_checking_your_doing_not_doing_instead.xml')),
-            ("009) Worry box",
-                                  load_resource('templates/xml/009_worry_box.xml')),
-            ("010) Hidden commitments",
-                                  load_resource('templates/xml/010_hidden_commitments.xml')),
-            ("011) Checking your hidden commitments",
-                                  load_resource('templates/xml/011_checking_your_hidden_commitments.xml')),
-            ("012) Your immune system",
-                                  load_resource('templates/xml/012_your_immune_system.xml')),
-            ("013) Checking the map",
-                                  load_resource('templates/xml/013_checking_the_map.xml')),
-            ("014) Big assumptions",
-                                  load_resource('templates/xml/014_big_assumptions.xml')),
-            ("015) Checking your big assumptions",
-                                  load_resource('templates/xml/015_checking_your_big_assumptions.xml')),
-            ("016) Revising your entire map",
-                                  load_resource('templates/xml/016_revising_your_entire_map.xml')),
-            ("017) Checking the entire map",
-                                  load_resource('templates/xml/017_checking_the_entire_map.xml')),
-            ("700) Change diary - Map",
-                                  load_resource('templates/xml/700_change_diary_map.xml')),
-            ("701) Change diary - Other fields",
-                                  load_resource('templates/xml/701_change_diary_other_fields.xml')),
-            ("800) Help on revising immunity to change maps",
-                                  load_resource('templates/xml/800_help_on_revising_immunity_to_change_maps.xml')),
-        ]
+        templates_path = 'templates/xml'
+        base_fullpath = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+        templates_fullpath = os.path.join(base_fullpath, templates_path)
+
+        scenarios = []
+        for template in os.listdir(templates_fullpath):
+            if not template.endswith('.xml'):
+                continue
+            title = template[:-4].replace('_', ' ').title()
+            template_path = os.path.join(templates_path, template)
+            scenarios.append((title, load_resource(template_path)))
+
+        return scenarios
