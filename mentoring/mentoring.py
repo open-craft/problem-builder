@@ -62,8 +62,9 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         fragment.add_javascript(load_resource('static/js/vendor/underscore-min.js'))
         fragment.add_javascript(load_resource('static/js/mentoring.js'))
 
+        # TODO-LMS-WORKAROUND: Use self.runtime.resources_url() when supported
         fragment.add_resource(load_resource('templates/html/mentoring_progress.html').format(
-                completed=self.runtime.resources_url('images/correct-icon.png')),
+                completed='/static/images/correct-icon.png'),
             "text/html")
 
         fragment.initialize_js('MentoringBlock')
