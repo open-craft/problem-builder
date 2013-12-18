@@ -113,7 +113,8 @@ class AnswerBlock(XBlock):
         if not name:
             raise ValueError, 'AnswerBlock.name field need to be set to a non-null/empty value'
 
-        student_id = self.runtime.anonymous_student_id
+        # TODO-WORKBENCH-WORKAROUND: Remove use of getattr(), used to work on both LMS & workbench
+        student_id = getattr(self.runtime, 'anonymous_student_id', 'student1')
 
         answer_data, created = Answer.objects.get_or_create(
             student_id=student_id,
