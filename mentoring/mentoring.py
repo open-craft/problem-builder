@@ -27,9 +27,20 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     student is a) provided mentoring advices and asked to alter his answer, or b) is given the
     ok to continue.
     """
-    attempted = Boolean(help="Has the student attempted this mentoring step?", default=False, scope=Scope.user_state)
-    completed = Boolean(help="Has the student completed this mentoring step?", default=False, scope=Scope.user_state)
-    completed_message = String(help="Message to display upon completion", scope=Scope.content, default="")
+    attempted = Boolean(help="Has the student attempted this mentoring step?",
+                        default=False, scope=Scope.user_state)
+    completed = Boolean(help="Has the student completed this mentoring step?",
+                        default=False, scope=Scope.user_state)
+    completed_message = String(help="Message to display upon completion",
+                               scope=Scope.content, default="")
+    next_step = String(help="url_name of the next step the student must complete (global to all blocks)",
+                       default='mentoring_first', scope=Scope.preferences)
+    followed_by = String(help="url_name of the step after the current mentoring block in workflow",
+                         default=None, scope=Scope.content)
+    url_name = String(help="Name of the current step, used for URL building",
+                      default='mentoring', scope=Scope.content)
+    enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
+                                 default=True, scope=Scope.content)
     has_children = True
 
     @classmethod
@@ -57,6 +68,7 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
+            'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
         fragment.add_css(load_resource('static/css/mentoring.css'))
         fragment.add_javascript(load_resource('static/js/vendor/underscore-min.js'))
@@ -70,6 +82,21 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         fragment.initialize_js('MentoringBlock')
 
         return fragment
+
+    @property
+    def has_missing_dependency(self):
+        """
+        Returns True if the student needs to complete another step before being able to complete
+        the current one, and False otherwise
+        """
+        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name)
+
+    @property
+    def next_step_url(self):
+        """
+        Returns the URL of the next step's page
+        """
+        return '/jump_to_id/{}'.format(self.next_step)
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
@@ -87,12 +114,19 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                 child.save()
                 completed = completed and child_result['completed']
 
-        self.completed = bool(completed)
-        if self.completed:
+        if completed:
             message = self.completed_message
         else:
             message = ''
 
+        if self.has_missing_dependency:
+            completed = False
+            message = 'You need to complete all previous steps before being able to complete '+\
+                      'the current one.'
+        elif completed and self.next_step == self.url_name:
+            self.next_step = self.followed_by
+
+        self.completed = bool(completed)
         return {
             'submitResults': submit_results,
             'completed': self.completed,

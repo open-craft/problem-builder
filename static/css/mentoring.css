@@ -1,3 +1,14 @@
-.messages {
+.mentoring .messages {
     margin-top: 10px;
+}
+
+.mentoring .warning {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px;
+    -moz-border-radius:.5em;
+    -webkit-border-radius:.5em;
+    border-radius:.5em;
+    color: #9F6000;
+    background-color: #FEEFB3;
 }
