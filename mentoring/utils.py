@@ -11,6 +11,7 @@ import unicodecsv
 from cStringIO import StringIO
 from django.template import Context, Template
 from xblock.fragment import Fragment
+from workbench.scenarios import add_xml_scenario
 
 
 # Globals ###########################################################
@@ -45,6 +46,37 @@ def list2csv(row):
     writer.writerow(row)
     f.seek(0)
     return f.read()
+
+def get_scenarios_from_path(scenarios_path, include_identifier=False):
+    """
+    Returns an array of (title, xmlcontent) from files contained in a specified directory,
+    formatted as expected for the return value of the workbench_scenarios() method
+    """
+    base_fullpath = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    scenarios_fullpath = os.path.join(base_fullpath, scenarios_path)
+
+    scenarios = []
+    for template in os.listdir(scenarios_fullpath):
+        if not template.endswith('.xml'):
+            continue
+        identifier = template[:-4]
+        title = identifier.replace('_', ' ').title()
+        template_path = os.path.join(scenarios_path, template)
+        if not include_identifier:
+            scenarios.append((title, load_resource(template_path)))
+        else:
+            scenarios.append((identifier, title, load_resource(template_path)))
+
+    return scenarios
+
+def load_scenarios_from_path(scenarios_path):
+    """
+    Load all xml files contained in a specified directory, as workbench scenarios
+    """
+    scenarios = get_scenarios_from_path(scenarios_path, include_identifier=True)
+    for identifier, title, xml_template in scenarios:
+        add_xml_scenario(identifier, title, xml_template)
+    return scenarios
 
 
 # Classes ###########################################################

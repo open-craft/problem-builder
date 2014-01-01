@@ -1,0 +1,9 @@
+<vertical>
+    <mentoring url_name="answer_edit_1" enforce_dependency="false">
+        <html>
+            <p>This should be displayed in the answer_edit scenario</p>
+        </html>
+
+        <answer name="answer_1" />
+    </mentoring>
+</vertical>

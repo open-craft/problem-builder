@@ -3,12 +3,12 @@
 # Imports ###########################################################
 
 import logging
-import os
 
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 
-from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
+from .utils import get_scenarios_from_path, load_resource, render_template, \
+                   XBlockWithChildrenFragmentsMixin
 
 
 # Globals ###########################################################
@@ -138,16 +138,4 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         """
         Scenarios displayed by the workbench. Load them from external (private) repository
         """
-        templates_path = 'templates/xml'
-        base_fullpath = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        templates_fullpath = os.path.join(base_fullpath, templates_path)
-
-        scenarios = []
-        for template in os.listdir(templates_fullpath):
-            if not template.endswith('.xml'):
-                continue
-            title = template[:-4].replace('_', ' ').title()
-            template_path = os.path.join(templates_path, template)
-            scenarios.append((title, load_resource(template_path)))
-
-        return scenarios
+        return get_scenarios_from_path('templates/xml')
