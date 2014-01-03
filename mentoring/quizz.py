@@ -103,15 +103,12 @@ class QuizzBlock(XBlock):
             if tip.is_tip_displayed(submission):
                 tips_fragments.append(tip.render(submission))
 
-        if tips_fragments:
-            formatted_tips = render_template('templates/html/tip_group.html', {
-                'self': self,
-                'tips_fragments': tips_fragments,
-                'submission': submission,
-                'submission_display': self.get_submission_display(submission),
-            })
-        else:
-            formatted_tips = u''
+        formatted_tips = render_template('templates/html/tip_group.html', {
+            'self': self,
+            'tips_fragments': tips_fragments,
+            'submission': submission,
+            'submission_display': self.get_submission_display(submission),
+        })
 
         self.student_choice = submission
         result = {
@@ -167,7 +164,7 @@ class QuizzTipBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         return submission and submission not in self.reject_with_defaults
 
     def is_tip_displayed(self, submission):
-        return not submission or submission in self.display_with_defaults
+        return submission in self.display_with_defaults
 
     @property
     def display_with_defaults(self):
