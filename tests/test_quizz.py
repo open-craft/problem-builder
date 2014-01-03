@@ -11,14 +11,8 @@ from mentoring.test_base import MentoringBaseTest
 class QuizzBlockTest(MentoringBaseTest):
 
     def test_quizz_choices_rating(self):
-        link = self.browser.find_element_by_link_text('Quizz 1')
-        link.click()
-
-        # Mentoring block
-        vertical = self.browser.find_element_by_css_selector('div.vertical')
-        mentoring = vertical.find_element_by_css_selector('div.mentoring')
-
         # Initial quizzes status
+        mentoring = self.go_to_page('Quizz 1')
         quizz1 = mentoring.find_element_by_css_selector('fieldset.choices')
         quizz2 = mentoring.find_element_by_css_selector('fieldset.rating')
         messages = mentoring.find_element_by_css_selector('.messages')

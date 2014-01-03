@@ -10,25 +10,16 @@ class AnswerBlockTest(MentoringBaseTest):
 
     def test_answer_edit(self):
         # Answer should initially be blank on all instances with the same answer name
-        link = self.browser.find_element_by_link_text('Answer Edit 2')
-        link.click()
-
-        mentoring = self.browser.find_element_by_css_selector('div.mentoring')
+        mentoring = self.go_to_page('Answer Edit 2')
         answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer1_bis.get_attribute('value'), '')
         self.assertEqual(answer1_readonly.text, '')
 
         # Another answer with the same name
-        self.browser.get(self.live_server_url)
-        link = self.browser.find_element_by_link_text('Answer Edit 1')
-        link.click()
+        mentoring = self.go_to_page('Answer Edit 1')
         header1 = self.browser.find_element_by_css_selector('h1')
         self.assertEqual(header1.text, 'XBlock: Answer Edit 1')
-
-        # Mentoring block
-        vertical = self.browser.find_element_by_css_selector('div.vertical')
-        mentoring = vertical.find_element_by_css_selector('div.mentoring')
 
         # Check <html> child
         p = mentoring.find_element_by_css_selector('div.xblock > p')
@@ -57,11 +48,7 @@ class AnswerBlockTest(MentoringBaseTest):
         self.assertTrue(progress.find_elements_by_css_selector('img'))
 
         # Answer content should show on a different instance with the same name
-        self.browser.get(self.live_server_url)
-        link = self.browser.find_element_by_link_text('Answer Edit 2')
-        link.click()
-
-        mentoring = self.browser.find_element_by_css_selector('div.mentoring')
+        mentoring = self.go_to_page('Answer Edit 2')
         answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer1_bis.get_attribute('value'), 'This is the answer')
