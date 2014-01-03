@@ -115,7 +115,7 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                 completed = completed and child_result['completed']
 
         if completed:
-            message = self.completed_message
+            message = u'<div type="completed_message">{}</div>'.format(self.completed_message)
         else:
             message = ''
 
