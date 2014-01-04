@@ -24,6 +24,9 @@
 .mentoring-table.immunity-map-assumptions td {
     width: 20%;
 }
+.mentoring-table.five-cols td {
+    width: 20%;
+}
 
 .mentoring-table td:first-of-type > div {
     min-height: 500px;
