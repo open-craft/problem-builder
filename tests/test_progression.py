@@ -19,6 +19,9 @@ class MentoringProgressionTest(MentoringBaseTest):
         self.assertEqual(warning_link.get_attribute('href'), link_href)
 
     def test_progression(self):
+        """
+        Mentoring blocks after the current step in the workflow should redirect user to current step
+        """
         # Initial - Step 1 ok, steps 2&3 redirect to step 1
         mentoring = self.go_to_page('Progression 1')
         self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))

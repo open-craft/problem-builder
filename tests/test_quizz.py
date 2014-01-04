@@ -11,6 +11,9 @@ from mentoring.test_base import MentoringBaseTest
 class QuizzBlockTest(MentoringBaseTest):
 
     def test_quizz_choices_rating(self):
+        """
+        Mentoring quizz should display tips according to user choice
+        """
         # Initial quizzes status
         mentoring = self.go_to_page('Quizz 1')
         quizz1 = mentoring.find_element_by_css_selector('fieldset.choices')
