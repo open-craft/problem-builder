@@ -114,7 +114,7 @@ class QuizzBlockTest(MentoringBaseTest):
         self.assertEqual(len(tips), 3)
         self.assertEqual(tips[0].text, 'To the question "Do you like this quizz?", you answered "Yes".\nGreat!')
         self.assertEqual(tips[1].text, 'To the question "How much do you rate this quizz?", you answered "4".\nI love good grades.')
-        self.assertEqual(tips[2].text, 'All is good now - congratulations!')
+        self.assertEqual(tips[2].text, 'Congratulations!\nAll is good now...') # Includes child <html>
         self.assertEqual(progress.text, '')
         self.assertTrue(progress.find_elements_by_css_selector('img'))
 

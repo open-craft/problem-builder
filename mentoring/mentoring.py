@@ -7,6 +7,7 @@ import logging
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 
+from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template, \
                    XBlockWithChildrenFragmentsMixin
 
@@ -31,8 +32,6 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                         default=False, scope=Scope.user_state)
     completed = Boolean(help="Has the student completed this mentoring step?",
                         default=False, scope=Scope.user_state)
-    completed_message = String(help="Message to display upon completion",
-                               scope=Scope.content, default="")
     next_step = String(help="url_name of the next step the student must complete (global to all blocks)",
                        default='mentoring_first', scope=Scope.preferences)
     followed_by = String(help="url_name of the step after the current mentoring block in workflow",
@@ -43,27 +42,9 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                                  default=True, scope=Scope.content)
     has_children = True
 
-    @classmethod
-    def parse_xml(cls, node, runtime, keys):
-        block = runtime.construct_xblock_from_class(cls, keys)
-
-        for child in node:
-            if child.tag == 'message':
-                if child.get('type') == 'completed':
-                    block.completed_message = child.text
-                else:
-                    raise ValueError, u'Invalid value for message type: `{}`'.format(child.get('type'))
-            else:
-                block.runtime.add_node_as_child(block, child)
-
-        for name, value in node.items():
-            if name in block.fields:
-                setattr(block, name, value)
-
-        return block
-
     def student_view(self, context):
-        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')
+        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
+                                                              not_instance_of=MentoringMessageBlock)
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
@@ -115,7 +96,7 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                 completed = completed and child_result['completed']
 
         if completed:
-            message = u'<div type="completed_message">{}</div>'.format(self.completed_message)
+            message = self.get_message_html('completed')
         else:
             message = ''
 
@@ -132,6 +113,19 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
             'completed': self.completed,
             'message': message,
         }
+
+    def get_message_fragment(self, message_type):
+        for child_id in self.children:  # pylint: disable=E1101
+            child = self.runtime.get_block(child_id)
+            if isinstance(child, MentoringMessageBlock) and child.type == message_type:
+                return self.runtime.render_child(child, 'mentoring_view', {})
+
+    def get_message_html(self, message_type):
+        fragment = self.get_message_fragment(message_type)
+        if fragment:
+            return fragment.body_html()
+        else:
+            return ''
 
     @staticmethod
     def workbench_scenarios():

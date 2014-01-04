@@ -8,6 +8,7 @@ BLOCKS = [
     'header = mentoring:MentoringTableColumnHeaderBlock',
     'answer = mentoring:AnswerBlock',
     'quizz = mentoring:QuizzBlock',
+    'message = mentoring:MentoringMessageBlock',
     'tip = mentoring:QuizzTipBlock',
     'choice = mentoring:QuizzChoiceBlock',
 ]

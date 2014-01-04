@@ -20,6 +20,9 @@
             <tip reject="notwant">Your loss!</tip>
         </quizz>
 
-        <message type="completed">All is good now - congratulations!</message>
+        <message type="completed">
+            All is good now...
+            <html><p>Congratulations!</p></html>
+        </message>
     </mentoring>
 </vertical>
