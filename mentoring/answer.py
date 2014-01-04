@@ -86,8 +86,12 @@ class AnswerBlock(XBlock):
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
             'student_input': self.student_input,
-            'completed': bool(self.student_input),
+            'completed': self.completed,
         }
+
+    @property
+    def completed(self):
+        return bool(self.read_only or self.student_input)
 
     def save(self):
         """

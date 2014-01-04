@@ -9,6 +9,9 @@ from mentoring.test_base import MentoringBaseTest
 class AnswerBlockTest(MentoringBaseTest):
 
     def test_answer_edit(self):
+        """
+        Answers of same name should share value accross blocks
+        """
         # Answer should initially be blank on all instances with the same answer name
         mentoring = self.go_to_page('Answer Edit 2')
         answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
@@ -53,3 +56,21 @@ class AnswerBlockTest(MentoringBaseTest):
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer1_bis.get_attribute('value'), 'This is the answer')
         self.assertEqual(answer1_readonly.text, 'This is the answer')
+
+    def test_answer_blank_read_only(self):
+        """
+        Read-only answers should not prevent completion when blank
+        """
+        # Check initial state
+        mentoring = self.go_to_page('Answer Blank Read Only')
+        answer = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
+        self.assertEqual(answer.text, '')
+        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
+        self.assertEqual(progress.text, '(Not completed)')
+
+        # Submit should allow to complete
+        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit.click()
+        self.assertEqual(progress.text, '')
+        self.assertTrue(progress.find_elements_by_css_selector('img'))
+
