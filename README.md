@@ -102,8 +102,8 @@ Second XBlock instance:
 Installing dependencies
 -----------------------
 
-Within the Python virtual environment you used to setup the XBlock workbench or the LMS, install the
-requirements:
+From the xblock-mentoring repository, and within the Python virtual environment you used to setup the XBlock
+workbench or the LMS, install the requirements:
 
 ```bash
 $ pip install -r requirements.txt
@@ -119,7 +119,8 @@ $ pip install -e .
 Custom workbench settings
 -------------------------
 
-In the main XBlock repository, create the following configuration file in `workbench/settings_mentoring.py`:
+In the main XBlock repository, create the following configuration file in `workbench/settings_mentoring.py`
+in the XBlock repository:
 
 ```python
 from settings import *
@@ -128,21 +129,11 @@ INSTALLED_APPS += ('mentoring',)
 DATABASES['default']['NAME'] = 'workbench.sqlite'
 ```
 
-Adding custom scenarios in the workbench
-----------------------------------------
-
-Create the `templates/xml` and add XML scenarios to it - all files with the `*.xml` extension will be
-automatically loaded by the workbench:
-
-```bash
-$ mkdir templates/xml
-$ cat > templates/xml/my_mentoring_scenario.xml
-```
-
 Starting the workbench
 ----------------------
 
-Because this XBlock uses a Django model, you need to sync the database before starting the workbench:
+Because this XBlock uses a Django model, you need to sync the database before starting the workbench. Run this
+from the XBlock repository root:
 
 ```bash
 $ ./manage.py syncdb --settings=workbench.settings_mentoring
@@ -159,7 +150,7 @@ Access it at http://localhost:8000/
 Running tests
 -------------
 
-Run with the following command:
+From the xblock-mentoring repository root, run the tests with the following command:
 
 ```bash
 $ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" PYTHONPATH=".:/path/to/xblock" nosetests --with-django
@@ -167,3 +158,16 @@ $ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" PYTHONPATH=".:/path/to/x
 
 `/path/to/xblock` is the path to the XBlock main repository (the one containing the workbench)
  
+Adding custom scenarios to the workbench
+----------------------------------------
+
+Within the xblock-mentoring repository, create the `templates/xml` and add XML scenarios to it - all files with
+the `*.xml` extension will be automatically loaded by the workbench:
+
+```bash
+$ mkdir templates/xml
+$ cat > templates/xml/my_mentoring_scenario.xml
+```
+
+Restart the workbench to take the new scenarios into account.
+
