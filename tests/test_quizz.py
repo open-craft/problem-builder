@@ -106,6 +106,7 @@ class QuizzBlockTest(MentoringBaseTest):
         quizz1_choices_input[1].click()
         submit.click()
 
+        time.sleep(1)
         tips = messages.find_elements_by_xpath('./*')
         self.assertEqual(len(tips), 2)
         self.assertEqual(tips[0].text, 'To the question "Do you like this quizz?", you answered "Maybe not".\nAh, damn.')
