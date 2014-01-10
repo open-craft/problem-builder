@@ -76,16 +76,17 @@ def get_scenarios_from_path(scenarios_path, include_identifier=False):
     scenarios_fullpath = os.path.join(base_fullpath, scenarios_path)
 
     scenarios = []
-    for template in os.listdir(scenarios_fullpath):
-        if not template.endswith('.xml'):
-            continue
-        identifier = template[:-4]
-        title = identifier.replace('_', ' ').title()
-        template_path = os.path.join(scenarios_path, template)
-        if not include_identifier:
-            scenarios.append((title, load_resource(template_path)))
-        else:
-            scenarios.append((identifier, title, load_resource(template_path)))
+    if os.path.isdir(scenarios_fullpath):
+        for template in os.listdir(scenarios_fullpath):
+            if not template.endswith('.xml'):
+                continue
+            identifier = template[:-4]
+            title = identifier.replace('_', ' ').title()
+            template_path = os.path.join(scenarios_path, template)
+            if not include_identifier:
+                scenarios.append((title, load_resource(template_path)))
+            else:
+                scenarios.append((identifier, title, load_resource(template_path)))
 
     return scenarios
 

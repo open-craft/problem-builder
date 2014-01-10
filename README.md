@@ -128,6 +128,17 @@ INSTALLED_APPS += ('mentoring',)
 DATABASES['default']['NAME'] = 'workbench.sqlite'
 ```
 
+Adding custom scenarios in the workbench
+----------------------------------------
+
+Create the `templates/xml` and add XML scenarios to it - all files with the `*.xml` extension will be
+automatically loaded by the workbench:
+
+```bash
+$ mkdir templates/xml
+$ cat > templates/xml/my_mentoring_scenario.xml
+```
+
 Starting the workbench
 ----------------------
 
