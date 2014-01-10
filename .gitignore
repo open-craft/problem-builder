@@ -2,3 +2,4 @@
 *.pyc
 xblock_mentoring.egg-info
 workbench.sqlite
+templates/xml
