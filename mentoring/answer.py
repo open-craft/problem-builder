@@ -59,11 +59,11 @@ class AnswerBlock(XBlock):
         Use lazy property instead of XBlock field, as __init__() doesn't support 
         overwriting field values
         """
-        student_input = ''
-
         # Only attempt to locate a model object for this block when the answer has a name
-        if self.name:
-            student_input = self.get_model_object().student_input
+        if not self.name:
+            return ''
+
+        student_input = self.get_model_object().student_input
 
         # Default value can be set from another answer's current value
         if not student_input and self.default_from:
