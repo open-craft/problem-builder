@@ -40,7 +40,7 @@ class Answer(models.Model):
 
     name = models.CharField(max_length=50, db_index=True)
     student_id = models.CharField(max_length=20, db_index=True)
-    student_input = models.CharField(max_length=10000, blank=True, default='')
+    student_input = models.TextField(blank=True, default='')
     created_on = models.DateTimeField('created on', auto_now_add=True)
     modified_on = models.DateTimeField('modified on', auto_now=True)
 

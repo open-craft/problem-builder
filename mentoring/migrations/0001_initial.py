@@ -11,9 +11,9 @@ class Migration(SchemaMigration):
         # Adding model 'Answer'
         db.create_table('mentoring_answer', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=20, db_index=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=50, db_index=True)),
             ('student_id', self.gf('django.db.models.fields.CharField')(max_length=20, db_index=True)),
-            ('student_input', self.gf('django.db.models.fields.CharField')(max_length=10000)),
+            ('student_input', self.gf('django.db.models.fields.TextField')(default='', blank=True)),
             ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('modified_on', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
         ))
@@ -37,9 +37,9 @@ class Migration(SchemaMigration):
             'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'modified_on': ('django.db.models.fields.DateTimeField', [], {'auto_now': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '20', 'db_index': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'db_index': 'True'}),
             'student_id': ('django.db.models.fields.CharField', [], {'max_length': '20', 'db_index': 'True'}),
-            'student_input': ('django.db.models.fields.CharField', [], {'max_length': '10000'})
+            'student_input': ('django.db.models.fields.TextField', [], {'default': "''", 'blank': 'True'})
         }
     }
 
