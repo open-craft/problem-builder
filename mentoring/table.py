@@ -27,7 +27,6 @@ import logging
 
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 
 from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
 
@@ -82,10 +81,6 @@ class MentoringTableColumnBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     header = String(help="Header of the column", scope=Scope.content, default=None)
     has_children = True
 
-    def student_view(self, context=None):  # pylint: disable=W0613
-        """Returns default student view."""
-        return Fragment(u"<p>I can only appear inside mentoring-table blocks.</p>")
-
     def mentoring_table_view(self, context):
         """
         The content of the column
@@ -120,10 +115,6 @@ class MentoringTableColumnHeaderBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     content = String(help="Body of the header", scope=Scope.content, default='')
     has_children = True
     
-    def student_view(self, context=None):  # pylint: disable=W0613
-        """Returns default student view."""
-        return Fragment(u"<p>I can only appear inside mentoring-table blocks.</p>")
-
     def mentoring_table_header_view(self, context):
         fragment = super(MentoringTableColumnHeaderBlock, self).children_view(context)
         fragment.add_content(unicode(self.content))

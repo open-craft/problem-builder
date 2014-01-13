@@ -27,7 +27,6 @@ import logging
 
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 
 from .utils import render_template, XBlockWithChildrenFragmentsMixin
 
@@ -47,10 +46,6 @@ class MentoringMessageBlock(XBlock, XBlockWithChildrenFragmentsMixin):
     content = String(help="Message to display upon completion", scope=Scope.content, default="")
     type = String(help="Type of message", scope=Scope.content, default="completed")
     has_children = True
-
-    def student_view(self, context=None):  # pylint: disable=W0613
-        """Returns default student view."""
-        return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
 
     def mentoring_view(self, context=None):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')

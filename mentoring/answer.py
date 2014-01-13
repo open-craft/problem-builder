@@ -71,10 +71,6 @@ class AnswerBlock(XBlock):
 
         return student_input
 
-    def student_view(self, context=None):  # pylint: disable=W0613
-        """Returns default student view."""
-        return Fragment(u"<p>I can only appear inside mentoring blocks.</p>")
-
     def mentoring_view(self, context=None):
         if not self.read_only:
             html = render_template('templates/html/answer_editable.html', {
