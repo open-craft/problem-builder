@@ -38,8 +38,13 @@ class Answer(models.Model):
         app_label = 'mentoring'
         unique_together = (('student_id', 'name'),)
 
-    name = models.CharField(max_length=20, db_index=True)
+    name = models.CharField(max_length=50, db_index=True)
     student_id = models.CharField(max_length=20, db_index=True)
     student_input = models.CharField(max_length=10000, blank=True, default='')
     created_on = models.DateTimeField('created on', auto_now_add=True)
     modified_on = models.DateTimeField('modified on', auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Force validation of max_length
+        self.full_clean()
+        super(Answer, self).save(*args, **kwargs)
