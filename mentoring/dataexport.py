@@ -25,6 +25,7 @@
 
 import logging
 
+from itertools import groupby
 from webob import Response
 from xblock.core import XBlock
 from xblock.fragment import Fragment
@@ -75,20 +76,22 @@ class MentoringDataExportBlock(XBlock):
         # Header line
         yield list2csv([u'student_id'] + list(answers_names))
 
-        row = []
-        cur_student_id = None
-        cur_col = None
-        for answer in answers:
-            if answer.student_id != cur_student_id:
+        if answers_names:
+            for k, student_answers in groupby(answers, lambda x: x.student_id):
+                row = []
+                next_answer_idx = 0
+                for answer in student_answers:
+                    if not row:
+                        row = [answer.student_id]
+
+                    while answer.name != answers_names[next_answer_idx]:
+                        # Still add answer row to CSV when they don't exist in DB
+                        row.append('')
+                        next_answer_idx += 1
+
+                    row.append(answer.student_input)
+                    next_answer_idx += 1
+
                 if row:
                     yield list2csv(row)
-                row = [answer.student_id]
-                cur_student_id = answer.student_id
-                cur_col = 0
-            while answer.name != answers_names[cur_col]:
-                row.append('')
-                cur_col += 1
-            row.append(answer.student_input)
-            cur_col += 1
-        if row:
-            yield list2csv(row)
+
