@@ -7,10 +7,12 @@
       {% endfor %}
     </thead>
     {% endif %}
-    <tr>
-      {% for name, c in columns_frags %}
-      {{c.body_html|safe}}
-      {% endfor %}
-    </tr>
+    <tbody>
+      <tr>
+        {% for name, c in columns_frags %}
+        {{c.body_html|safe}}
+        {% endfor %}
+      </tr>
+    </tbody>
   </table>
 </div>
