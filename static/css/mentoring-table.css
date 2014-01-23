@@ -28,7 +28,7 @@
     width: 20%;
 }
 
-.mentoring-table td:first-of-type > div {
+.mentoring-table .mentoring-column {
     min-height: 500px;
 }
 
