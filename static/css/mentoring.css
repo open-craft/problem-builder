@@ -12,3 +12,10 @@
     color: #9F6000;
     background-color: #FEEFB3;
 }
+
+.mentoring .bold {
+    font-weight: bold;
+}
+.mentoring .italic {
+    font-style: italic;
+}
