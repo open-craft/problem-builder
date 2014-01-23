@@ -32,7 +32,7 @@
     min-height: 500px;
 }
 
-.mentoring-table h3, .mentoring-table h4 {
+.mentoring-table .hd-lvl1, .mentoring-table .hd-lvl2 {
     margin: 0 0 5px;
 }
 

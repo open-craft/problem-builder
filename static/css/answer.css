@@ -1,4 +1,4 @@
-blockquote.answer.read_only {
+.mentoring .answer.read_only {
     background: #f9f9f9;
     border-left: 10px solid #ccc;
     margin: 1.5em 10px;
@@ -6,7 +6,7 @@ blockquote.answer.read_only {
     quotes: "\201C""\201D""\2018""\2019";
 }
 
-blockquote.answer.read_only:before {
+.mentoring .answer.read_only:before {
     color: #ccc;
     content: "\201C";
     font-size: 4em;
