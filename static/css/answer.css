@@ -1,16 +1,16 @@
 .mentoring .answer.read_only {
     background: #f9f9f9;
     border-left: 10px solid #ccc;
-    margin: 1.5em 10px;
-    padding: 0.5em 10px;
+    margin: 20px 10px;
+    padding: 10px 10px;
     quotes: "\201C""\201D""\2018""\2019";
 }
 
 .mentoring .answer.read_only:before {
     color: #ccc;
     content: "\201C";
-    font-size: 4em;
-    line-height: 0.1em;
-    margin-right: 0.25em;
-    vertical-align: -0.4em;
+    font-size: 65px;
+    line-height: 11px;
+    margin-right: 13px;
+    vertical-align: -25px;
 }
