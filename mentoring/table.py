@@ -23,6 +23,7 @@
 
 # Imports ###########################################################
 
+import errno
 import logging
 
 from xblock.core import XBlock
@@ -56,11 +57,21 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         # TODO: What's the right way to link to images from CSS? This hack won't work in prod
         bg_image_url = self.runtime.resources_url('mentoring/img/{}-bg.png'.format(self.type))
 
+        # Load an optional description for the background image, for accessibility
+        try:
+            bg_image_description = load_resource('static/text/table-{}.txt'.format(self.type))
+        except IOError as e:
+            if e.errno == errno.ENOENT:
+                bg_image_description = ''
+            else:
+                raise
+
         fragment.add_content(render_template('templates/html/mentoring-table.html', {
             'self': self,
             'columns_frags': columns_frags,
             'header_frags': header_frags,
             'bg_image_url': bg_image_url,
+            'bg_image_description': bg_image_description,
         }))
         fragment.add_css(load_resource('static/css/mentoring-table.css'))
         fragment.add_javascript(load_resource('static/js/vendor/jquery.shorten.js'))

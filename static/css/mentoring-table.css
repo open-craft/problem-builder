@@ -35,3 +35,15 @@
 .mentoring-table h3, .mentoring-table h4 {
     margin: 0 0 5px;
 }
+
+/* Hidden elements - Screenreaders */
+.mentoring-table .cont-text-sr {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}

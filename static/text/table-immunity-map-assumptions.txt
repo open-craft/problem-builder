@@ -1,0 +1,3 @@
+On the table background, an arrow goes from column 1 (My Improvement Goal), to
+column 3 (My Hidden Commitments). A second arrow goes back from column 3 to
+column 1. A third arrow goes from column 4 (My Big Assumptions) to column 3.
