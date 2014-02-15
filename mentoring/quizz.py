@@ -69,14 +69,14 @@ class QuizzBlock(XBlock):
     has_children = True
 
     @classmethod
-    def parse_xml(cls, node, runtime, keys):
+    def parse_xml(cls, node, runtime, keys, id_generator):
         block = runtime.construct_xblock_from_class(cls, keys)
 
         for child in node:
             if child.tag == "question":
                 block.question = child.text
             else:
-                block.runtime.add_node_as_child(block, child)
+                block.runtime.add_node_as_child(block, child, id_generator)
 
         for name, value in node.items():
             if name in block.fields:
