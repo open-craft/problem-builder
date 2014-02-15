@@ -62,7 +62,7 @@ class QuizzBlock(XBlock):
     set, with preset choices and author-defined values.
     """
     question = String(help="Question to ask the student", scope=Scope.content, default="")
-    type = String(help="Type of quizz", scope=Scope.content, default="yes-no-unsure")
+    type = String(help="Type of quizz", scope=Scope.content, default="choices")
     student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     low = String(help="Label for low ratings", scope=Scope.content, default="Less")
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
