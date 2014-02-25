@@ -25,8 +25,9 @@
 
 import logging
 
+from xblock.fragment import Fragment
+
 from .light_children import LightChild, Scope, String
-from .utils import render_template
 
 
 # Globals ###########################################################
@@ -36,18 +37,20 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringMessageBlock(LightChild):
+class HTMLBlock(LightChild):
     """
-    A message which can be conditionally displayed at the mentoring block level,
-    for example upon completion of the block
+    A simplistic replacement for the HTML XModule, as a light XBlock child
     """
-    content = String(help="Message to display upon completion", scope=Scope.content, default="")
-    type = String(help="Type of message", scope=Scope.content, default="completed")
+    content = String(help="HTML content", scope=Scope.content, default="")
+
+    @classmethod
+    def init_block_from_node(cls, block, node):
+        block.light_children = []
+        
+        # TODO-LIGHT-CHILDREN: get real value from `node` (lxml)
+        block.content = '<div>Placeholder HTML content</div>'
+
+        return block
 
     def mentoring_view(self, context=None):
-        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')
-        fragment.add_content(render_template('templates/html/message.html', {
-            'self': self,
-            'named_children': named_children,
-        }))
-        return fragment
+        return Fragment(self.content)

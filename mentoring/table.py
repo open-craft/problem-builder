@@ -29,7 +29,8 @@ import logging
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 
-from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
+from .light_children import LightChild, XBlockWithLightChildrenMixin, String as LightString
+from .utils import load_resource, render_template
 
 
 # Globals ###########################################################
@@ -39,7 +40,8 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
+# TODO-LIGHT-CHILDREN: Transform this into always using as LightChildren
+class MentoringTableBlock(XBlockWithLightChildrenMixin, XBlock):
     """
     Table-type display of information from mentoring blocks
 
@@ -85,11 +87,11 @@ class MentoringTableBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         return self.student_view(context)
 
 
-class MentoringTableColumnBlock(XBlock, XBlockWithChildrenFragmentsMixin):
+class MentoringTableColumnBlock(LightChild):
     """
     Individual column of a mentoring table
     """
-    header = String(help="Header of the column", scope=Scope.content, default=None)
+    header = LightString(help="Header of the column", scope=Scope.content, default=None)
     has_children = True
 
     def mentoring_table_view(self, context):
@@ -119,12 +121,11 @@ class MentoringTableColumnBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         return fragment
 
 
-class MentoringTableColumnHeaderBlock(XBlock, XBlockWithChildrenFragmentsMixin):
+class MentoringTableColumnHeaderBlock(LightChild):
     """
     Header content for a given column
     """
-    content = String(help="Body of the header", scope=Scope.content, default='')
-    has_children = True
+    content = LightString(help="Body of the header", scope=Scope.content, default='')
     
     def mentoring_table_header_view(self, context):
         fragment = super(MentoringTableColumnHeaderBlock, self).children_view(context)

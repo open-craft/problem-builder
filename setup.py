@@ -45,6 +45,9 @@ BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
     'mentoring-dataexport = mentoring:MentoringDataExportBlock',
     'mentoring-table = mentoring:MentoringTableBlock',
+]
+
+BLOCKS_CHILDREN = [
     'column = mentoring:MentoringTableColumnBlock',
     'header = mentoring:MentoringTableColumnHeaderBlock',
     'answer = mentoring:AnswerBlock',
@@ -52,6 +55,7 @@ BLOCKS = [
     'message = mentoring:MentoringMessageBlock',
     'tip = mentoring:QuizzTipBlock',
     'choice = mentoring:QuizzChoiceBlock',
+    'html = mentoring:HTMLBlock',
 ]
 
 setup(
@@ -64,6 +68,7 @@ setup(
     ],
     entry_points={
         'xblock.v1': BLOCKS,
+        'xblock.light_children': BLOCKS_CHILDREN,
     },
     package_data=package_data("mentoring", "static"),
 )

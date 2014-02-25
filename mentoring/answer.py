@@ -27,10 +27,9 @@ import logging
 
 from lazy import lazy
 
-from xblock.core import XBlock
-from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
 
+from .light_children import LightChild, Boolean, Scope, String
 from .models import Answer
 from .utils import load_resource, render_template
 
@@ -42,7 +41,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class AnswerBlock(XBlock):
+class AnswerBlock(LightChild):
     """
     A field where the student enters an answer
 

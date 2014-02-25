@@ -25,11 +25,10 @@
 
 import logging
 
-from xblock.core import XBlock
-from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 
-from .utils import load_resource, render_template, XBlockWithChildrenFragmentsMixin
+from .light_children import LightChild, Scope, String
+from .utils import load_resource, render_template
 
 
 # Globals ###########################################################
@@ -53,7 +52,7 @@ def commas_to_list(commas_str):
 
 # Classes ###########################################################
 
-class QuizzBlock(XBlock):
+class QuizzBlock(LightChild):
     """
     An XBlock used to ask multiple-choice questions
 
@@ -66,21 +65,18 @@ class QuizzBlock(XBlock):
     student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     low = String(help="Label for low ratings", scope=Scope.content, default="Less")
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
-    has_children = True
 
     @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator):
-        block = runtime.construct_xblock_from_class(cls, keys)
-
-        for child in node:
-            if child.tag == "question":
-                block.question = child.text
+    def init_block_from_node(cls, block, node):
+        block.light_children = []
+        for child_id, xml_child in enumerate(node):
+            if xml_child.tag == "question":
+                block.question = xml_child.text
             else:
-                block.runtime.add_node_as_child(block, child, id_generator)
+                cls.add_node_as_child(block, xml_child, child_id)
 
         for name, value in node.items():
-            if name in block.fields:
-                setattr(block, name, value)
+            setattr(block, name, value)
 
         return block
 
@@ -103,8 +99,7 @@ class QuizzBlock(XBlock):
     @property
     def custom_choices(self):
         custom_choices = []
-        for child_id in self.children:  # pylint: disable=E1101
-            child = self.runtime.get_block(child_id)
+        for child in self.get_children_objects():
             if isinstance(child, QuizzChoiceBlock):
                 custom_choices.append(child)
         return custom_choices
@@ -156,14 +151,13 @@ class QuizzBlock(XBlock):
         return tips
 
 
-class QuizzTipBlock(XBlock, XBlockWithChildrenFragmentsMixin):
+class QuizzTipBlock(LightChild):
     """
     Each quizz
     """
     content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
     display = String(help="List of choices to display the tip for", scope=Scope.content, default=None)
     reject = String(help="List of choices to reject", scope=Scope.content, default=None)
-    has_children = True
     
     def render(self, submission):
         """
@@ -199,7 +193,7 @@ class QuizzTipBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         return reject or []
 
 
-class QuizzChoiceBlock(XBlock):
+class QuizzChoiceBlock(LightChild):
     """
     Custom choice of an answer for a quizz
     """

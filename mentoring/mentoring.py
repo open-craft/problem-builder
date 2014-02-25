@@ -28,9 +28,9 @@ import logging
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 
+from .light_children import XBlockWithLightChildrenMixin
 from .message import MentoringMessageBlock
-from .utils import get_scenarios_from_path, load_resource, render_template, \
-                   XBlockWithChildrenFragmentsMixin
+from .utils import get_scenarios_from_path, load_resource, render_template
 
 
 # Globals ###########################################################
@@ -40,7 +40,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
+class MentoringBlock(XBlockWithLightChildrenMixin, XBlock):
     """
     An XBlock providing mentoring capabilities
 
@@ -61,6 +61,7 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
                       default='mentoring', scope=Scope.content)
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=True, scope=Scope.content)
+    xml_content = String(help="XML content", default='', scope=Scope.content)
     has_children = True
 
     def student_view(self, context):
@@ -107,8 +108,7 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
 
         submit_results = []
         completed = True
-        for child_id in self.children:  # pylint: disable=E1101
-            child = self.runtime.get_block(child_id)
+        for child in self.get_children_objects():
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
@@ -136,10 +136,9 @@ class MentoringBlock(XBlock, XBlockWithChildrenFragmentsMixin):
         }
 
     def get_message_fragment(self, message_type):
-        for child_id in self.children:  # pylint: disable=E1101
-            child = self.runtime.get_block(child_id)
+        for child in self.get_children_objects():
             if isinstance(child, MentoringMessageBlock) and child.type == message_type:
-                return self.runtime.render_child(child, 'mentoring_view', {})
+                return self.render_child(child, 'mentoring_view', {})
 
     def get_message_html(self, message_type):
         fragment = self.get_message_fragment(message_type)
