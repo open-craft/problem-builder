@@ -67,7 +67,7 @@ class QuizzBlock(LightChild):
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
 
     @classmethod
-    def init_block_from_node(cls, block, node):
+    def init_block_from_node(cls, block, node, attr):
         block.light_children = []
         for child_id, xml_child in enumerate(node):
             if xml_child.tag == "question":
@@ -75,7 +75,7 @@ class QuizzBlock(LightChild):
             else:
                 cls.add_node_as_child(block, xml_child, child_id)
 
-        for name, value in node.items():
+        for name, value in attr:
             setattr(block, name, value)
 
         return block

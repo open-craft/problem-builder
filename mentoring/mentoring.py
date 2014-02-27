@@ -28,7 +28,7 @@ import logging
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 
-from .light_children import XBlockWithLightChildrenMixin
+from .light_children import XBlockWithLightChildren
 from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
 
@@ -40,7 +40,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringBlock(XBlockWithLightChildrenMixin, XBlock):
+class MentoringBlock(XBlockWithLightChildren):
     """
     An XBlock providing mentoring capabilities
 
@@ -65,6 +65,7 @@ class MentoringBlock(XBlockWithLightChildrenMixin, XBlock):
     has_children = True
 
     def student_view(self, context):
+        log.warn('xml_content => {}'.format(self.xml_content)) 
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
                                                               not_instance_of=MentoringMessageBlock)
 

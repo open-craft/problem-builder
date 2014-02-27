@@ -26,10 +26,9 @@
 import errno
 import logging
 
-from xblock.core import XBlock
 from xblock.fields import Scope, String
 
-from .light_children import LightChild, XBlockWithLightChildrenMixin, String as LightString
+from .light_children import LightChild, XBlockWithLightChildren, String as LightString
 from .utils import load_resource, render_template
 
 
@@ -41,7 +40,7 @@ log = logging.getLogger(__name__)
 # Classes ###########################################################
 
 # TODO-LIGHT-CHILDREN: Transform this into always using as LightChildren
-class MentoringTableBlock(XBlockWithLightChildrenMixin, XBlock):
+class MentoringTableBlock(XBlockWithLightChildren):
     """
     Table-type display of information from mentoring blocks
 
@@ -57,7 +56,7 @@ class MentoringTableBlock(XBlockWithLightChildrenMixin, XBlock):
         f, header_frags = self.get_children_fragment(context, view_name='mentoring_table_header_view')
 
         # TODO: What's the right way to link to images from CSS? This hack won't work in prod
-        bg_image_url = self.runtime.resources_url('mentoring/img/{}-bg.png'.format(self.type))
+        bg_image_url = '' #self.runtime.resources_url('mentoring/img/{}-bg.png'.format(self.type))
 
         # Load an optional description for the background image, for accessibility
         try:

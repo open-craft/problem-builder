@@ -25,6 +25,10 @@
 
 import logging
 
+from cStringIO import StringIO
+from lxml import etree
+
+from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
 
@@ -36,9 +40,16 @@ from .utils import XBlockWithChildrenFragmentsMixin
 log = logging.getLogger(__name__)
 
 
+# Functions #########################################################
+
+def node_to_xml(node):
+    # TODO-LIGHT-CHILDREN
+    return '<mentoring><html>Hello</html><answer name="test1" /></mentoring>'
+
+
 # Classes ###########################################################
 
-class XBlockWithLightChildrenMixin(XBlockWithChildrenFragmentsMixin):
+class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     """
     Allows to use lightweight children on a given XBlock, which will
     have a similar behavior but will not be instanciated as full-fledged
@@ -58,34 +69,20 @@ class XBlockWithLightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     * fields on LightChild don't have any persistence
     """
 
-    def __init__(self, *args, **kwargs):
-        self.load_children_from_xml_content()
-
-    def load_children_from_xml_content(self):
-        """
-        Load light children from the `xml_content` attribute
-        """
-        if not hasattr(self, 'xml_content') or not self.xml_content:
-            return
-
-        # TODO-LIGHT-CHILDREN: replace by proper lxml call
-        node = None # lxml.load(self.xml_content)
-
-        self.init_block_from_node(self, node)
-
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
         block = runtime.construct_xblock_from_class(cls, keys)
-        cls.init_block_from_node(block, node)
+        cls.init_block_from_node(block, node, node.items())
+        block.xml_content = getattr(block, 'xml_content', '') or node_to_xml(node)
         return block
 
     @classmethod
-    def init_block_from_node(cls, block, node):
+    def init_block_from_node(cls, block, node, attr):
         block.light_children = []
         for child_id, xml_child in enumerate(node):
             cls.add_node_as_child(block, xml_child, child_id)
 
-        for name, value in node.items():
+        for name, value in attr:
             setattr(block, name, value)
 
         return block
@@ -97,16 +94,25 @@ class XBlockWithLightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         child = child_class()
         child.name = u'{}_{}'.format(block.name, child_id)
 
-        log.warn(child_class)
-
         # Add any children the child may itself have
-        child_class.init_block_from_node(child, xml_child)
+        child_class.init_block_from_node(child, xml_child, xml_child.items())
 
         block.light_children.append(child)
 
     @classmethod
     def get_class_by_element(cls, xml_tag):
         return LightChild.load_class(xml_tag)
+
+    def load_children_from_xml_content(self):
+        """
+        Load light children from the `xml_content` attribute
+        """
+        self.light_children = []
+        if not hasattr(self, 'xml_content') or not self.xml_content:
+            return
+
+        node = etree.parse(StringIO(self.xml_content)).getroot()
+        LightChildrenMixin.init_block_from_node(self, node, {})
 
     def get_children_objects(self):
         """
@@ -135,7 +141,16 @@ class XBlockWithLightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         return fragment, named_child_frags
 
 
-class LightChild(Plugin, XBlockWithLightChildrenMixin):
+class XBlockWithLightChildren(LightChildrenMixin, XBlock):
+    """
+    XBlock base class with support for LightChild
+    """
+    def __init__(self, *args, **kwargs):
+        super(XBlockWithLightChildren, self).__init__(*args, **kwargs)
+        self.load_children_from_xml_content()
+
+
+class LightChild(Plugin, LightChildrenMixin):
     """
     Base class for the light children
     """

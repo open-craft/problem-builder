@@ -44,7 +44,7 @@ class HTMLBlock(LightChild):
     content = String(help="HTML content", scope=Scope.content, default="")
 
     @classmethod
-    def init_block_from_node(cls, block, node):
+    def init_block_from_node(cls, block, node, attr):
         block.light_children = []
         
         # TODO-LIGHT-CHILDREN: get real value from `node` (lxml)
