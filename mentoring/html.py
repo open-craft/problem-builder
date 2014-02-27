@@ -25,6 +25,8 @@
 
 import logging
 
+from lxml import etree
+
 from xblock.fragment import Fragment
 
 from .light_children import LightChild, Scope, String
@@ -46,9 +48,9 @@ class HTMLBlock(LightChild):
     @classmethod
     def init_block_from_node(cls, block, node, attr):
         block.light_children = []
-        
-        # TODO-LIGHT-CHILDREN: get real value from `node` (lxml)
-        block.content = '<div>Placeholder HTML content</div>'
+
+        node.tag = 'div'
+        block.content = etree.tostring(node)
 
         return block
 

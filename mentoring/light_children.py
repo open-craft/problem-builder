@@ -40,13 +40,6 @@ from .utils import XBlockWithChildrenFragmentsMixin
 log = logging.getLogger(__name__)
 
 
-# Functions #########################################################
-
-def node_to_xml(node):
-    # TODO-LIGHT-CHILDREN
-    return '<mentoring><html>Hello</html><answer name="test1" /></mentoring>'
-
-
 # Classes ###########################################################
 
 class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
@@ -58,12 +51,12 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     TODO: Replace this once the support for XBlock children has matured
     by a mixin implementing the following abstractions, used to keep
     code reusable in the XBlocks:
-    
+
     * get_children_objects()
     * Functionality of XBlockWithChildrenFragmentsMixin
 
     Other changes caused by LightChild use:
-    
+
     * overrides of `parse_xml()` have been replaced by overrides of
     `init_block_from_node()` on LightChildren
     * fields on LightChild don't have any persistence
@@ -73,7 +66,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     def parse_xml(cls, node, runtime, keys, id_generator):
         block = runtime.construct_xblock_from_class(cls, keys)
         cls.init_block_from_node(block, node, node.items())
-        block.xml_content = getattr(block, 'xml_content', '') or node_to_xml(node)
+        block.xml_content = getattr(block, 'xml_content', '') or etree.tostring(node)
         return block
 
     @classmethod
@@ -96,6 +89,12 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
 
         # Add any children the child may itself have
         child_class.init_block_from_node(child, xml_child, xml_child.items())
+
+        text = xml_child.text
+        if text:
+            text = text.strip()
+            if text:
+                child.content = text
 
         block.light_children.append(child)
 
@@ -162,10 +161,16 @@ class LightChildField(object):
     Fake field with no persistence - allows to keep XBlocks fields definitions on LightChild
     """
     def __init__(self, *args, **kwargs):
-        pass
+        self.value = kwargs.get('default', '')
+
+    def __nonzero__(self):
+        return bool(self.value)
+
 
 class String(LightChildField):
-    pass
+    def __str__(self):
+        return self.value
+
 
 class Boolean(LightChildField):
     pass

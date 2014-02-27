@@ -43,6 +43,7 @@ class MentoringMessageBlock(LightChild):
     """
     content = String(help="Message to display upon completion", scope=Scope.content, default="")
     type = String(help="Type of message", scope=Scope.content, default="completed")
+    has_children = True
 
     def mentoring_view(self, context=None):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')

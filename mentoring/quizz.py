@@ -81,7 +81,7 @@ class QuizzBlock(LightChild):
         return block
 
     def mentoring_view(self, context=None):
-        if self.type not in ('rating', 'choices'):
+        if str(self.type) not in ('rating', 'choices'):
             raise ValueError, u'Invalid value for QuizzBlock.type: `{}`'.format(self.type)
 
         template_path = 'templates/html/quizz_{}.html'.format(self.type)

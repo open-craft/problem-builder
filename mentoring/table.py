@@ -26,9 +26,9 @@
 import errno
 import logging
 
-from xblock.fields import Scope, String
+from xblock.fields import Scope
 
-from .light_children import LightChild, XBlockWithLightChildren, String as LightString
+from .light_children import LightChild, String
 from .utils import load_resource, render_template
 
 
@@ -39,8 +39,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-# TODO-LIGHT-CHILDREN: Transform this into always using as LightChildren
-class MentoringTableBlock(XBlockWithLightChildren):
+class MentoringTableBlock(LightChild):
     """
     Table-type display of information from mentoring blocks
 
@@ -90,7 +89,7 @@ class MentoringTableColumnBlock(LightChild):
     """
     Individual column of a mentoring table
     """
-    header = LightString(help="Header of the column", scope=Scope.content, default=None)
+    header = String(help="Header of the column", scope=Scope.content, default=None)
     has_children = True
 
     def mentoring_table_view(self, context):
@@ -124,7 +123,7 @@ class MentoringTableColumnHeaderBlock(LightChild):
     """
     Header content for a given column
     """
-    content = LightString(help="Body of the header", scope=Scope.content, default='')
+    content = String(help="Body of the header", scope=Scope.content, default='')
     
     def mentoring_table_header_view(self, context):
         fragment = super(MentoringTableColumnHeaderBlock, self).children_view(context)
