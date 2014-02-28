@@ -144,9 +144,8 @@ class QuizzBlock(LightChild):
         Returns the tips contained in this block
         """
         tips = []
-        for child_id in self.children:  # pylint: disable=E1101
-            child = self.runtime.get_block(child_id)
-            if child.xml_element_name() == 'tip':
+        for child in self.get_children_objects():
+            if isinstance(child, QuizzTipBlock):
                 tips.append(child)
         return tips
 

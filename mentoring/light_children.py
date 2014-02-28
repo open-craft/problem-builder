@@ -84,7 +84,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     def add_node_as_child(cls, block, xml_child, child_id):
         # Instantiate child
         child_class = cls.get_class_by_element(xml_child.tag)
-        child = child_class()
+        child = child_class(block.runtime)
         child.name = u'{}_{}'.format(block.name, child_id)
 
         # Add any children the child may itself have
@@ -123,7 +123,10 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         """
         Replacement for ```self.runtime.render_child()```
         """
-        return getattr(child, view_name)(context)
+        frag = getattr(child, view_name)(context)
+        frag.content = u'<div class="xblock-light-child" name="{}" data-type="{}">{}</div>'.format(
+                child.name, child.__class__.__name__, frag.content)
+        return frag
 
     def get_children_fragment(self, context, view_name='student_view', instance_of=None,
                               not_instance_of=None):
@@ -155,6 +158,12 @@ class LightChild(Plugin, LightChildrenMixin):
     """
     entry_point = 'xblock.light_children'
 
+    def __init__(self, runtime):
+        self.runtime = runtime
+
+    def save(self):
+        pass
+
 
 class LightChildField(object):
     """
@@ -168,8 +177,14 @@ class LightChildField(object):
 
 
 class String(LightChildField):
+    def __init__(self, *args, **kwargs):
+        self.value = kwargs.get('default', '') or ''
+
     def __str__(self):
         return self.value
+
+    def split(self, *args, **kwargs):
+        return self.value.split(*args, **kwargs)
 
 
 class Boolean(LightChildField):

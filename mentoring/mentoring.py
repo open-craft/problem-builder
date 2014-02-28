@@ -65,7 +65,6 @@ class MentoringBlock(XBlockWithLightChildren):
     has_children = True
 
     def student_view(self, context):
-        log.warn('xml_content => {}'.format(self.xml_content)) 
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
                                                               not_instance_of=MentoringMessageBlock)
 
@@ -129,6 +128,7 @@ class MentoringBlock(XBlockWithLightChildren):
         elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
+        log.warn(submit_results);
         self.completed = bool(completed)
         return {
             'submitResults': submit_results,
