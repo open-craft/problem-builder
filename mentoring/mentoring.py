@@ -64,6 +64,7 @@ class MentoringBlock(XBlockWithLightChildren):
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
     has_children = True
+    icon_class = 'problem'
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
