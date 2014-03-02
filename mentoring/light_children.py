@@ -28,9 +28,12 @@ import logging
 from cStringIO import StringIO
 from lxml import etree
 
+from django.core.urlresolvers import reverse
+
 from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
+from xmodule_modifiers import replace_jump_to_id_urls
 
 from .utils import XBlockWithChildrenFragmentsMixin
 
@@ -156,7 +159,18 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         Current HTML view of the XBlock, for refresh by client
         """
+        # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
+        course_id = self.xmodule_runtime.course_id
+
         frag = self.student_view({})
+        frag = replace_jump_to_id_urls(
+                course_id,
+                reverse('jump_to_id', kwargs={'course_id': course_id, 'module_id': ''}),
+                self,
+                'student_view',
+                frag,
+                {}
+            )
         return {
             'html': frag.content,
         }

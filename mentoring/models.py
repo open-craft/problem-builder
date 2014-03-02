@@ -36,7 +36,7 @@ class Answer(models.Model):
 
     class Meta:
         app_label = 'mentoring'
-        unique_together = (('student_id', 'name'),)
+        unique_together = (('student_id', 'course_id', 'name'),)
 
     name = models.CharField(max_length=50, db_index=True)
     student_id = models.CharField(max_length=32, db_index=True)

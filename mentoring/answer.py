@@ -131,13 +131,13 @@ class AnswerBlock(LightChild):
         if not name:
             raise ValueError, 'AnswerBlock.name field need to be set to a non-null/empty value'
 
+        # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         student_id = self.xmodule_runtime.anonymous_student_id
-        # TODO: How do we get the course id?
-        course_id = 'default'
+        course_id = self.xmodule_runtime.course_id
 
         answer_data, created = Answer.objects.get_or_create(
             student_id=student_id,
             course_id=course_id,
-            name=name
+            name=name,
         )
         return answer_data
