@@ -61,6 +61,7 @@ class MentoringBlock(XBlockWithLightChildren):
                       default='mentoring', scope=Scope.content)
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=True, scope=Scope.content)
+    display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
     has_children = True
 
