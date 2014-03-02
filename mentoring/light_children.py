@@ -84,7 +84,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     def add_node_as_child(cls, block, xml_child, child_id):
         # Instantiate child
         child_class = cls.get_class_by_element(xml_child.tag)
-        child = child_class(block.runtime)
+        child = child_class(block)
         child.name = u'{}_{}'.format(block.name, child_id)
 
         # Add any children the child may itself have
@@ -168,8 +168,16 @@ class LightChild(Plugin, LightChildrenMixin):
     """
     entry_point = 'xblock.light_children'
 
-    def __init__(self, runtime):
-        self.runtime = runtime
+    def __init__(self, parent):
+        self.parent = parent
+
+    @property
+    def runtime(self):
+        return self.parent.runtime
+
+    @property
+    def xmodule_runtime(self):
+        return self.parent.xmodule_runtime
 
     def save(self):
         pass
