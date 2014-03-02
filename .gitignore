@@ -2,4 +2,5 @@
 *.pyc
 xblock_mentoring.egg-info
 workbench.sqlite
-templates/xml
+mentoring/templates/xml
+dist
