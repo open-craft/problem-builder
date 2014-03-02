@@ -44,10 +44,10 @@ def package_data(pkg, root):
 BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
     'mentoring-dataexport = mentoring:MentoringDataExportBlock',
-    'mentoring-table = mentoring:MentoringTableBlock',
 ]
 
 BLOCKS_CHILDREN = [
+    'mentoring-table = mentoring:MentoringTableBlock',
     'column = mentoring:MentoringTableColumnBlock',
     'header = mentoring:MentoringTableColumnHeaderBlock',
     'answer = mentoring:AnswerBlock',
