@@ -5,4 +5,5 @@ function MentoringTableBlock(runtime, element) {
         lessText: 'less',
         showChars: '500'
     });
+    return {}
 }
