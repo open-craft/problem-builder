@@ -71,8 +71,9 @@ def get_scenarios_from_path(scenarios_path, include_identifier=False):
     Returns an array of (title, xmlcontent) from files contained in a specified directory,
     formatted as expected for the return value of the workbench_scenarios() method
     """
-    base_fullpath = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    base_fullpath = os.path.dirname(os.path.realpath(__file__))
     scenarios_fullpath = os.path.join(base_fullpath, scenarios_path)
+    print scenarios_fullpath
 
     scenarios = []
     if os.path.isdir(scenarios_fullpath):

@@ -33,7 +33,12 @@ from django.core.urlresolvers import reverse
 from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
-from xmodule_modifiers import replace_jump_to_id_urls
+
+try:
+    from xmodule_modifiers import replace_jump_to_id_urls
+except:
+    # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
+    replace_jump_to_id_urls = lambda a,b,c,d,frag,f: frag
 
 from .utils import XBlockWithChildrenFragmentsMixin
 
@@ -162,17 +167,21 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         Current HTML view of the XBlock, for refresh by client
         """
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
-        course_id = self.xmodule_runtime.course_id
+        try:
+            course_id = self.xmodule_runtime.course_id
+        except AttributeError:
+            # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
+            course_id = 'sample-course'
+
+        try:
+            jump_to_url = reverse('jump_to_id', kwargs={'course_id': course_id, 'module_id': ''})
+        except:
+            # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
+            jump_to_url = '/jump_to_id'
 
         frag = self.student_view({})
-        frag = replace_jump_to_id_urls(
-                course_id,
-                reverse('jump_to_id', kwargs={'course_id': course_id, 'module_id': ''}),
-                self,
-                'student_view',
-                frag,
-                {}
-            )
+        frag = replace_jump_to_id_urls(course_id, jump_to_url, self, 'student_view', frag, {})
+
         return {
             'html': frag.content,
         }
@@ -194,7 +203,15 @@ class LightChild(Plugin, LightChildrenMixin):
 
     @property
     def xmodule_runtime(self):
-        return self.parent.xmodule_runtime
+        try:
+            xmodule_runtime = self.parent.xmodule_runtime
+        except AttributeError:
+            # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
+            class xmodule_runtime(object):
+                course_id = 'sample-course'
+                anonymous_student_id = 'student1'
+            xmodule_runtime = xmodule_runtime()
+        return xmodule_runtime
 
     def save(self):
         pass
