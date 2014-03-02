@@ -24,8 +24,8 @@ function MentoringBlock(runtime, element) {
     }
 
     function handleSubmitResults(results) {
-        $('.messages', element).hide();
-        $('.messages', element).html('<div class="title1">Feedback</div>');
+        var messages_dom = $('.messages', element);
+        messages_dom.empty().hide();
 
         $.each(results.submitResults || [], function(index, submitResult) {
             var input = submitResult[0],
@@ -38,9 +38,10 @@ function MentoringBlock(runtime, element) {
         renderProgress();
 
         // Messages should only be displayed upon hitting 'submit', not on page reload
-        if (results.message.trim()) {
-            $('.messages', element).append(results.message);
-            $('.messages', element).show();
+        messages_dom.append(results.message);
+        if (messages_dom.html().trim()) {
+            messages_dom.prepend('<div class="title1">Feedback</div>');
+            messages_dom.show();
         }
     }
 
