@@ -58,18 +58,33 @@ function MentoringBlock(runtime, element) {
         }
     }
 
-    $(element).find('.submit').bind('click', function() {
-        var data = {};
-        var children = getChildren(element);
-        for (var i = 0; i < children.length; i++) {
-            var child = children[i];
-            if (child.name !== undefined) {
-                data[child.name] = callIfExists(child, 'submit');
+    function initXBlock() {
+        $(element).find('.submit').bind('click', function() {
+            var data = {};
+            var children = getChildren(element);
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child.name !== undefined) {
+                    data[child.name] = callIfExists(child, 'submit');
+                }
             }
-        }
-        var handlerUrl = runtime.handlerUrl(element, 'submit');
-        $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
-    });
+            var handlerUrl = runtime.handlerUrl(element, 'submit');
+            $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
+        });
 
-    renderProgress();
+        renderProgress();
+    }
+
+    function handleRefreshResults(results) {
+        $(element).html(results.html);
+        initXBlock();
+    }
+
+    function refreshXBlock() {
+        var handlerUrl = runtime.handlerUrl(element, 'view');
+        $.post(handlerUrl, '{}').success(handleRefreshResults);
+    }
+
+    // We need to manually refresh, XBlocks are currently loaded together with the section
+    refreshXBlock(element);
 }

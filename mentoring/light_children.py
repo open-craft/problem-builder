@@ -151,6 +151,16 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         super(XBlockWithLightChildren, self).__init__(*args, **kwargs)
         self.load_children_from_xml_content()
 
+    @XBlock.json_handler
+    def view(self, data, suffix=''):
+        """
+        Current HTML view of the XBlock, for refresh by client
+        """
+        frag = self.student_view({})
+        return {
+            'html': frag.content,
+        }
+
 
 class LightChild(Plugin, LightChildrenMixin):
     """
