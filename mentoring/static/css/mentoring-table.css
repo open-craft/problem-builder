@@ -2,11 +2,12 @@
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-position: center;
+    margin-bottom: 20px;
 }
 
 .mentoring-table table {
     width: 100%;
-    border: 1px solid;
+    border: 1px solid rgb(221, 221, 221);
     border-spacing: 0;
     border-collapse: collapse;
 }
@@ -15,7 +16,11 @@
 .mentoring-table th {
     padding: 10px;
     vertical-align: top;
-    border: 1px solid;
+    border: 1px solid rgb(221, 221, 221);
+}
+
+.mentoring-table thead a {
+    font-weight: bold;
 }
 
 .mentoring-table.immunity-map td {

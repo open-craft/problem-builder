@@ -1,0 +1,17 @@
+.mentoring .rating .question,
+.mentoring .choices .question {
+    font-weight: bold;
+}
+
+.mentoring .rating,
+.mentoring .choices {
+    margin-bottom: 5px;
+}
+
+.mentoring .choices .choice {
+    margin-right: 10px;
+}
+
+.mentoring .choices .choice .choice-selector {
+    margin-right: 5px;
+}

@@ -1,5 +1,17 @@
 .mentoring .messages {
+    display: none;
     margin-top: 10px;
+    border: 1px solid rgb(221, 221, 221);
+    padding: 12px 15px 20px;
+}
+
+.mentoring .messages .title1 {
+    color: rgb(170, 170, 170);
+    text-transform: uppercase;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 0.9em;
+    margin-bottom: 5px;
 }
 
 .mentoring .warning {
@@ -22,4 +34,9 @@
 }
 .mentoring .italic {
     font-style: italic;
+}
+
+.mentoring h3,
+.mentoring h4 {
+    margin-bottom: 20px;
 }
