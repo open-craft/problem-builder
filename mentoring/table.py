@@ -54,8 +54,8 @@ class MentoringTableBlock(LightChild):
                                                              view_name='mentoring_table_view')
         f, header_frags = self.get_children_fragment(context, view_name='mentoring_table_header_view')
 
-        # TODO: What's the right way to link to images from CSS? This hack won't work in prod
-        bg_image_url = '' #self.runtime.resources_url('mentoring/img/{}-bg.png'.format(self.type))
+        bg_image_url = self.runtime.local_resource_url(self.xblock_container,
+                                                       'public/img/{}-bg.png'.format(self.type))
 
         # Load an optional description for the background image, for accessibility
         try:

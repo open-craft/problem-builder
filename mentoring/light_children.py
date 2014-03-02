@@ -57,6 +57,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
 
     * get_children_objects()
     * Functionality of XBlockWithChildrenFragmentsMixin
+    * self.xblock_container for when we need a real XBlock reference
 
     Other changes caused by LightChild use:
 
@@ -152,6 +153,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
     """
     def __init__(self, *args, **kwargs):
         super(XBlockWithLightChildren, self).__init__(*args, **kwargs)
+        self.xblock_container = self
         self.load_children_from_xml_content()
 
     @XBlock.json_handler
@@ -184,6 +186,7 @@ class LightChild(Plugin, LightChildrenMixin):
 
     def __init__(self, parent):
         self.parent = parent
+        self.xblock_container = parent.xblock_container
 
     @property
     def runtime(self):

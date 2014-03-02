@@ -69,6 +69,9 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
                                                               not_instance_of=MentoringMessageBlock)
 
+        correct_icon_url = self.runtime.local_resource_url(self.xblock_container,
+                                                           'public/img/correct-icon.png')
+
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
@@ -77,10 +80,8 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment.add_css(load_resource('static/css/mentoring.css'))
         fragment.add_javascript(load_resource('static/js/vendor/underscore-min.js'))
         fragment.add_javascript(load_resource('static/js/mentoring.js'))
-
-        # TODO-LMS-WORKAROUND: Use self.runtime.resources_url() when supported
         fragment.add_resource(load_resource('templates/html/mentoring_progress.html').format(
-                completed='/static/images/correct-icon.png'),
+                completed=correct_icon_url),
             "text/html")
 
         fragment.initialize_js('MentoringBlock')

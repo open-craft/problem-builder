@@ -71,5 +71,5 @@ setup(
         'xblock.v1': BLOCKS,
         'xblock.light_children': BLOCKS_CHILDREN,
     },
-    package_data=package_data("mentoring", ["static", "templates"]),
+    package_data=package_data("mentoring", ["static", "templates", "public"]),
 )
