@@ -1,10 +1,8 @@
 <div class="mentoring">
-  {% if missing_dependency_url %}
-  <div class="warning">
+  <div class="missing-dependency warning" data-missing="{{ self.has_missing_dependency }}">
     You need to complete <a href="{{ missing_dependency_url }}">the following step</a> before
     attempting this step.
   </div>
-  {% endif %}
   {% for name, c in named_children %}
   {{c.body_html|safe}}
   {% endfor %}

@@ -13,6 +13,10 @@
     background-color: #FEEFB3;
 }
 
+.mentoring .missing-dependency.warning {
+    display: none;
+}
+
 .mentoring .bold {
     font-weight: bold;
 }

@@ -6,6 +6,15 @@ function MentoringBlock(runtime, element) {
         $('.indicator', element).html(progressTemplate(data));
     }
 
+    function renderDependency() {
+        var warning_dom = $('.missing-dependency', element),
+            data = warning_dom.data();
+
+        if (data.missing === 'True') {
+            warning_dom.show();
+        }
+    }
+
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
             return obj[fn].apply(obj, Array.prototype.slice.call(arguments, 2));
@@ -59,7 +68,9 @@ function MentoringBlock(runtime, element) {
     }
 
     function initXBlock() {
-        $(element).find('.submit').bind('click', function() {
+        var submit_dom = $(element).find('.submit');
+
+        submit_dom.bind('click', function() {
             var data = {};
             var children = getChildren(element);
             for (var i = 0; i < children.length; i++) {
@@ -72,7 +83,11 @@ function MentoringBlock(runtime, element) {
             $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
         });
 
-        renderProgress();
+        if (submit_dom.length) {
+            renderProgress();
+        }
+
+        renderDependency();
     }
 
     function handleRefreshResults(results) {
