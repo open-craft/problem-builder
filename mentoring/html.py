@@ -60,3 +60,6 @@ class HTMLBlock(LightChild):
 
     def mentoring_view(self, context=None):
         return self.student_view(context)
+    
+    def mentoring_table_view(self, context=None):
+        return self.student_view(context)
