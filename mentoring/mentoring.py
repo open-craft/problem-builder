@@ -146,7 +146,8 @@ class MentoringBlock(XBlockWithLightChildren):
     def get_message_fragment(self, message_type):
         for child in self.get_children_objects():
             if isinstance(child, MentoringMessageBlock) and child.type == message_type:
-                return self.render_child(child, 'mentoring_view', {})
+                frag = self.render_child(child, 'mentoring_view', {})
+                return self.fragment_text_rewriting(frag)
 
     def get_message_html(self, message_type):
         fragment = self.get_message_fragment(message_type)

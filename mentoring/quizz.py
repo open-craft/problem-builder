@@ -167,7 +167,7 @@ class QuizzTipBlock(LightChild):
             'self': self,
             'named_children': named_children,
         }))
-        return fragment
+        return self.xblock_container.fragment_text_rewriting(fragment)
 
     def is_completed(self, submission):
         return submission and submission not in self.reject_with_defaults

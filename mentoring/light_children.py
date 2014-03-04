@@ -166,6 +166,17 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         Current HTML view of the XBlock, for refresh by client
         """
+        frag = self.student_view({})
+        frag = self.fragment_text_rewriting(frag)
+
+        return {
+            'html': frag.content,
+        }
+
+    def fragment_text_rewriting(self, fragment):
+        """
+        Do replacements like `/jump_to_id` URL rewriting in the provided text
+        """
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         try:
             course_id = self.xmodule_runtime.course_id
@@ -179,13 +190,8 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
             # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
             jump_to_url = '/jump_to_id'
 
-        frag = self.student_view({})
-        frag = replace_jump_to_id_urls(course_id, jump_to_url, self, 'student_view', frag, {})
-
-        return {
-            'html': frag.content,
-        }
-
+        fragment = replace_jump_to_id_urls(course_id, jump_to_url, self, 'student_view', fragment, {})
+        return fragment
 
 class LightChild(Plugin, LightChildrenMixin):
     """
