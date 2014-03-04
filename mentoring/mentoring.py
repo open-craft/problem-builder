@@ -119,14 +119,14 @@ class MentoringBlock(XBlockWithLightChildren):
                 child.save()
                 completed = completed and child_result['completed']
 
-        # Once it has been completed once, keep completion even if user changes values
-        if self.completed:
-            completed = True
-
         if completed:
             message = self.get_message_html('completed')
         else:
             message = ''
+
+        # Once it has been completed once, keep completion even if user changes values
+        if self.completed:
+            completed = True
 
         if self.has_missing_dependency:
             completed = False
