@@ -28,7 +28,7 @@ import logging
 from xblock.fragment import Fragment
 
 from .light_children import LightChild, Scope, String
-from .utils import load_resource, render_template
+from .utils import render_template
 
 
 # Globals ###########################################################
@@ -91,8 +91,10 @@ class QuizzBlock(LightChild):
         })
 
         fragment = Fragment(html)
-        fragment.add_css(load_resource('static/css/quizz.css'))
-        fragment.add_javascript(load_resource('static/js/quizz.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self.xblock_container,
+                                                             'public/css/quizz.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
+                                                                    'public/js/quizz.js'))
         fragment.initialize_js('QuizzBlock')
         return fragment
 

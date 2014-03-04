@@ -31,7 +31,7 @@ from xblock.core import XBlock
 from xblock.fragment import Fragment
 
 from .models import Answer
-from .utils import load_resource, list2csv, render_template
+from .utils import list2csv, render_template
 
 
 # Globals ###########################################################
@@ -52,8 +52,8 @@ class MentoringDataExportBlock(XBlock):
         })
 
         fragment = Fragment(html)
-        fragment.add_javascript(load_resource('static/js/dataexport.js'))
-        fragment.add_css(load_resource('static/css/dataexport.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/dataexport.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/dataexport.css'))
 
         fragment.initialize_js('MentoringDataExportBlock')
 

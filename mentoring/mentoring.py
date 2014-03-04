@@ -70,17 +70,17 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
                                                               not_instance_of=MentoringMessageBlock)
 
-        correct_icon_url = self.runtime.local_resource_url(self.xblock_container,
-                                                           'public/img/correct-icon.png')
+        correct_icon_url = self.runtime.local_resource_url(self, 'public/img/correct-icon.png')
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
-        fragment.add_css(load_resource('static/css/mentoring.css'))
-        fragment.add_javascript(load_resource('static/js/vendor/underscore-min.js'))
-        fragment.add_javascript(load_resource('static/js/mentoring.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring.css'))
+        fragment.add_javascript_url(
+                    self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(load_resource('templates/html/mentoring_progress.html').format(
                 completed=correct_icon_url),
             "text/html")
