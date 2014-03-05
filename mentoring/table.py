@@ -76,7 +76,7 @@ class MentoringTableBlock(LightChild):
         fragment.add_css_url(self.runtime.local_resource_url(self.xblock_container,
                                                              'public/css/mentoring-table.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
-                                                                    'public/js/vendor/jquery.shorten.js'))
+                                                                    'public/js/vendor/jquery-shorten.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
                                                                     'public/js/mentoring-table.js'))
         fragment.initialize_js('MentoringTableBlock')
