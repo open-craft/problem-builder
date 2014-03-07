@@ -27,6 +27,7 @@ import logging
 
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
+from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
 from .message import MentoringMessageBlock
@@ -63,7 +64,6 @@ class MentoringBlock(XBlockWithLightChildren):
                                  default=True, scope=Scope.content)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
-    has_children = True
     icon_class = 'problem'
 
     def student_view(self, context):
@@ -155,6 +155,30 @@ class MentoringBlock(XBlockWithLightChildren):
             return fragment.body_html()
         else:
             return ''
+
+    def studio_view(self, context):
+        """
+        Editing view in Studio
+        """
+        fragment = Fragment()
+        fragment.add_content(render_template('templates/html/mentoring_edit.html', {
+            'self': self,
+        }))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+
+        fragment.initialize_js('MentoringEditBlock')
+
+        return fragment
+
+    @XBlock.json_handler
+    def studio_submit(self, submissions, suffix=''):
+        log.info(u'Received submissions: {}'.format(submissions))
+
+        # TODO-MRQ: Add XML validation
+        self.xml_content = submissions['xml_content']
+        return {
+            'result': 'success',
+        }
 
     @staticmethod
     def workbench_scenarios():
