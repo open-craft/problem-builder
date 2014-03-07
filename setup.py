@@ -63,7 +63,7 @@ setup(
     name='xblock-mentoring',
     version='0.1',
     description='XBlock - Mentoring',
-    packages=['mentoring'],
+    packages=['mentoring', 'mentoring.migrations'],
     install_requires=[
         'XBlock',
     ],
