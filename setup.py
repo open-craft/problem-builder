@@ -52,10 +52,11 @@ BLOCKS_CHILDREN = [
     'column = mentoring:MentoringTableColumnBlock',
     'header = mentoring:MentoringTableColumnHeaderBlock',
     'answer = mentoring:AnswerBlock',
-    'quizz = mentoring:QuizzBlock',
+    'quizz = mentoring:MCQBlock',
+    'mcq = mentoring:MCQBlock',
     'message = mentoring:MentoringMessageBlock',
-    'tip = mentoring:QuizzTipBlock',
-    'choice = mentoring:QuizzChoiceBlock',
+    'tip = mentoring:TipBlock',
+    'choice = mentoring:ChoiceBlock',
     'html = mentoring:HTMLBlock',
 ]
 

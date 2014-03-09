@@ -49,8 +49,8 @@ class MentoringBlock(XBlockWithLightChildren):
     """
     An XBlock providing mentoring capabilities
 
-    Composed of text, answers input fields, and a set of multiple choice quizzes with advices. 
-    A set of conditions on the provided answers and quizzes choices will determine if the
+    Composed of text, answers input fields, and a set of MRQ/MCQ with advices. 
+    A set of conditions on the provided answers and MCQ/MRQ choices will determine if the
     student is a) provided mentoring advices and asked to alter his answer, or b) is given the
     ok to continue.
     """

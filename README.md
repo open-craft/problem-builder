@@ -6,7 +6,7 @@ This XBlock allows to automate the workflow of real-life mentoring, within an ed
 It supports:
 
 * **Free-form answers** (textarea) which can be shared accross different XBlock instances (for example, to remind a student of an answer he gave before). Editable or read-only.
-* **Self-assessment quizzes** (multiple choice), to display predetermined feedback to a student based on his choices in the self-assessment. Supports rating scales and arbitrary answers.
+* **Self-assessment MCQs** (multiple choice), to display predetermined feedback to a student based on his choices in the self-assessment. Supports rating scales and arbitrary answers.
 * **Progression tracking**, allowing to check that the student has completed the previous steps before allowing to complete a given XBlock instance. Provides a link to the next step to the student.
 * **Tables**, which allow to present answers from the student to free-form answers in a concise way. Supports custom headers.
 * **Data export**, to allow course authors to download a CSV file containing the free-form answers entered by the students
@@ -44,12 +44,12 @@ Second XBlock instance:
 </mentoring>
 ```
 
-### Self-assessment quizzes
+### Self-assessment MCQs
 
 ```xml
-<mentoring url_name="quizz_1" enforce_dependency="false">
-    <quizz name="quizz_1_1" type="choices">
-        <question>Do you like this quizz?</question>
+<mentoring url_name="mcq_1" enforce_dependency="false">
+    <mcq name="mcq_1_1" type="choices">
+        <question>Do you like this MCQ?</question>
         <choice value="yes">Yes</choice>
         <choice value="maybenot">Maybe not</choice>
         <choice value="understand">I don't understand</choice>
@@ -57,16 +57,16 @@ Second XBlock instance:
         <tip display="yes">Great!</tip>
         <tip reject="maybenot">Ah, damn.</tip>
         <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
-    </quizz>
+    </mcq>
 
-    <quizz name="quizz_1_2" type="rating" low="Not good at all" high="Extremely good">
-        <question>How much do you rate this quizz?</question>
+    <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
+        <question>How much do you rate this MCQ?</question>
         <choice value="notwant">I don't want to rate it</choice>
 
         <tip display="4,5">I love good grades.</tip>
         <tip reject="1,2,3">Will do better next time...</tip>
         <tip reject="notwant">Your loss!</tip>
-    </quizz>
+    </MCQ>
 
     <message type="completed">
         All is good now...

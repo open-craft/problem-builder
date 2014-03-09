@@ -1,4 +1,4 @@
-function QuizzBlock(runtime, element) {
+function MCQBlock(runtime, element) {
     return {
         submit: function() {
             var checkedRadio = $('input[type=radio]:checked', element);
