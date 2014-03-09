@@ -70,11 +70,20 @@ class TipBlock(LightChild):
         }))
         return self.xblock_container.fragment_text_rewriting(fragment)
 
-    def is_completed(self, submission):
-        return submission and submission not in self.reject_with_defaults
+    def is_completed(self, submissions):
+        if not submissions:
+            return False
 
-    def is_tip_displayed(self, submission):
-        return submission in self.display_with_defaults
+        for submission in submissions:
+            if submission in self.reject_with_defaults:
+                return False
+        return True
+
+    def is_tip_displayed(self, submissions):
+        for submission in submissions:
+            if submission in self.display_with_defaults:
+                return True
+        return False
 
     @property
     def display_with_defaults(self):

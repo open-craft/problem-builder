@@ -101,3 +101,12 @@ class QuestionnaireAbstractBlock(LightChild):
             if isinstance(child, TipBlock):
                 tips.append(child)
         return tips
+
+    def get_submission_display(self, submission):
+        """
+        Get the human-readable version of a submission value
+        """
+        for choice in self.custom_choices:
+            if choice.value == submission:
+                return choice.content
+        return submission

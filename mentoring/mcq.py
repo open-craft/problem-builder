@@ -56,8 +56,8 @@ class MCQBlock(QuestionnaireAbstractBlock):
         completed = True
         tips_fragments = []
         for tip in self.get_tips():
-            completed = completed and tip.is_completed(submission)
-            if tip.is_tip_displayed(submission):
+            completed = completed and tip.is_completed([submission])
+            if tip.is_tip_displayed([submission]):
                 tips_fragments.append(tip.render(submission))
 
         formatted_tips = render_template('templates/html/tip_group.html', {
@@ -75,13 +75,3 @@ class MCQBlock(QuestionnaireAbstractBlock):
         }
         log.debug(u'MCQ submission result: %s', result)
         return result
-
-    def get_submission_display(self, submission):
-        """
-        Get the human-readable version of a submission value
-        """
-        for choice in self.custom_choices:
-            if choice.value == submission:
-                return choice.content
-        return submission
-
