@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2014 Harvard
@@ -25,11 +26,9 @@
 
 import logging
 
-from xblock.fragment import Fragment
 
-from .choice import ChoiceBlock
-from .tip import TipBlock
-from .light_children import LightChild, Scope, String
+from .light_children import Scope, String
+from .questionnaire import QuestionnaireAbstractBlock
 from .utils import render_template
 
 
@@ -40,59 +39,16 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MCQBlock(LightChild):
+class MCQBlock(QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
-
-    Must be a child of a MentoringBlock. Allow to display a tip/advice depending on the
-    values entered by the student, and supports multiple types of multiple-choice
-    set, with preset choices and author-defined values.
     """
-    question = String(help="Question to ask the student", scope=Scope.content, default="")
     type = String(help="Type of MCQ", scope=Scope.content, default="choices")
     student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
     low = String(help="Label for low ratings", scope=Scope.content, default="Less")
     high = String(help="Label for high ratings", scope=Scope.content, default="More")
 
-    @classmethod
-    def init_block_from_node(cls, block, node, attr):
-        block.light_children = []
-        for child_id, xml_child in enumerate(node):
-            if xml_child.tag == "question":
-                block.question = xml_child.text
-            else:
-                cls.add_node_as_child(block, xml_child, child_id)
-
-        for name, value in attr:
-            setattr(block, name, value)
-
-        return block
-
-    def mentoring_view(self, context=None):
-        if str(self.type) not in ('rating', 'choices'):
-            raise ValueError, u'Invalid value for MCQBlock.type: `{}`'.format(self.type)
-
-        template_path = 'templates/html/mcq_{}.html'.format(self.type)
-        html = render_template(template_path, {
-            'self': self,
-            'custom_choices': self.custom_choices,
-        })
-
-        fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self.xblock_container,
-                                                             'public/css/mcq.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
-                                                                    'public/js/mcq.js'))
-        fragment.initialize_js('MCQBlock')
-        return fragment
-
-    @property
-    def custom_choices(self):
-        custom_choices = []
-        for child in self.get_children_objects():
-            if isinstance(child, ChoiceBlock):
-                custom_choices.append(child)
-        return custom_choices
+    valid_types = ('rating', 'choices')
 
     def submit(self, submission):
         log.debug(u'Received MCQ submission: "%s"', submission)
@@ -100,7 +56,6 @@ class MCQBlock(LightChild):
         completed = True
         tips_fragments = []
         for tip in self.get_tips():
-            log.warn(tip)
             completed = completed and tip.is_completed(submission)
             if tip.is_tip_displayed(submission):
                 tips_fragments.append(tip.render(submission))
@@ -130,12 +85,3 @@ class MCQBlock(LightChild):
                 return choice.content
         return submission
 
-    def get_tips(self):
-        """
-        Returns the tips contained in this block
-        """
-        tips = []
-        for child in self.get_children_objects():
-            if isinstance(child, TipBlock):
-                tips.append(child)
-        return tips

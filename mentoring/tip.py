@@ -89,5 +89,4 @@ class TipBlock(LightChild):
     @property
     def reject_with_defaults(self):
         reject = commas_to_list(self.reject)
-        log.debug(reject)
         return reject or []
