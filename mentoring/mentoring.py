@@ -24,6 +24,7 @@
 # Imports ###########################################################
 
 import logging
+import uuid
 
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
@@ -59,9 +60,9 @@ class MentoringBlock(XBlockWithLightChildren):
     followed_by = String(help="url_name of the step after the current mentoring block in workflow",
                          default=None, scope=Scope.content)
     url_name = String(help="Name of the current step, used for URL building",
-                      default='mentoring', scope=Scope.content)
+                      default='mentoring-default', scope=Scope.content)
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
-                                 default=True, scope=Scope.content)
+                                 default=False, scope=Scope.content)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
     icon_class = 'problem'
@@ -135,7 +136,6 @@ class MentoringBlock(XBlockWithLightChildren):
         elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
-        log.warn(submit_results);
         self.completed = bool(completed)
         return {
             'submitResults': submit_results,
@@ -163,8 +163,9 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment = Fragment()
         fragment.add_content(render_template('templates/html/mentoring_edit.html', {
             'self': self,
+            'xml_content': self.xml_content or self.default_xml_content,
         }))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+        fragment.add_javascript(load_resource('public/js/mentoring_edit.js'))
 
         fragment.initialize_js('MentoringEditBlock')
 
@@ -172,13 +173,34 @@ class MentoringBlock(XBlockWithLightChildren):
 
     @XBlock.json_handler
     def studio_submit(self, submissions, suffix=''):
-        log.info(u'Received submissions: {}'.format(submissions))
+        log.info(u'Received studio submissions: {}'.format(submissions))
 
         # TODO-MRQ: Add XML validation
         self.xml_content = submissions['xml_content']
         return {
             'result': 'success',
         }
+
+    @property
+    def default_xml_content(self):
+        return render_template('templates/xml/mentoring_default.xml', {
+            'self': self,
+            'url_name': self.url_name_with_default,
+        })
+
+    @property
+    def url_name_with_default(self):
+        """
+        Ensure the `url_name` is set to a unique, non-empty value.
+        This should ideally be handled by Studio, but we need to declare the attribute
+        to be able to use it from the workbench, and when this happen Studio doesn't set
+        a unique default value - this property gives either the set value, or if none is set
+        a randomized default value
+        """
+        if self.url_name == 'mentoring-default':
+            return 'mentoring-{}'.format(uuid.uuid4())
+        else:
+            return self.url_name
 
     @staticmethod
     def workbench_scenarios():

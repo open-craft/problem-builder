@@ -73,6 +73,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
+        log.debug('parse_xml called')
         block = runtime.construct_xblock_from_class(cls, keys)
         cls.init_block_from_node(block, node, node.items())
         block.xml_content = getattr(block, 'xml_content', '') or etree.tostring(node)
