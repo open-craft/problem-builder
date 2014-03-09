@@ -26,6 +26,9 @@
 import logging
 import uuid
 
+from lxml import etree
+from StringIO import StringIO
+
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
@@ -166,6 +169,7 @@ class MentoringBlock(XBlockWithLightChildren):
             'xml_content': self.xml_content or self.default_xml_content,
         }))
         fragment.add_javascript(load_resource('public/js/mentoring_edit.js'))
+        fragment.add_css(load_resource('public/css/mentoring_edit.css'))
 
         fragment.initialize_js('MentoringEditBlock')
 
@@ -175,11 +179,22 @@ class MentoringBlock(XBlockWithLightChildren):
     def studio_submit(self, submissions, suffix=''):
         log.info(u'Received studio submissions: {}'.format(submissions))
 
-        # TODO-MRQ: Add XML validation
-        self.xml_content = submissions['xml_content']
-        return {
-            'result': 'success',
-        }
+        xml_content = submissions['xml_content']
+        try:
+            etree.parse(StringIO(xml_content))
+        except etree.XMLSyntaxError as e:
+            response = {
+                'result': 'error',
+                'message': e.message
+            }
+        else:
+            response = {
+                'result': 'success',
+            }
+            self.xml_content = xml_content
+
+        log.debug(u'Response from Studio: {}'.format(response))
+        return response
 
     @property
     def default_xml_content(self):
