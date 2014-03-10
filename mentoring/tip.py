@@ -36,16 +36,14 @@ log = logging.getLogger(__name__)
 
 # Functions #########################################################
 
-def commas_to_list(commas_str):
+def commas_to_set(commas_str):
     """
-    Converts a comma-separated string to a list
+    Converts a comma-separated string to a set
     """
-    if commas_str is None:
-        return None # Means default value (which can be non-empty)
-    elif commas_str == '':
-        return [] # Means empty list
+    if not commas_str:
+        return set()
     else:
-        return commas_str.split(',')
+        return set(commas_str.split(','))
 
 
 
@@ -58,8 +56,9 @@ class TipBlock(LightChild):
     content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
     display = String(help="List of choices to display the tip for", scope=Scope.content, default=None)
     reject = String(help="List of choices to reject", scope=Scope.content, default=None)
+    require = String(help="List of choices to require", scope=Scope.content, default=None)
 
-    def render(self, submission):
+    def render(self):
         """
         Returns a fragment containing the formatted tip
         """
@@ -70,32 +69,15 @@ class TipBlock(LightChild):
         }))
         return self.xblock_container.fragment_text_rewriting(fragment)
 
-    def is_completed(self, submissions):
-        if not submissions:
-            return False
-
-        for submission in submissions:
-            if submission in self.reject_with_defaults:
-                return False
-        return True
-
-    def is_tip_displayed(self, submissions):
-        for submission in submissions:
-            if submission in self.display_with_defaults:
-                return True
-        return False
-
     @property
     def display_with_defaults(self):
-        display = commas_to_list(self.display)
-        if display is None:
-            display = self.reject_with_defaults
-        else:
-            display += [choice for choice in self.reject_with_defaults
-                               if choice not in display]
-        return display
+        display = commas_to_set(self.display)
+        return display | self.reject_with_defaults | self.require_with_defaults
 
     @property
     def reject_with_defaults(self):
-        reject = commas_to_list(self.reject)
-        return reject or []
+        return commas_to_set(self.reject)
+
+    @property
+    def require_with_defaults(self):
+        return commas_to_set(self.require)

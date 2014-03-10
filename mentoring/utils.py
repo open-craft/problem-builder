@@ -73,7 +73,6 @@ def get_scenarios_from_path(scenarios_path, include_identifier=False):
     """
     base_fullpath = os.path.dirname(os.path.realpath(__file__))
     scenarios_fullpath = os.path.join(base_fullpath, scenarios_path)
-    print scenarios_fullpath
 
     scenarios = []
     if os.path.isdir(scenarios_fullpath):

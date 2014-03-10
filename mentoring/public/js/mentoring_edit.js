@@ -2,7 +2,7 @@ function MentoringEditBlock(runtime, element) {
     var xmlEditorTextarea = $('.block-xml-editor', element),
         xmlEditor = CodeMirror.fromTextArea(xmlEditorTextarea[0], { mode: 'xml' });
 
-    $('.save-button').bind('click', function() {
+    $('.save-button', element).bind('click', function() {
         var handlerUrl = runtime.handlerUrl(element, 'studio_submit'),
             data = {
                 'xml_content': xmlEditor.getValue(),

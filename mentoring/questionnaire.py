@@ -48,7 +48,10 @@ class QuestionnaireAbstractBlock(LightChild):
     values entered by the student, and supports multiple types of multiple-choice
     set, with preset choices and author-defined values.
     """
+    type = String(help="Type of questionnaire", scope=Scope.content, default="choices")
     question = String(help="Question to ask the student", scope=Scope.content, default="")
+
+    valid_types = ('choices')
 
     @classmethod
     def init_block_from_node(cls, block, node, attr):
@@ -77,11 +80,16 @@ class QuestionnaireAbstractBlock(LightChild):
         })
 
         fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self.xblock_container,
-                                                             'public/css/questionnaire.css'))
+        fragment.add_css(render_template('public/css/questionnaire.css', {
+            'self': self,
+            'correct_icon_url': self.runtime.local_resource_url(self.xblock_container,
+                                                                'public/img/correct-icon.png'),
+            'incorrect_icon_url': self.runtime.local_resource_url(self.xblock_container,
+                                                                  'public/img/incorrect-icon.png'),
+        }))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
                                                                     'public/js/questionnaire.js'))
-        fragment.initialize_js('QuestionnaireBlock')
+        fragment.initialize_js(name)
         return fragment
 
     @property

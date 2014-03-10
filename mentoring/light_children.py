@@ -249,6 +249,12 @@ class String(LightChildField):
 class Boolean(LightChildField):
     pass
 
+
+class List(LightChildField):
+    def __init__(self, *args, **kwargs):
+        self.value = kwargs.get('default', [])
+
+
 class Scope(object):
     content = None
     user_state = None

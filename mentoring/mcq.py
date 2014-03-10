@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2014 Harvard
@@ -56,11 +55,11 @@ class MCQBlock(QuestionnaireAbstractBlock):
         completed = True
         tips_fragments = []
         for tip in self.get_tips():
-            completed = completed and tip.is_completed([submission])
-            if tip.is_tip_displayed([submission]):
-                tips_fragments.append(tip.render(submission))
+            completed = completed and self.is_tip_completed(tip, submission)
+            if submission in tip.display_with_defaults:
+                tips_fragments.append(tip.render())
 
-        formatted_tips = render_template('templates/html/tip_group.html', {
+        formatted_tips = render_template('templates/html/tip_question_group.html', {
             'self': self,
             'tips_fragments': tips_fragments,
             'submission': submission,
@@ -75,3 +74,12 @@ class MCQBlock(QuestionnaireAbstractBlock):
         }
         log.debug(u'MCQ submission result: %s', result)
         return result
+
+    def is_tip_completed(self, tip, submission):
+        if not submission:
+            return False
+
+        if submission in tip.reject_with_defaults:
+            return False
+
+        return True

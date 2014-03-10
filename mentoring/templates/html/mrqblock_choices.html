@@ -5,8 +5,9 @@
     <div class="choice">
       <span class="choice-result"></span>
       <label class="choice-label">
-        <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %}> {{ choice.content }}
+        <input class="choice-selector" type="checkbox" name="{{ self.name }}" value="{{ choice.value }}"{% if choice.value in self.student_choices %} checked{% endif %}> {{ choice.content }}
       </label>
+      <div class="choice-tips"></div>
     </div>
     {% endfor %}
   </div>

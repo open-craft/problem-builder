@@ -8,7 +8,26 @@
     margin-bottom: 5px;
 }
 
-.mentoring .choices .choice {
+.mentoring .choices .choices .choice {
+    margin: 10px 0;
+}
+
+.mentoring .choices .choices .choice-result {
+    padding-right: 40px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.mentoring .choices .choices .choice-result.correct {
+    background-image: url({{ correct_icon_url }});
+    cursor: pointer;
+}
+.mentoring .choices .choices .choice-result.incorrect {
+    background-image: url({{ incorrect_icon_url }});
+    cursor: pointer;
+}
+
+.mentoring .rating .choices .choice {
     margin-right: 10px;
 }
 

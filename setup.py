@@ -54,6 +54,7 @@ BLOCKS_CHILDREN = [
     'answer = mentoring:AnswerBlock',
     'quizz = mentoring:MCQBlock',
     'mcq = mentoring:MCQBlock',
+    'mrq = mentoring:MRQBlock',
     'message = mentoring:MentoringMessageBlock',
     'tip = mentoring:TipBlock',
     'choice = mentoring:ChoiceBlock',
