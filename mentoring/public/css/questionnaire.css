@@ -27,6 +27,39 @@
     cursor: pointer;
 }
 
+.mentoring .choices .choices .choice-tips {
+    display: none;
+    background-color: #0384ce;
+    color: #fff;
+    padding: 20px;
+    position: absolute;
+    width: 600px;
+    margin: 10px 0;
+}
+
+.mentoring .choices .choices .choice-tips .title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.mentoring .choices .choices .choice-tips .tip-choice-group {
+    position: relative;
+}
+
+.mentoring .choices .choices .choice-tips .tip-choice-group .close {
+    background-image: url({{ close_icon_url }});
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 18px;
+    height: 19px;
+}
+
+.mentoring .choices .choices .choice-tips p {
+    color: #fff;
+}
+
 .mentoring .rating .choices .choice {
     margin-right: 10px;
 }

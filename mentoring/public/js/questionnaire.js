@@ -37,18 +37,36 @@ function MRQBlock(runtime, element) {
 
         handleSubmit: function(result) {
             $.each(result.choices, function(index, choice) {
-                var choice_input_dom = $('.choice input[value='+choice.value+']', element),
-                    choice_dom = choice_input_dom.closest('.choice'),
-                    choice_result_dom = $('.choice-result', choice_dom),
-                    choice_tips_dom = $('.choice-tips', choice_dom);
+                var choiceInputDOM = $('.choice input[value='+choice.value+']', element),
+                    choiceDOM = choiceInputDOM.closest('.choice'),
+                    choiceResultDOM = $('.choice-result', choiceDOM),
+                    choiceTipsDOM = $('.choice-tips', choiceDOM),
+                    choiceTipsCloseDOM,
+                    clearPopupEvents;
+
+                clearPopupEvents = function() {
+                    $('.choice-tips', element).hide();
+                    $('.choice-tips .close').off('click');
+                };
 
                 if (choice.completed) {
-                    choice_result_dom.removeClass('incorrect').addClass('correct');
+                    choiceResultDOM.removeClass('incorrect').addClass('correct');
                 } else {
-                    choice_result_dom.removeClass('correct').addClass('incorrect');
+                    choiceResultDOM.removeClass('correct').addClass('incorrect');
                 }
 
-                choice_tips_dom.html(choice.tips);
+                choiceTipsDOM.html(choice.tips);
+
+                choiceTipsCloseDOM = $('.close', choiceTipsDOM);
+                choiceResultDOM.off('click').on('click', function() {
+                    clearPopupEvents();
+                    choiceTipsDOM.show();
+
+                    choiceTipsCloseDOM.on('click', function() {
+                        clearPopupEvents();
+                        choiceTipsDOM.hide();
+                    });
+                });
             });
         }
     };

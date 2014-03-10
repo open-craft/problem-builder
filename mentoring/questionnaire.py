@@ -86,6 +86,8 @@ class QuestionnaireAbstractBlock(LightChild):
                                                                 'public/img/correct-icon.png'),
             'incorrect_icon_url': self.runtime.local_resource_url(self.xblock_container,
                                                                   'public/img/incorrect-icon.png'),
+            'close_icon_url': self.runtime.local_resource_url(self.xblock_container,
+                                                              'public/img/close.png'),
         }))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
                                                                     'public/js/questionnaire.js'))
