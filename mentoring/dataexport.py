@@ -70,8 +70,10 @@ class MentoringDataExportBlock(XBlock):
         return response
 
     def get_csv(self):
-        answers = Answer.objects.all().order_by('student_id', 'name')
-        answers_names = Answer.objects.values_list('name', flat=True).distinct().order_by('name')
+        course_id = self.xmodule_runtime.course_id
+
+        answers = Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
+        answers_names = answers.values_list('name', flat=True).distinct().order_by('name')
 
         # Header line
         yield list2csv([u'student_id'] + list(answers_names))
