@@ -7,6 +7,10 @@
     margin: 5px 0 10px;
 }
 
+.mentoring .choices .choices-list {
+    position: relative;
+}
+
 .mentoring .choices .choice {
     margin: 10px 0;
 }
@@ -28,17 +32,23 @@
 
 .mentoring .choices .choice-tips {
     display: none;
-    background-color: #0384ce;
     color: #fff;
-    padding: 20px;
     position: absolute;
-    width: 600px;
-    margin: 10px 0;
+    top: 0;
+    right: 0;
+    background: none repeat scroll 0 0 #5C9DD5;
+    font-family: arial;
+    font-size: 14px;
+    height: 100%;
+    opacity: 0.9;
+    padding: 10px;
+    width: 300px;
 }
 
 .mentoring .choices .choice-tips .title {
-    font-weight: bold;
-    margin-bottom: 10px;
+    margin: 0 0 5px;
+    font-size: 18px;
+    font-family: arial;
 }
 
 .mentoring .choices .choice-tips .tip-choice-group {
@@ -49,10 +59,10 @@
     background-image: url({{ close_icon_url }});
     cursor: pointer;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -10px;
+    right: -10px;
     width: 18px;
-    height: 19px;
+    height: 21px;
 }
 
 .mentoring .choices .choice-tips p {
