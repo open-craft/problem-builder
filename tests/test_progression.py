@@ -63,7 +63,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
 
         progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         mentoring = self.go_to_page('Progression 2')
@@ -82,7 +82,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         submit.click()
 
         progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         mentoring = self.go_to_page('Progression 2')

@@ -45,7 +45,7 @@ class MCQBlockTest(MentoringBaseTest):
 
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.find_elements_by_xpath('./*'))
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         mcq1_legend = mcq1.find_element_by_css_selector('legend')
@@ -99,7 +99,7 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(len(tips), 2)
         self.assertEqual(tips[0].text, 'To the question "Do you like this MCQ?", you have not provided an answer.')
         self.assertEqual(tips[1].text, 'To the question "How much do you rate this MCQ?", you have not provided an answer.')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # Select only one option
@@ -111,7 +111,7 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(len(tips), 2)
         self.assertEqual(tips[0].text, 'To the question "Do you like this MCQ?", you answered "Maybe not".\nAh, damn.')
         self.assertEqual(tips[1].text, 'To the question "How much do you rate this MCQ?", you have not provided an answer.')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # One with only display tip, one with reject tip - should not complete
@@ -124,7 +124,7 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(len(tips), 2)
         self.assertEqual(tips[0].text, 'To the question "Do you like this MCQ?", you answered "Yes".\nGreat!')
         self.assertEqual(tips[1].text, 'To the question "How much do you rate this MCQ?", you answered "3".\nWill do better next time...')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # Only display tips, to allow to complete
