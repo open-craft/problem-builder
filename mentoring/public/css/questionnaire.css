@@ -3,31 +3,30 @@
     font-weight: bold;
 }
 
-.mentoring .rating,
-.mentoring .choices {
-    margin-bottom: 5px;
+.mentoring .rating .choices-list {
+    margin: 5px 0 10px;
 }
 
-.mentoring .choices .choices .choice {
+.mentoring .choices .choice {
     margin: 10px 0;
 }
 
-.mentoring .choices .choices .choice-result {
+.mentoring .choices .choice-result {
     padding-right: 40px;
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.mentoring .choices .choices .choice-result.correct {
+.mentoring .choices .choice-result.correct {
     background-image: url({{ correct_icon_url }});
     cursor: pointer;
 }
-.mentoring .choices .choices .choice-result.incorrect {
+.mentoring .choices .choice-result.incorrect {
     background-image: url({{ incorrect_icon_url }});
     cursor: pointer;
 }
 
-.mentoring .choices .choices .choice-tips {
+.mentoring .choices .choice-tips {
     display: none;
     background-color: #0384ce;
     color: #fff;
@@ -37,16 +36,16 @@
     margin: 10px 0;
 }
 
-.mentoring .choices .choices .choice-tips .title {
+.mentoring .choices .choice-tips .title {
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-.mentoring .choices .choices .choice-tips .tip-choice-group {
+.mentoring .choices .choice-tips .tip-choice-group {
     position: relative;
 }
 
-.mentoring .choices .choices .choice-tips .tip-choice-group .close {
+.mentoring .choices .choice-tips .tip-choice-group .close {
     background-image: url({{ close_icon_url }});
     cursor: pointer;
     position: absolute;
@@ -56,14 +55,14 @@
     height: 19px;
 }
 
-.mentoring .choices .choices .choice-tips p {
+.mentoring .choices .choice-tips p {
     color: #fff;
 }
 
-.mentoring .rating .choices .choice {
+.mentoring .rating .choice {
     margin-right: 10px;
 }
 
-.mentoring .choices .choice .choice-selector {
+.mentoring .choices-list .choice-selector {
     margin-right: 5px;
 }
