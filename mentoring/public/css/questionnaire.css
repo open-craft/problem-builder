@@ -30,7 +30,8 @@
     cursor: pointer;
 }
 
-.mentoring .choices .choice-tips {
+.mentoring .choices .choice-tips,
+.mentoring .choices .choice-message {
     display: none;
     color: #fff;
     position: absolute;
@@ -51,11 +52,13 @@
     font-family: arial;
 }
 
-.mentoring .choices .choice-tips .tip-choice-group {
+.mentoring .choices .choice-tips .tip-choice-group,
+.mentoring .choices .choice-message .message-content {
     position: relative;
 }
 
-.mentoring .choices .choice-tips .tip-choice-group .close {
+.mentoring .choices .choice-tips .close,
+.mentoring .choices .choice-message .close {
     background-image: url({{ close_icon_url }});
     cursor: pointer;
     position: absolute;

@@ -50,6 +50,7 @@ class QuestionnaireAbstractBlock(LightChild):
     """
     type = String(help="Type of questionnaire", scope=Scope.content, default="choices")
     question = String(help="Question to ask the student", scope=Scope.content, default="")
+    message = String(help="General feedback provided when submiting", scope=Scope.content, default="")
 
     valid_types = ('choices')
 
@@ -57,8 +58,10 @@ class QuestionnaireAbstractBlock(LightChild):
     def init_block_from_node(cls, block, node, attr):
         block.light_children = []
         for child_id, xml_child in enumerate(node):
-            if xml_child.tag == "question":
+            if xml_child.tag == 'question':
                 block.question = xml_child.text
+            elif xml_child.tag == 'message' and xml_child.get('type') == 'on-submit':
+                block.message = (xml_child.text or '').strip()
             else:
                 cls.add_node_as_child(block, xml_child, child_id)
 

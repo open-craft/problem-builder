@@ -78,6 +78,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'submissions': submissions,
             'completed': completed,
             'choices': results,
+            'message': self.message,
         }
         log.debug(u'MRQ submissions result: %s', result)
         return result
