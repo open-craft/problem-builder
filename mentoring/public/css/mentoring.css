@@ -48,3 +48,7 @@
 .mentoring .submit {
     margin-top: 20px;
 }
+
+.mentoring .progress .indicator .checkmark {
+    margin-top: 25px;
+}
