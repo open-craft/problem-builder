@@ -1,14 +1,10 @@
-.mentoring .rating .question,
-.mentoring .choices .question {
-    font-weight: bold;
-}
-
 .mentoring .rating .choices-list {
     margin: 5px 0 10px;
 }
 
 .mentoring .choices .choices-list {
     position: relative;
+    margin-top: 20px;
 }
 
 .mentoring .choices .choice {
