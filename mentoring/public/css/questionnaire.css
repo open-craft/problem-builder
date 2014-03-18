@@ -12,18 +12,20 @@
 }
 
 .mentoring .choices .choice-result {
-    padding-right: 40px;
+    padding-right: 10px;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .mentoring .choices .choice-result.correct {
-    background-image: url({{ correct_icon_url }});
-    cursor: pointer;
+    color: #006600
 }
+
 .mentoring .choices .choice-result.incorrect {
-    background-image: url({{ incorrect_icon_url }});
-    cursor: pointer;
+    margin-right: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #ff0000;
 }
 
 .mentoring .choices .choice-tips,
