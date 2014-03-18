@@ -31,7 +31,6 @@ import unicodecsv
 from cStringIO import StringIO
 from django.template import Context, Template
 from xblock.fragment import Fragment
-from workbench.scenarios import add_xml_scenario
 
 
 # Globals ###########################################################
@@ -93,10 +92,7 @@ def load_scenarios_from_path(scenarios_path):
     """
     Load all xml files contained in a specified directory, as workbench scenarios
     """
-    scenarios = get_scenarios_from_path(scenarios_path, include_identifier=True)
-    for identifier, title, xml_template in scenarios:
-        add_xml_scenario(identifier, title, xml_template)
-    return scenarios
+    return get_scenarios_from_path(scenarios_path, include_identifier=True)
 
 
 # Classes ###########################################################
