@@ -116,6 +116,11 @@ directory, enter:
 $ pip install -e .
 ```
 
+Since `XBlock` and `xblock-mentoring` are both in development, it is recommended
+to use the `XBlock` revision specified in the workbench/LMS requirements.txt
+file. The main `XBlock` repository is not always ready to use in edx-platform
+and you might experience some issues.
+
 Custom workbench settings
 -------------------------
 
@@ -157,7 +162,7 @@ $ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" PYTHONPATH=".:/path/to/x
 ```
 
 `/path/to/xblock` is the path to the XBlock main repository (the one containing the workbench)
- 
+
 Adding custom scenarios to the workbench
 ----------------------------------------
 
@@ -170,4 +175,3 @@ $ cat > templates/xml/my_mentoring_scenario.xml
 ```
 
 Restart the workbench to take the new scenarios into account.
-
