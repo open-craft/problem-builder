@@ -34,7 +34,8 @@ function MentoringBlock(runtime, element) {
             callIfExists(child, 'handleSubmit', result);
         });
 
-        $('.progress', element).data('completed', results.completed ? 'True' : 'False')
+        $('.progress', element).data('completed', results.completed ? 'True' : 'False');
+        $('.progress', element).data('attempted', results.attempted ? 'True' : 'False');
         renderProgress();
 
         // Messages should only be displayed upon hitting 'submit', not on page reload

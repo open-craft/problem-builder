@@ -139,6 +139,7 @@ class MentoringBlock(XBlockWithLightChildren):
         return {
             'submitResults': submit_results,
             'completed': self.completed,
+            'attempted': self.attempted,
             'message': message,
         }
 

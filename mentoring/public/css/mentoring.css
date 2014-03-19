@@ -49,6 +49,15 @@
     margin-top: 20px;
 }
 
-.mentoring .progress .indicator .checkmark {
+.mentoring .progress .indicator {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.mentoring .progress .indicator .checkmark-correct {
     color: #006600;
+}
+
+.mentoring .progress .indicator .checkmark-incorrect {
+    color: #ff0000;
 }
