@@ -13,12 +13,13 @@
 
 .mentoring .choices .choice-result {
     padding-right: 10px;
-    background-position: center;
-    background-repeat: no-repeat;
+    vertical-align: middle;
 }
 
 .mentoring .choices .choice-result.correct {
-    color: #006600
+    color: #006600;
+    position: relative;
+    top: -3px;
 }
 
 .mentoring .choices .choice-result.incorrect {
