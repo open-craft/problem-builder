@@ -89,6 +89,10 @@ function MentoringBlock(runtime, element) {
         });
 
         if (submit_dom.length) {
+            /* On page load, remove the incomplete mark */
+            if ($('.progress', element).data('completed') === "False")
+                $('.progress', element).data('completed', null)
+
             renderProgress();
         }
 
