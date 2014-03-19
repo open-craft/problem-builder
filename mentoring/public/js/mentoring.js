@@ -34,7 +34,8 @@ function MentoringBlock(runtime, element) {
             callIfExists(child, 'handleSubmit', result);
         });
 
-        $('.progress', element).data('completed', results.completed ? 'True' : 'False')
+        $('.progress', element).data('completed', results.completed ? 'True' : 'False');
+        $('.progress', element).data('attempted', results.attempted ? 'True' : 'False');
         renderProgress();
 
         // Messages should only be displayed upon hitting 'submit', not on page reload
@@ -89,10 +90,6 @@ function MentoringBlock(runtime, element) {
         });
 
         if (submit_dom.length) {
-            /* On page load, remove the incomplete mark */
-            if ($('.progress', element).data('completed') === "False")
-                $('.progress', element).data('completed', null)
-
             renderProgress();
         }
 

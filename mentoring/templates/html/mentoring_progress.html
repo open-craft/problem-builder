@@ -1,7 +1,7 @@
 <script type="text/template" id="xblock-progress-template">
     <% if (completed === "True") {{ %>
       <i class="icon-ok icon-2x checkmark-correct"></i>
-    <% }} else if (completed === "False") {{ %>
+    <% }} else if (attempted === "True") {{ %>
        <i class="icon-exclamation icon-2x checkmark-incorrect"></i>
     <% }} %>
 </script>
