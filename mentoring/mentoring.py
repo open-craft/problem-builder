@@ -49,7 +49,7 @@ class MentoringBlock(XBlockWithLightChildren):
     """
     An XBlock providing mentoring capabilities
 
-    Composed of text, answers input fields, and a set of MRQ/MCQ with advices. 
+    Composed of text, answers input fields, and a set of MRQ/MCQ with advices.
     A set of conditions on the provided answers and MCQ/MRQ choices will determine if the
     student is a) provided mentoring advices and asked to alter his answer, or b) is given the
     ok to continue.
@@ -74,8 +74,6 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
                                                               not_instance_of=MentoringMessageBlock)
 
-        correct_icon_url = self.runtime.local_resource_url(self, 'public/img/correct-icon.png')
-
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
@@ -85,9 +83,7 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment.add_javascript_url(
                     self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(load_resource('templates/html/mentoring_progress.html').format(
-                completed=correct_icon_url),
-            "text/html")
+        fragment.add_resource(load_resource('templates/html/mentoring_progress.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
 

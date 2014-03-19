@@ -53,7 +53,7 @@ function MRQBlock(runtime, element) {
                 };
 
             if (result.message) {
-                messageDOM.html('<div class="message-content"><div class="close"></div>' + 
+                messageDOM.html('<div class="message-content"><div class="close"></div>' +
                                 result.message + '</div>');
                 showPopup(messageDOM);
             }
@@ -66,9 +66,9 @@ function MRQBlock(runtime, element) {
                     choiceTipsCloseDOM;
 
                 if (choice.completed) {
-                    choiceResultDOM.removeClass('incorrect').addClass('correct');
+                    choiceResultDOM.removeClass('incorrect icon-exclamation').addClass('correct icon-ok');
                 } else {
-                    choiceResultDOM.removeClass('correct').addClass('incorrect');
+                    choiceResultDOM.removeClass('correct icon-ok').addClass('incorrect icon-exclamation');
                 }
 
                 choiceTipsDOM.html(choice.tips);
