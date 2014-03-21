@@ -11,21 +11,26 @@
     margin: 10px 0;
 }
 
+.mentoring .choices .choice-checkbox {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .mentoring .choices .choice-result {
-    padding-right: 10px;
+    display: inline-block;
+    width: 40px;
     vertical-align: middle;
 }
 
-.mentoring .choices .choice-result.correct {
+.mentoring .choices .choice-result.correct, .choice-answer.correct {
     color: #006600;
     position: relative;
     top: -3px;
 }
 
-.mentoring .choices .choice-result.incorrect {
-    margin-right: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+.mentoring .choices .choice-result.incorrect, .choice-answer.incorrect {
+    text-align:center;
     color: #ff0000;
 }
 

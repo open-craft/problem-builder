@@ -35,7 +35,7 @@ function MRQBlock(runtime, element) {
             if (_.isUndefined(this.answers))
               showAnswerButton.hide();
             else
-              showAnswerButton.on('click', _.bind(this.displayAnswers, this));
+              showAnswerButton.on('click', _.bind(this.toggleAnswers, this));
           }
         },
 
@@ -44,6 +44,11 @@ function MRQBlock(runtime, element) {
         },
 
         submit: function() {
+            // hide answers
+            var choiceInputDOM = $('.choice input', element),
+                choiceResultDOM = $('.choice-answer', choiceInputDOM.closest('.choice'));
+            choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
+
             var checkedCheckboxes = $('input[type=checkbox]:checked', element),
                 checkedValues = [];
 
@@ -91,7 +96,8 @@ function MRQBlock(runtime, element) {
                 });
 
                 choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
-                if (choiceInputDOM.prop('checked')) { /* show hint if checked */
+              /* show hint if checked or max_attempts is disabled */
+                if (choiceInputDOM.prop('checked') || _.isNull(result.max_attempts)) {
                   if (choice.completed) {
                     choiceResultDOM.addClass('correct icon-ok');
                   } else if (!choice.completed) {
@@ -112,21 +118,19 @@ function MRQBlock(runtime, element) {
             this.renderAttempts();
         },
 
-      displayAnswers: function() {
+      toggleAnswers: function() {
         var showAnswerButton = $('button span', element);
         var answers_displayed = this.answers_displayed = !this.answers_displayed;
 
         _.each(this.answers, function(answer) {
-          var choiceResultDOM = $('.choice-result', answer.input.closest('.choice'));
+          var choiceResultDOM = $('.choice-answer', answer.input.closest('.choice'));
           choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
           if (answers_displayed) {
-            answer.input.attr('checked', answer.answer);
             if (answer.answer)
               choiceResultDOM.addClass('correct icon-ok');
             showAnswerButton.text('Hide Answer(s)');
           }
           else {
-            answer.input.attr('checked', false);
             showAnswerButton.text('Show Answer(s)');
           }
         });

@@ -80,7 +80,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         # What's the proper way to get my value saved? it doesn't work without '.value'
         # this is incorrect and the num_attempts is resetted if we restart the server.
-        self.num_attempts.value = int(self.num_attempts) + 1
+        self.num_attempts.value = int(self.num_attempts) + 1 if self.max_attempts else 0
 
         max_attempts_reached = False
         if self.max_attempts:
@@ -89,9 +89,9 @@ class MRQBlock(QuestionnaireAbstractBlock):
             max_attempts_reached = num_attempts >= max_attempts
 
         if max_attempts_reached and (not completed or num_attempts > max_attempts):
-            log.debug(u'MRQ max attempts reached');
             completed = True
-            self.message += u' You have reached the maximum number of attempts for this question. Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
+            self.message += u' You have reached the maximum number of attempts for this question. ' \
+            'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
         else: # only save the student_choices if there was a attempt left, might be incorrect or unuseful
             self.student_choices = submissions
 
