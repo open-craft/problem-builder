@@ -260,7 +260,7 @@ class Integer(LightChildField):
     def __nonzero__(self):
         try:
             int(self.value)
-        except ValueError: # not an integer
+        except TypeError, ValueError: # not an integer
             return False
 
         return self.value is not None
