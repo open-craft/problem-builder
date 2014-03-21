@@ -1,0 +1,12 @@
+<script type="text/template" id="xblock-mrq-attempts">
+  <% if (_.isNumber(max_attempts)) {{ %>
+
+  <% if (num_attempts >= max_attempts) {{ %>
+  <button class="show">
+    <span class="show-label">Show Answer(s)</span>
+  </button>
+  <% }} %>
+
+  <div> You have used <%= _.min([num_attempts, max_attempts]) %> of <%= max_attempts %> attempts for this question.</div>
+  <% }} %>
+</script>

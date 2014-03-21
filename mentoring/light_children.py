@@ -246,6 +246,26 @@ class String(LightChildField):
         return self.value.split(*args, **kwargs)
 
 
+class Integer(LightChildField):
+    def __init__(self, *args, **kwargs):
+        self.value = kwargs.get('default', 0)
+        print self.value
+
+    def __str__(self):
+        return str(self.value)
+
+    def __int__(self):
+        return self.value
+
+    def __nonzero__(self):
+        try:
+            int(self.value)
+        except ValueError: # not an integer
+            return False
+
+        return self.value is not None
+
+
 class Boolean(LightChildField):
     pass
 

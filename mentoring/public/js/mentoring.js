@@ -74,7 +74,7 @@ function MentoringBlock(runtime, element) {
     }
 
     function initXBlock() {
-        var submit_dom = $(element).find('.submit');
+        var submit_dom = $(element).find('.submit input');
 
         submit_dom.bind('click', function() {
             var data = {};
@@ -87,6 +87,12 @@ function MentoringBlock(runtime, element) {
             }
             var handlerUrl = runtime.handlerUrl(element, 'submit');
             $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
+        });
+
+        // init children (especially mrq blocks)
+        var children = getChildren(element);
+        _.each(children, function(child) {
+          callIfExists(child, 'init');
         });
 
         if (submit_dom.length) {

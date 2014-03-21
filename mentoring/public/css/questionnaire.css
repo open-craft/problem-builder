@@ -78,3 +78,16 @@
 .mentoring .choices-list .choice-selector {
     margin-right: 5px;
 }
+
+.mentoring .mrq-attempts {
+    display: inline-block;
+    vertical-align: baseline;
+    margin: 8px 0 0 10px;
+    color: #777;
+    font-style: italic;
+    webkit-font-smoothing: antialiased;
+}
+
+.mentoring .mrq-attempts div {
+    display: inline-block;
+}

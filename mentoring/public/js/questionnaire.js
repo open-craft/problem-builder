@@ -1,4 +1,5 @@
 // TODO: Split in two files
+var mrqAttemptsTemplate = _.template($('#xblock-mrq-attempts').html());
 
 function MCQBlock(runtime, element) {
     return {
@@ -25,6 +26,23 @@ function MCQBlock(runtime, element) {
 
 function MRQBlock(runtime, element) {
     return {
+        renderAttempts: function() {
+          var data = $('.mrq-attempts', element).data();
+          $('.mrq-attempts', element).html(mrqAttemptsTemplate(data));
+          // bind show answer button
+          var showAnswerButton = $('button', element);
+          if (showAnswerButton.length != 0) {
+            if (_.isUndefined(this.answers))
+              showAnswerButton.hide();
+            else
+              showAnswerButton.on('click', _.bind(this.displayAnswers, this));
+          }
+        },
+
+        init: function() {
+          this.renderAttempts();
+        },
+
         submit: function() {
             var checkedCheckboxes = $('input[type=checkbox]:checked', element),
                 checkedValues = [];
@@ -58,6 +76,7 @@ function MRQBlock(runtime, element) {
                 showPopup(messageDOM);
             }
 
+            var answers = []; // used in displayAnswers
             $.each(result.choices, function(index, choice) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element),
                     choiceDOM = choiceInputDOM.closest('.choice'),
@@ -65,10 +84,19 @@ function MRQBlock(runtime, element) {
                     choiceTipsDOM = $('.choice-tips', choiceDOM),
                     choiceTipsCloseDOM;
 
-                if (choice.completed) {
-                    choiceResultDOM.removeClass('incorrect icon-exclamation').addClass('correct icon-ok');
-                } else {
-                    choiceResultDOM.removeClass('correct icon-ok').addClass('incorrect icon-exclamation');
+                /* update our answers dict */
+                answers.push({
+                  input: choiceInputDOM,
+                  answer: choice.completed ? choiceInputDOM.attr('checked') : !choiceInputDOM.attr('checked')
+                });
+
+                choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
+                if (choiceInputDOM.prop('checked')) { /* show hint if checked */
+                  if (choice.completed) {
+                    choiceResultDOM.addClass('correct icon-ok');
+                  } else if (!choice.completed) {
+                    choiceResultDOM.addClass('incorrect icon-exclamation');
+                  }
                 }
 
                 choiceTipsDOM.html(choice.tips);
@@ -78,6 +106,32 @@ function MRQBlock(runtime, element) {
                     showPopup(choiceTipsDOM);
                 });
             });
-        }
+            this.answers = answers;
+
+            $('.mrq-attempts', element).data('num_attempts', result.num_attempts);
+            this.renderAttempts();
+        },
+
+      displayAnswers: function() {
+        var showAnswerButton = $('button span', element);
+        var answers_displayed = this.answers_displayed = !this.answers_displayed;
+
+        _.each(this.answers, function(answer) {
+          var choiceResultDOM = $('.choice-result', answer.input.closest('.choice'));
+          choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
+          if (answers_displayed) {
+            answer.input.attr('checked', answer.answer);
+            if (answer.answer)
+              choiceResultDOM.addClass('correct icon-ok');
+            showAnswerButton.text('Hide Answer(s)');
+          }
+          else {
+            answer.input.attr('checked', false);
+            showAnswerButton.text('Show Answer(s)');
+          }
+        });
+
+      }
+
     };
 }

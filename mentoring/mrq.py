@@ -26,7 +26,7 @@
 import logging
 
 
-from .light_children import List, Scope
+from .light_children import Integer, List, Scope
 from .questionnaire import QuestionnaireAbstractBlock
 from .utils import render_template
 
@@ -43,11 +43,14 @@ class MRQBlock(QuestionnaireAbstractBlock):
     An XBlock used to ask multiple-response questions
     """
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
+    max_attempts = Integer(help="Number of max attempts for this questions", default=None, scope=Scope.content)
+    num_attempts = Integer(help="Number of attempts a user has answered for this questions", scope=Scope.user_state)
 
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
         completed = True
+
         results = []
         for choice in self.custom_choices:
             choice_completed = True
@@ -73,12 +76,32 @@ class MRQBlock(QuestionnaireAbstractBlock):
                 }),
             })
 
-        self.student_choices = submissions
+        self.message = u'Your answer is correct!' if completed else u'Your answer is incorrect.'
+
+        # What's the proper way to get my value saved? it doesn't work without '.value'
+        # this is incorrect and the num_attempts is resetted if we restart the server.
+        self.num_attempts.value = int(self.num_attempts) + 1
+
+        max_attempts_reached = False
+        if self.max_attempts:
+            max_attempts = int(self.max_attempts)
+            num_attempts = int(self.num_attempts)
+            max_attempts_reached = num_attempts >= max_attempts
+
+        if max_attempts_reached and (not completed or num_attempts > max_attempts):
+            log.debug(u'MRQ max attempts reached');
+            completed = True
+            self.message += u' You have reached the maximum number of attempts for this question. Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
+        else: # only save the student_choices if there was a attempt left, might be incorrect or unuseful
+            self.student_choices = submissions
+
         result = {
             'submissions': submissions,
             'completed': completed,
             'choices': results,
             'message': self.message,
+            'max_attempts': int(self.max_attempts) if self.max_attempts else None,
+            'num_attempts': int(self.num_attempts)
         }
         log.debug(u'MRQ submissions result: %s', result)
         return result
