@@ -73,6 +73,10 @@ class QuestionnaireAbstractBlock(LightChild):
     def mentoring_view(self, context=None):
         name = self.__class__.__name__
 
+        # Ensure our data are loaded from the db
+        # TODO HACK, TO REMOVE.
+        self.load_student_data()
+
         if str(self.type) not in self.valid_types:
             raise ValueError, u'Invalid value for {}.type: `{}`'.format(name, self.type)
 

@@ -46,12 +46,14 @@ class MRQBlock(QuestionnaireAbstractBlock):
     max_attempts = Integer(help="Number of max attempts for this questions", default=None, scope=Scope.content)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions", scope=Scope.user_state)
 
+    # TODO REMOVE THIS, ONLY NEEDED FOR LIGHTCHILDREN
     @classmethod
     def get_fields(cls):
         return [
             'num_attempts'
         ]
 
+    # TODO REMOVE ALL USE OF THE get() METHOD
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 

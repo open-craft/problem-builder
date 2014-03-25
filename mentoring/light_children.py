@@ -209,8 +209,6 @@ class LightChild(Plugin, LightChildrenMixin):
     def __init__(self, parent):
         self.parent = parent
         self.xblock_container = parent.xblock_container
-        # This doesn't work, crash.... where should I trigger the lazy property to be loaded?
-        #self.load_student_data()
 
     def __setattr__(self, name, value):
 
@@ -255,8 +253,10 @@ class LightChild(Plugin, LightChildrenMixin):
         """
         Load the values from the student_data in the database.
         """
+        if not self.student_data:
+            return
 
-        student_data = self.student_data
+        student_data = json.loads(self.student_data)
         fields = self.get_fields()
         for field in fields:
             if field in student_data:
