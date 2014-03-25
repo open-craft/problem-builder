@@ -46,6 +46,12 @@ class MRQBlock(QuestionnaireAbstractBlock):
     max_attempts = Integer(help="Number of max attempts for this questions", default=None, scope=Scope.content)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions", scope=Scope.user_state)
 
+    @classmethod
+    def get_fields(cls):
+        return [
+            'num_attempts'
+        ]
+
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
@@ -66,7 +72,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
             completed = completed and choice_completed
             results.append({
-                'value': choice.value,
+                'value': choice.value.get(),
                 'selected': choice_selected,
                 'completed': choice_completed,
                 'tips': render_template('templates/html/tip_choice_group.html', {
@@ -80,12 +86,13 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         # What's the proper way to get my value saved? it doesn't work without '.value'
         # this is incorrect and the num_attempts is resetted if we restart the server.
-        self.num_attempts.value = int(self.num_attempts) + 1 if self.max_attempts else 0
+        num_attempts = self.num_attempts.get() + 1 if self.max_attempts else 0
+        setattr(self, 'num_attempts', num_attempts)
 
         max_attempts_reached = False
         if self.max_attempts:
-            max_attempts = int(self.max_attempts)
-            num_attempts = int(self.num_attempts)
+            max_attempts = self.max_attempts.get()
+            num_attempts = self.num_attempts.get()
             max_attempts_reached = num_attempts >= max_attempts
 
         if max_attempts_reached and (not completed or num_attempts > max_attempts):
@@ -96,12 +103,13 @@ class MRQBlock(QuestionnaireAbstractBlock):
             self.student_choices = submissions
 
         result = {
-            'submissions': submissions,
-            'completed': completed,
-            'choices': results,
-            'message': self.message,
-            'max_attempts': int(self.max_attempts) if self.max_attempts else None,
-            'num_attempts': int(self.num_attempts)
+        'submissions': submissions,
+        'completed': completed,
+        'choices': results,
+        'message': self.message.get(),
+        'max_attempts': self.max_attempts.get() if self.max_attempts else None,
+        'num_attempts': self.num_attempts.get()
         }
+
         log.debug(u'MRQ submissions result: %s', result)
         return result

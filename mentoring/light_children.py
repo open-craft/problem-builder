@@ -24,6 +24,9 @@
 # Imports ###########################################################
 
 import logging
+import json
+
+from lazy import lazy
 
 from cStringIO import StringIO
 from lxml import etree
@@ -33,6 +36,8 @@ from django.core.urlresolvers import reverse
 from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
+
+from .models import LightChild as LightChildModel
 
 try:
     from xmodule_modifiers import replace_jump_to_id_urls
@@ -194,6 +199,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         fragment = replace_jump_to_id_urls(course_id, jump_to_url, self, 'student_view', fragment, {})
         return fragment
 
+
 class LightChild(Plugin, LightChildrenMixin):
     """
     Base class for the light children
@@ -203,6 +209,31 @@ class LightChild(Plugin, LightChildrenMixin):
     def __init__(self, parent):
         self.parent = parent
         self.xblock_container = parent.xblock_container
+        # This doesn't work, crash.... where should I trigger the lazy property to be loaded?
+        #self.load_student_data()
+
+    def __setattr__(self, name, value):
+
+        field = getattr(self, name) if hasattr(self, name) else None
+
+        # If the property is a LightChildField instance, use its setattr
+        if isinstance(field, LightChildField):
+            field.set(value)
+        else:
+            super(LightChild, self).__setattr__(name, value)
+
+    @lazy
+    def student_data(self):
+        """
+        Use lazy property instead of XBlock field, as __init__() doesn't support
+        overwriting field values
+        """
+
+        if not self.name:
+            return ''
+
+        student_data = self.get_lightchild_model_object().student_data
+        return student_data
 
     @property
     def runtime(self):
@@ -220,19 +251,95 @@ class LightChild(Plugin, LightChildrenMixin):
             xmodule_runtime = xmodule_runtime()
         return xmodule_runtime
 
+    def load_student_data(self):
+        """
+        Load the values from the student_data in the database.
+        """
+
+        student_data = self.student_data
+        fields = self.get_fields()
+        for field in fields:
+            if field in student_data:
+                setattr(self, field, student_data[field])
+
+    @classmethod
+    def get_fields(cls):
+        """
+        Returns a list of all LightChildField of the class. Used for saving student data.
+        """
+        return []
+
     def save(self):
-        pass
+        """
+        Replicate data changes on the related Django model used for sharing of data accross XBlocks
+        """
+
+        # Save all children
+        for child in self.get_children_objects():
+            child.save()
+
+        self.student_data = {}
+
+        # Get All LightChild fields to save
+        for field in self.get_fields():
+            self.student_data[field] = getattr(self, field).to_json()
+
+        if self.name:
+            lightchild_data = self.get_lightchild_model_object()
+            if lightchild_data.student_data != self.student_data:
+                lightchild_data.student_data = json.dumps(self.student_data)
+                lightchild_data.save()
+
+    def get_lightchild_model_object(self, name=None):
+        """
+        Fetches the LightChild model object for the lightchild named `name`
+        """
+
+        if not name:
+            name = self.name
+
+        if not name:
+            raise ValueError, 'LightChild.name field need to be set to a non-null/empty value'
+
+        student_id = self.xmodule_runtime.anonymous_student_id
+        course_id = self.xmodule_runtime.course_id
+
+        lightchild_data, created = LightChildModel.objects.get_or_create(
+            student_id=student_id,
+            course_id=course_id,
+            name=name,
+        )
+        return lightchild_data
 
 
 class LightChildField(object):
     """
     Fake field with no persistence - allows to keep XBlocks fields definitions on LightChild
     """
+
     def __init__(self, *args, **kwargs):
         self.value = kwargs.get('default', '')
 
     def __nonzero__(self):
         return bool(self.value)
+
+    def set(self, value):
+        self.value = value
+
+    def get(self):
+        return self.value
+
+    def to_json(self):
+        """
+        Returns the JSON representation of the LightChieldField.
+        """
+        return self.value
+
+    def from_json(self, value):
+        """
+        Returns value as a native full featured python type from a JSON value.
+        """
+        pass
 
 
 class String(LightChildField):
@@ -259,10 +366,18 @@ class Integer(LightChildField):
     def __nonzero__(self):
         try:
             int(self.value)
-        except TypeError, ValueError: # not an integer
+        except (TypeError, ValueError): # not an integer
             return False
 
         return self.value is not None
+
+    def set(self, value):
+        self.value = int(value)
+
+    def from_json(self, value):
+        if value is None or value == '':
+            return None
+        return int(value)
 
 
 class Boolean(LightChildField):

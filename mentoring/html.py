@@ -56,7 +56,8 @@ class HTMLBlock(LightChild):
         return block
 
     def student_view(self, context=None):
-        return Fragment(self.content)
+        # HACK, TO MODIFY
+        return Fragment(self.content.get())
 
     def mentoring_view(self, context=None):
         return self.student_view(context)
