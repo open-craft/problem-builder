@@ -25,6 +25,7 @@
 
 import logging
 import json
+import copy
 
 from lazy import lazy
 
@@ -101,6 +102,14 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         child_class = cls.get_class_by_element(xml_child.tag)
         child = child_class(block)
         child.name = u'{}_{}'.format(block.name, child_id)
+
+        # Instanciate our LightChild fields
+        # TODO HACK, Since we are not replacing the fields attribute with directly, we need to
+        # instanciate new fields for our LightChild.
+        fields = [(attr, value) for attr, value in child_class.__dict__.iteritems() if \
+                  isinstance(value, LightChildField)]
+        for attr, value in fields:
+            child.__dict__[attr] = copy.deepcopy(value)
 
         # Add any children the child may itself have
         child_class.init_block_from_node(child, xml_child, xml_child.items())
@@ -257,13 +266,13 @@ class LightChild(Plugin, LightChildrenMixin):
             return
 
         student_data = json.loads(self.student_data)
-        fields = self.get_fields()
+        fields = self.get_fields_to_save()
         for field in fields:
             if field in student_data:
                 setattr(self, field, student_data[field])
 
     @classmethod
-    def get_fields(cls):
+    def get_fields_to_save(cls):
         """
         Returns a list of all LightChildField of the class. Used for saving student data.
         """
@@ -281,7 +290,7 @@ class LightChild(Plugin, LightChildrenMixin):
         self.student_data = {}
 
         # Get All LightChild fields to save
-        for field in self.get_fields():
+        for field in self.get_fields_to_save():
             self.student_data[field] = getattr(self, field).to_json()
 
         if self.name:

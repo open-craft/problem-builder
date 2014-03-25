@@ -48,7 +48,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
     # TODO REMOVE THIS, ONLY NEEDED FOR LIGHTCHILDREN
     @classmethod
-    def get_fields(cls):
+    def get_fields_to_save(cls):
         return [
             'num_attempts'
         ]
@@ -57,19 +57,23 @@ class MRQBlock(QuestionnaireAbstractBlock):
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
+        # Ensure our data are loaded from the db
+        # TODO HACK, TO REMOVE.
+        self.load_student_data()
+
         completed = True
 
         results = []
         for choice in self.custom_choices:
             choice_completed = True
             choice_tips_fragments = []
-            choice_selected = choice.value in submissions
+            choice_selected = choice.value.get() in submissions
             for tip in self.get_tips():
-                if choice.value in tip.display_with_defaults:
+                if choice.value.get() in tip.display_with_defaults:
                     choice_tips_fragments.append(tip.render())
 
-                if ((not choice_selected and choice.value in tip.require_with_defaults) or
-                        (choice_selected and choice.value in tip.reject_with_defaults)):
+                if ((not choice_selected and choice.value.get() in tip.require_with_defaults) or
+                        (choice_selected and choice.value.get() in tip.reject_with_defaults)):
                     choice_completed = False
 
             completed = completed and choice_completed
@@ -86,8 +90,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         self.message = u'Your answer is correct!' if completed else u'Your answer is incorrect.'
 
-        # What's the proper way to get my value saved? it doesn't work without '.value'
-        # this is incorrect and the num_attempts is resetted if we restart the server.
         num_attempts = self.num_attempts.get() + 1 if self.max_attempts else 0
         setattr(self, 'num_attempts', num_attempts)
 
@@ -99,10 +101,10 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         if max_attempts_reached and (not completed or num_attempts > max_attempts):
             completed = True
-            self.message += u' You have reached the maximum number of attempts for this question. ' \
-            'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
-        else: # only save the student_choices if there was a attempt left, might be incorrect or unuseful
-            self.student_choices = submissions
+            self.message = self.message.get() + u' You have reached the maximum number of attempts for this question. ' \
+            u'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
+
+        self.student_choices = submissions
 
         result = {
         'submissions': submissions,
