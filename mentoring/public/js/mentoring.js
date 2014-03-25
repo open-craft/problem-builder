@@ -74,7 +74,7 @@ function MentoringBlock(runtime, element) {
     }
 
     function initXBlock() {
-        var submit_dom = $(element).find('.submit input');
+        var submit_dom = $(element).find('.submit .input-main');
 
         submit_dom.bind('click', function() {
             var data = {};

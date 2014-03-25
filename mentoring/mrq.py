@@ -103,8 +103,8 @@ class MRQBlock(QuestionnaireAbstractBlock):
             completed = True
             self.message = self.message.get() + u' You have reached the maximum number of attempts for this question. ' \
             u'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
-
-        self.student_choices = submissions
+        else:
+            self.student_choices = submissions
 
         result = {
         'submissions': submissions,

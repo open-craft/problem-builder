@@ -103,14 +103,6 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         child = child_class(block)
         child.name = u'{}_{}'.format(block.name, child_id)
 
-        # Instanciate our LightChild fields
-        # TODO HACK, Since we are not replacing the fields attribute with directly, we need to
-        # instanciate new fields for our LightChild.
-        fields = [(attr, value) for attr, value in child_class.__dict__.iteritems() if \
-                  isinstance(value, LightChildField)]
-        for attr, value in fields:
-            child.__dict__[attr] = copy.deepcopy(value)
-
         # Add any children the child may itself have
         child_class.init_block_from_node(child, xml_child, xml_child.items())
 
@@ -219,6 +211,14 @@ class LightChild(Plugin, LightChildrenMixin):
         self.parent = parent
         self.xblock_container = parent.xblock_container
 
+        # Instanciate our LightChild fields
+        # TODO HACK, Since we are not replacing the fields attribute directly, we need to
+        # instanciate new fields for our LightChild.
+        fields = [(attr, value) for attr, value in self.__class__.__dict__.iteritems() if \
+                  isinstance(value, LightChildField)]
+        for attr, value in fields:
+            self.__dict__[attr] = copy.deepcopy(value)
+
     def __setattr__(self, name, value):
 
         field = getattr(self, name) if hasattr(self, name) else None
@@ -262,11 +262,12 @@ class LightChild(Plugin, LightChildrenMixin):
         """
         Load the values from the student_data in the database.
         """
-        if not self.student_data:
+
+        fields = self.get_fields_to_save()
+        if not fields or not self.student_data:
             return
 
         student_data = json.loads(self.student_data)
-        fields = self.get_fields_to_save()
         for field in fields:
             if field in student_data:
                 setattr(self, field, student_data[field])
@@ -381,7 +382,10 @@ class Integer(LightChildField):
         return self.value is not None
 
     def set(self, value):
-        self.value = int(value)
+        try:
+           self.value = int(value)
+        except (TypeError, ValueError): # not an integer
+            self.value = None
 
     def from_json(self, value):
         if value is None or value == '':
