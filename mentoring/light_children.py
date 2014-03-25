@@ -217,17 +217,7 @@ class LightChild(Plugin, LightChildrenMixin):
         fields = [(attr, value) for attr, value in self.__class__.__dict__.iteritems() if \
                   isinstance(value, LightChildField)]
         for attr, value in fields:
-            self.__dict__[attr] = copy.deepcopy(value)
-
-    def __setattr__(self, name, value):
-
-        field = getattr(self, name) if hasattr(self, name) else None
-
-        # If the property is a LightChildField instance, use its setattr
-        if isinstance(field, LightChildField):
-            field.set(value)
-        else:
-            super(LightChild, self).__setattr__(name, value)
+            self.__dict__[attr] = value.value # set the default value
 
     @lazy
     def student_data(self):
@@ -292,7 +282,7 @@ class LightChild(Plugin, LightChildrenMixin):
 
         # Get All LightChild fields to save
         for field in self.get_fields_to_save():
-            self.student_data[field] = getattr(self, field).to_json()
+            self.student_data[field] = getattr(self, field)
 
         if self.name:
             lightchild_data = self.get_lightchild_model_object()
@@ -339,18 +329,6 @@ class LightChildField(object):
     def get(self):
         return self.value
 
-    def to_json(self):
-        """
-        Returns the JSON representation of the LightChieldField.
-        """
-        return self.value
-
-    def from_json(self, value):
-        """
-        Returns value as a native full featured python type from a JSON value.
-        """
-        pass
-
 
 class String(LightChildField):
     def __init__(self, *args, **kwargs):
@@ -370,9 +348,6 @@ class Integer(LightChildField):
     def __str__(self):
         return str(self.value)
 
-    def __int__(self):
-        return self.value
-
     def __nonzero__(self):
         try:
             int(self.value)
@@ -380,18 +355,6 @@ class Integer(LightChildField):
             return False
 
         return self.value is not None
-
-    def set(self, value):
-        try:
-           self.value = int(value)
-        except (TypeError, ValueError): # not an integer
-            self.value = None
-
-    def from_json(self, value):
-        if value is None or value == '':
-            return None
-        return int(value)
-
 
 class Boolean(LightChildField):
     pass

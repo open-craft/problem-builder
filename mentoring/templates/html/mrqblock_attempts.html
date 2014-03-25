@@ -1,5 +1,5 @@
 <script type="text/template" id="xblock-mrq-attempts">
-  <% if (_.isNumber(max_attempts)) {{ %>
+  <% if (_.isNumber(max_attempts) && max_attempts > 0) {{ %>
 
   <% if (num_attempts >= max_attempts) {{ %>
   <button class="show">

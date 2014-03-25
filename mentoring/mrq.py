@@ -43,7 +43,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
     An XBlock used to ask multiple-response questions
     """
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
-    max_attempts = Integer(help="Number of max attempts for this questions", default=None, scope=Scope.content)
+    max_attempts = Integer(help="Number of max attempts for this questions", scope=Scope.content)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions", scope=Scope.user_state)
 
     # TODO REMOVE THIS, ONLY NEEDED FOR LIGHTCHILDREN
@@ -53,7 +53,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'num_attempts'
         ]
 
-    # TODO REMOVE ALL USE OF THE get() METHOD
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
@@ -67,18 +66,18 @@ class MRQBlock(QuestionnaireAbstractBlock):
         for choice in self.custom_choices:
             choice_completed = True
             choice_tips_fragments = []
-            choice_selected = choice.value.get() in submissions
+            choice_selected = choice.value in submissions
             for tip in self.get_tips():
-                if choice.value.get() in tip.display_with_defaults:
+                if choice.value in tip.display_with_defaults:
                     choice_tips_fragments.append(tip.render())
 
-                if ((not choice_selected and choice.value.get() in tip.require_with_defaults) or
-                        (choice_selected and choice.value.get() in tip.reject_with_defaults)):
+                if ((not choice_selected and choice.value in tip.require_with_defaults) or
+                        (choice_selected and choice.value in tip.reject_with_defaults)):
                     choice_completed = False
 
             completed = completed and choice_completed
             results.append({
-                'value': choice.value.get(),
+                'value': choice.value,
                 'selected': choice_selected,
                 'completed': choice_completed,
                 'tips': render_template('templates/html/tip_choice_group.html', {
@@ -90,18 +89,17 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         self.message = u'Your answer is correct!' if completed else u'Your answer is incorrect.'
 
-        num_attempts = self.num_attempts.get() + 1 if self.max_attempts else 0
-        setattr(self, 'num_attempts', num_attempts)
+        setattr(self, 'num_attempts', self.num_attempts + 1)
 
         max_attempts_reached = False
         if self.max_attempts:
-            max_attempts = self.max_attempts.get()
-            num_attempts = self.num_attempts.get()
+            max_attempts = self.max_attempts
+            num_attempts = self.num_attempts
             max_attempts_reached = num_attempts >= max_attempts
 
         if max_attempts_reached and (not completed or num_attempts > max_attempts):
             completed = True
-            self.message = self.message.get() + u' You have reached the maximum number of attempts for this question. ' \
+            self.message += u' You have reached the maximum number of attempts for this question. ' \
             u'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
         else:
             self.student_choices = submissions
@@ -110,9 +108,9 @@ class MRQBlock(QuestionnaireAbstractBlock):
         'submissions': submissions,
         'completed': completed,
         'choices': results,
-        'message': self.message.get(),
-        'max_attempts': self.max_attempts.get() if self.max_attempts else None,
-        'num_attempts': self.num_attempts.get()
+        'message': self.message,
+        'max_attempts': self.max_attempts,
+        'num_attempts': self.num_attempts
         }
 
         log.debug(u'MRQ submissions result: %s', result)

@@ -97,7 +97,7 @@ function MRQBlock(runtime, element) {
 
                 choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
               /* show hint if checked or max_attempts is disabled */
-                if (choiceInputDOM.prop('checked') || _.isNull(result.max_attempts)) {
+                if (choiceInputDOM.prop('checked') || result.max_attempts <= 0) {
                   if (choice.completed) {
                     choiceResultDOM.addClass('correct icon-ok');
                   } else if (!choice.completed) {
