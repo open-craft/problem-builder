@@ -88,7 +88,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
         if not completed:
             setattr(self, 'num_attempts', self.num_attempts + 1)
 
-        if self.num_attempts >= self.max_attempts:
+        if self.max_attempts > 0 and self.num_attempts >= self.max_attempts:
             completed = True
             self.message += u' You have reached the maximum number of attempts for this question. ' \
             u'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'

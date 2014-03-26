@@ -25,9 +25,9 @@
 
 import logging
 import json
-import copy
 
 from lazy import lazy
+from weakref import WeakKeyDictionary
 
 from cStringIO import StringIO
 from lxml import etree
@@ -140,11 +140,6 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         Replacement for ```self.runtime.render_child()```
         """
 
-        # load student_data
-        for lightchild in self.get_children_objects():
-            if isinstance(lightchild, LightChild):
-                lightchild.load_student_data()
-
         frag = getattr(child, view_name)(context)
         frag.content = u'<div class="xblock-light-child" name="{}" data-type="{}">{}</div>'.format(
                 child.name, child.__class__.__name__, frag.content)
@@ -215,30 +210,9 @@ class LightChild(Plugin, LightChildrenMixin):
     entry_point = 'xblock.light_children'
 
     def __init__(self, parent):
-        self.__dict__['_field_data'] = {} # Keep a track of the field class type, for setattr
         self.parent = parent
         self.xblock_container = parent.xblock_container
-
-        # Instanciate our LightChild fields
-        # TODO HACK, Since we are not replacing the fields attribute directly, we need to
-        # instanciate new fields for our LightChild.
-        fields = [(attr, value) for attr, value in self.__class__.__dict__.iteritems() if \
-                  isinstance(value, LightChildField)]
-        for attr, value in fields:
-            self._field_data[attr] =  value.__class__
-            self.__dict__[attr] = value.get() # set the default value
-
-    @lazy
-    def student_data(self):
-        """
-        Use lazy property instead of XBlock field, as __init__() doesn't support
-        overwriting field values
-        """
-        if not self.name:
-            return ''
-
-        student_data = self.get_lightchild_model_object().student_data
-        return student_data
+        self._student_data_loaded = False
 
     @property
     def runtime(self):
@@ -256,10 +230,25 @@ class LightChild(Plugin, LightChildrenMixin):
             xmodule_runtime = xmodule_runtime()
         return xmodule_runtime
 
+    @lazy
+    def student_data(self):
+        """
+        Use lazy property instead of XBlock field, as __init__() doesn't support
+        overwriting field values
+        """
+        if not self.name:
+            return ''
+
+        student_data = self.get_lightchild_model_object().student_data
+        return student_data
+
     def load_student_data(self):
         """
-        Load the values from the student_data in the database.
+        Load the student data from the database.
         """
+
+        if self._student_data_loaded:
+            return
 
         fields = self.get_fields_to_save()
         if not fields or not self.student_data:
@@ -269,6 +258,8 @@ class LightChild(Plugin, LightChildrenMixin):
         for field in fields:
             if field in student_data:
                 setattr(self, field, student_data[field])
+
+        self._student_data_loaded = True
 
     @classmethod
     def get_fields_to_save(cls):
@@ -319,13 +310,6 @@ class LightChild(Plugin, LightChildrenMixin):
         )
         return lightchild_data
 
-    def __setattr__(self, name, value):
-
-        if name in self._field_data:
-            self.__dict__[name] = self._field_data[name].set(value) # use the class type setter
-        else:
-            super(LightChild, self).__setattr__(name, value)
-
 
 class LightChildField(object):
     """
@@ -333,52 +317,38 @@ class LightChildField(object):
     """
 
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', '')
+        self.default = kwargs.get('default', '')
+        self.data = WeakKeyDictionary()
 
-    def __nonzero__(self):
-        return bool(self.value)
+    def __get__(self, instance, name):
 
-    def get(self):
-        return self.value
+        # A LightChildField can depend on student_data
+        instance.load_student_data()
 
-    @classmethod
-    def set(cls, value):
-        return value
+        return self.data.get(instance, self.default)
 
+    def __set__(self, instance, value):
+        self.data[instance] = value
 
 class String(LightChildField):
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', '') or ''
+        super(String, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', '') or ''
 
-    def __str__(self):
-        return self.value
-
-    def split(self, *args, **kwargs):
-        return self.value.split(*args, **kwargs)
+#    def split(self, *args, **kwargs):
+#        return self.value.split(*args, **kwargs)
 
 
 class Integer(LightChildField):
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', 0)
+        super(Integer, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', 0)
 
-    def __str__(self):
-        return str(self.value)
-
-    @classmethod
-    def set(cls, value):
+    def __set__(self, instance, value):
         try:
-            value = int(value)
+            self.data[instance] = int(value)
         except (TypeError, ValueError): # not an integer
-            return 0
-        return value
-
-    def __nonzero__(self):
-        try:
-            int(self.value)
-        except (TypeError, ValueError): # not an integer
-            return False
-
-        return self.value is not None
+            self.data[instance] = 0
 
 
 class Boolean(LightChildField):
@@ -387,7 +357,8 @@ class Boolean(LightChildField):
 
 class List(LightChildField):
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', [])
+        super(List, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', [])
 
 
 class Scope(object):
