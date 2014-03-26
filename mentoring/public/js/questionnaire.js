@@ -86,6 +86,7 @@ function MRQBlock(runtime, element) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element),
                     choiceDOM = choiceInputDOM.closest('.choice'),
                     choiceResultDOM = $('.choice-result', choiceDOM),
+                    choiceAnswerDOM = $('.choice-answer', choiceDOM),
                     choiceTipsDOM = $('.choice-tips', choiceDOM),
                     choiceTipsCloseDOM;
 
@@ -97,7 +98,7 @@ function MRQBlock(runtime, element) {
 
                 choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
               /* show hint if checked or max_attempts is disabled */
-                if (choiceInputDOM.prop('checked') || result.max_attempts <= 0) {
+                if (result.completed || choiceInputDOM.prop('checked') || result.max_attempts <= 0) {
                   if (choice.completed) {
                     choiceResultDOM.addClass('correct icon-ok');
                   } else if (!choice.completed) {
@@ -111,6 +112,11 @@ function MRQBlock(runtime, element) {
                 choiceResultDOM.off('click').on('click', function() {
                     showPopup(choiceTipsDOM);
                 });
+
+                choiceAnswerDOM.off('click').on('click', function() {
+                  showPopup(choiceTipsDOM);
+                });
+
             });
             this.answers = answers;
 
@@ -124,7 +130,7 @@ function MRQBlock(runtime, element) {
 
         _.each(this.answers, function(answer) {
           var choiceResultDOM = $('.choice-answer', answer.input.closest('.choice'));
-          choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
+          choiceResultDOM.removeClass('correct icon-ok');
           if (answers_displayed) {
             if (answer.answer)
               choiceResultDOM.addClass('correct icon-ok');

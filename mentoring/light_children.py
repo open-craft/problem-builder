@@ -217,7 +217,7 @@ class LightChild(Plugin, LightChildrenMixin):
         fields = [(attr, value) for attr, value in self.__class__.__dict__.iteritems() if \
                   isinstance(value, LightChildField)]
         for attr, value in fields:
-            self.__dict__[attr] = value.value # set the default value
+            self.__dict__[attr] = value.get() # set the default value
 
     @lazy
     def student_data(self):
@@ -323,9 +323,6 @@ class LightChildField(object):
     def __nonzero__(self):
         return bool(self.value)
 
-    def set(self, value):
-        self.value = value
-
     def get(self):
         return self.value
 
@@ -347,6 +344,9 @@ class Integer(LightChildField):
 
     def __str__(self):
         return str(self.value)
+
+    def get(self):
+        return int(self.value)
 
     def __nonzero__(self):
         try:
