@@ -33,7 +33,7 @@ from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
 
-from .light_children import XBlockWithLightChildren
+from .light_children import XBlockWithLightChildren, LightChild
 from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
 
@@ -114,6 +114,8 @@ class MentoringBlock(XBlockWithLightChildren):
         completed = True
         for child in self.get_children_objects():
             if child.name and child.name in submissions:
+                if isinstance(child, LightChild):
+                    child.load_student_data()
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
                 submit_results.append([child.name, child_result])

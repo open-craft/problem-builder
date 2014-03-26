@@ -56,10 +56,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
-        # Ensure our data are loaded from the db
-        # TODO HACK, TO REMOVE.
-        self.load_student_data()
-
         completed = True
 
         results = []
@@ -88,15 +84,11 @@ class MRQBlock(QuestionnaireAbstractBlock):
             })
 
         self.message = u'Your answer is correct!' if completed else u'Your answer is incorrect.'
-
         # Do not increase the counter is the answer is correct
         if not completed:
             setattr(self, 'num_attempts', self.num_attempts + 1)
 
-        # TODO do a proper fix, max_attempts is set as 'str' with the xml loading code.
-        # will find a better solution tomorrow
-        max_attempts = int(self.max_attempts)
-        if self.num_attempts >= max_attempts and (not completed or self.num_attempts > max_attempts):
+        if self.num_attempts >= self.max_attempts:
             completed = True
             self.message += u' You have reached the maximum number of attempts for this question. ' \
             u'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
@@ -108,7 +100,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
         'completed': completed,
         'choices': results,
         'message': self.message,
-        'max_attempts': max_attempts,
+        'max_attempts': self.max_attempts,
         'num_attempts': self.num_attempts
         }
 

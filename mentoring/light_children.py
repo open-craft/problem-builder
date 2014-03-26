@@ -139,6 +139,12 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         """
         Replacement for ```self.runtime.render_child()```
         """
+
+        # load student_data
+        for lightchild in self.get_children_objects():
+            if isinstance(lightchild, LightChild):
+                lightchild.load_student_data()
+
         frag = getattr(child, view_name)(context)
         frag.content = u'<div class="xblock-light-child" name="{}" data-type="{}">{}</div>'.format(
                 child.name, child.__class__.__name__, frag.content)
@@ -173,6 +179,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         Current HTML view of the XBlock, for refresh by client
         """
+
         frag = self.student_view({})
         frag = self.fragment_text_rewriting(frag)
 
@@ -208,6 +215,7 @@ class LightChild(Plugin, LightChildrenMixin):
     entry_point = 'xblock.light_children'
 
     def __init__(self, parent):
+        self.__dict__['_field_data'] = {} # Keep a track of the field class type, for setattr
         self.parent = parent
         self.xblock_container = parent.xblock_container
 
@@ -217,6 +225,7 @@ class LightChild(Plugin, LightChildrenMixin):
         fields = [(attr, value) for attr, value in self.__class__.__dict__.iteritems() if \
                   isinstance(value, LightChildField)]
         for attr, value in fields:
+            self._field_data[attr] =  value.__class__
             self.__dict__[attr] = value.get() # set the default value
 
     @lazy
@@ -225,7 +234,6 @@ class LightChild(Plugin, LightChildrenMixin):
         Use lazy property instead of XBlock field, as __init__() doesn't support
         overwriting field values
         """
-
         if not self.name:
             return ''
 
@@ -311,6 +319,13 @@ class LightChild(Plugin, LightChildrenMixin):
         )
         return lightchild_data
 
+    def __setattr__(self, name, value):
+
+        if name in self._field_data:
+            self.__dict__[name] = self._field_data[name].set(value) # use the class type setter
+        else:
+            super(LightChild, self).__setattr__(name, value)
+
 
 class LightChildField(object):
     """
@@ -325,6 +340,10 @@ class LightChildField(object):
 
     def get(self):
         return self.value
+
+    @classmethod
+    def set(cls, value):
+        return value
 
 
 class String(LightChildField):
@@ -345,8 +364,13 @@ class Integer(LightChildField):
     def __str__(self):
         return str(self.value)
 
-    def get(self):
-        return int(self.value)
+    @classmethod
+    def set(cls, value):
+        try:
+            value = int(value)
+        except (TypeError, ValueError): # not an integer
+            return 0
+        return value
 
     def __nonzero__(self):
         try:
@@ -355,6 +379,7 @@ class Integer(LightChildField):
             return False
 
         return self.value is not None
+
 
 class Boolean(LightChildField):
     pass
