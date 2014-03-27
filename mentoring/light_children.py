@@ -127,7 +127,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
             return
 
         node = etree.parse(StringIO(self.xml_content)).getroot()
-        LightChildrenMixin.init_block_from_node(self, node, {})
+        LightChildrenMixin.init_block_from_node(self, node, node.items())
 
     def get_children_objects(self):
         """
