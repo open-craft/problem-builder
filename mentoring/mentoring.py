@@ -179,11 +179,18 @@ class MentoringBlock(XBlockWithLightChildren):
 
         xml_content = submissions['xml_content']
         try:
-            etree.parse(StringIO(xml_content))
+            xml = etree.parse(StringIO(xml_content))
+            root = xml.getroot()
+            self.url_name = root.attrib['url_name']
         except etree.XMLSyntaxError as e:
             response = {
                 'result': 'error',
                 'message': e.message
+            }
+        except KeyError as e:
+            response = {
+                'result': 'error',
+                'message': 'mentoring "url_name" attribute is missing'
             }
         else:
             response = {
