@@ -54,14 +54,14 @@ class AnswerBlockTest(MentoringBaseTest):
         answer1 = mentoring.find_element_by_css_selector('textarea')
         self.assertEqual(answer1.text, '')
         progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # Submit without answer
         submit = mentoring.find_element_by_css_selector('input.submit')
         submit.click()
         self.assertEqual(answer1.get_attribute('value'), '')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
         self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # Submit an answer
@@ -88,7 +88,7 @@ class AnswerBlockTest(MentoringBaseTest):
         answer = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer.text, '')
         progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '(Not completed)')
+        self.assertEqual(progress.text, '')
 
         # Submit should allow to complete
         submit = mentoring.find_element_by_css_selector('input.submit')

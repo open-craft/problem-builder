@@ -49,3 +49,21 @@ class Answer(models.Model):
         # Force validation of max_length
         self.full_clean()
         super(Answer, self).save(*args, **kwargs)
+
+
+class LightChild(models.Model):
+    """
+    Django model used to store LightChild student data that need to be shared and queried accross
+    XBlock instances (workaround). Since this is temporary, `data` are stored in json.
+    """
+
+    class Meta:
+        app_label = 'mentoring'
+        unique_together = (('student_id', 'course_id', 'name'),)
+
+    name = models.CharField(max_length=50, db_index=True)
+    student_id = models.CharField(max_length=32, db_index=True)
+    course_id = models.CharField(max_length=50, db_index=True)
+    student_data = models.TextField(blank=True, default='')
+    created_on = models.DateTimeField('created on', auto_now_add=True)
+    modified_on = models.DateTimeField('modified on', auto_now=True)

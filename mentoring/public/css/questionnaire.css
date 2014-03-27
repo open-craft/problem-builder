@@ -1,0 +1,99 @@
+.mentoring .rating .choices-list {
+    margin: 5px 0 10px;
+}
+
+.mentoring .choices .choices-list {
+    position: relative;
+    padding-top: 10px;
+}
+
+.mentoring .choices .choice {
+    margin: 10px 0;
+}
+
+.mentoring .choices .choice-checkbox {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.mentoring .choices .choice-result {
+    display: inline-block;
+    width: 40px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.mentoring .choices .choice-result.correct, .choice-answer.correct {
+    cursor: pointer;
+    color: #006600;
+    position: relative;
+    top: -3px;
+}
+
+.mentoring .choices .choice-result.incorrect {
+    text-align:center;
+    color: #ff0000;
+}
+
+.mentoring .choices .choice-tips,
+.mentoring .choices .choice-message {
+    display: none;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none repeat scroll 0 0 #5C9DD5;
+    font-family: arial;
+    font-size: 14px;
+    height: 100%;
+    opacity: 0.9;
+    padding: 10px;
+    width: 300px;
+}
+
+.mentoring .choices .choice-tips .title {
+    margin: 0 0 5px;
+    font-size: 18px;
+    font-family: arial;
+}
+
+.mentoring .choices .choice-tips .tip-choice-group,
+.mentoring .choices .choice-message .message-content {
+    position: relative;
+}
+
+.mentoring .choices .choice-tips .close,
+.mentoring .choices .choice-message .close {
+    background-image: url({{ close_icon_url }});
+    cursor: pointer;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 18px;
+    height: 21px;
+}
+
+.mentoring .choices .choice-tips p {
+    color: #fff;
+}
+
+.mentoring .rating .choice {
+    margin-right: 10px;
+}
+
+.mentoring .choices-list .choice-selector {
+    margin-right: 5px;
+}
+
+.mentoring .mrq-attempts {
+    display: inline-block;
+    vertical-align: baseline;
+    color: #777;
+    font-style: italic;
+    webkit-font-smoothing: antialiased;
+}
+
+.mentoring .mrq-attempts div {
+    display: inline-block;
+}

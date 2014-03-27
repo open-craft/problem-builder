@@ -52,10 +52,12 @@ BLOCKS_CHILDREN = [
     'column = mentoring:MentoringTableColumnBlock',
     'header = mentoring:MentoringTableColumnHeaderBlock',
     'answer = mentoring:AnswerBlock',
-    'quizz = mentoring:QuizzBlock',
+    'quizz = mentoring:MCQBlock',
+    'mcq = mentoring:MCQBlock',
+    'mrq = mentoring:MRQBlock',
     'message = mentoring:MentoringMessageBlock',
-    'tip = mentoring:QuizzTipBlock',
-    'choice = mentoring:QuizzChoiceBlock',
+    'tip = mentoring:TipBlock',
+    'choice = mentoring:ChoiceBlock',
     'html = mentoring:HTMLBlock',
 ]
 
@@ -63,7 +65,7 @@ setup(
     name='xblock-mentoring',
     version='0.1',
     description='XBlock - Mentoring',
-    packages=['mentoring'],
+    packages=['mentoring', 'mentoring.migrations'],
     install_requires=[
         'XBlock',
     ],
@@ -71,5 +73,5 @@ setup(
         'xblock.v1': BLOCKS,
         'xblock.light_children': BLOCKS_CHILDREN,
     },
-    package_data=package_data("mentoring", ["static", "templates", "public"]),
+    package_data=package_data("mentoring", ["static", "templates", "public", "migrations"]),
 )

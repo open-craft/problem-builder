@@ -1,7 +1,7 @@
 <vertical>
-    <mentoring url_name="quizz_1" enforce_dependency="false">
-        <quizz name="quizz_1_1" type="choices">
-            <question>Do you like this quizz?</question>
+    <mentoring url_name="mcq_1" enforce_dependency="false">
+        <mcq name="mcq_1_1" type="choices">
+            <question>Do you like this MCQ?</question>
             <choice value="yes">Yes</choice>
             <choice value="maybenot">Maybe not</choice>
             <choice value="understand">I don't understand</choice>
@@ -9,16 +9,16 @@
             <tip display="yes">Great!</tip>
             <tip reject="maybenot">Ah, damn.</tip>
             <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
-        </quizz>
+        </mcq>
 
-        <quizz name="quizz_1_2" type="rating" low="Not good at all" high="Extremely good">
-            <question>How much do you rate this quizz?</question>
+        <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
+            <question>How much do you rate this MCQ?</question>
             <choice value="notwant">I don't want to rate it</choice>
 
             <tip display="4,5">I love good grades.</tip>
             <tip reject="1,2,3">Will do better next time...</tip>
             <tip reject="notwant">Your loss!</tip>
-        </quizz>
+        </mcq>
 
         <message type="completed">
             All is good now...

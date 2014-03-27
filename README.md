@@ -6,7 +6,7 @@ This XBlock allows to automate the workflow of real-life mentoring, within an ed
 It supports:
 
 * **Free-form answers** (textarea) which can be shared accross different XBlock instances (for example, to remind a student of an answer he gave before). Editable or read-only.
-* **Self-assessment quizzes** (multiple choice), to display predetermined feedback to a student based on his choices in the self-assessment. Supports rating scales and arbitrary answers.
+* **Self-assessment MCQs** (multiple choice), to display predetermined feedback to a student based on his choices in the self-assessment. Supports rating scales and arbitrary answers.
 * **Progression tracking**, allowing to check that the student has completed the previous steps before allowing to complete a given XBlock instance. Provides a link to the next step to the student.
 * **Tables**, which allow to present answers from the student to free-form answers in a concise way. Supports custom headers.
 * **Data export**, to allow course authors to download a CSV file containing the free-form answers entered by the students
@@ -44,12 +44,12 @@ Second XBlock instance:
 </mentoring>
 ```
 
-### Self-assessment quizzes
+### Self-assessment MCQs
 
 ```xml
-<mentoring url_name="quizz_1" enforce_dependency="false">
-    <quizz name="quizz_1_1" type="choices">
-        <question>Do you like this quizz?</question>
+<mentoring url_name="mcq_1" enforce_dependency="false">
+    <mcq name="mcq_1_1" type="choices">
+        <question>Do you like this MCQ?</question>
         <choice value="yes">Yes</choice>
         <choice value="maybenot">Maybe not</choice>
         <choice value="understand">I don't understand</choice>
@@ -57,16 +57,16 @@ Second XBlock instance:
         <tip display="yes">Great!</tip>
         <tip reject="maybenot">Ah, damn.</tip>
         <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
-    </quizz>
+    </mcq>
 
-    <quizz name="quizz_1_2" type="rating" low="Not good at all" high="Extremely good">
-        <question>How much do you rate this quizz?</question>
+    <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
+        <question>How much do you rate this MCQ?</question>
         <choice value="notwant">I don't want to rate it</choice>
 
         <tip display="4,5">I love good grades.</tip>
         <tip reject="1,2,3">Will do better next time...</tip>
         <tip reject="notwant">Your loss!</tip>
-    </quizz>
+    </MCQ>
 
     <message type="completed">
         All is good now...
@@ -74,6 +74,28 @@ Second XBlock instance:
     </message>
 </mentoring>
 ```
+
+### Self-assessment MRQs
+```xml
+<mentoring url_name="mcq_1" enforce_dependency="false">
+    <mrq name="mrq_1_1" type="choices" max_attempts="3">
+        <question>What do you like in this MRQ?</question>
+        <choice value="elegance">Its elegance</choice>
+        <choice value="beauty">Its beauty</choice>
+        <choice value="gracefulness">Its gracefulness</choice>
+        <choice value="bugs">Its bugs</choice>
+
+        <tip require="gracefulness">This MRQ is indeed very graceful</tip>
+        <tip require="elegance,beauty">This is something everyone has to like about this MRQ</tip>
+        <tip reject="bugs">Nah, there isn't any!</tip>
+
+        <message type="on-submit">Thank you for answering!</message>
+    </mrq>
+    <message type="completed">
+        All is good now...
+        <html><p>Congratulations!</p></html>
+    </message>
+</mentoring>
 
 ### Tables
 
@@ -116,6 +138,11 @@ directory, enter:
 $ pip install -e .
 ```
 
+Since `XBlock` and `xblock-mentoring` are both in development, it is recommended
+to use the `XBlock` revision specified in the workbench/LMS requirements.txt
+file. The main `XBlock` repository is not always ready to use in edx-platform
+and you might experience some issues.
+
 Custom workbench settings
 -------------------------
 
@@ -157,7 +184,7 @@ $ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" PYTHONPATH=".:/path/to/x
 ```
 
 `/path/to/xblock` is the path to the XBlock main repository (the one containing the workbench)
- 
+
 Adding custom scenarios to the workbench
 ----------------------------------------
 
@@ -170,4 +197,3 @@ $ cat > templates/xml/my_mentoring_scenario.xml
 ```
 
 Restart the workbench to take the new scenarios into account.
-
