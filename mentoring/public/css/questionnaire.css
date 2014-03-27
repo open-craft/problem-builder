@@ -11,21 +11,28 @@
     margin: 10px 0;
 }
 
-.mentoring .choices .choice-result {
-    padding-right: 10px;
-    vertical-align: middle;
+.mentoring .choices .choice-checkbox {
+    display: inline-block;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-.mentoring .choices .choice-result.correct {
+.mentoring .choices .choice-result {
+    display: inline-block;
+    width: 40px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.mentoring .choices .choice-result.correct, .choice-answer.correct {
+    cursor: pointer;
     color: #006600;
     position: relative;
     top: -3px;
 }
 
 .mentoring .choices .choice-result.incorrect {
-    margin-right: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    text-align:center;
     color: #ff0000;
 }
 
@@ -77,4 +84,16 @@
 
 .mentoring .choices-list .choice-selector {
     margin-right: 5px;
+}
+
+.mentoring .mrq-attempts {
+    display: inline-block;
+    vertical-align: baseline;
+    color: #777;
+    font-style: italic;
+    webkit-font-smoothing: antialiased;
+}
+
+.mentoring .mrq-attempts div {
+    display: inline-block;
 }

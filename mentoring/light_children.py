@@ -24,6 +24,10 @@
 # Imports ###########################################################
 
 import logging
+import json
+
+from lazy import lazy
+from weakref import WeakKeyDictionary
 
 from cStringIO import StringIO
 from lxml import etree
@@ -33,6 +37,8 @@ from django.core.urlresolvers import reverse
 from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
+
+from .models import LightChild as LightChildModel
 
 try:
     from xmodule_modifiers import replace_jump_to_id_urls
@@ -133,6 +139,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         """
         Replacement for ```self.runtime.render_child()```
         """
+
         frag = getattr(child, view_name)(context)
         frag.content = u'<div class="xblock-light-child" name="{}" data-type="{}">{}</div>'.format(
                 child.name, child.__class__.__name__, frag.content)
@@ -167,6 +174,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         Current HTML view of the XBlock, for refresh by client
         """
+
         frag = self.student_view({})
         frag = self.fragment_text_rewriting(frag)
 
@@ -194,6 +202,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         fragment = replace_jump_to_id_urls(course_id, jump_to_url, self, 'student_view', fragment, {})
         return fragment
 
+
 class LightChild(Plugin, LightChildrenMixin):
     """
     Base class for the light children
@@ -203,6 +212,7 @@ class LightChild(Plugin, LightChildrenMixin):
     def __init__(self, parent):
         self.parent = parent
         self.xblock_container = parent.xblock_container
+        self._student_data_loaded = False
 
     @property
     def runtime(self):
@@ -220,30 +230,125 @@ class LightChild(Plugin, LightChildrenMixin):
             xmodule_runtime = xmodule_runtime()
         return xmodule_runtime
 
+    @lazy
+    def student_data(self):
+        """
+        Use lazy property instead of XBlock field, as __init__() doesn't support
+        overwriting field values
+        """
+        if not self.name:
+            return ''
+
+        student_data = self.get_lightchild_model_object().student_data
+        return student_data
+
+    def load_student_data(self):
+        """
+        Load the student data from the database.
+        """
+
+        if self._student_data_loaded:
+            return
+
+        fields = self.get_fields_to_save()
+        if not fields or not self.student_data:
+            return
+
+        student_data = json.loads(self.student_data)
+        for field in fields:
+            if field in student_data:
+                setattr(self, field, student_data[field])
+
+        self._student_data_loaded = True
+
+    @classmethod
+    def get_fields_to_save(cls):
+        """
+        Returns a list of all LightChildField of the class. Used for saving student data.
+        """
+        return []
+
     def save(self):
-        pass
+        """
+        Replicate data changes on the related Django model used for sharing of data accross XBlocks
+        """
+
+        # Save all children
+        for child in self.get_children_objects():
+            child.save()
+
+        self.student_data = {}
+
+        # Get All LightChild fields to save
+        for field in self.get_fields_to_save():
+            self.student_data[field] = getattr(self, field)
+
+        if self.name:
+            lightchild_data = self.get_lightchild_model_object()
+            if lightchild_data.student_data != self.student_data:
+                lightchild_data.student_data = json.dumps(self.student_data)
+                lightchild_data.save()
+
+    def get_lightchild_model_object(self, name=None):
+        """
+        Fetches the LightChild model object for the lightchild named `name`
+        """
+
+        if not name:
+            name = self.name
+
+        if not name:
+            raise ValueError, 'LightChild.name field need to be set to a non-null/empty value'
+
+        student_id = self.xmodule_runtime.anonymous_student_id
+        course_id = self.xmodule_runtime.course_id
+
+        lightchild_data, created = LightChildModel.objects.get_or_create(
+            student_id=student_id,
+            course_id=course_id,
+            name=name,
+        )
+        return lightchild_data
 
 
 class LightChildField(object):
     """
     Fake field with no persistence - allows to keep XBlocks fields definitions on LightChild
     """
+
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', '')
+        self.default = kwargs.get('default', '')
+        self.data = WeakKeyDictionary()
 
-    def __nonzero__(self):
-        return bool(self.value)
+    def __get__(self, instance, name):
 
+        # A LightChildField can depend on student_data
+        instance.load_student_data()
+
+        return self.data.get(instance, self.default)
+
+    def __set__(self, instance, value):
+        self.data[instance] = value
 
 class String(LightChildField):
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', '') or ''
+        super(String, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', '') or ''
 
-    def __str__(self):
-        return self.value
+#    def split(self, *args, **kwargs):
+#        return self.value.split(*args, **kwargs)
 
-    def split(self, *args, **kwargs):
-        return self.value.split(*args, **kwargs)
+
+class Integer(LightChildField):
+    def __init__(self, *args, **kwargs):
+        super(Integer, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', 0)
+
+    def __set__(self, instance, value):
+        try:
+            self.data[instance] = int(value)
+        except (TypeError, ValueError): # not an integer
+            self.data[instance] = 0
 
 
 class Boolean(LightChildField):
@@ -252,7 +357,8 @@ class Boolean(LightChildField):
 
 class List(LightChildField):
     def __init__(self, *args, **kwargs):
-        self.value = kwargs.get('default', [])
+        super(List, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', [])
 
 
 class Scope(object):

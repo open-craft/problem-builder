@@ -5,12 +5,20 @@
     {% for choice in custom_choices %}
     <div class="choice">
       <span class="choice-result icon-2x"></span>
-      <label class="choice-label">
-        <input class="choice-selector" type="checkbox" name="{{ self.name }}" value="{{ choice.value }}"{% if choice.value in self.student_choices %} checked{% endif %}> {{ choice.content }}
-      </label>
+      <div class="choice-checkbox">
+        <label class="choice-label">
+          <input class="choice-selector" type="checkbox" name="{{ self.name }}"
+                 value="{{ choice.value }}"
+                 {% if choice.value in self.student_choices %} checked{% endif %}>
+          {{ choice.content }}
+          </input>
+        </label>
+      </div>
+      <span class="choice-answer icon-2x"></span>
       <div class="choice-tips"></div>
     </div>
     {% endfor %}
     <div class="choice-message"></div>
   </div>
 </fieldset>
+<div class="mrq-attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>

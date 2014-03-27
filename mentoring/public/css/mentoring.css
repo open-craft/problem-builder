@@ -51,7 +51,7 @@
 
 .mentoring .progress .indicator {
     display: inline-block;
-    margin-top: 5px;
+    vertical-align: middle;
 }
 
 .mentoring .progress .indicator .checkmark-correct {

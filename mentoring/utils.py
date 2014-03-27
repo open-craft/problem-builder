@@ -105,9 +105,9 @@ class XBlockWithChildrenFragmentsMixin(object):
         and a list of fragments, one per children
 
         - `view_name` allows to select a specific view method on the children
-        - `instance_of` allows to only return fragments for children which are instances of 
+        - `instance_of` allows to only return fragments for children which are instances of
           the provided class
-        - `not_instance_of` allows to only return fragments for children which are *NOT* 
+        - `not_instance_of` allows to only return fragments for children which are *NOT*
           instances of the provided class
         """
         fragment = Fragment()

@@ -75,6 +75,28 @@ Second XBlock instance:
 </mentoring>
 ```
 
+### Self-assessment MRQs
+```xml
+<mentoring url_name="mcq_1" enforce_dependency="false">
+    <mrq name="mrq_1_1" type="choices" max_attempts="3">
+        <question>What do you like in this MRQ?</question>
+        <choice value="elegance">Its elegance</choice>
+        <choice value="beauty">Its beauty</choice>
+        <choice value="gracefulness">Its gracefulness</choice>
+        <choice value="bugs">Its bugs</choice>
+
+        <tip require="gracefulness">This MRQ is indeed very graceful</tip>
+        <tip require="elegance,beauty">This is something everyone has to like about this MRQ</tip>
+        <tip reject="bugs">Nah, there isn't any!</tip>
+
+        <message type="on-submit">Thank you for answering!</message>
+    </mrq>
+    <message type="completed">
+        All is good now...
+        <html><p>Congratulations!</p></html>
+    </message>
+</mentoring>
+
 ### Tables
 
 ```xml

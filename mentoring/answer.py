@@ -55,7 +55,7 @@ class AnswerBlock(LightChild):
     @lazy
     def student_input(self):
         """
-        Use lazy property instead of XBlock field, as __init__() doesn't support 
+        Use lazy property instead of XBlock field, as __init__() doesn't support
         overwriting field values
         """
         # Only attempt to locate a model object for this block when the answer has a name
@@ -79,7 +79,7 @@ class AnswerBlock(LightChild):
             html = render_template('templates/html/answer_read_only.html', {
                 'self': self,
             })
-        
+
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self.xblock_container, 'public/css/answer.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
