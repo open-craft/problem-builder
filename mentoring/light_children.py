@@ -127,7 +127,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
             return
 
         node = etree.parse(StringIO(self.xml_content)).getroot()
-        LightChildrenMixin.init_block_from_node(self, node, {})
+        LightChildrenMixin.init_block_from_node(self, node, node.items())
 
     def get_children_objects(self):
         """
@@ -302,11 +302,12 @@ class LightChild(Plugin, LightChildrenMixin):
 
         student_id = self.xmodule_runtime.anonymous_student_id
         course_id = self.xmodule_runtime.course_id
+        url_name = "%s-%s" % (self.xblock_container.url_name, name)
 
         lightchild_data, created = LightChildModel.objects.get_or_create(
             student_id=student_id,
             course_id=course_id,
-            name=name,
+            name=url_name,
         )
         return lightchild_data
 

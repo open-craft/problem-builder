@@ -61,7 +61,7 @@ class LightChild(models.Model):
         app_label = 'mentoring'
         unique_together = (('student_id', 'course_id', 'name'),)
 
-    name = models.CharField(max_length=50, db_index=True)
+    name = models.CharField(max_length=100, db_index=True)
     student_id = models.CharField(max_length=32, db_index=True)
     course_id = models.CharField(max_length=50, db_index=True)
     student_data = models.TextField(blank=True, default='')
