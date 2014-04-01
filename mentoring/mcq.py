@@ -53,32 +53,41 @@ class MCQBlock(QuestionnaireAbstractBlock):
         log.debug(u'Received MCQ submission: "%s"', submission)
 
         completed = True
-        tips_fragments = []
-        for tip in self.get_tips():
-            completed = completed and self.is_tip_completed(tip, submission)
-            if submission in tip.display_with_defaults:
-                tips_fragments.append(tip.render())
+        tips = []
 
-        if self.type == 'rating':
-            formatted_tips = render_template('templates/html/tip_question_group.html', {
-                'self': self,
-                'tips_fragments': tips_fragments,
-                'submission': submission,
-                'submission_display': self.get_submission_display(submission),
-            })
-        else:
-            formatted_tips = render_template('templates/html/tip_choice_group.html', {
-                'self': self,
-                'tips_fragments': tips_fragments,
-                'completed': completed,
-            })
+        for choice in self.custom_choices:
+            choice_tips_fragments = []
+            for tip in self.get_tips():
+                completed = completed and self.is_tip_completed(tip, submission)
+                if choice.value in tip.display_with_defaults:
+                    choice_tips_fragments.append(tip.render())
+
+            if self.type == 'choices':
+                tips.append({
+                    'choice': choice.value,
+                    'tips': render_template('templates/html/tip_choice_group.html', {
+                        'self': self,
+                        'tips_fragments': choice_tips_fragments,
+                        'completed': completed,
+                    })
+                })
+            else:
+                tips.append({
+                    'choice': choice.value,
+                    'tips': render_template('templates/html/tip_question_group.html', {
+                        'self': self,
+                        'tips_fragments': choice_tips_fragments,
+                        'submission': submission,
+                        'submission_display': self.get_submission_display(submission),
+                    })
+                })
 
         self.student_choice = submission
         result = {
             'type': self.type,
             'submission': submission,
             'completed': completed,
-            'tips': formatted_tips,
+            'tips': tips,
         }
         log.debug(u'MCQ submission result: %s', result)
         return result

@@ -14,14 +14,47 @@ function MCQBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
-          if (result.type == 'rating') {
-            var tipsDom = $(element).parent().find('.messages'),
-                tipHtml = (result || {}).tips || '';
 
-            if(tipHtml)
-              tipsDom.append(tipHtml);
+          if (result.type == 'rating') {
+            if (_.size(result.tips) > 0) {
+              var tipsDom = $(element).parent().find('.messages'),
+                  tipHtml = result.tips[0].tips || '';
+
+              if(tipHtml)
+                  tipsDom.append(tipHtml);
+            }
           }
           else { // choices
+
+            var choiceInputs = $('.choice input', element);
+            $.each(choiceInputs, function(index, choiceInput) {
+                var choiceInputDOM = $(choiceInput),
+                    choiceDOM = choiceInputDOM.closest('.choice'),
+                    choiceResultDOM = $('.choice-result', choiceDOM),
+                    choiceTipsDOM = $('.choice-tips', choiceDOM),
+                    choiceTipsCloseDOM;
+
+                choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
+                if (result.completed && choiceInputDOM.val() == result.submission) {
+                    choiceResultDOM.addClass('correct icon-ok');
+                }
+                else if (choiceInputDOM.val() == result.submission || _.isNull(result.submission)) {
+                    choiceResultDOM.addClass('incorrect icon-exclamation');
+                }
+
+              var tips = _.find(result.tips, function(obj) {
+                           return obj.choice == choiceInputDOM.val();
+                         });
+              if (tips) {
+                  choiceTipsDOM.html(tips.tips);
+              }
+
+              choiceTipsCloseDOM = $('.close', choiceTipsDOM);
+                choiceResultDOM.off('click').on('click', function() {
+                    showPopup(choiceTipsDOM);
+                });
+            });
+
             var messageDOM = $('.choice-message', element),
                 allPopupsDOM = $('.choice-tips, .choice-message', element),
                 clearPopupEvents = function() {
@@ -43,8 +76,15 @@ function MCQBlock(runtime, element) {
                 showPopup(messageDOM);
             }
             else if (result.tips) {
-                messageDOM.html(result.tips);
-                showPopup(messageDOM);
+                var tips = _.find(result.tips, function(obj) {
+                               return obj.choice == result.submission;
+                           });
+                if (tips) {
+                    messageDOM.html(tips.tips);
+                    showPopup(messageDOM);
+                } else {
+                    clearPopupEvents();
+                }
             }
           }
         }

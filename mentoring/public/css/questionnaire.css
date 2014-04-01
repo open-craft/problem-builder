@@ -59,7 +59,7 @@
 }
 
 .mentoring .choices .choice-tips .tip-choice-group,
-.mentoring .choices .choice-message .message-content {
+.mentoring .choices .choice-message > div {
     position: relative;
 }
 
