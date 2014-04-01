@@ -62,29 +62,17 @@ class MCQBlock(QuestionnaireAbstractBlock):
                 if choice.value in tip.display_with_defaults:
                     choice_tips_fragments.append(tip.render())
 
-            if self.type == 'choices':
-                tips.append({
-                    'choice': choice.value,
-                    'tips': render_template('templates/html/tip_choice_group.html', {
-                        'self': self,
-                        'tips_fragments': choice_tips_fragments,
-                        'completed': completed,
-                    })
+            tips.append({
+                'choice': choice.value,
+                'tips': render_template('templates/html/tip_choice_group.html', {
+                    'self': self,
+                    'tips_fragments': choice_tips_fragments,
+                    'completed': completed,
                 })
-            else:
-                tips.append({
-                    'choice': choice.value,
-                    'tips': render_template('templates/html/tip_question_group.html', {
-                        'self': self,
-                        'tips_fragments': choice_tips_fragments,
-                        'submission': submission,
-                        'submission_display': self.get_submission_display(submission),
-                    })
-                })
+            })
 
         self.student_choice = submission
         result = {
-            'type': self.type,
             'submission': submission,
             'completed': completed,
             'tips': tips,

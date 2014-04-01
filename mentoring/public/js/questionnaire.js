@@ -10,10 +10,11 @@ function MessageView(element) {
       $('.close', this.allPopupsDOM).off('click');
     },
     showPopup: function(popupDOM) {
+      var self = this;
       this.clearPopupEvents();
       popupDOM.show();
       popupDOM.on('click', function() {
-        this.clearPopupEvents();
+        self.clearPopupEvents();
       });
     },
     showMessage: function(message) {
@@ -41,17 +42,6 @@ function MCQBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
-          if (result.type == 'rating') {
-            if (_.size(result.tips) > 0) {
-              var tipsDom = $(element).parent().find('.messages'),
-                  tipHtml = result.tips[0].tips || '';
-
-              if(tipHtml)
-                  tipsDom.append(tipHtml);
-            }
-          }
-          else { // choices
-
             var messageView = MessageView(element);
             var choiceInputs = $('.choice input', element);
             $.each(choiceInputs, function(index, choiceInput) {
@@ -78,7 +68,9 @@ function MCQBlock(runtime, element) {
 
               choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
-                    messageView.showMessage(choiceTipsDOM);
+                    if (choiceTipsDOM.html() != '') {
+                      messageView.showMessage(choiceTipsDOM);
+                    }
                 });
             });
 
@@ -93,11 +85,10 @@ function MCQBlock(runtime, element) {
                 if (tips) {
                     messageView.showMessage(tips.tips);
                 } else {
-                    clearPopupEvents();
+                    messageView.clearPopupEvents();
                 }
             }
           }
-        }
     };
 }
 

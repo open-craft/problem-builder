@@ -1,27 +1,40 @@
-<fieldset class="rating">
+<fieldset class="rating questionnaire">
   <legend class="question">{{ self.question }}</legend>
   <div class="choices-list">
-    <span class="low">{{ self.low }}</span>
-    <span class="choice">
+    <div class="choice">
+      <span class="choice-result icon-2x"></span>
       <label><input class="choice-selector" type="radio" name="{{ self.name }}" value="1"{% if self.student_choice == '1' %} checked{% endif %}>1</label>
-    </span>
-    <span class="choice">
+      <span class="low"> - {{ self.low }}</span>
+      <div class="choice-tips"></div>
+    </div>
+    <div class="choice">
+      <span class="choice-result icon-2x"></span>
       <label><input class="choice-selector" type="radio" name="{{ self.name }}" value="2"{% if self.student_choice == '2' %} checked{% endif %}>2</label>
-    </span>
-    <span class="choice">
+      <div class="choice-tips"></div>
+    </div>
+    <div class="choice">
+      <span class="choice-result icon-2x"></span>
       <label><input class="choice-selector" type="radio" name="{{ self.name }}" value="3"{% if self.student_choice == '3' %} checked{% endif %}>3</label>
-    </span>
-    <span class="choice">
+      <div class="choice-tips"></div>
+    </div>
+    <div class="choice">
+      <span class="choice-result icon-2x"></span>
       <label><input class="choice-selector" type="radio" name="{{ self.name }}" value="4"{% if self.student_choice == '4' %} checked{% endif %}>4</label>
-    </span>
-    <span class="choice">
+      <div class="choice-tips"></div>
+    </div>
+    <div class="choice">
+      <span class="choice-result icon-2x"></span>
       <label><input class="choice-selector" type="radio" name="{{ self.name }}" value="5"{% if self.student_choice == '5' %} checked{% endif %}>5</label>
-    </span>
-    <span class="low">{{ self.high }}</span>
+      <span class="low"> - {{ self.high }}</span>
+      <div class="choice-tips"></div>
+    </div>
     {% for choice in custom_choices %}
-    <span class="choice">
+    <div class="choice">
+      <span class="choice-result icon-2x"></span>
       <label><input type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == '{{ choice.value }}' %} checked{% endif %}> {{ choice.content }}</label>
-    </span>
+      <div class="choice-tips"></div>
+    </div>
     {% endfor %}
+    <div class="choice-message"></div>
   </div>
 </fieldset>
