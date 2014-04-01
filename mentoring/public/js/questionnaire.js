@@ -1,6 +1,33 @@
 // TODO: Split in two files
 var mrqAttemptsTemplate = _.template($('#xblock-mrq-attempts').html());
 
+function MessageView(element) {
+  return {
+    messageDOM: $('.choice-message', element),
+    allPopupsDOM: $('.choice-tips, .choice-message', element),
+    clearPopupEvents: function() {
+      this.allPopupsDOM.hide();
+      $('.close', this.allPopupsDOM).off('click');
+    },
+    showPopup: function(popupDOM) {
+      this.clearPopupEvents();
+      popupDOM.show();
+      popupDOM.on('click', function() {
+        this.clearPopupEvents();
+      });
+    },
+    showMessage: function(message) {
+      if (_.isString(message)) {
+        this.messageDOM.html(message);
+        this.showPopup(this.messageDOM);
+      }
+      else {
+        this.showPopup(message); // already a DOM
+      }
+    }
+  }
+}
+
 function MCQBlock(runtime, element) {
     return {
         submit: function() {
@@ -14,7 +41,6 @@ function MCQBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
-
           if (result.type == 'rating') {
             if (_.size(result.tips) > 0) {
               var tipsDom = $(element).parent().find('.messages'),
@@ -26,6 +52,7 @@ function MCQBlock(runtime, element) {
           }
           else { // choices
 
+            var messageView = MessageView(element);
             var choiceInputs = $('.choice input', element);
             $.each(choiceInputs, function(index, choiceInput) {
                 var choiceInputDOM = $(choiceInput),
@@ -51,37 +78,20 @@ function MCQBlock(runtime, element) {
 
               choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
-                    showPopup(choiceTipsDOM);
+                    messageView.showMessage(choiceTipsDOM);
                 });
             });
 
-            var messageDOM = $('.choice-message', element),
-                allPopupsDOM = $('.choice-tips, .choice-message', element),
-                clearPopupEvents = function() {
-                  allPopupsDOM.hide();
-                  $('.close', allPopupsDOM).off('click');
-                },
-                showPopup = function(popupDOM) {
-                  clearPopupEvents();
-                  popupDOM.show();
-
-                  popupDOM.on('click', function() {
-                    clearPopupEvents();
-                  });
-                };
-
             if (_.isNull(result.submission)) {
-                messageDOM.html('<div class="message-content"><div class="close"></div>' +
-                                'You have not provided an answer.' + '</div>');
-                showPopup(messageDOM);
+                messageView.showMessage('<div class="message-content"><div class="close"></div>' +
+                                        'You have not provided an answer.' + '</div>');
             }
             else if (result.tips) {
                 var tips = _.find(result.tips, function(obj) {
                                return obj.choice == result.submission;
                            });
                 if (tips) {
-                    messageDOM.html(tips.tips);
-                    showPopup(messageDOM);
+                    messageView.showMessage(tips.tips);
                 } else {
                     clearPopupEvents();
                 }
@@ -126,25 +136,11 @@ function MRQBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
-            var messageDOM = $('.choice-message', element),
-                allPopupsDOM = $('.choice-tips, .choice-message', element),
-                clearPopupEvents = function() {
-                    allPopupsDOM.hide();
-                    $('.close', allPopupsDOM).off('click');
-                },
-                showPopup = function(popupDOM) {
-                    clearPopupEvents();
-                    popupDOM.show();
-
-                    popupDOM.on('click', function() {
-                      clearPopupEvents();
-                    });
-                };
+            var messageView = MessageView(element);
 
             if (result.message) {
-                messageDOM.html('<div class="message-content"><div class="close"></div>' +
-                                result.message + '</div>');
-                showPopup(messageDOM);
+                messageView.showMessage('<div class="message-content"><div class="close"></div>' +
+                                        result.message + '</div>');
             }
 
             var answers = []; // used in displayAnswers
@@ -176,11 +172,11 @@ function MRQBlock(runtime, element) {
 
                 choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
-                    showPopup(choiceTipsDOM);
+                    messageView.showMessage(choiceTipsDOM);
                 });
 
                 choiceAnswerDOM.off('click').on('click', function() {
-                  showPopup(choiceTipsDOM);
+                  messageView.showMessage(choiceTipsDOM);
                 });
 
             });
