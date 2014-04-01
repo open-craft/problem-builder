@@ -8,6 +8,8 @@
         <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %}> {{ choice.content }}
       </label>
     </div>
+    <div class="choice-tips"></div>
     {% endfor %}
+    <div class="choice-message"></div>
   </div>
 </fieldset>

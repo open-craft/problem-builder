@@ -59,15 +59,23 @@ class MCQBlock(QuestionnaireAbstractBlock):
             if submission in tip.display_with_defaults:
                 tips_fragments.append(tip.render())
 
-        formatted_tips = render_template('templates/html/tip_question_group.html', {
-            'self': self,
-            'tips_fragments': tips_fragments,
-            'submission': submission,
-            'submission_display': self.get_submission_display(submission),
-        })
+        if self.type == 'rating':
+            formatted_tips = render_template('templates/html/tip_question_group.html', {
+                'self': self,
+                'tips_fragments': tips_fragments,
+                'submission': submission,
+                'submission_display': self.get_submission_display(submission),
+            })
+        else:
+            formatted_tips = render_template('templates/html/tip_choice_group.html', {
+                'self': self,
+                'tips_fragments': tips_fragments,
+                'completed': completed,
+            })
 
         self.student_choice = submission
         result = {
+            'type': self.type,
             'submission': submission,
             'completed': completed,
             'tips': formatted_tips,

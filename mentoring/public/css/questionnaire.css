@@ -78,6 +78,10 @@
     color: #fff;
 }
 
+.mentoring .choices .choice-message p {
+    color: #fff;
+}
+
 .mentoring .rating .choice {
     margin-right: 10px;
 }

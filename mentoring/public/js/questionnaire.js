@@ -14,12 +14,39 @@ function MCQBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
+          if (result.type == 'rating') {
             var tipsDom = $(element).parent().find('.messages'),
                 tipHtml = (result || {}).tips || '';
 
-            if(tipHtml) {
-                tipsDom.append(tipHtml);
+            if(tipHtml)
+              tipsDom.append(tipHtml);
+          }
+          else { // choices
+            var messageDOM = $('.choice-message', element),
+                allPopupsDOM = $('.choice-tips, .choice-message', element),
+                clearPopupEvents = function() {
+                  allPopupsDOM.hide();
+                  $('.close', allPopupsDOM).off('click');
+                },
+                showPopup = function(popupDOM) {
+                  clearPopupEvents();
+                  popupDOM.show();
+
+                  popupDOM.on('click', function() {
+                    clearPopupEvents();
+                  });
+                };
+
+            if (_.isNull(result.submission)) {
+                messageDOM.html('<div class="message-content"><div class="close"></div>' +
+                                'You have not provided an answer.' + '</div>');
+                showPopup(messageDOM);
             }
+            else if (result.tips) {
+                messageDOM.html(result.tips);
+                showPopup(messageDOM);
+            }
+          }
         }
     };
 }
@@ -70,8 +97,7 @@ function MRQBlock(runtime, element) {
                     popupDOM.show();
 
                     popupDOM.on('click', function() {
-                        clearPopupEvents();
-                        choiceTipsDOM.hide();
+                      clearPopupEvents();
                     });
                 };
 
