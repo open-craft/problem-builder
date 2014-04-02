@@ -55,15 +55,20 @@ class MCQBlock(QuestionnaireAbstractBlock):
         completed = True
         tips = []
 
-        for choice in self.custom_choices:
+        choices = [choice.value for choice in self.custom_choices]
+        # ensure rating tips are included
+        if self.type == 'rating':
+            choices +=  [str(n) for n in range(1,6)]
+
+        for choice in choices:
             choice_tips_fragments = []
             for tip in self.get_tips():
                 completed = completed and self.is_tip_completed(tip, submission)
-                if choice.value in tip.display_with_defaults:
+                if choice in tip.display_with_defaults:
                     choice_tips_fragments.append(tip.render())
 
             tips.append({
-                'choice': choice.value,
+                'choice': choice,
                 'tips': render_template('templates/html/tip_choice_group.html', {
                     'self': self,
                     'tips_fragments': choice_tips_fragments,
