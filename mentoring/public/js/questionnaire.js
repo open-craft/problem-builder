@@ -52,15 +52,15 @@ function MCQBlock(runtime, element) {
                     choiceTipsCloseDOM;
 
                 choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
-                if (result.completed && choiceInputDOM.val() == result.submission) {
+                if (result.completed && choiceInputDOM.val() === result.submission) {
                     choiceResultDOM.addClass('correct icon-ok');
                 }
-                else if (choiceInputDOM.val() == result.submission || _.isNull(result.submission)) {
+                else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {
                     choiceResultDOM.addClass('incorrect icon-exclamation');
                 }
 
               var tips = _.find(result.tips, function(obj) {
-                           return obj.choice == choiceInputDOM.val();
+                           return obj.choice === choiceInputDOM.val();
                          });
               if (tips) {
                   choiceTipsDOM.html(tips.tips);
@@ -80,7 +80,7 @@ function MCQBlock(runtime, element) {
             }
             else if (result.tips) {
                 var tips = _.find(result.tips, function(obj) {
-                               return obj.choice == result.submission;
+                               return obj.choice === result.submission;
                            });
                 if (tips) {
                     messageView.showMessage(tips.tips);
