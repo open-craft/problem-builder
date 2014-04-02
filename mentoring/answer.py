@@ -29,7 +29,7 @@ from lazy import lazy
 
 from xblock.fragment import Fragment
 
-from .light_children import LightChild, Boolean, Scope, String
+from .light_children import LightChild, Boolean, Scope, String, Integer
 from .models import Answer
 from .utils import render_template
 
@@ -51,6 +51,8 @@ class AnswerBlock(LightChild):
     read_only = Boolean(help="Display as a read-only field", default=False, scope=Scope.content)
     default_from = String(help="If specified, the name of the answer to get the default value from",
                           default=None, scope=Scope.content)
+    min_characters = Integer(help="Minimum number of characters allowed for the answer",
+                             scope=Scope.content)
 
     @lazy
     def student_input(self):
@@ -106,7 +108,11 @@ class AnswerBlock(LightChild):
 
     @property
     def completed(self):
-        return bool(self.read_only or self.student_input)
+        answer_length_ok = self.student_input
+        if self.min_characters > 0:
+            answer_length_ok = len(self.student_input) >= self.min_characters
+
+        return bool(self.read_only or answer_length_ok)
 
     def save(self):
         """

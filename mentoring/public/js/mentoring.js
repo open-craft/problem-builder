@@ -77,16 +77,25 @@ function MentoringBlock(runtime, element) {
         var submit_dom = $(element).find('.submit .input-main');
 
         submit_dom.bind('click', function() {
+            var success = true;
             var data = {};
             var children = getChildren(element);
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
                 if (child.name !== undefined) {
-                    data[child.name] = callIfExists(child, 'submit');
+                    try {
+                        data[child.name] = callIfExists(child, 'submit');
+                    }
+                    catch (error) {
+                      alert(error);
+                      success = false;
+                    }
                 }
             }
-            var handlerUrl = runtime.handlerUrl(element, 'submit');
-            $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
+            if (success) {
+                var handlerUrl = runtime.handlerUrl(element, 'submit');
+                $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
+            }
         });
 
         // init children (especially mrq blocks)
