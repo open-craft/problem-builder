@@ -2,7 +2,8 @@ function AnswerBlock(runtime, element) {
     return {
         submit: function() {
             var input = $(':input', element),
-                answer_length = input.val().length,
+                input_value = input.val().replace(/^\s+|\s+$/gm,''),
+                answer_length = input_value.length,
                 data = input.data();
 
             if (_.isNumber(data.min_characters) &&

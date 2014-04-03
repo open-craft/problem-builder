@@ -52,7 +52,7 @@ class AnswerBlock(LightChild):
     default_from = String(help="If specified, the name of the answer to get the default value from",
                           default=None, scope=Scope.content)
     min_characters = Integer(help="Minimum number of characters allowed for the answer",
-                             scope=Scope.content)
+                             default=0, scope=Scope.content)
 
     @lazy
     def student_input(self):
@@ -110,7 +110,7 @@ class AnswerBlock(LightChild):
     def completed(self):
         answer_length_ok = self.student_input
         if self.min_characters > 0:
-            answer_length_ok = len(self.student_input) >= self.min_characters
+            answer_length_ok = len(self.student_input.strip()) >= self.min_characters
 
         return bool(self.read_only or answer_length_ok)
 
