@@ -83,26 +83,23 @@ function MentoringBlock(runtime, element) {
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
                 if (child.name !== undefined) {
-                    try {
                         data[child.name] = callIfExists(child, 'submit');
-                    }
-                    catch (error) {
-                      alert(error);
-                      success = false;
-                    }
                 }
             }
-            if (success) {
-                var handlerUrl = runtime.handlerUrl(element, 'submit');
-                $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
-            }
+            var handlerUrl = runtime.handlerUrl(element, 'submit');
+            $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
         });
 
         // init children (especially mrq blocks)
         var children = getChildren(element);
+        var options = {
+            blockValidator: validateXBlock
+        };
         _.each(children, function(child) {
-          callIfExists(child, 'init');
+          callIfExists(child, 'init', options);
         });
+
+        validateXBlock();
 
         if (submit_dom.length) {
             renderProgress();
@@ -119,6 +116,31 @@ function MentoringBlock(runtime, element) {
     function refreshXBlock() {
         var handlerUrl = runtime.handlerUrl(element, 'view');
         $.post(handlerUrl, '{}').success(handleRefreshResults);
+    }
+
+    // validate all children
+    function validateXBlock() {
+        var submit_dom = $(element).find('.submit .input-main');
+        var children_are_valid = true;
+        var data = {};
+        var children = getChildren(element);
+
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.name !== undefined) {
+                var child_validation = callIfExists(child, 'validate');
+                if (_.isBoolean(child_validation)) {
+                    children_are_valid = children_are_valid && child_validation
+                }
+            }
+        }
+
+        if (!children_are_valid) {
+            submit_dom.attr('disabled','disabled');
+        }
+        else {
+            submit_dom.removeAttr("disabled");
+        }
     }
 
     // We need to manually refresh, XBlocks are currently loaded together with the section
