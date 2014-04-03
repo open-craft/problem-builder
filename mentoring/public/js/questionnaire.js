@@ -1,6 +1,4 @@
 // TODO: Split in two files
-var mrqAttemptsTemplate = _.template($('#xblock-mrq-attempts').html());
-
 function MessageView(element) {
   return {
     messageDOM: $('.choice-message', element),
@@ -93,6 +91,7 @@ function MCQBlock(runtime, element) {
 }
 
 function MRQBlock(runtime, element) {
+    var mrqAttemptsTemplate = _.template($('#xblock-mrq-attempts').html());
     return {
         renderAttempts: function() {
           var data = $('.mrq-attempts', element).data();
