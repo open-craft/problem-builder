@@ -83,7 +83,7 @@ function MentoringBlock(runtime, element) {
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
                 if (child.name !== undefined) {
-                  data[child.name] = callIfExists(child, 'submit');
+                    data[child.name] = callIfExists(child, 'submit');
                 }
             }
             var handlerUrl = runtime.handlerUrl(element, 'submit');
