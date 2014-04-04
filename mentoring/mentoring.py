@@ -30,7 +30,7 @@ from lxml import etree
 from StringIO import StringIO
 
 from xblock.core import XBlock
-from xblock.fields import Boolean, Scope, String
+from xblock.fields import Boolean, Scope, String, Float
 from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
@@ -68,6 +68,9 @@ class MentoringBlock(XBlockWithLightChildren):
                                  default=False, scope=Scope.content)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
+    weight = Float(display_name="Problem Weight",
+                   help="Defines the maximum total grade of the block.",
+                   values={"min": 0, "step": .1}, default=1, scope=Scope.settings)
     icon_class = 'problem'
     has_score = True
 
