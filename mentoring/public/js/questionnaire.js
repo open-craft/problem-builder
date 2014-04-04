@@ -91,23 +91,11 @@ function MCQBlock(runtime, element) {
 }
 
 function MRQBlock(runtime, element) {
-    var mrqAttemptsTemplate = _.template($('#xblock-mrq-attempts').html());
     return {
-        renderAttempts: function() {
-          var data = $('.mrq-attempts', element).data();
-          $('.mrq-attempts', element).html(mrqAttemptsTemplate(data));
-          // bind show answer button
-          var showAnswerButton = $('button', element);
-          if (showAnswerButton.length != 0) {
-            if (_.isUndefined(this.answers))
-              showAnswerButton.hide();
-            else
-              showAnswerButton.on('click', _.bind(this.toggleAnswers, this));
-          }
-        },
-
         init: function() {
-          this.renderAttempts();
+            var answerButton = $('button', element);
+            answerButton.on('click', _.bind(this.toggleAnswers, this));
+            this.showAnswerButton();
         },
 
         submit: function() {
@@ -125,7 +113,7 @@ function MRQBlock(runtime, element) {
             return checkedValues;
         },
 
-        handleSubmit: function(result) {
+        handleSubmit: function(result, options) {
             var messageView = MessageView(element);
 
             if (result.message) {
@@ -149,8 +137,8 @@ function MRQBlock(runtime, element) {
                 });
 
                 choiceResultDOM.removeClass('incorrect icon-exclamation correct icon-ok');
-              /* show hint if checked or max_attempts is disabled */
-                if (result.completed || choiceInputDOM.prop('checked') || result.max_attempts <= 0) {
+                /* show hint if checked or max_attempts is disabled */
+                if (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0) {
                   if (choice.completed) {
                     choiceResultDOM.addClass('correct icon-ok');
                   } else if (!choice.completed) {
@@ -170,10 +158,21 @@ function MRQBlock(runtime, element) {
                 });
 
             });
-            this.answers = answers;
 
-            $('.mrq-attempts', element).data('num_attempts', result.num_attempts);
-            this.renderAttempts();
+            this.answers = answers;
+            this.showAnswerButton(options);
+        },
+
+        showAnswerButton: function(options) {
+            var button = $('.show-answer', element);
+            var is_enabled = options && (options.num_attempts >= options.max_attempts);
+
+            if (is_enabled && _.isArray(this.answers)) {
+                button.show();
+            }
+            else {
+                button.hide();
+            }
         },
 
       toggleAnswers: function() {

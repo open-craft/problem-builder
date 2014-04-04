@@ -26,7 +26,7 @@
 import logging
 
 
-from .light_children import Integer, List, Scope
+from .light_children import List, Scope
 from .questionnaire import QuestionnaireAbstractBlock
 from .utils import render_template
 
@@ -43,17 +43,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
     An XBlock used to ask multiple-response questions
     """
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
-    max_attempts = Integer(help="Number of max attempts for this questions", default=0,
-                           scope=Scope.content)
-    num_attempts = Integer(help="Number of attempts a user has answered for this questions",
-                           default=0, scope=Scope.user_state)
-
-    # TODO REMOVE THIS, ONLY NEEDED FOR LIGHTCHILDREN
-    @classmethod
-    def get_fields_to_save(cls):
-        return [
-            'num_attempts'
-        ]
 
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
@@ -85,26 +74,14 @@ class MRQBlock(QuestionnaireAbstractBlock):
                 }),
             })
 
-        self.message = u'Your answer is correct!' if completed else u'Your answer is incorrect.'
-        # Do not increase the counter is the answer is correct
-        if not completed:
-            setattr(self, 'num_attempts', self.num_attempts + 1)
-
-        if self.max_attempts > 0 and self.num_attempts >= self.max_attempts:
-            completed = True
-            self.message += u' You have reached the maximum number of attempts for this question. ' \
-            u'Your next answers won''t be saved. You can check the answer(s) using the "Show Answer(s)" button.'
-        else:
-            self.student_choices = submissions
+        self.student_choices = submissions
 
         result = {
-        'submissions': submissions,
-        'completed': completed,
-        'choices': results,
-        'message': self.message,
-        'max_attempts': self.max_attempts,
-        'num_attempts': self.num_attempts,
-        'score': sum(1.0 for r in results if r['completed']) / len(results),
+            'submissions': submissions,
+            'completed': completed,
+            'choices': results,
+            'message': self.message,
+            'score': sum(1.0 for r in results if r['completed']) / len(results)
         }
 
         log.debug(u'MRQ submissions result: %s', result)

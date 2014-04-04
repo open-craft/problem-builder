@@ -1,9 +1,16 @@
 function MentoringBlock(runtime, element) {
     var progressTemplate = _.template($('#xblock-progress-template').html());
+    var attemptsTemplate = _.template($('#xblock-attempts-template').html());
+    var children; // Keep track of children. A Child need a single object scope for its data.
 
     function renderProgress() {
         var data = $('.progress', element).data();
         $('.indicator', element).html(progressTemplate(data));
+    }
+
+    function renderAttempts() {
+        var data = $('.attempts', element).data();
+        $('.attempts', element).html(attemptsTemplate(data));
     }
 
     function renderDependency() {
@@ -31,12 +38,20 @@ function MentoringBlock(runtime, element) {
             var input = submitResult[0],
                 result = submitResult[1],
                 child = getChildByName(element, input);
-            callIfExists(child, 'handleSubmit', result);
+            var options = {
+                max_attempts: results.max_attempts,
+                num_attempts: results.num_attempts
+            }
+            callIfExists(child, 'handleSubmit', result, options);
         });
 
         $('.progress', element).data('completed', results.completed ? 'True' : 'False');
         $('.progress', element).data('attempted', results.attempted ? 'True' : 'False');
         renderProgress();
+
+        $('.attempts', element).data('max_attempts', results.max_attempts);
+        $('.attempts', element).data('num_attempts', results.num_attempts);
+        renderAttempts();
 
         // Messages should only be displayed upon hitting 'submit', not on page reload
         messages_dom.append(results.message);
@@ -44,11 +59,16 @@ function MentoringBlock(runtime, element) {
             messages_dom.prepend('<div class="title1">Feedback</div>');
             messages_dom.show();
         }
+
+        validateXBlock();
     }
 
     function getChildren(element) {
-        var children_dom = $('.xblock-light-child', element),
-            children = [];
+        if (!_.isUndefined(children))
+          return children;
+
+        var children_dom = $('.xblock-light-child', element);
+        children = [];
 
         $.each(children_dom, function(index, child_dom) {
             var child_type = $(child_dom).attr('data-type'),
@@ -99,13 +119,15 @@ function MentoringBlock(runtime, element) {
           callIfExists(child, 'init', options);
         });
 
-        validateXBlock();
 
         if (submit_dom.length) {
             renderProgress();
         }
 
+        renderAttempts();
         renderDependency();
+
+        validateXBlock();
     }
 
     function handleRefreshResults(results) {
@@ -122,15 +144,20 @@ function MentoringBlock(runtime, element) {
     function validateXBlock() {
         var submit_dom = $(element).find('.submit .input-main');
         var children_are_valid = true;
-        var data = {};
+        var data = $('.attempts', element).data();
         var children = getChildren(element);
 
-        for (var i = 0; i < children.length; i++) {
-            var child = children[i];
-            if (child.name !== undefined) {
-                var child_validation = callIfExists(child, 'validate');
-                if (_.isBoolean(child_validation)) {
-                    children_are_valid = children_are_valid && child_validation
+        if ((data.max_attempts > 0) && (data.num_attempts >= data.max_attempts)) {
+          children_are_valid = false;
+        }
+        else {
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child.name !== undefined) {
+                    var child_validation = callIfExists(child, 'validate');
+                    if (_.isBoolean(child_validation)) {
+                        children_are_valid = children_are_valid && child_validation
+                    }
                 }
             }
         }

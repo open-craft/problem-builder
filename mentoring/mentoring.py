@@ -30,7 +30,7 @@ from lxml import etree
 from StringIO import StringIO
 
 from xblock.core import XBlock
-from xblock.fields import Boolean, Scope, String, Float
+from xblock.fields import Boolean, Scope, String, Integer, Float
 from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
@@ -69,6 +69,10 @@ class MentoringBlock(XBlockWithLightChildren):
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.", default=0, scope=Scope.content)
+    num_attempts = Integer(help="Number of attempts a user has answered for this questions",
+                           default=0, scope=Scope.user_state)
+    max_attempts = Integer(help="Number of max attempts for this questions", default=0,
+                           scope=Scope.content)
     icon_class = 'problem'
     has_score = True
 
@@ -86,7 +90,7 @@ class MentoringBlock(XBlockWithLightChildren):
                     self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(load_resource('templates/html/mentoring_progress.html'), "text/html")
-        fragment.add_resource(load_resource('templates/html/mrqblock_attempts.html'), "text/html")
+        fragment.add_resource(load_resource('templates/html/mentoring_attempts.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
 
@@ -111,6 +115,15 @@ class MentoringBlock(XBlockWithLightChildren):
     def submit(self, submissions, suffix=''):
         log.info(u'Received submissions: {}'.format(submissions))
         self.attempted = True
+
+        # TODO Don't do that...
+        # The xblock.fields.Field implementation has the effect that if the data *is not* read from
+        # the json (real xblock), it is set as dirty and it doesn't take care of the data type. So
+        # self.max_attempts is a string since it is read from the xml and set using 'setattr'.
+        try:
+            max_attempts = int(self.max_attempts)
+        except ValueError:
+            max_attempts = 0
 
         submit_results = []
         completed = True
@@ -145,11 +158,17 @@ class MentoringBlock(XBlockWithLightChildren):
         })
 
         self.completed = bool(completed)
+
+        if not self.completed and max_attempts > 0:
+            setattr(self, 'num_attempts', self.num_attempts + 1)
+
         return {
             'submitResults': submit_results,
             'completed': self.completed,
             'attempted': self.attempted,
             'message': message,
+            'max_attempts': max_attempts,
+            'num_attempts': self.num_attempts
         }
 
     def get_message_fragment(self, message_type):

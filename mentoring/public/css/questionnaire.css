@@ -82,14 +82,6 @@
     margin-right: 5px;
 }
 
-.mentoring .mrq-attempts {
-    display: inline-block;
-    vertical-align: baseline;
-    color: #777;
-    font-style: italic;
-    webkit-font-smoothing: antialiased;
-}
-
-.mentoring .mrq-attempts div {
-    display: inline-block;
+.mentoring .show-answer {
+    display: none;
 }
