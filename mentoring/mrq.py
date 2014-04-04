@@ -43,8 +43,10 @@ class MRQBlock(QuestionnaireAbstractBlock):
     An XBlock used to ask multiple-response questions
     """
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
-    max_attempts = Integer(help="Number of max attempts for this questions", scope=Scope.content)
-    num_attempts = Integer(help="Number of attempts a user has answered for this questions", scope=Scope.user_state)
+    max_attempts = Integer(help="Number of max attempts for this questions", default=0,
+                           scope=Scope.content)
+    num_attempts = Integer(help="Number of attempts a user has answered for this questions",
+                           default=0, scope=Scope.user_state)
 
     # TODO REMOVE THIS, ONLY NEEDED FOR LIGHTCHILDREN
     @classmethod
