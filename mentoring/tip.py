@@ -57,6 +57,7 @@ class TipBlock(LightChild):
     display = String(help="List of choices to display the tip for", scope=Scope.content, default=None)
     reject = String(help="List of choices to reject", scope=Scope.content, default=None)
     require = String(help="List of choices to require", scope=Scope.content, default=None)
+    has_children = True
 
     def render(self):
         """
