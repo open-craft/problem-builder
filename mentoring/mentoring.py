@@ -160,7 +160,7 @@ class MentoringBlock(XBlockWithLightChildren):
         self.completed = bool(completed)
 
         if not self.completed and max_attempts > 0:
-            setattr(self, 'num_attempts', self.num_attempts + 1)
+            self.num_attempts += 1
 
         return {
             'submitResults': submit_results,

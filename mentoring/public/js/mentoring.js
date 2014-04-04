@@ -143,12 +143,12 @@ function MentoringBlock(runtime, element) {
     // validate all children
     function validateXBlock() {
         var submit_dom = $(element).find('.submit .input-main');
-        var children_are_valid = true;
+        var is_valid = true;
         var data = $('.attempts', element).data();
         var children = getChildren(element);
 
         if ((data.max_attempts > 0) && (data.num_attempts >= data.max_attempts)) {
-          children_are_valid = false;
+          is_valid = false;
         }
         else {
             for (var i = 0; i < children.length; i++) {
@@ -156,13 +156,13 @@ function MentoringBlock(runtime, element) {
                 if (child.name !== undefined) {
                     var child_validation = callIfExists(child, 'validate');
                     if (_.isBoolean(child_validation)) {
-                        children_are_valid = children_are_valid && child_validation
+                        is_valid = is_valid && child_validation;
                     }
                 }
             }
         }
 
-        if (!children_are_valid) {
+        if (!is_valid) {
             submit_dom.attr('disabled','disabled');
         }
         else {
