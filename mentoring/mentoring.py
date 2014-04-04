@@ -68,11 +68,16 @@ class MentoringBlock(XBlockWithLightChildren):
                                  default=False, scope=Scope.content)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
-    weight = Float(display_name="Problem Weight",
-                   help="Defines the maximum total grade of the block.",
-                   values={"min": 0, "step": .1}, default=1, scope=Scope.settings)
+    max_grade = Float(help="Defines the maximum total grade of the block.", default=0, scope=Scope.content)
     icon_class = 'problem'
     has_score = True
+
+    @property
+    def weight(self):
+        return float(self.max_grade)
+    @weight.setter
+    def weight(self, value):
+        self.max_grade = value
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
