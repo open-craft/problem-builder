@@ -53,24 +53,34 @@ class MCQBlock(QuestionnaireAbstractBlock):
         log.debug(u'Received MCQ submission: "%s"', submission)
 
         completed = True
-        tips_fragments = []
-        for tip in self.get_tips():
-            completed = completed and self.is_tip_completed(tip, submission)
-            if submission in tip.display_with_defaults:
-                tips_fragments.append(tip.render())
+        tips = []
 
-        formatted_tips = render_template('templates/html/tip_question_group.html', {
-            'self': self,
-            'tips_fragments': tips_fragments,
-            'submission': submission,
-            'submission_display': self.get_submission_display(submission),
-        })
+        choices = [choice.value for choice in self.custom_choices]
+        # ensure rating tips are included
+        if self.type == 'rating':
+            choices +=  [str(n) for n in range(1,6)]
+
+        for choice in choices:
+            choice_tips_fragments = []
+            for tip in self.get_tips():
+                completed = completed and self.is_tip_completed(tip, submission)
+                if choice in tip.display_with_defaults:
+                    choice_tips_fragments.append(tip.render())
+
+            tips.append({
+                'choice': choice,
+                'tips': render_template('templates/html/tip_choice_group.html', {
+                    'self': self,
+                    'tips_fragments': choice_tips_fragments,
+                    'completed': completed,
+                })
+            })
 
         self.student_choice = submission
         result = {
             'submission': submission,
             'completed': completed,
-            'tips': formatted_tips,
+            'tips': tips,
         }
         log.debug(u'MCQ submission result: %s', result)
         return result
