@@ -103,7 +103,8 @@ class MRQBlock(QuestionnaireAbstractBlock):
         'choices': results,
         'message': self.message,
         'max_attempts': self.max_attempts,
-        'num_attempts': self.num_attempts
+        'num_attempts': self.num_attempts,
+        'score': sum(1.0 for r in results if r['completed']) / len(results),
         }
 
         log.debug(u'MRQ submissions result: %s', result)

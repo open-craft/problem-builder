@@ -69,6 +69,7 @@ class MentoringBlock(XBlockWithLightChildren):
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
     icon_class = 'problem'
+    has_score = True
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view',
@@ -135,6 +136,12 @@ class MentoringBlock(XBlockWithLightChildren):
                       'the current one.'
         elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
+
+        score = sum(r[1]['score'] for r in submit_results) / float(len(submit_results))
+        self.runtime.publish(self, 'grade', {
+            'value': score,
+            'max_value': 1,
+        })
 
         self.completed = bool(completed)
         return {

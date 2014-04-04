@@ -81,6 +81,7 @@ class MCQBlock(QuestionnaireAbstractBlock):
             'submission': submission,
             'completed': completed,
             'tips': tips,
+            'score': 1 if completed else 0,
         }
         log.debug(u'MCQ submission result: %s', result)
         return result

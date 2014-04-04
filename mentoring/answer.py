@@ -104,6 +104,7 @@ class AnswerBlock(LightChild):
         return {
             'student_input': self.student_input,
             'completed': self.completed,
+            'score': 1 if self.completed else 0,
         }
 
     @property
