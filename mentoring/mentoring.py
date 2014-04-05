@@ -116,15 +116,6 @@ class MentoringBlock(XBlockWithLightChildren):
         log.info(u'Received submissions: {}'.format(submissions))
         self.attempted = True
 
-        # TODO Don't do that...
-        # The xblock.fields.Field implementation has the effect that if the data *is not* read from
-        # the json (real xblock), it is set as dirty and it doesn't take care of the data type. So
-        # self.max_attempts is a string since it is read from the xml and set using 'setattr'.
-        try:
-            max_attempts = int(self.max_attempts)
-        except ValueError:
-            max_attempts = 0
-
         submit_results = []
         completed = True
         for child in self.get_children_objects():
@@ -159,7 +150,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         self.completed = bool(completed)
 
-        if not self.completed and max_attempts > 0:
+        if not self.completed and self.max_attempts > 0:
             self.num_attempts += 1
 
         return {
@@ -167,7 +158,7 @@ class MentoringBlock(XBlockWithLightChildren):
             'completed': self.completed,
             'attempted': self.attempted,
             'message': message,
-            'max_attempts': max_attempts,
+            'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts
         }
 
