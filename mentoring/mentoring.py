@@ -132,6 +132,10 @@ class MentoringBlock(XBlockWithLightChildren):
         if self.completed:
             completed = True
 
+        # server-side check to not set completion if the max_attempts is reached
+        if self.max_attempts > 0 and self.num_attempts >= self.max_attempts:
+            completed = False
+
         if completed:
             message = self.get_message_html('completed')
         else:
