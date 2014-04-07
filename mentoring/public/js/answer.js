@@ -11,7 +11,16 @@ function AnswerBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
+            var checkmark = $('.answer-checkmark', element);
             $(element).find('.message').text((result || {}).error || '');
+
+            checkmark.removeClass('checkmark-incorrect icon-exclamation checkmark-correct icon-ok');
+            if (result.completed) {
+                checkmark.addClass('checkmark-correct icon-ok');
+            }
+            else {
+                checkmark.addClass('checkmark-incorrect icon-exclamation');
+            }
         },
 
         // Returns `true` if the child is valid, else `false`

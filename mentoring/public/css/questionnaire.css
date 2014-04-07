@@ -21,17 +21,14 @@
     cursor: pointer;
 }
 
-.mentoring .questionnaire .choice-result.correct,
-.mentoring .questionnaire .choice-answer.correct {
-    cursor: pointer;
-    color: #006600;
+.mentoring .questionnaire .choice-result.checkmark-correct,
+.mentoring .questionnaire .choice-answer.checkmark-correct {
     position: relative;
     top: -3px;
 }
 
-.mentoring .questionnaire .choice-result.incorrect {
+.mentoring .questionnaire .choice-result.checkmark-incorrect {
     text-align:center;
-    color: #ff0000;
 }
 
 .mentoring .questionnaire .choice-tips,

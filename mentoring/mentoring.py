@@ -89,7 +89,6 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment.add_javascript_url(
                     self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(load_resource('templates/html/mentoring_progress.html'), "text/html")
         fragment.add_resource(load_resource('templates/html/mentoring_attempts.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
