@@ -61,3 +61,12 @@
 .mentoring .progress .indicator .checkmark-incorrect {
     color: #ff0000;
 }
+
+.mentoring .attempts {
+    margin-top: 20px;
+    display: inline-block;
+    vertical-align: baseline;
+    color: #777;
+    font-style: italic;
+    webkit-font-smoothing: antialiased;
+}
