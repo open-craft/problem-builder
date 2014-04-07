@@ -1,12 +1,6 @@
 function MentoringBlock(runtime, element) {
-    var progressTemplate = _.template($('#xblock-progress-template').html());
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var children; // Keep track of children. A Child need a single object scope for its data.
-
-    function renderProgress() {
-        var data = $('.progress', element).data();
-        $('.indicator', element).html(progressTemplate(data));
-    }
 
     function renderAttempts() {
         var data = $('.attempts', element).data();
@@ -44,10 +38,6 @@ function MentoringBlock(runtime, element) {
             }
             callIfExists(child, 'handleSubmit', result, options);
         });
-
-        $('.progress', element).data('completed', results.completed ? 'True' : 'False');
-        $('.progress', element).data('attempted', results.attempted ? 'True' : 'False');
-        renderProgress();
 
         $('.attempts', element).data('max_attempts', results.max_attempts);
         $('.attempts', element).data('num_attempts', results.num_attempts);
@@ -119,10 +109,6 @@ function MentoringBlock(runtime, element) {
           callIfExists(child, 'init', options);
         });
 
-
-        if (submit_dom.length) {
-            renderProgress();
-        }
 
         renderAttempts();
         renderDependency();
