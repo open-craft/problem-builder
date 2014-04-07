@@ -1,6 +1,11 @@
 .mentoring .answer.editable {
     height: 250px;
     width: 100%;
+    margin-bottom: 10px;
+}
+
+.mentoring .answer-checkmark {
+    display: inline-block;
     margin-bottom: 20px;
 }
 

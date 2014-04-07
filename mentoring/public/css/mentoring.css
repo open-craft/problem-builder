@@ -57,3 +57,11 @@
     font-style: italic;
     webkit-font-smoothing: antialiased;
 }
+
+.mentoring .checkmark-correct {
+    color: #006600;
+}
+
+.mentoring .checkmark-incorrect {
+    color: #ff0000;
+}
