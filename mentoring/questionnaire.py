@@ -30,6 +30,7 @@ from xblock.fragment import Fragment
 from .choice import ChoiceBlock
 from .light_children import LightChild, Scope, String
 from .tip import TipBlock
+from .feedback import FeedbackBlock
 from .utils import render_template
 
 
@@ -80,6 +81,7 @@ class QuestionnaireAbstractBlock(LightChild):
         html = render_template(template_path, {
             'self': self,
             'custom_choices': self.custom_choices,
+            'feedback': self.get_feedback().render()
         })
 
         fragment = Fragment(html)
@@ -110,6 +112,22 @@ class QuestionnaireAbstractBlock(LightChild):
             if isinstance(child, TipBlock):
                 tips.append(child)
         return tips
+
+    def get_feedback(self):
+        """
+        Returns the feedback child in this block. If there is no feedback block, provide a default one.
+        """
+        feedback = None
+        for child in self.get_children_objects():
+            if isinstance(child, FeedbackBlock):
+                feedback = child
+                break
+
+        if feedback is None:
+            feedback = FeedbackBlock(self)
+            feedback.init_block_from_node(feedback,[],{})
+
+        return feedback
 
     def get_submission_display(self, submission):
         """
