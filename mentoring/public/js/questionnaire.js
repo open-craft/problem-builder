@@ -49,12 +49,14 @@ function MCQBlock(runtime, element) {
                     choiceTipsDOM = $('.choice-tips', choiceDOM),
                     choiceTipsCloseDOM;
 
-                choiceResultDOM.removeClass('checkmark-incorrect icon-exclamation checkmark-correct icon-ok');
+                choiceResultDOM.removeClass(
+                  'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+                );
                 if (result.completed && choiceInputDOM.val() === result.submission) {
-                    choiceResultDOM.addClass('checkmark-correct icon-ok');
+                    choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                 }
                 else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {
-                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation');
+                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
 
               var tips = _.find(result.tips, function(obj) {
@@ -102,7 +104,9 @@ function MRQBlock(runtime, element) {
             // hide answers
             var choiceInputDOM = $('.choice input', element),
                 choiceResultDOM = $('.choice-answer', choiceInputDOM.closest('.choice'));
-            choiceResultDOM.removeClass('checkmark-incorrect icon-exclamation checkmark-correct icon-ok');
+            choiceResultDOM.removeClass(
+              'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+            );
 
             var checkedCheckboxes = $('input[type=checkbox]:checked', element),
                 checkedValues = [];
@@ -136,13 +140,15 @@ function MRQBlock(runtime, element) {
                   answer: choice.completed ? choiceInputDOM.attr('checked') : !choiceInputDOM.attr('checked')
                 });
 
-                choiceResultDOM.removeClass('checkmark-incorrect icon-exclamation checkmark-correct icon-ok');
+                choiceResultDOM.removeClass(
+                  'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+                );
                 /* show hint if checked or max_attempts is disabled */
                 if (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0) {
                   if (choice.completed) {
-                    choiceResultDOM.addClass('checkmark-correct icon-ok');
+                    choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                   } else if (!choice.completed) {
-                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation');
+                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                   }
                 }
 
@@ -181,10 +187,10 @@ function MRQBlock(runtime, element) {
 
         _.each(this.answers, function(answer) {
           var choiceResultDOM = $('.choice-answer', answer.input.closest('.choice'));
-          choiceResultDOM.removeClass('checkmark-correct icon-ok');
+          choiceResultDOM.removeClass('checkmark-correct icon-ok fa-check');
           if (answers_displayed) {
             if (answer.answer)
-              choiceResultDOM.addClass('checkmark-correct icon-ok');
+              choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
             showAnswerButton.text('Hide Answer(s)');
           }
           else {
