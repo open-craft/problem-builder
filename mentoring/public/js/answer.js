@@ -14,12 +14,14 @@ function AnswerBlock(runtime, element) {
             var checkmark = $('.answer-checkmark', element);
             $(element).find('.message').text((result || {}).error || '');
 
-            checkmark.removeClass('checkmark-incorrect icon-exclamation checkmark-correct icon-ok');
+            checkmark.removeClass(
+              'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+            );
             if (result.completed) {
-                checkmark.addClass('checkmark-correct icon-ok');
+                checkmark.addClass('checkmark-correct icon-ok fa-check');
             }
             else {
-                checkmark.addClass('checkmark-incorrect icon-exclamation');
+                checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
             }
         },
 
