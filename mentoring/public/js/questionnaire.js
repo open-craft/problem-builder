@@ -1,8 +1,8 @@
 // TODO: Split in two files
 function MessageView(element) {
   return {
-    messageDOM: $('.choice-message', element),
-    allPopupsDOM: $('.choice-tips, .choice-message', element),
+    messageDOM: $('.feedback', element),
+    allPopupsDOM: $('.choice-tips, .feedback', element),
     clearPopupEvents: function() {
       this.allPopupsDOM.hide();
       $('.close', this.allPopupsDOM).off('click');

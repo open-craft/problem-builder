@@ -96,6 +96,7 @@ Second XBlock instance:
         <html><p>Congratulations!</p></html>
     </message>
 </mentoring>
+```
 
 ### Tables
 
@@ -119,6 +120,22 @@ Second XBlock instance:
 <vertical>
     <mentoring-dataexport url_name="mentoring_dataexport"></mentoring-dataexport>
 </vertical>
+```
+
+### Custom feedback popup window
+
+You can use the `feedback` child to have a custom popup window. Currently, only the *width* and
+*height* can be modified. The value of those attribute should be valid CSS.
+
+```xml
+<mentoring url_name="mcq_1" enforce_dependency="false">
+    <mrq name="mrq_1_1" type="choices" max_attempts="3">
+        <question>What do you like in this MRQ?</question>
+        <choice value="elegance">Its elegance</choice>
+        ...
+        <feedback width="100px" height="50px"/>
+    </mrq>
+</mentoring>
 ```
 
 Installing dependencies

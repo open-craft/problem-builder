@@ -32,7 +32,7 @@
 }
 
 .mentoring .questionnaire .choice-tips,
-.mentoring .questionnaire .choice-message {
+.mentoring .questionnaire .feedback {
     display: none;
     color: #fff;
     position: absolute;
@@ -54,13 +54,13 @@
 }
 
 .mentoring .questionnaire .choice-tips .tip-choice-group,
-.mentoring .questionnaire .choice-message .tip-choice-group,
-.mentoring .questionnaire .choice-message .message-content {
+.mentoring .questionnaire .feedback .tip-choice-group,
+.mentoring .questionnaire .feedback .message-content {
     position: relative;
 }
 
 .mentoring .questionnaire .choice-tips .close,
-.mentoring .questionnaire .choice-message .close {
+.mentoring .questionnaire .feedback .close {
     background-image: url({{ close_icon_url }});
     cursor: pointer;
     position: absolute;
@@ -71,7 +71,7 @@
 }
 
 .mentoring .questionnaire .choice-tips p,
-.mentoring .questionnaire .choice-message p {
+.mentoring .questionnaire .feedback p {
     color: #fff;
 }
 
