@@ -148,11 +148,13 @@ class MentoringBlock(XBlockWithLightChildren):
         elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
-        score = sum(r[1]['score'] for r in submit_results) / float(len(submit_results))
-        self.runtime.publish(self, 'grade', {
-            'value': score,
-            'max_value': 1,
-        })
+        # Once it was completed, lock score
+        if not self.completed:
+            score = sum(r[1]['score'] for r in submit_results) / float(len(submit_results))
+            self.runtime.publish(self, 'grade', {
+                'value': score,
+                'max_value': 1,
+            })
 
         if not self.completed and self.max_attempts > 0:
             self.num_attempts += 1
