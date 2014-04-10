@@ -26,7 +26,7 @@
 import logging
 
 
-from .light_children import List, Scope
+from .light_children import List, Scope, Boolean
 from .questionnaire import QuestionnaireAbstractBlock
 from .utils import render_template
 
@@ -43,6 +43,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
     An XBlock used to ask multiple-response questions
     """
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
+    hide_results = Boolean(help="Hide results", scope=Scope.content, default=False)
 
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
