@@ -27,6 +27,12 @@ function AnswerBlock(runtime, element) {
 
         // Returns `true` if the child is valid, else `false`
         validate: function() {
+
+            // return true if the answer is read only
+            var blockquote_ro = $('blockquote.answer.read_only', element);
+            if (blockquote_ro.length > 0)
+              return true;
+
             var input = $(':input', element),
                 input_value = input.val().replace(/^\s+|\s+$/gm,''),
                 answer_length = input_value.length,
