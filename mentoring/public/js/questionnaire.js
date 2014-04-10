@@ -112,6 +112,10 @@ function MRQBlock(runtime, element) {
                                         result.message + '</div>');
             }
 
+            var questionnaireDOM = $('fieldset.questionnaire', element),
+                data = questionnaireDOM.data(),
+                hide_results = (data.hide_results === 'True') ? true : false;
+
             $.each(result.choices, function(index, choice) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element),
                     choiceDOM = choiceInputDOM.closest('.choice'),
@@ -120,11 +124,12 @@ function MRQBlock(runtime, element) {
                     choiceTipsCloseDOM;
 
                 choiceResultDOM.removeClass(
-                  'checkmark-incorrect icon-exclamation checkmark-correct icon-ok fa-check'
+                  'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
                 );
 
                 /* show hint if checked or max_attempts is disabled */
-                if (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0) {
+                if (!hide_results &&
+                    (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0)) {
                   if (choice.completed) {
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                   } else if (!choice.completed) {

@@ -78,7 +78,7 @@ Second XBlock instance:
 ### Self-assessment MRQs
 ```xml
 <mentoring url_name="mcq_1" enforce_dependency="false">
-    <mrq name="mrq_1_1" type="choices" max_attempts="3">
+    <mrq name="mrq_1_1" type="choices" hide_results="true">
         <question>What do you like in this MRQ?</question>
         <choice value="elegance">Its elegance</choice>
         <choice value="beauty">Its beauty</choice>
@@ -122,6 +122,23 @@ Second XBlock instance:
 </vertical>
 ```
 
+### Maximum Attempts
+
+You can set the number of maximum attempts for the unit completion:
+```xml
+<mentoring url_name="mcq_1" enforce_dependency="false" max_attempts="3">
+    <mrq name="mrq_1_1" type="choices" hide_results="true">
+        <question>What do you like in this MRQ?</question>
+        <choice value="elegance">Its elegance</choice>
+        ...
+    </mrq>
+    <message type="completed">
+        All is good now...
+        <html><p>Congratulations!</p></html>
+    </message>
+</mentoring>
+```
+
 ### Custom feedback popup window
 
 You can use the `feedback` child to have a custom popup window. Currently, only the *width* and
@@ -129,7 +146,7 @@ You can use the `feedback` child to have a custom popup window. Currently, only 
 
 ```xml
 <mentoring url_name="mcq_1" enforce_dependency="false">
-    <mrq name="mrq_1_1" type="choices" max_attempts="3">
+    <mrq name="mrq_1_1" type="choices">
         <question>What do you like in this MRQ?</question>
         <choice value="elegance">Its elegance</choice>
         ...

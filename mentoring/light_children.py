@@ -331,6 +331,7 @@ class LightChildField(object):
     def __set__(self, instance, value):
         self.data[instance] = value
 
+
 class String(LightChildField):
     def __init__(self, *args, **kwargs):
         super(String, self).__init__(*args, **kwargs)
@@ -353,7 +354,15 @@ class Integer(LightChildField):
 
 
 class Boolean(LightChildField):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(Boolean, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', False)
+
+    def __set__(self, instance, value):
+        if isinstance(value, basestring):
+            value = value.lower() == 'true'
+
+        self.data[instance] = value
 
 
 class List(LightChildField):
