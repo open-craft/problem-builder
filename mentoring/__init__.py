@@ -8,4 +8,3 @@ from .mentoring import MentoringBlock
 from .message import MentoringMessageBlock
 from .table import MentoringTableBlock, MentoringTableColumnBlock, MentoringTableColumnHeaderBlock
 from .tip import TipBlock
-from .feedback import FeedbackBlock

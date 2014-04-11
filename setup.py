@@ -58,8 +58,7 @@ BLOCKS_CHILDREN = [
     'message = mentoring:MentoringMessageBlock',
     'tip = mentoring:TipBlock',
     'choice = mentoring:ChoiceBlock',
-    'html = mentoring:HTMLBlock',
-    'feedback = mentoring:FeedbackBlock'
+    'html = mentoring:HTMLBlock'
 ]
 
 setup(

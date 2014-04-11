@@ -139,10 +139,10 @@ You can set the number of maximum attempts for the unit completion:
 </mentoring>
 ```
 
-### Custom feedback popup window
+### Custom tip popup window size
 
-You can use the `feedback` child to have a custom popup window. Currently, only the *width* and
-*height* can be modified. The value of those attribute should be valid CSS.
+You can specify `width` and `height` attributes to the `tip` child to customize the popup window
+size. The value of those attribute should be valid CSS.
 
 ```xml
 <mentoring url_name="mcq_1" enforce_dependency="false">
@@ -150,7 +150,7 @@ You can use the `feedback` child to have a custom popup window. Currently, only 
         <question>What do you like in this MRQ?</question>
         <choice value="elegance">Its elegance</choice>
         ...
-        <feedback width="100px" height="50px"/>
+        <tip require="elegance" width="50px" height="20px">This is something everyone has to like about this MRQ</tip>
     </mrq>
 </mentoring>
 ```
