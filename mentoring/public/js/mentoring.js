@@ -55,7 +55,7 @@ function MentoringBlock(runtime, element) {
 
     function getChildren(element) {
         if (!_.isUndefined(children))
-          return children;
+            return children;
 
         var children_dom = $('.xblock-light-child', element);
         children = [];
@@ -106,7 +106,7 @@ function MentoringBlock(runtime, element) {
             blockValidator: validateXBlock
         };
         _.each(children, function(child) {
-          callIfExists(child, 'init', options);
+            callIfExists(child, 'init', options);
         });
 
 
@@ -134,7 +134,7 @@ function MentoringBlock(runtime, element) {
         var children = getChildren(element);
 
         if ((data.max_attempts > 0) && (data.num_attempts >= data.max_attempts)) {
-          is_valid = false;
+            is_valid = false;
         }
         else {
             for (var i = 0; i < children.length; i++) {

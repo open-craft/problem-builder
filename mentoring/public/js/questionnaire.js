@@ -1,46 +1,46 @@
 // TODO: Split in two files
 function MessageView(element) {
-  return {
-    messageDOM: $('.feedback', element),
-    allPopupsDOM: $('.choice-tips, .feedback', element),
-    clearPopupEvents: function() {
-      this.allPopupsDOM.hide();
-      $('.close', this.allPopupsDOM).off('click');
-    },
-    showPopup: function(popupDOM) {
-      var self = this;
-      this.clearPopupEvents();
+    return {
+        messageDOM: $('.feedback', element),
+        allPopupsDOM: $('.choice-tips, .feedback', element),
+        clearPopupEvents: function() {
+            this.allPopupsDOM.hide();
+            $('.close', this.allPopupsDOM).off('click');
+        },
+        showPopup: function(popupDOM) {
+            var self = this;
+            this.clearPopupEvents();
 
-      // Set the width/height
-      var tip = $('.tip', popupDOM)[0];
-      var data = $(tip).data();
-      if (data && data.width) {
-        popupDOM.css('width', data.width)
-      } else {
-        popupDOM.css('width', '')
-      }
+            // Set the width/height
+            var tip = $('.tip', popupDOM)[0];
+            var data = $(tip).data();
+            if (data && data.width) {
+                popupDOM.css('width', data.width)
+            } else {
+                popupDOM.css('width', '')
+            }
 
-      if (data && data.height) {
-        popupDOM.css('height', data.height);
-      } else {
-        popupDOM.css('height', '')
-      }
+            if (data && data.height) {
+                popupDOM.css('height', data.height);
+            } else {
+                popupDOM.css('height', '')
+            }
 
-      popupDOM.show();
-      popupDOM.on('click', function() {
-        self.clearPopupEvents();
-      });
-    },
-    showMessage: function(message) {
-      if (_.isString(message)) {
-        this.messageDOM.html(message);
-        this.showPopup(this.messageDOM);
-      }
-      else {
-        this.showPopup(message); // already a DOM
-      }
+            popupDOM.show();
+            popupDOM.on('click', function() {
+                self.clearPopupEvents();
+            });
+        },
+        showMessage: function(message) {
+            if (_.isString(message)) {
+                this.messageDOM.html(message);
+                this.showPopup(this.messageDOM);
+            }
+            else {
+                this.showPopup(message); // already a DOM
+            }
+        }
     }
-  }
 }
 
 function MCQBlock(runtime, element) {
@@ -66,7 +66,7 @@ function MCQBlock(runtime, element) {
                     choiceTipsCloseDOM;
 
                 choiceResultDOM.removeClass(
-                  'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+                    'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
                 );
                 if (result.completed && choiceInputDOM.val() === result.submission) {
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
@@ -75,17 +75,17 @@ function MCQBlock(runtime, element) {
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
 
-              var tips = _.find(result.tips, function(obj) {
-                           return obj.choice === choiceInputDOM.val();
-                         });
-              if (tips) {
-                  choiceTipsDOM.html(tips.tips);
-              }
+                var tips = _.find(result.tips, function(obj) {
+                    return obj.choice === choiceInputDOM.val();
+                });
+                if (tips) {
+                    choiceTipsDOM.html(tips.tips);
+                }
 
-              choiceTipsCloseDOM = $('.close', choiceTipsDOM);
+                choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
                     if (choiceTipsDOM.html() != '') {
-                      messageView.showMessage(choiceTipsDOM);
+                        messageView.showMessage(choiceTipsDOM);
                     }
                 });
             });
@@ -96,15 +96,15 @@ function MCQBlock(runtime, element) {
             }
             else if (result.tips) {
                 var tips = _.find(result.tips, function(obj) {
-                               return obj.choice === result.submission;
-                           });
+                    return obj.choice === result.submission;
+                });
                 if (tips) {
                     messageView.showMessage(tips.tips);
                 } else {
                     messageView.clearPopupEvents();
                 }
             }
-          }
+        }
     };
 }
 
@@ -140,17 +140,17 @@ function MRQBlock(runtime, element) {
                     choiceTipsCloseDOM;
 
                 choiceResultDOM.removeClass(
-                  'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+                    'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
                 );
 
                 /* show hint if checked or max_attempts is disabled */
                 if (!hide_results &&
                     (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0)) {
-                  if (choice.completed) {
-                    choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
-                  } else if (!choice.completed) {
-                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
-                  }
+                    if (choice.completed) {
+                        choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
+                    } else if (!choice.completed) {
+                        choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                    }
                 }
 
                 choiceTipsDOM.html(choice.tips);

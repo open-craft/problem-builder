@@ -2,8 +2,8 @@ function AnswerBlock(runtime, element) {
     return {
 
         init: function(options) {
-          // register the child validator
-          $(':input', element).on('keyup', options.blockValidator);
+            // register the child validator
+            $(':input', element).on('keyup', options.blockValidator);
         },
 
         submit: function() {
@@ -15,7 +15,7 @@ function AnswerBlock(runtime, element) {
             $(element).find('.message').text((result || {}).error || '');
 
             checkmark.removeClass(
-              'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+                'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
             );
             if (result.completed) {
                 checkmark.addClass('checkmark-correct icon-ok fa-check');
@@ -31,7 +31,7 @@ function AnswerBlock(runtime, element) {
             // return true if the answer is read only
             var blockquote_ro = $('blockquote.answer.read_only', element);
             if (blockquote_ro.length > 0)
-              return true;
+                return true;
 
             var input = $(':input', element),
                 input_value = input.val().replace(/^\s+|\s+$/gm,''),
