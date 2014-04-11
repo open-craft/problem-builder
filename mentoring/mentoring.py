@@ -35,7 +35,6 @@ from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
 from .message import MentoringMessageBlock
-from .feedback import FeedbackBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
 
 
@@ -80,7 +79,7 @@ class MentoringBlock(XBlockWithLightChildren):
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
-            not_instance_of=(MentoringMessageBlock, FeedbackBlock)
+            not_instance_of=MentoringMessageBlock
         )
 
         fragment.add_content(render_template('templates/html/mentoring.html', {

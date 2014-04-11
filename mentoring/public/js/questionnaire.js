@@ -10,6 +10,22 @@ function MessageView(element) {
     showPopup: function(popupDOM) {
       var self = this;
       this.clearPopupEvents();
+
+      // Set the width/height
+      var tip = $('.tip', popupDOM)[0];
+      var data = $(tip).data();
+      if (data && data.width) {
+        popupDOM.css('width', data.width)
+      } else {
+        popupDOM.css('width', '')
+      }
+
+      if (data && data.height) {
+        popupDOM.css('height', data.height);
+      } else {
+        popupDOM.css('height', '')
+      }
+
       popupDOM.show();
       popupDOM.on('click', function() {
         self.clearPopupEvents();
