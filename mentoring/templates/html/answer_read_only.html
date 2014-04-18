@@ -1,4 +1,5 @@
-<blockquote class="answer read_only">
-  {{ self.student_input|linebreaksbr }}
-</blockquote>
-
+<div class="xblock-answer" data-completed="{{ self.completed }}">
+  <blockquote class="answer read_only">
+    {{ self.student_input|linebreaksbr }}
+  </blockquote>
+</div>

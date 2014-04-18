@@ -4,6 +4,12 @@ function AnswerBlock(runtime, element) {
         init: function(options) {
             // register the child validator
             $(':input', element).on('keyup', options.blockValidator);
+
+            var checkmark = $('.answer-checkmark', element);
+            var completed = $('.xblock-answer', element).data('completed');
+            if (completed === 'True') {
+                checkmark.addClass('checkmark-correct icon-ok fa-check');
+            }
         },
 
         submit: function() {
