@@ -34,6 +34,7 @@ from xblock.fields import Boolean, Scope, String, Integer, Float
 from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
+from .title import TitleBlock
 from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
 
@@ -79,7 +80,7 @@ class MentoringBlock(XBlockWithLightChildren):
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
-            not_instance_of=MentoringMessageBlock
+            not_instance_of=(MentoringMessageBlock, TitleBlock)
         )
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
@@ -96,6 +97,16 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment.initialize_js('MentoringBlock')
 
         return fragment
+
+    @property
+    def title(self):
+        """
+        Returns the title child.
+        """
+        for child in self.get_children_objects():
+            if isinstance(child, TitleBlock):
+                return child
+        return None
 
     @property
     def has_missing_dependency(self):
