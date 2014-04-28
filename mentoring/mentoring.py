@@ -257,3 +257,14 @@ class MentoringBlock(XBlockWithLightChildren):
         Scenarios displayed by the workbench. Load them from external (private) repository
         """
         return get_scenarios_from_path('templates/xml')
+
+    @property
+    def display_name_with_default(self):
+        """
+        Return a display name for the module: use display_name if defined in
+        metadata, otherwise use a custom default value.
+        """
+        name = self.display_name
+        if name is None:
+            name = "Mentoring Block"
+        return name
