@@ -155,6 +155,21 @@ size. The value of those attribute should be valid CSS.
 </mentoring>
 ```
 
+### Custom Nav title
+
+The Nav title (the black tooltip showed on hover on the Units Nav bar) is a list of the `display_name` attributes of all the blocks present in that Unit.
+
+So two Mentoring blocks like the following will result in a tooltip like the one below:
+
+```xml
+<mentoring url_name="mentoring-0a06b184" weight="20" display_name="First Mentoring block">
+<mentoring url_name="mentoring-1a04badd" weight="20" display_name="Second Mentoring block">
+```
+
+![image](https://cloud.githubusercontent.com/assets/1225294/2820216/b0228fd8-cef7-11e3-98e1-5fdbf49b706a.png)
+
+The default title is "Mentoring Block".
+
 Installing dependencies
 -----------------------
 
