@@ -149,7 +149,7 @@ class MentoringBlock(XBlockWithLightChildren):
         if completed:
             message = self.get_message_html('completed')
         else:
-            message = ''
+            message = self.get_message_html('incomplete')
 
         if self.has_missing_dependency:
             completed = False
