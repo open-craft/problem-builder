@@ -72,6 +72,9 @@ Second XBlock instance:
         All is good now...
         <html><p>Congratulations!</p></html>
     </message>
+    <message type="incomplete">
+        <html><p>Still some work to do...</p></html>
+    </message>
 </mentoring>
 ```
 
@@ -94,6 +97,9 @@ Second XBlock instance:
     <message type="completed">
         All is good now...
         <html><p>Congratulations!</p></html>
+    </message>
+    <message type="incomplete">
+        <html><p>Still some work to do...</p></html>
     </message>
 </mentoring>
 ```
@@ -124,7 +130,8 @@ Second XBlock instance:
 
 ### Maximum Attempts
 
-You can set the number of maximum attempts for the unit completion:
+You can set the number of maximum attempts for the unit completion, as well as
+a feedback message when the maximum number of attempts is reached:
 ```xml
 <mentoring url_name="mcq_1" enforce_dependency="false" max_attempts="3">
     <mrq name="mrq_1_1" type="choices" hide_results="true">
@@ -135,6 +142,9 @@ You can set the number of maximum attempts for the unit completion:
     <message type="completed">
         All is good now...
         <html><p>Congratulations!</p></html>
+    </message>
+    <message type="max_attempts_reached">
+        <html><p>Maximum number of attempts reached</p></html>
     </message>
 </mentoring>
 ```
