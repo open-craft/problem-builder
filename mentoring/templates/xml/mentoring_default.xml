@@ -1,4 +1,5 @@
-<mentoring url_name="{{ url_name }}">
+<mentoring url_name="{{ url_name }}" weight="1">
+    <title>Default Title</title>
     <html>
         <p>What is your goal?</p>
     </html>

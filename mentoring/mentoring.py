@@ -69,7 +69,7 @@ class MentoringBlock(XBlockWithLightChildren):
                                  default=False, scope=Scope.content)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
-    weight = Float(help="Defines the maximum total grade of the block.", default=0, scope=Scope.content)
+    weight = Float(help="Defines the maximum total grade of the block.", default=1, scope=Scope.content)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions",
                            default=0, scope=Scope.user_state)
     max_attempts = Integer(help="Number of max attempts for this questions", default=0,
