@@ -143,11 +143,13 @@ class MentoringBlock(XBlockWithLightChildren):
             completed = True
 
         # server-side check to not set completion if the max_attempts is reached
-        if self.max_attempts > 0 and self.num_attempts >= self.max_attempts:
+        if self.max_attempts_reached:
             completed = False
 
         if completed:
             message = self.get_message_html('completed')
+        elif self.max_attempts_reached:
+            message = self.get_message_html('max_attempts_reached')
         else:
             message = self.get_message_html('incomplete')
 
@@ -179,6 +181,10 @@ class MentoringBlock(XBlockWithLightChildren):
             'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts
         }
+
+    @property
+    def max_attempts_reached(self):
+        return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
 
     def get_message_fragment(self, message_type):
         for child in self.get_children_objects():
