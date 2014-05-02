@@ -208,8 +208,8 @@ class MentoringBlock(XBlockWithLightChildren):
             'self': self,
             'xml_content': self.xml_content or self.default_xml_content,
         }))
-        fragment.add_javascript(load_resource('public/js/mentoring_edit.js'))
-        fragment.add_css(load_resource('public/css/mentoring_edit.css'))
+        fragment.add_javascript(self.runtime.local_resource_url('public/js/mentoring_edit.js'))
+        fragment.add_css(self.runtime.local_resource_url('public/css/mentoring_edit.css'))
 
         fragment.initialize_js('MentoringEditBlock')
 
