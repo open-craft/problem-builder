@@ -45,6 +45,10 @@ function MessageView(element) {
 
 function MCQBlock(runtime, element) {
     return {
+        init: function(options) {
+            $('input[type=radio]', element).on('change', options.blockValidator);
+        },
+
         submit: function() {
             var checkedRadio = $('input[type=radio]:checked', element);
 
@@ -104,12 +108,24 @@ function MCQBlock(runtime, element) {
                     messageView.clearPopupEvents();
                 }
             }
+        },
+        
+        validate: function(){
+            var checked = $('input[type=radio]:checked', element);
+            if (checked.length) {
+                return true;
+            }
+            return false;
         }
     };
 }
 
 function MRQBlock(runtime, element) {
     return {
+        init: function(options) {
+            $('input[type=checkbox]', element).on('change', options.blockValidator);
+        },
+
         submit: function() {
             var checkedCheckboxes = $('input[type=checkbox]:checked', element),
                 checkedValues = [];
@@ -161,6 +177,14 @@ function MRQBlock(runtime, element) {
                 });
 
             });
+        },
+
+        validate: function(){
+            var checked = $('input[type=checkbox]:checked', element);
+            if (checked.length) {
+                return true;
+            }
+            return false;
         }
 
     };
