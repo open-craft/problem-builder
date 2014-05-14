@@ -1,9 +1,12 @@
 <fieldset class="choices questionnaire">
-  <legend class="question">{{ self.question }}</legend>
+  <legend class="question">
+    <h3>QUESTION</h3>
+    <p>{{ self.question }}</p>
+  </legend>
   <div class="choices-list">
     {% for choice in custom_choices %}
     <div class="choice">
-      <span class="choice-result icon-2x"></span>
+      <div class="choice-result icon-2x"></div>
       <label class="choice-label">
         <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %}> {{ choice.content }}
       </label>
