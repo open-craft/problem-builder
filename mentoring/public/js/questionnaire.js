@@ -96,7 +96,7 @@ function MCQBlock(runtime, element) {
 
             if (_.isNull(result.submission)) {
                 messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
-                                        '<i class="close icon-remove-sign fa-times-circle"></i>');
+                                        '<div class="close icon-remove-sign fa-times-circle"></div>');
             }
             else if (result.tips) {
                 var tips = _.find(result.tips, function(obj) {
@@ -141,7 +141,7 @@ function MRQBlock(runtime, element) {
 
             if (result.message) {
                 messageView.showMessage('<div class="message-content">' + result.message + '</div>'+
-                                        '<i class="close icon-remove-sign fa-times-circle"></i>');
+                                        '<div class="close icon-remove-sign fa-times-circle"></div>');
             }
 
             var questionnaireDOM = $('fieldset.questionnaire', element),

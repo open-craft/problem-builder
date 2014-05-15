@@ -29,7 +29,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    background: none repeat scroll 0 0 #5C9DD5;
+    background: none repeat scroll 0 0 #66A5B5;
     font-family: arial;
     font-size: 14px;
     height: 100%;
@@ -55,9 +55,12 @@
     cursor: pointer;
     position: absolute;
     top: 5px;
-    right: 0px;
+    right: 3px;
     width: 18px;
     height: 21px;
+    font-family: FontAwesome;
+    font-style: normal;
+    text-align: center;
 }
 
 .mentoring .questionnaire .choice-tips p,
