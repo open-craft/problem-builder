@@ -1,12 +1,12 @@
-.mentoring .title {
+.mentoring .title * {
     display: inline-block;
 }
 
 .mentoring .messages {
     display: none;
     margin-top: 10px;
-    border: 1px solid rgb(221, 221, 221);
-    padding: 12px 15px 20px;
+    border-top: 2px solid #eaeaea;
+    padding: 12px 0px 20px;
 }
 
 .mentoring .messages .title1 {
@@ -57,6 +57,8 @@
     margin-left: 10px;
     display: inline-block;
     vertical-align: middle;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .mentoring .attempts > span {
