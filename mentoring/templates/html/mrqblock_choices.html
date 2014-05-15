@@ -1,9 +1,13 @@
 <fieldset class="choices questionnaire" data-hide_results="{{self.hide_results}}">
-  <legend class="question">{{ self.question }}</legend>
+
+  <legend class="question">
+    <h3>QUESTION</h3>
+    <p>{{ self.question }}</p>
+  </legend>
   <div class="choices-list">
     {% for choice in custom_choices %}
     <div class="choice">
-      <span class="choice-result icon-2x"></span>
+      <div class="choice-result icon-2x"></div>
       <div class="choice-checkbox">
         <label class="choice-label">
           <input class="choice-selector" type="checkbox" name="{{ self.name }}"

@@ -36,7 +36,6 @@
     font-style: italic;
 }
 
-.mentoring h3,
 .mentoring h4 {
     margin-bottom: 20px;
 }
@@ -46,22 +45,41 @@
 }
 
 .mentoring .submit {
+    display: inline-block;
     margin-top: 20px;
 }
 
 .mentoring .attempts {
-    margin-top: 20px;
+    margin-left: 10px;
     display: inline-block;
-    vertical-align: baseline;
+    vertical-align: middle;
+}
+
+.mentoring .attempts > span {
     color: #777;
     font-style: italic;
     webkit-font-smoothing: antialiased;
 }
 
 .mentoring .checkmark-correct {
+    font-size: 22pt;
     color: #006600;
+    color: #629b2b;
+    float: left;
 }
 
 .mentoring .checkmark-incorrect {
+    font-size: 22pt;
     color: #ff0000;
+    float: left;
+}
+
+.mentoring div {
+    overflow: hidden;
+}
+
+.mentoring .choice-result{
+    display:block;
+    float: left;
+    height:33.33px;
 }
