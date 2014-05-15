@@ -138,6 +138,13 @@ class MentoringBlock(XBlockWithLightChildren):
                 child.save()
                 completed = completed and child_result['completed']
 
+        if self.max_attempts_reached:
+            message = self.get_message_html('max_attempts_reached')
+        elif completed:
+            message = self.get_message_html('completed')
+        else:
+            message = self.get_message_html('incomplete')
+
         # Once it has been completed once, keep completion even if user changes values
         if self.completed:
             completed = True
@@ -145,13 +152,6 @@ class MentoringBlock(XBlockWithLightChildren):
         # server-side check to not set completion if the max_attempts is reached
         if self.max_attempts_reached:
             completed = False
-
-        if completed:
-            message = self.get_message_html('completed')
-        elif self.max_attempts_reached:
-            message = self.get_message_html('max_attempts_reached')
-        else:
-            message = self.get_message_html('incomplete')
 
         if self.has_missing_dependency:
             completed = False

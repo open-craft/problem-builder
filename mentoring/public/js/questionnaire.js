@@ -46,7 +46,7 @@ function MessageView(element) {
 function MCQBlock(runtime, element) {
     return {
         init: function(options) {
-            $('input[type=radio]', element).on('change', options.blockValidator);
+            $('input[type=radio]', element).on('change', options.onChange);
         },
 
         submit: function() {
@@ -123,7 +123,7 @@ function MCQBlock(runtime, element) {
 function MRQBlock(runtime, element) {
     return {
         init: function(options) {
-            $('input[type=checkbox]', element).on('change', options.blockValidator);
+            $('input[type=checkbox]', element).on('change', options.onChange);
         },
 
         submit: function() {

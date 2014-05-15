@@ -1,6 +1,7 @@
 function MentoringBlock(runtime, element) {
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var children; // Keep track of children. A Child need a single object scope for its data.
+    var submitXHR;
 
     function renderAttempts() {
         var data = $('.attempts', element).data();
@@ -83,27 +84,46 @@ function MentoringBlock(runtime, element) {
         }
     }
 
-    function initXBlock() {
-        var submit_dom = $(element).find('.submit .input-main');
-
-        submit_dom.bind('click', function() {
-            var success = true;
-            var data = {};
-            var children = getChildren(element);
-            for (var i = 0; i < children.length; i++) {
-                var child = children[i];
-                if (child.name !== undefined) {
-                    data[child.name] = callIfExists(child, 'submit');
-                }
+    function submit() {
+        var success = true;
+        var data = {};
+        var children = getChildren(element);
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.name !== undefined) {
+                data[child.name] = callIfExists(child, 'submit');
             }
-            var handlerUrl = runtime.handlerUrl(element, 'submit');
-            $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
-        });
+        }
+        var handlerUrl = runtime.handlerUrl(element, 'submit');
+        if (submitXHR) {
+            submitXHR.abort();
+        }
+        submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
+    }
+
+    function resubmit() {
+        // Don't autosubmit if number of attempts is limited.
+        var max_attempts = $('.attempts', element).data('max_attempts');
+        // Only autosubmit if messages are already shown.
+        var messages_dom = $('.messages', element);
+        if (messages_dom.html().trim() && !max_attempts) {
+            submit();
+        }
+    }
+
+    function onChange() {
+        validateXBlock();
+        resubmit();
+    }
+
+
+    function initXBlock() {
+        $(element).find('.submit .input-main').bind('click', submit);
 
         // init children (especially mrq blocks)
         var children = getChildren(element);
         var options = {
-            blockValidator: validateXBlock
+            onChange: onChange
         };
         _.each(children, function(child) {
             callIfExists(child, 'init', options);
