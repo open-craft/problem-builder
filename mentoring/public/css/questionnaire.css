@@ -4,10 +4,6 @@
     margin-bottom: 10px;
 }
 
-.mentoring .questionnaire .choice {
-    margin: 10px 0;
-}
-
 .mentoring .choices .choice-checkbox {
     display: inline-block;
     margin-top: 5px;
@@ -22,11 +18,6 @@
 }
 
 .mentoring .questionnaire .choice-result.checkmark-correct,
-.mentoring .questionnaire .choice-answer.checkmark-correct {
-    position: relative;
-    top: -3px;
-}
-
 .mentoring .questionnaire .choice-result.checkmark-incorrect {
     text-align:center;
 }

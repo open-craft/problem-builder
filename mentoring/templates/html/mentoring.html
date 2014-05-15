@@ -10,9 +10,9 @@
   {{c.body_html|safe}}
   {% endfor %}
   {% if self.display_submit %}
-  <div class="attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>
   <div class="submit">
     <input type="button" class="input-main" value="Submit"></input>
+    <div class="attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>
   </div>
   {% endif %}
   <div class="messages"></div>

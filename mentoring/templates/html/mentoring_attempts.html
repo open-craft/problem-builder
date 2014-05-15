@@ -1,5 +1,5 @@
 <script type="text/template" id="xblock-attempts-template">
   <% if (_.isNumber(max_attempts) && max_attempts > 0) {{ %>
-  <div> You have used <%= _.min([num_attempts, max_attempts]) %> of <%= max_attempts %> attempts.</div>
+  <span> You have used <%= _.min([num_attempts, max_attempts]) %> of <%= max_attempts %> attempts.</span>
   <% }} %>
 </script>
