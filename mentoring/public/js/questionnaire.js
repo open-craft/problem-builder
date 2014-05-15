@@ -95,8 +95,8 @@ function MCQBlock(runtime, element) {
             });
 
             if (_.isNull(result.submission)) {
-                messageView.showMessage('<div class="message-content"><div class="close"></div>' +
-                                        'You have not provided an answer.' + '</div>');
+                messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
+                                        '<i class="close icon-remove-sign fa-times-circle"></i>');
             }
             else if (result.tips) {
                 var tips = _.find(result.tips, function(obj) {
@@ -109,7 +109,7 @@ function MCQBlock(runtime, element) {
                 }
             }
         },
-        
+
         validate: function(){
             var checked = $('input[type=radio]:checked', element);
             if (checked.length) {
@@ -140,8 +140,8 @@ function MRQBlock(runtime, element) {
             var messageView = MessageView(element);
 
             if (result.message) {
-                messageView.showMessage('<div class="message-content"><div class="close"></div>' +
-                                        result.message + '</div>');
+                messageView.showMessage('<div class="message-content">' + result.message + '</div>'+
+                                        '<i class="close icon-remove-sign fa-times-circle"></i>');
             }
 
             var questionnaireDOM = $('fieldset.questionnaire', element),

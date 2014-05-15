@@ -84,9 +84,7 @@ class QuestionnaireAbstractBlock(LightChild):
 
         fragment = Fragment(html)
         fragment.add_css(render_template('public/css/questionnaire.css', {
-            'self': self,
-            'close_icon_url': self.runtime.local_resource_url(self.xblock_container,
-                                                              'public/img/close.png'),
+            'self': self
         }))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
                                                                     'public/js/questionnaire.js'))
