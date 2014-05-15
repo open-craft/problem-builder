@@ -3,7 +3,7 @@ function AnswerBlock(runtime, element) {
 
         init: function(options) {
             // register the child validator
-            $(':input', element).on('keyup', options.blockValidator);
+            $(':input', element).on('keyup', _.debounce(options.onChange, 1000));
 
             var checkmark = $('.answer-checkmark', element);
             var completed = $('.xblock-answer', element).data('completed');
