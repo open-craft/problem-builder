@@ -1,3 +1,7 @@
+.mentoring .title {
+    display: inline-block;
+}
+
 .mentoring .messages {
     display: none;
     margin-top: 10px;
