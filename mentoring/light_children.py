@@ -29,7 +29,7 @@ import json
 from lazy import lazy
 from weakref import WeakKeyDictionary
 
-from cStringIO import StringIO
+from StringIO import StringIO
 from lxml import etree
 
 from django.core.urlresolvers import reverse
