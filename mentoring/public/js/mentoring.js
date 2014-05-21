@@ -26,8 +26,7 @@ function MentoringBlock(runtime, element) {
     }
 
     function handleSubmitResults(results) {
-        var messages_dom = $('.messages', element);
-        messages_dom.empty().hide();
+        messagesDOM.empty().hide();
 
         $.each(results.submitResults || [], function(index, submitResult) {
             var input = submitResult[0],
@@ -45,13 +44,13 @@ function MentoringBlock(runtime, element) {
         renderAttempts();
 
         // Messages should only be displayed upon hitting 'submit', not on page reload
-        messages_dom.append(results.message);
-        if (messages_dom.html().trim()) {
-            messages_dom.prepend('<div class="title1">Feedback</div>');
-            messages_dom.show();
+        messagesDOM.append(results.message);
+        if (messagesDOM.html().trim()) {
+            messagesDOM.prepend('<div class="title1">Feedback</div>');
+            messagesDOM.show();
         }
 
-        validateXBlock();
+        submitDOM.attr('disabled', 'disabled');
     }
 
     function getChildren(element) {
@@ -101,24 +100,24 @@ function MentoringBlock(runtime, element) {
         submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
     }
 
-    function resubmit() {
-        // Don't autosubmit if number of attempts is limited.
-        var max_attempts = $('.attempts', element).data('max_attempts');
-        // Only autosubmit if messages are already shown.
-        var messages_dom = $('.messages', element);
-        if (messages_dom.html().trim() && !max_attempts) {
-            submit();
+    function clearResults() {
+        messagesDOM.empty().hide();
+
+        var children = getChildren(element);
+        for (var i = 0; i < children.length; i++) {
+            callIfExists(children[i], 'clearResult');
         }
     }
 
     function onChange() {
+        clearResults();
         validateXBlock();
-        resubmit();
     }
 
-
     function initXBlock() {
-        $(element).find('.submit .input-main').bind('click', submit);
+        messagesDOM = $(element).find('.messages');
+        submitDOM = $(element).find('.submit .input-main');
+        submitDOM.bind('click', submit);
 
         // init children (especially mrq blocks)
         var children = getChildren(element);
@@ -148,7 +147,6 @@ function MentoringBlock(runtime, element) {
 
     // validate all children
     function validateXBlock() {
-        var submit_dom = $(element).find('.submit .input-main');
         var is_valid = true;
         var data = $('.attempts', element).data();
         var children = getChildren(element);
@@ -169,10 +167,10 @@ function MentoringBlock(runtime, element) {
         }
 
         if (!is_valid) {
-            submit_dom.attr('disabled','disabled');
+            submitDOM.attr('disabled','disabled');
         }
         else {
-            submit_dom.removeAttr("disabled");
+            submitDOM.removeAttr("disabled");
         }
     }
 
