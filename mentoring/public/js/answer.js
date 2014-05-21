@@ -3,7 +3,7 @@ function AnswerBlock(runtime, element) {
 
         init: function(options) {
             // register the child validator
-            $(':input', element).on('keyup', _.debounce(options.onChange, 1000));
+            $(':input', element).on('keyup', options.onChange);
 
             var checkmark = $('.answer-checkmark', element);
             var completed = $('.xblock-answer', element).data('completed');
@@ -20,15 +20,21 @@ function AnswerBlock(runtime, element) {
             var checkmark = $('.answer-checkmark', element);
             $(element).find('.message').text((result || {}).error || '');
 
-            checkmark.removeClass(
-                'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
-            );
+            this.clearResult();
+
             if (result.completed) {
                 checkmark.addClass('checkmark-correct icon-ok fa-check');
             }
             else {
                 checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
             }
+        },
+
+        clearResult: function() {
+            var checkmark = $('.answer-checkmark', element);
+            checkmark.removeClass(
+                'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+            );
         },
 
         // Returns `true` if the child is valid, else `false`

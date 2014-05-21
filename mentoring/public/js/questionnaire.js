@@ -3,6 +3,7 @@ function MessageView(element) {
     return {
         messageDOM: $('.feedback', element),
         allPopupsDOM: $('.choice-tips, .feedback', element),
+        allResultsDOM: $('.choice-result', element),
         clearPopupEvents: function() {
             this.allPopupsDOM.hide();
             $('.close', this.allPopupsDOM).off('click');
@@ -39,6 +40,12 @@ function MessageView(element) {
             else {
                 this.showPopup(message); // already a DOM
             }
+        },
+        clearResult: function() {
+            this.allPopupsDOM.hide();
+            this.allResultsDOM.removeClass(
+                'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
+            );
         }
     }
 }
@@ -61,6 +68,8 @@ function MCQBlock(runtime, element) {
 
         handleSubmit: function(result) {
             var messageView = MessageView(element);
+            messageView.clearResult();
+
             var choiceInputs = $('.choice input', element);
             $.each(choiceInputs, function(index, choiceInput) {
                 var choiceInputDOM = $(choiceInput),
@@ -69,9 +78,6 @@ function MCQBlock(runtime, element) {
                     choiceTipsDOM = $('.choice-tips', choiceDOM),
                     choiceTipsCloseDOM;
 
-                choiceResultDOM.removeClass(
-                    'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
-                );
                 if (result.completed && choiceInputDOM.val() === result.submission) {
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                 }
@@ -108,6 +114,10 @@ function MCQBlock(runtime, element) {
                     messageView.clearPopupEvents();
                 }
             }
+        },
+
+        clearResult: function() {
+            MessageView(element).clearResult();
         },
 
         validate: function(){
@@ -155,10 +165,6 @@ function MRQBlock(runtime, element) {
                     choiceTipsDOM = $('.choice-tips', choiceDOM),
                     choiceTipsCloseDOM;
 
-                choiceResultDOM.removeClass(
-                    'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
-                );
-
                 /* show hint if checked or max_attempts is disabled */
                 if (!hide_results &&
                     (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0)) {
@@ -177,6 +183,10 @@ function MRQBlock(runtime, element) {
                 });
 
             });
+        },
+
+        clearResult: function() {
+            MessageView(element).clearResult();
         },
 
         validate: function(){
