@@ -94,6 +94,28 @@ def load_scenarios_from_path(scenarios_path):
     """
     return get_scenarios_from_path(scenarios_path, include_identifier=True)
 
+def serialize_opaque_key(key):
+    """
+    Gracefully handle opaque keys, both before and after the transition.
+    https://github.com/edx/edx-platform/wiki/Opaque-Keys
+
+    From https://github.com/edx/edx-ora2/pull/330
+
+    Currently uses `to_deprecated_string()` to ensure that new keys
+    are backwards-compatible with keys we store in ORA2 database models.
+
+    Args:
+    key (unicode or OpaqueKey subclass): The key to serialize.
+
+    Returns:
+    unicode
+
+    """
+    if hasattr(key, 'to_deprecated_string'):
+        return key.to_deprecated_string()
+    else:
+        return unicode(key)
+
 
 # Classes ###########################################################
 

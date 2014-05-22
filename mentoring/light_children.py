@@ -46,7 +46,7 @@ except:
     # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
     replace_jump_to_id_urls = lambda a,b,c,d,frag,f: frag
 
-from .utils import XBlockWithChildrenFragmentsMixin
+from .utils import serialize_opaque_key, XBlockWithChildrenFragmentsMixin
 
 
 # Globals ###########################################################
@@ -188,7 +188,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         try:
-            course_id = self.xmodule_runtime.course_id
+            course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
         except AttributeError:
             # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
             course_id = 'sample-course'
