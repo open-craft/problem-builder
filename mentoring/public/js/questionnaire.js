@@ -28,7 +28,7 @@ function MessageView(element) {
             }
 
             popupDOM.show();
-            popupDOM.on('click', function() {
+            $('.close', popupDOM).on('click', function() {
                 self.clearPopupEvents();
             });
         },
