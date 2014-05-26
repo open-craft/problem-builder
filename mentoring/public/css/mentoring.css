@@ -10,7 +10,7 @@
 }
 
 .mentoring .messages .title1 {
-    color: rgb(170, 170, 170);
+    color: #333333;
     text-transform: uppercase;
     font-weight: bold;
     font-style: normal;
@@ -84,4 +84,12 @@
     display:block;
     float: left;
     height:33.33px;
+}
+
+.mentoring input[type=button] {
+    background-color: #3384ca;
+}
+
+.mentoring input[type=button][disabled], .mentoring input[type=button][disabled]:hover {
+    background-color: #cccccc;
 }
