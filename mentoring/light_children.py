@@ -301,7 +301,7 @@ class LightChild(Plugin, LightChildrenMixin):
             raise ValueError, 'LightChild.name field need to be set to a non-null/empty value'
 
         student_id = self.xmodule_runtime.anonymous_student_id
-        course_id = self.xmodule_runtime.course_id
+        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
         url_name = "%s-%s" % (self.xblock_container.url_name, name)
 
         lightchild_data, created = LightChildModel.objects.get_or_create(
