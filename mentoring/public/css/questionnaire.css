@@ -4,17 +4,12 @@
     margin-bottom: 10px;
 }
 
-.mentoring .choices .choice-checkbox {
-    display: inline-block;
-    margin-top: 5px;
-    margin-bottom: 5px;
-}
-
 .mentoring .questionnaire .choice-result {
     display: inline-block;
     width: 40px;
     vertical-align: middle;
     cursor: pointer;
+    float: left;
 }
 
 .mentoring .questionnaire .choice {
@@ -78,5 +73,9 @@
 }
 
 .mentoring .choice-label {
-    margin-top: 5px;
+    margin-top: 8px;
+    margin-bottom: 5px;
+    padding-left: 70px;
+    text-indent: -22px;
+    line-height: 1.3;
 }
