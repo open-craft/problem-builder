@@ -137,7 +137,7 @@ class AnswerBlock(LightChild):
             name = self.name
         # Consistency check - we should have a name by now
         if not name:
-            raise ValueError, 'AnswerBlock.name field need to be set to a non-null/empty value'
+            raise ValueError('AnswerBlock.name field need to be set to a non-null/empty value')
 
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         student_id = self.xmodule_runtime.anonymous_student_id

@@ -96,4 +96,3 @@ class MentoringDataExportBlock(XBlock):
 
                 if row:
                     yield list2csv(row)
-

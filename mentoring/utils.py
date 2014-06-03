@@ -47,6 +47,7 @@ def load_resource(resource_path):
     resource_content = pkg_resources.resource_string(__name__, resource_path)
     return unicode(resource_content)
 
+
 def render_template(template_path, context={}):
     """
     Evaluate a template by resource path, applying the provided context
@@ -54,6 +55,7 @@ def render_template(template_path, context={}):
     template_str = load_resource(template_path)
     template = Template(template_str)
     return template.render(Context(context))
+
 
 def list2csv(row):
     """
@@ -64,6 +66,7 @@ def list2csv(row):
     writer.writerow(row)
     f.seek(0)
     return f.read()
+
 
 def get_scenarios_from_path(scenarios_path, include_identifier=False):
     """
@@ -88,11 +91,13 @@ def get_scenarios_from_path(scenarios_path, include_identifier=False):
 
     return scenarios
 
+
 def load_scenarios_from_path(scenarios_path):
     """
     Load all xml files contained in a specified directory, as workbench scenarios
     """
     return get_scenarios_from_path(scenarios_path, include_identifier=True)
+
 
 def serialize_opaque_key(key):
     """
