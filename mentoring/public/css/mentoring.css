@@ -14,7 +14,7 @@
     text-transform: uppercase;
     font-weight: bold;
     font-style: normal;
-    font-size: 0.9em;
+    font-size: 14px;
     margin-bottom: 5px;
 }
 
@@ -86,10 +86,18 @@
     height:33.33px;
 }
 
-.mentoring input[type=button] {
+.mentoring input[type=button],
+.mentoring input[type=button]:focus {
     background-color: #3384ca;
 }
 
-.mentoring input[type=button][disabled], .mentoring input[type=button][disabled]:hover {
+.mentoring input[type=button][disabled],
+.mentoring input[type=button][disabled]:hover,
+.mentoring input[type=button][disabled]:focus {
     background-color: #cccccc;
+}
+
+.mentoring input[type="checkbox"],
+.mentoring input[type="radio"] {
+    margin: 0;
 }
