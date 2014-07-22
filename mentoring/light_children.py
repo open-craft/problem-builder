@@ -44,9 +44,9 @@ try:
     from xmodule_modifiers import replace_jump_to_id_urls
 except:
     # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
-    replace_jump_to_id_urls = lambda a,b,c,d,frag,f: frag
+    replace_jump_to_id_urls = lambda a, b, c, d, frag, f: frag
 
-from .utils import XBlockWithChildrenFragmentsMixin
+from .utils import serialize_opaque_key, XBlockWithChildrenFragmentsMixin
 
 
 # Globals ###########################################################
@@ -142,7 +142,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
 
         frag = getattr(child, view_name)(context)
         frag.content = u'<div class="xblock-light-child" name="{}" data-type="{}">{}</div>'.format(
-                child.name, child.__class__.__name__, frag.content)
+            child.name, child.__class__.__name__, frag.content)
         return frag
 
     def get_children_fragment(self, context, view_name='student_view', instance_of=None,
@@ -188,7 +188,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         try:
-            course_id = self.xmodule_runtime.course_id
+            course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
         except AttributeError:
             # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
             course_id = 'sample-course'
@@ -298,10 +298,10 @@ class LightChild(Plugin, LightChildrenMixin):
             name = self.name
 
         if not name:
-            raise ValueError, 'LightChild.name field need to be set to a non-null/empty value'
+            raise ValueError('LightChild.name field need to be set to a non-null/empty value')
 
         student_id = self.xmodule_runtime.anonymous_student_id
-        course_id = self.xmodule_runtime.course_id
+        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
         url_name = "%s-%s" % (self.xblock_container.url_name, name)
 
         lightchild_data, created = LightChildModel.objects.get_or_create(
@@ -349,7 +349,7 @@ class Integer(LightChildField):
     def __set__(self, instance, value):
         try:
             self.data[instance] = int(value)
-        except (TypeError, ValueError): # not an integer
+        except (TypeError, ValueError):  # not an integer
             self.data[instance] = 0
 
 

@@ -31,7 +31,7 @@ from xblock.fragment import Fragment
 
 from .light_children import LightChild, Boolean, Scope, String, Integer
 from .models import Answer
-from .utils import render_template
+from .utils import render_template, serialize_opaque_key
 
 
 # Globals ###########################################################
@@ -137,11 +137,11 @@ class AnswerBlock(LightChild):
             name = self.name
         # Consistency check - we should have a name by now
         if not name:
-            raise ValueError, 'AnswerBlock.name field need to be set to a non-null/empty value'
+            raise ValueError('AnswerBlock.name field need to be set to a non-null/empty value')
 
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         student_id = self.xmodule_runtime.anonymous_student_id
-        course_id = self.xmodule_runtime.course_id
+        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
 
         answer_data, created = Answer.objects.get_or_create(
             student_id=student_id,

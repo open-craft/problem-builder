@@ -31,7 +31,7 @@ from xblock.core import XBlock
 from xblock.fragment import Fragment
 
 from .models import Answer
-from .utils import list2csv, render_template
+from .utils import list2csv, render_template, serialize_opaque_key
 
 
 # Globals ###########################################################
@@ -70,7 +70,7 @@ class MentoringDataExportBlock(XBlock):
         return response
 
     def get_csv(self):
-        course_id = self.xmodule_runtime.course_id
+        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
 
         answers = Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
         answers_names = answers.values_list('name', flat=True).distinct().order_by('name')
@@ -96,4 +96,3 @@ class MentoringDataExportBlock(XBlock):
 
                 if row:
                     yield list2csv(row)
-
