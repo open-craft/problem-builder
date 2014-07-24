@@ -30,11 +30,12 @@ from lxml import etree
 from StringIO import StringIO
 
 from xblock.core import XBlock
-from xblock.fields import Boolean, Scope, String, Integer, Float
+from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
 from .title import TitleBlock
+from .html import HTMLBlock
 from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
 
@@ -75,8 +76,39 @@ class MentoringBlock(XBlockWithLightChildren):
                            default=0, scope=Scope.user_state, enforce_type=True)
     max_attempts = Integer(help="Number of max attempts for this questions", default=0,
                            scope=Scope.content, enforce_type=True)
+    mode = String(help="Mode of the mentoring. 'standard' or 'accessment'",
+                  default='standard', scope=Scope.content)
+    step = Integer(help="Keep track of the student assessment progress.",
+                   default=0, scope=Scope.user_state, enforce_type=True)
+    student_results = List(help="Store results of student choices.", default=[],
+                           scope=Scope.user_state)
+
     icon_class = 'problem'
     has_score = True
+
+    MENTORING_MODES = ('standard', 'assessment')
+
+    @property
+    def is_assessment(self):
+        return self.mode == 'assessment'
+
+    @property
+    def steps(self):
+        return [child for child in self.get_children_objects() if
+                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock))]
+
+    @property
+    def score(self):
+        """Compute the student score taking into account the light child weight."""
+        total_child_weight = sum(float(step.weight) for step in self.steps)
+        if total_child_weight == 0:
+            return (0, 0, 0)
+        score = sum(r[1]['score']*r[1]['weight'] \
+                    for r in self.student_results) / total_child_weight
+        correct = sum(1 for r in self.student_results if r[1]['completed'] == True)
+        incorrect = sum(1 for r in self.student_results if r[1]['completed'] == False)
+
+        return (score, float('%0.2f' % (score*100,)), correct, incorrect)
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
@@ -92,8 +124,18 @@ class MentoringBlock(XBlockWithLightChildren):
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring.css'))
         fragment.add_javascript_url(
                     self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        if self.is_assessment:
+            fragment.add_javascript_url(
+                self.runtime.local_resource_url(self, 'public/js/mentoring_assessment_view.js')
+            )
+        else:
+            fragment.add_javascript_url(
+                self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js')
+            )
+
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(load_resource('templates/html/mentoring_attempts.html'), "text/html")
+        fragment.add_resource(load_resource('templates/html/mentoring_grade.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
 
@@ -129,6 +171,9 @@ class MentoringBlock(XBlockWithLightChildren):
         log.info(u'Received submissions: {}'.format(submissions))
         self.attempted = True
 
+        if self.is_assessment:
+            return self.handleAssessmentSubmit(submissions, suffix)
+
         submit_results = []
         completed = True
         for child in self.get_children_objects():
@@ -163,9 +208,15 @@ class MentoringBlock(XBlockWithLightChildren):
 
         # Once it was completed, lock score
         if not self.completed:
-            score = sum(r[1]['score'] for r in submit_results) / float(len(submit_results))
+            # save user score and results
+            while self.student_results:
+                self.student_results.pop()
+            for result in submit_results:
+                self.student_results.append(result)
+
+            (raw_score, score, correct, incorrect) = self.score
             self.runtime.publish(self, 'grade', {
-                'value': score,
+                'value': raw_score,
                 'max_value': 1,
             })
 
@@ -181,6 +232,77 @@ class MentoringBlock(XBlockWithLightChildren):
             'message': message,
             'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts
+        }
+
+    def handleAssessmentSubmit(self, submissions, suffix):
+
+        completed = False
+        step = 0
+        children = [child for child in self.get_children_objects() \
+                    if not isinstance(child, TitleBlock)]
+
+        for child in children:
+            if child.name and child.name in submissions:
+                submission = submissions[child.name]
+
+                # Assessment mode doesn't allow to modify answers
+                # This will get the student back at the step he should be
+                step = children.index(child)
+                if self.step > step or self.max_attempts_reached:
+                    step = self.step
+                    completed = False
+                    break
+
+                self.step = step+1
+
+                child_result = child.submit(submission)
+                if 'tips' in child_result:
+                    del child_result['tips']
+                self.student_results.append([child.name, child_result])
+                child.save()
+                completed = child_result['completed']
+
+        (raw_score, score, correct, incorrect) = self.score
+        if step == len(self.steps):
+            log.info(u'Last assessment step submitted: {}'.format(submissions))
+            if not self.max_attempts_reached:
+                self.runtime.publish(self, 'grade', {
+                    'value': raw_score,
+                    'max_value': 1,
+                })
+
+            self.num_attempts += 1
+            self.completed = True
+
+        return {
+            'completed': completed,
+            'attempted': self.attempted,
+            'max_attempts': self.max_attempts,
+            'num_attempts': self.num_attempts,
+            'step': self.step,
+            'score': score,
+            'correct_answer': correct,
+            'incorrect_answer': incorrect
+        }
+
+    @XBlock.json_handler
+    def try_again(self, data, suffix=''):
+
+        if self.max_attempts_reached:
+            return {
+                'result': 'error',
+                'message': 'max attempts reached'
+            }
+
+        # reset
+        self.step = 0
+        self.completed = False
+
+        while self.student_results:
+            self.student_results.pop()
+
+        return {
+            'result': 'success'
         }
 
     @property
@@ -222,19 +344,34 @@ class MentoringBlock(XBlockWithLightChildren):
     def studio_submit(self, submissions, suffix=''):
         log.info(u'Received studio submissions: {}'.format(submissions))
 
+        success = True
         xml_content = submissions['xml_content']
         try:
-            etree.parse(StringIO(xml_content))
+            content = etree.parse(StringIO(xml_content))
         except etree.XMLSyntaxError as e:
             response = {
                 'result': 'error',
                 'message': e.message
             }
+            success = False
         else:
-            response = {
-                'result': 'success',
-            }
-            self.xml_content = xml_content
+            root = content.getroot()
+            if 'mode' in root.attrib:
+                if root.attrib['mode'] not in self.MENTORING_MODES:
+                    response = {
+                        'result': 'error',
+                        'message': "Invalid mentoring mode: should be 'standard' or 'assessment'"
+                    }
+                    success = False
+                elif root.attrib['mode'] == 'assessment' and 'max_attempts' not in root.attrib:
+                    # assessment has a default of 2 max_attempts
+                    root.attrib['max_attempts'] = '2'
+
+            if success:
+                response = {
+                    'result': 'success',
+                }
+                self.xml_content = etree.tostring(content, pretty_print=True)
 
         log.debug(u'Response from Studio: {}'.format(response))
         return response

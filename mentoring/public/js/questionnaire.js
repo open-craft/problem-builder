@@ -52,7 +52,9 @@ function MessageView(element) {
 
 function MCQBlock(runtime, element) {
     return {
+        mode: null,
         init: function(options) {
+            this.mode = options.mode;
             $('input[type=radio]', element).on('change', options.onChange);
         },
 
@@ -67,6 +69,9 @@ function MCQBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
+            if (this.mode === 'assessment')
+                return;
+
             var messageView = MessageView(element);
             messageView.clearResult();
 
@@ -132,7 +137,9 @@ function MCQBlock(runtime, element) {
 
 function MRQBlock(runtime, element) {
     return {
+        mode: null,
         init: function(options) {
+            this.mode = options.mode;
             $('input[type=checkbox]', element).on('change', options.onChange);
         },
 
@@ -147,6 +154,9 @@ function MRQBlock(runtime, element) {
         },
 
         handleSubmit: function(result, options) {
+            if (this.mode === 'assessment')
+                return;
+
             var messageView = MessageView(element);
 
             if (result.message) {

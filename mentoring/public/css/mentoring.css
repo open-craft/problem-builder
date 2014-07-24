@@ -53,6 +53,10 @@
     margin-top: 20px;
 }
 
+.mentoring .submit input {
+    display: none;
+}
+
 .mentoring .attempts {
     margin-left: 10px;
     display: inline-block;
@@ -84,6 +88,15 @@
     display:block;
     float: left;
     height:33.33px;
+}
+
+.mentoring .assessment-checkmark {
+    margin-right: 10px;
+}
+
+.mentoring .grade .checkmark-incorrect {
+    margin-left: 10px;
+    margin-right: 20px;
 }
 
 .mentoring input[type=button],

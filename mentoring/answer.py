@@ -29,9 +29,9 @@ from lazy import lazy
 
 from xblock.fragment import Fragment
 
-from .light_children import LightChild, Boolean, Scope, String, Integer
+from .light_children import LightChild, Boolean, Scope, String, Integer, Float
 from .models import Answer
-from .utils import render_template, serialize_opaque_key
+from .utils import render_js_template, serialize_opaque_key
 
 
 # Globals ###########################################################
@@ -53,6 +53,8 @@ class AnswerBlock(LightChild):
                           default=None, scope=Scope.content)
     min_characters = Integer(help="Minimum number of characters allowed for the answer",
                              default=0, scope=Scope.content)
+    weight = Float(help="Defines the maximum total grade of the light child block.",
+                   default=1, scope=Scope.content, enforce_type=True)
 
     @lazy
     def student_input(self):
@@ -74,11 +76,11 @@ class AnswerBlock(LightChild):
 
     def mentoring_view(self, context=None):
         if not self.read_only:
-            html = render_template('templates/html/answer_editable.html', {
+            html = render_js_template('templates/html/answer_editable.html', {
                 'self': self,
             })
         else:
-            html = render_template('templates/html/answer_read_only.html', {
+            html = render_js_template('templates/html/answer_read_only.html', {
                 'self': self,
             })
 
@@ -90,7 +92,7 @@ class AnswerBlock(LightChild):
         return fragment
 
     def mentoring_table_view(self, context=None):
-        html = render_template('templates/html/answer_table.html', {
+        html = render_js_template('templates/html/answer_table.html', {
             'self': self,
         })
         fragment = Fragment(html)
@@ -104,6 +106,7 @@ class AnswerBlock(LightChild):
         return {
             'student_input': self.student_input,
             'completed': self.completed,
+            'weight': self.weight,
             'score': 1 if self.completed else 0,
         }
 

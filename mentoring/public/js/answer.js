@@ -1,13 +1,14 @@
 function AnswerBlock(runtime, element) {
     return {
-
+        mode: null,
         init: function(options) {
             // register the child validator
             $(':input', element).on('keyup', options.onChange);
 
+            this.mode = options.mode;
             var checkmark = $('.answer-checkmark', element);
             var completed = $('.xblock-answer', element).data('completed');
-            if (completed === 'True') {
+            if (completed === 'True' && this.mode === 'standard') {
                 checkmark.addClass('checkmark-correct icon-ok fa-check');
             }
         },
@@ -17,6 +18,9 @@ function AnswerBlock(runtime, element) {
         },
 
         handleSubmit: function(result) {
+            if (this.mode === 'assessment')
+                return;
+
             var checkmark = $('.answer-checkmark', element);
             $(element).find('.message').text((result || {}).error || '');
 

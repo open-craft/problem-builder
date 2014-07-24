@@ -1,4 +1,4 @@
-<mentoring url_name="{{ url_name }}" display_name="Nav tooltip title" weight="1">
+<mentoring url_name="{{ url_name }}" display_name="Nav tooltip title" weight="1" mode="standard">
     <title>Default Title</title>
     <html>
         <p>What is your goal?</p>

@@ -28,9 +28,9 @@ import logging
 from xblock.fragment import Fragment
 
 from .choice import ChoiceBlock
-from .light_children import LightChild, Scope, String
+from .light_children import LightChild, Scope, String, Float
 from .tip import TipBlock
-from .utils import render_template
+from .utils import render_template, render_js_template
 
 
 # Globals ###########################################################
@@ -51,6 +51,8 @@ class QuestionnaireAbstractBlock(LightChild):
     type = String(help="Type of questionnaire", scope=Scope.content, default="choices")
     question = String(help="Question to ask the student", scope=Scope.content, default="")
     message = String(help="General feedback provided when submiting", scope=Scope.content, default="")
+    weight = Float(help="Defines the maximum total grade of the light child block.",
+                   default=1, scope=Scope.content, enforce_type=True)
 
     valid_types = ('choices')
 
@@ -77,7 +79,7 @@ class QuestionnaireAbstractBlock(LightChild):
             raise ValueError, u'Invalid value for {}.type: `{}`'.format(name, self.type)
 
         template_path = 'templates/html/{}_{}.html'.format(name.lower(), self.type)
-        html = render_template(template_path, {
+        html = render_js_template(template_path, {
             'self': self,
             'custom_choices': self.custom_choices
         })

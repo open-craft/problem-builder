@@ -365,6 +365,18 @@ class Boolean(LightChildField):
         self.data[instance] = value
 
 
+class Float(LightChildField):
+    def __init__(self, *args, **kwargs):
+        super(Float, self).__init__(*args, **kwargs)
+        self.default = kwargs.get('default', 0)
+
+    def __set__(self, instance, value):
+        try:
+            self.data[instance] = float(value)
+        except (TypeError, ValueError):  # not an integer
+            self.data[instance] = 0
+
+
 class List(LightChildField):
     def __init__(self, *args, **kwargs):
         super(List, self).__init__(*args, **kwargs)
