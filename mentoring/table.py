@@ -29,7 +29,7 @@ import logging
 from xblock.fields import Scope
 
 from .light_children import LightChild, String
-from .utils import load_resource, render_template
+from .utils import load_resource, render_js_template
 
 
 # Globals ###########################################################
@@ -66,7 +66,7 @@ class MentoringTableBlock(LightChild):
             else:
                 raise
 
-        fragment.add_content(render_template('templates/html/mentoring-table.html', {
+        fragment.add_content(render_js_template('templates/html/mentoring-table.html', {
             'self': self,
             'columns_frags': columns_frags,
             'header_frags': header_frags,
@@ -102,7 +102,7 @@ class MentoringTableColumnBlock(LightChild):
         fragment, named_children = self.get_children_fragment(context,
                                               view_name='mentoring_table_view',
                                               not_instance_of=MentoringTableColumnHeaderBlock)
-        fragment.add_content(render_template('templates/html/mentoring-table-column.html', {
+        fragment.add_content(render_js_template('templates/html/mentoring-table-column.html', {
             'self': self,
             'named_children': named_children,
         }))
@@ -115,7 +115,7 @@ class MentoringTableColumnBlock(LightChild):
         fragment, named_children = self.get_children_fragment(context,
                                               view_name='mentoring_table_header_view',
                                               instance_of=MentoringTableColumnHeaderBlock)
-        fragment.add_content(render_template('templates/html/mentoring-table-header.html', {
+        fragment.add_content(render_js_template('templates/html/mentoring-table-header.html', {
             'self': self,
             'named_children': named_children,
         }))

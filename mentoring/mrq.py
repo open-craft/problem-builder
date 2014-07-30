@@ -82,6 +82,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'completed': completed,
             'choices': results,
             'message': self.message,
+            'weight': self.weight,
             'score': sum(1.0 for r in results if r['completed']) / len(results)
         }
 

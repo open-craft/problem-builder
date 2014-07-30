@@ -57,6 +57,16 @@ def render_template(template_path, context={}):
     return template.render(Context(context))
 
 
+def render_js_template(template_path, context={}, id='light-child-template'):
+    """
+    Render a js template.
+    """
+    return u"<script type='text/template' id='{}'>\n{}\n</script>".format(
+        id,
+        render_template(template_path, context)
+    )
+
+
 def list2csv(row):
     """
     Convert a list to a CSV string (single row)

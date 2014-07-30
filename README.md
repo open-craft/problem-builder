@@ -19,12 +19,12 @@ Examples
 First XBlock instance:
 
 ```xml
-<mentoring url_name="goal_definition" followed_by="getting_feedback">
+<mentoring url_name="goal_definition" followed_by="getting_feedback" weight="20">
     <html>
         <p>What is your goal?</p>
     </html>
 
-    <answer name="goal" />
+    <answer name="goal" weight="10"/>
 </mentoring>
 ```
 
@@ -40,15 +40,18 @@ Second XBlock instance:
     <html>
         <p>Ask feedback from friends about this goal - what did they think?</p>
     </html>
-    <answer name="goal_feedback" />
+    <answer name="goal_feedback" weight="5"/>
 </mentoring>
 ```
+
+You can specify the weight of a free form answer. It will be considered during the
+grade/score computation.
 
 ### Self-assessment MCQs
 
 ```xml
 <mentoring url_name="mcq_1" enforce_dependency="false">
-    <mcq name="mcq_1_1" type="choices">
+    <mcq name="mcq_1_1" type="choices" weight="10">
         <question>Do you like this MCQ?</question>
         <choice value="yes">Yes</choice>
         <choice value="maybenot">Maybe not</choice>
@@ -59,7 +62,7 @@ Second XBlock instance:
         <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
     </mcq>
 
-    <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
+    <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good" weight="5">
         <question>How much do you rate this MCQ?</question>
         <choice value="notwant">I don't want to rate it</choice>
 
@@ -78,10 +81,13 @@ Second XBlock instance:
 </mentoring>
 ```
 
+You can specify the weight of a self-assessment MCQ. It will be considered during the
+grade/score computation.
+
 ### Self-assessment MRQs
 ```xml
-<mentoring url_name="mcq_1" enforce_dependency="false">
-    <mrq name="mrq_1_1" type="choices" hide_results="true">
+<mentoring url_name="mrq_1" enforce_dependency="false">
+    <mrq name="mrq_1_1" type="choices" hide_results="true" weight="10">
         <question>What do you like in this MRQ?</question>
         <choice value="elegance">Its elegance</choice>
         <choice value="beauty">Its beauty</choice>
@@ -103,6 +109,9 @@ Second XBlock instance:
     </message>
 </mentoring>
 ```
+
+You can specify the weight of a self-assessment MRQ. It will be considered during the
+grade/score computation.
 
 ### Tables
 
@@ -126,6 +135,24 @@ Second XBlock instance:
 <vertical>
     <mentoring-dataexport url_name="mentoring_dataexport"></mentoring-dataexport>
 </vertical>
+```
+
+### Modes
+
+There are 2 mentoring modes available:
+
+ * standard: Traditional mentoring. All questions are displayed in the page and submitted at the
+   same time. The student get some tips and feedback about their answers. (default mode)
+
+ * assessment: Questions are displayed and submitted one after one. The student dont get tips or
+   feedback but only know if their answer was correct. Assessment mode comes with a default
+   max_attempts of 2.
+
+To set the *assessment* mode, set the mode attribute in the settings:
+```xml
+<mentoring url_name="mentoring_1" mode="assesment">
+...
+</mentoring>
 ```
 
 ### Maximum Attempts

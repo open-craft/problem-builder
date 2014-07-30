@@ -56,7 +56,10 @@ class HTMLBlock(LightChild):
         return block
 
     def student_view(self, context=None):
-        return Fragment(self.content)
+        return Fragment(u"<script type='text/template' id='{}'>\n{}\n</script>".format(
+            'light-child-template',
+            self.content
+        ))
 
     def mentoring_view(self, context=None):
         return self.student_view(context)
