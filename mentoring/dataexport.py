@@ -28,6 +28,7 @@ import logging
 from itertools import groupby
 from webob import Response
 from xblock.core import XBlock
+from xblock.fields import String, Scope
 from xblock.fragment import Fragment
 
 from .models import Answer
@@ -45,6 +46,8 @@ class MentoringDataExportBlock(XBlock):
     """
     An XBlock allowing the instructor team to export all the student answers as a CSV file
     """
+    display_name = String(help="Display name of the component", default="Mentoring Data Export",
+                          scope=Scope.settings)
 
     def student_view(self, context):
         html = render_template('templates/html/dataexport.html', {
