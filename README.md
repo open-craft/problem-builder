@@ -150,7 +150,7 @@ There are 2 mentoring modes available:
 
 To set the *assessment* mode, set the mode attribute in the settings:
 ```xml
-<mentoring url_name="mentoring_1" mode="assesment">
+<mentoring url_name="mentoring_1" mode="assessment">
 ...
 </mentoring>
 ```
