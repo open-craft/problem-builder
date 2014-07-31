@@ -23,6 +23,10 @@ function MentoringStandardView(runtime, element, mentoring) {
 
         // Messages should only be displayed upon hitting 'submit', not on page reload
         messagesDOM.append(results.message);
+        var template = $('#light-child-template', messagesDOM).html();
+        if (template) {
+            messagesDOM.append(template);
+        }
         if (messagesDOM.html().trim()) {
             messagesDOM.prepend('<div class="title1">Feedback</div>');
             messagesDOM.show();
