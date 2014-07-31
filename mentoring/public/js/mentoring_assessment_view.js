@@ -112,7 +112,12 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     }
 
     function onChange() {
-        validateXBlock();
+        // Assessment mode does not allow to modify answers.
+        // Once an answer has been submitted (next button is enabled),
+        // start ignoring changes to the answer.
+        if (nextDOM.attr('disabled')) {
+            validateXBlock();
+        }
     }
 
     function handleSubmitResults(result) {
