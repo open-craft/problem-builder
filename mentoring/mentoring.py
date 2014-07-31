@@ -104,7 +104,7 @@ class MentoringBlock(XBlockWithLightChildren):
         """Compute the student score taking into account the light child weight."""
         total_child_weight = sum(float(step.weight) for step in self.steps)
         if total_child_weight == 0:
-            return (0, 0, 0)
+            return (0, 0, 0, 0)
         score = sum(r[1]['score']*r[1]['weight'] \
                     for r in self.student_results) / total_child_weight
         correct = sum(1 for r in self.student_results if r[1]['completed'] == True)
