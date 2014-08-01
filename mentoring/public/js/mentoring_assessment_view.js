@@ -43,7 +43,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         if (result.result !== 'success')
             return;
 
-        active_child = 0;
+        active_child = -1;
         displayNextChild();
         tryAgainDOM.hide();
         submitDOM.show().removeAttr('disabled');
