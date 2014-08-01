@@ -239,7 +239,7 @@ class MentoringBlock(XBlockWithLightChildren):
     def handleAssessmentSubmit(self, submissions, suffix):
 
         completed = False
-        step = 0
+        current_child = None
         children = [child for child in self.get_children_objects() \
                     if not isinstance(child, TitleBlock)]
 
@@ -249,6 +249,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
                 # Assessment mode doesn't allow to modify answers
                 # This will get the student back at the step he should be
+                current_child = child
                 step = children.index(child)
                 if self.step > step or self.max_attempts_reached:
                     step = self.step
@@ -265,7 +266,7 @@ class MentoringBlock(XBlockWithLightChildren):
                 completed = child_result['completed']
 
         (raw_score, score, correct, incorrect) = self.score
-        if step == len(self.steps):
+        if current_child == self.steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             if not self.max_attempts_reached:
                 self.runtime.publish(self, 'grade', {
