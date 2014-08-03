@@ -231,6 +231,16 @@ class MentoringBlock(XBlockWithLightChildren):
 
         self.completed = bool(completed)
 
+        raw_score = self.score[0]
+
+        self.runtime.publish(self, 'mentoring.problem.attempted', {
+            'component_id': self.scope_ids.usage_id,
+            'user_id': self.runtime.user_id,
+            'num_attempts': self.num_attempts,
+            'submitted_answer': submissions,
+            'grade': raw_score,
+        })
+
         return {
             'submitResults': submit_results,
             'completed': self.completed,
