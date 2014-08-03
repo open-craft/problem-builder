@@ -27,9 +27,16 @@ function MessageView(element) {
                 popupDOM.css('height', '')
             }
 
+
             popupDOM.show();
             $('.close', popupDOM).on('click', function() {
                 self.clearPopupEvents();
+                console.log(popupDOM);
+                $.ajax({
+                    type: "POST",
+                    url: runtime.handlerUrl(element, 'publish_event'),
+                    data: JSON.stringify({event_type:'mentoring.feedback.closed'})
+                });
             });
         },
         showMessage: function(message) {
