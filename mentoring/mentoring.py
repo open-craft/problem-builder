@@ -141,6 +141,10 @@ class MentoringBlock(XBlockWithLightChildren):
 
         fragment.initialize_js('MentoringBlock')
 
+        self.runtime.publish(self, 'mentoring.problem.shown',
+                {'component_id': self.scope_ids.usage_id, 'user_id': self.runtime.user_id}
+        )
+
         return fragment
 
     @property
