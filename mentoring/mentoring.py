@@ -110,7 +110,7 @@ class MentoringBlock(XBlockWithLightChildren):
         correct = sum(1 for r in self.student_results if r[1]['completed'] == True)
         incorrect = sum(1 for r in self.student_results if r[1]['completed'] == False)
 
-        return (score, float('%0.2f' % (score*100,)), correct, incorrect)
+        return (score, int(round(score*100)), correct, incorrect)
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
