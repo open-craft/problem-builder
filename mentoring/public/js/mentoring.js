@@ -92,4 +92,10 @@ function MentoringBlock(runtime, element) {
     else if (data.mode === 'assessment') {
         MentoringAssessmentView(runtime, element, mentoring);
     }
+
+    $.ajax({
+        type: "POST",
+        url: runtime.handlerUrl(element, 'publish_event'),
+        data: JSON.stringify({event_type:"xblock.mentoring.loaded"})
+    });
 }

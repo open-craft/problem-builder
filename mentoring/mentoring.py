@@ -141,10 +141,6 @@ class MentoringBlock(XBlockWithLightChildren):
 
         fragment.initialize_js('MentoringBlock')
 
-        self.runtime.publish(self, 'mentoring.problem.shown',
-                {'component_id': self.scope_ids.usage_id, 'user_id': self.runtime.user_id}
-        )
-
         return fragment
 
     @XBlock.json_handler
@@ -247,7 +243,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         raw_score = self.score[0]
 
-        self.runtime.publish(self, 'mentoring.problem.attempted', {
+        self.runtime.publish(self, 'xblock.mentoring.submitted', {
             'component_id': self.scope_ids.usage_id,
             'user_id': self.runtime.user_id,
             'num_attempts': self.num_attempts,

@@ -27,16 +27,22 @@ function MessageView(element) {
                 popupDOM.css('height', '')
             }
 
-
             popupDOM.show();
-            $('.close', popupDOM).on('click', function() {
-                self.clearPopupEvents();
-                console.log(popupDOM);
+
+            function publish_event(data) {
                 $.ajax({
                     type: "POST",
                     url: runtime.handlerUrl(element, 'publish_event'),
-                    data: JSON.stringify({event_type:'mentoring.feedback.closed'})
+                    data: JSON.stringify(data)
                 });
+            }
+
+            publish_event({event_type:'xblock.mentoring.feedback.opened'});
+
+            $('.close', popupDOM).on('click', function() {
+                self.clearPopupEvents();
+                console.log(popupDOM);
+                publish_event({event_type:'xblock.mentoring.feedback.closed'});
             });
         },
         showMessage: function(message) {
