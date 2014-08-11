@@ -28,8 +28,21 @@ function MessageView(element) {
             }
 
             popupDOM.show();
+
+            function publish_event(data) {
+                $.ajax({
+                    type: "POST",
+                    url: runtime.handlerUrl(element, 'publish_event'),
+                    data: JSON.stringify(data)
+                });
+            }
+
+            publish_event({event_type:'xblock.mentoring.feedback.opened'});
+
             $('.close', popupDOM).on('click', function() {
                 self.clearPopupEvents();
+                console.log(popupDOM);
+                publish_event({event_type:'xblock.mentoring.feedback.closed'});
             });
         },
         showMessage: function(message) {
