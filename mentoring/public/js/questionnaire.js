@@ -107,7 +107,7 @@ function MCQBlock(runtime, element, mentoring) {
                     return obj.choice === choiceInputDOM.val();
                 });
                 if (tips) {
-                    choiceTipsDOM.html(tips.tips);
+                    mentoring.setContent(choiceTipsDOM, tips.tips);
                 }
 
                 choiceTipsCloseDOM = $('.close', choiceTipsDOM);
@@ -198,7 +198,7 @@ function MRQBlock(runtime, element, mentoring) {
                     }
                 }
 
-                choiceTipsDOM.html(choice.tips);
+                mentoring.setContent(choiceTipsDOM, choice.tips);
 
                 choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
