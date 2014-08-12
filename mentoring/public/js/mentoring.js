@@ -13,6 +13,15 @@ function MentoringBlock(runtime, element) {
         }
     }
 
+    function setContent(dom, content) {
+        dom.html('');
+        dom.append(content);
+        var template = $('#light-child-template', dom).html();
+        if (template) {
+            dom.append(template);
+        }
+    }
+
     function renderAttempts() {
         var data = $('.attempts', element).data();
         $('.attempts', element).html(attemptsTemplate(data));
@@ -36,7 +45,7 @@ function MentoringBlock(runtime, element) {
             children_dom.push(child_dom);
             children.push(child);
             if (typeof child !== 'undefined') {
-                child = child(runtime, child_dom);
+                child = child(runtime, child_dom, mentoring);
                 child.name = $(child_dom).attr('name');
                 children[children.length-1] = child;
             }
@@ -75,6 +84,7 @@ function MentoringBlock(runtime, element) {
 
     var mentoring = {
         callIfExists: callIfExists,
+        setContent: setContent,
         renderAttempts: renderAttempts,
         renderDependency: renderDependency,
         readChildren: readChildren,
@@ -83,7 +93,8 @@ function MentoringBlock(runtime, element) {
         displayChild: displayChild,
         displayChildren: displayChildren,
         getChildByName: getChildByName,
-        step: step
+        step: step,
+        event_url: runtime.handlerUrl(element, 'publish_event')
     }
 
     if (data.mode === 'standard') {

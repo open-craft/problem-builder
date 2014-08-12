@@ -1,5 +1,5 @@
 // TODO: Split in two files
-function MessageView(element) {
+function MessageView(element, mentoring) {
     return {
         messageDOM: $('.feedback', element),
         allPopupsDOM: $('.choice-tips, .feedback', element),
@@ -32,7 +32,7 @@ function MessageView(element) {
             function publish_event(data) {
                 $.ajax({
                     type: "POST",
-                    url: runtime.handlerUrl(element, 'publish_event'),
+                    url: mentoring.event_url,
                     data: JSON.stringify(data)
                 });
             }
@@ -47,7 +47,7 @@ function MessageView(element) {
         },
         showMessage: function(message) {
             if (_.isString(message)) {
-                this.messageDOM.html(message);
+                mentoring.setContent(this.messageDOM, message)
                 this.showPopup(this.messageDOM);
             }
             else {
@@ -63,7 +63,7 @@ function MessageView(element) {
     }
 }
 
-function MCQBlock(runtime, element) {
+function MCQBlock(runtime, element, mentoring) {
     return {
         mode: null,
         init: function(options) {
@@ -85,7 +85,7 @@ function MCQBlock(runtime, element) {
             if (this.mode === 'assessment')
                 return;
 
-            var messageView = MessageView(element);
+            var messageView = MessageView(element, mentoring);
             messageView.clearResult();
 
             var choiceInputs = $('.choice input', element);
@@ -135,7 +135,7 @@ function MCQBlock(runtime, element) {
         },
 
         clearResult: function() {
-            MessageView(element).clearResult();
+            MessageView(element, mentoring).clearResult();
         },
 
         validate: function(){
@@ -148,7 +148,7 @@ function MCQBlock(runtime, element) {
     };
 }
 
-function MRQBlock(runtime, element) {
+function MRQBlock(runtime, element, mentoring) {
     return {
         mode: null,
         init: function(options) {
@@ -170,7 +170,7 @@ function MRQBlock(runtime, element) {
             if (this.mode === 'assessment')
                 return;
 
-            var messageView = MessageView(element);
+            var messageView = MessageView(element, mentoring);
 
             if (result.message) {
                 messageView.showMessage('<div class="message-content">' + result.message + '</div>'+
@@ -209,7 +209,7 @@ function MRQBlock(runtime, element) {
         },
 
         clearResult: function() {
-            MessageView(element).clearResult();
+            MessageView(element, mentoring).clearResult();
         },
 
         validate: function(){
