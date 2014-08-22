@@ -6,7 +6,6 @@
   {% if self.title %}
   <div class="title">
     <h2 class="main">{{ self.title.content }}</h2>
-    <span class="weight">{% if self.weight %} ({{ self.weight }} Points Possible) {% endif %}</span>
   </div>
   {% endif %}
   {% for name, c in named_children %}
