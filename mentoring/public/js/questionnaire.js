@@ -1,4 +1,19 @@
 // TODO: Split in two files
+
+$(document).on("click", function(event, ui) {
+    target = $(event.target);
+    feedback_box = ".mentoring .feedback";
+    if (target.is(feedback_box)) {
+        return;
+    };
+    if (target.parents(feedback_box).length>0) {
+        return;
+    };
+
+    $(feedback_box).hide();
+    publish_event({event_type:'xblock.mentoring.feedback.closed'});
+});
+
 function MessageView(element, mentoring) {
     return {
         messageDOM: $('.feedback', element),
