@@ -5,6 +5,37 @@ function MentoringBlock(runtime, element) {
     var children = [];
     var step = data.step;
 
+    function publish_event(data) {
+        $.ajax({
+            type: "POST",
+            url: runtime.handlerUrl(element, 'publish_event'),
+            data: JSON.stringify(data)
+        });
+    }
+
+    $(document).on("click", function(event, ui) {
+        target = $(event.target);
+        feedback_box = ".mentoring .feedback";
+        if (target.is(feedback_box)) {
+            return;
+        };
+        if (target.parents(feedback_box).length>0) {
+            return;
+        };
+
+        $(feedback_box).each(function(i, el) {
+            el = $(el);
+            if (el.is(":hidden")) {
+                return;
+            }
+            el.hide();
+            publish_event({
+                event_type:'xblock.mentoring.feedback.closed',
+                content: el.text()
+            });
+        });
+    });
+
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
             return obj[fn].apply(obj, Array.prototype.slice.call(arguments, 2));
@@ -94,7 +125,7 @@ function MentoringBlock(runtime, element) {
         displayChildren: displayChildren,
         getChildByName: getChildByName,
         step: step,
-        event_url: runtime.handlerUrl(element, 'publish_event')
+        publish_event: publish_event
     }
 
     if (data.mode === 'standard') {
@@ -104,9 +135,5 @@ function MentoringBlock(runtime, element) {
         MentoringAssessmentView(runtime, element, mentoring);
     }
 
-    $.ajax({
-        type: "POST",
-        url: runtime.handlerUrl(element, 'publish_event'),
-        data: JSON.stringify({event_type:"xblock.mentoring.loaded"})
-    });
+    publish_event({event_type:"xblock.mentoring.loaded"});
 }

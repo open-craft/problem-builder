@@ -1,19 +1,5 @@
 // TODO: Split in two files
 
-$(document).on("click", function(event, ui) {
-    target = $(event.target);
-    feedback_box = ".mentoring .feedback";
-    if (target.is(feedback_box)) {
-        return;
-    };
-    if (target.parents(feedback_box).length>0) {
-        return;
-    };
-
-    $(feedback_box).hide();
-    publish_event({event_type:'xblock.mentoring.feedback.closed'});
-});
-
 function MessageView(element, mentoring) {
     return {
         messageDOM: $('.feedback', element),
@@ -44,19 +30,17 @@ function MessageView(element, mentoring) {
 
             popupDOM.show();
 
-            function publish_event(data) {
-                $.ajax({
-                    type: "POST",
-                    url: mentoring.event_url,
-                    data: JSON.stringify(data)
-                });
-            }
-
-            publish_event({event_type:'xblock.mentoring.feedback.opened'});
+            mentoring.publish_event({
+                event_type:'xblock.mentoring.feedback.opened',
+                content: $(popupDOM).text()
+            });
 
             $('.close', popupDOM).on('click', function() {
                 self.clearPopupEvents();
-                publish_event({event_type:'xblock.mentoring.feedback.closed'});
+                mentoring.publish_event({
+                    event_type:'xblock.mentoring.feedback.closed',
+                    content: $(popupDOM).text()
+                });
             });
         },
         showMessage: function(message) {
