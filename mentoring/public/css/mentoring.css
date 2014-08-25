@@ -57,6 +57,11 @@
     display: none;
 }
 
+.mentoring legend {
+    white-space: normal;
+    display: table; /* Enable line-wrapping in IE8 */
+}
+
 .mentoring .attempts {
     margin-left: 10px;
     display: inline-block;
