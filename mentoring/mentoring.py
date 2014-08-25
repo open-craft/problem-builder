@@ -151,6 +151,8 @@ class MentoringBlock(XBlockWithLightChildren):
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
+        data["user_id"] = self.runtime.user_id
+
         self.runtime.publish(self, event_type, data)
         return {'result':'success'}
 
@@ -241,6 +243,7 @@ class MentoringBlock(XBlockWithLightChildren):
         raw_score = self.score[0]
 
         self.runtime.publish(self, 'xblock.mentoring.submitted', {
+            'user_id': self.runtime.user_id,
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
