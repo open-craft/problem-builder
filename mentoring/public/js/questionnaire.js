@@ -56,7 +56,6 @@ function MessageView(element, mentoring) {
 
             $('.close', popupDOM).on('click', function() {
                 self.clearPopupEvents();
-                console.log(popupDOM);
                 publish_event({event_type:'xblock.mentoring.feedback.closed'});
             });
         },
