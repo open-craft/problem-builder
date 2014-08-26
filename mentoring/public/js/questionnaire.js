@@ -1,4 +1,5 @@
 // TODO: Split in two files
+
 function MessageView(element, mentoring) {
     return {
         messageDOM: $('.feedback', element),
@@ -29,20 +30,17 @@ function MessageView(element, mentoring) {
 
             popupDOM.show();
 
-            function publish_event(data) {
-                $.ajax({
-                    type: "POST",
-                    url: mentoring.event_url,
-                    data: JSON.stringify(data)
-                });
-            }
-
-            publish_event({event_type:'xblock.mentoring.feedback.opened'});
+            mentoring.publish_event({
+                event_type:'xblock.mentoring.feedback.opened',
+                content: $(popupDOM).text()
+            });
 
             $('.close', popupDOM).on('click', function() {
                 self.clearPopupEvents();
-                console.log(popupDOM);
-                publish_event({event_type:'xblock.mentoring.feedback.closed'});
+                mentoring.publish_event({
+                    event_type:'xblock.mentoring.feedback.closed',
+                    content: $(popupDOM).text()
+                });
             });
         },
         showMessage: function(message) {
