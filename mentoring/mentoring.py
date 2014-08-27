@@ -145,12 +145,14 @@ class MentoringBlock(XBlockWithLightChildren):
 
     @XBlock.json_handler
     def publish_event(self, data, suffix=''):
-
         try:
             event_type = data.pop('event_type')
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
+        self._publish_event(event_type, data)
+
+    def _publish_event(self, event_type, data):
         data['user_id'] = self.scope_ids.user_id
         data['component_id'] = self.url_name
 
@@ -243,9 +245,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         raw_score = self.score[0]
 
-        self.runtime.publish(self, 'xblock.mentoring.submitted', {
-            'user_id': self.scope_ids.user_id,
-            'component_id': self._get_unique_id(),
+        self._publish_event('xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
