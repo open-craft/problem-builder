@@ -94,10 +94,11 @@ def get_scenarios_from_path(scenarios_path, include_identifier=False):
             identifier = template[:-4]
             title = identifier.replace('_', ' ').title()
             template_path = os.path.join(scenarios_path, template)
+            scenario = unicode(render_template(template_path, {"url_name": identifier}))
             if not include_identifier:
-                scenarios.append((title, load_resource(template_path)))
+                scenarios.append((title, scenario))
             else:
-                scenarios.append((identifier, title, load_resource(template_path)))
+                scenarios.append((identifier, title, scenario))
 
     return scenarios
 

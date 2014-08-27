@@ -76,7 +76,7 @@ class MentoringBlock(XBlockWithLightChildren):
                            default=0, scope=Scope.user_state, enforce_type=True)
     max_attempts = Integer(help="Number of max attempts for this questions", default=0,
                            scope=Scope.content, enforce_type=True)
-    mode = String(help="Mode of the mentoring. 'standard' or 'accessment'",
+    mode = String(help="Mode of the mentoring. 'standard' or 'assessment'",
                   default='standard', scope=Scope.content)
     step = Integer(help="Keep track of the student assessment progress.",
                    default=0, scope=Scope.user_state, enforce_type=True)
@@ -156,7 +156,6 @@ class MentoringBlock(XBlockWithLightChildren):
 
         self.runtime.publish(self, event_type, data)
         return {'result':'success'}
-
 
     @property
     def title(self):
