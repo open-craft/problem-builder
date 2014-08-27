@@ -289,6 +289,8 @@ class MentoringBlock(XBlockWithLightChildren):
                 child.save()
                 completed = child_result['completed']
 
+        event_data = {}
+
         (raw_score, score, correct, incorrect) = self.score
         if current_child == self.steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
@@ -297,9 +299,16 @@ class MentoringBlock(XBlockWithLightChildren):
                     'value': raw_score,
                     'max_value': 1,
                 })
+                event_data['final_grade'] = raw_score
 
             self.num_attempts += 1
             self.completed = True
+
+        event_data['exercise_id'] = current_child.name
+        event_data['num_attempts'] = self.num_attempts
+        event_data['submitted_answer'] = submissions
+
+        self._publish_event('xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,
