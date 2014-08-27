@@ -151,10 +151,19 @@ class MentoringBlock(XBlockWithLightChildren):
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
-        data["user_id"] = self.runtime.user_id
+        data['user_id'] = self.scope_ids.user_id
+        data['component_id'] = self._get_unique_id()
 
         self.runtime.publish(self, event_type, data)
         return {'result':'success'}
+
+    def _get_unique_id(self):
+        try:
+            unique_id = self.location.name
+        except AttributeError:
+            # workaround for xblock workbench
+            unique_id = self.parent.replace('.',  '-')
+        return unique_id
 
     @property
     def title(self):
@@ -243,7 +252,8 @@ class MentoringBlock(XBlockWithLightChildren):
         raw_score = self.score[0]
 
         self.runtime.publish(self, 'xblock.mentoring.submitted', {
-            'user_id': self.runtime.user_id,
+            'user_id': self.scope_ids.user_id,
+            'component_id': self._get_unique_id(),
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
