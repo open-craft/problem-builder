@@ -184,15 +184,14 @@ function MRQBlock(runtime, element, mentoring) {
                     } else if (!choice.completed) {
                         choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                     }
+
+                    mentoring.setContent(choiceTipsDOM, choice.tips);
+
+                    choiceTipsCloseDOM = $('.close', choiceTipsDOM);
+                    choiceResultDOM.off('click').on('click', function() {
+                        messageView.showMessage(choiceTipsDOM);
+                    });
                 }
-
-                mentoring.setContent(choiceTipsDOM, choice.tips);
-
-                choiceTipsCloseDOM = $('.close', choiceTipsDOM);
-                choiceResultDOM.off('click').on('click', function() {
-                    messageView.showMessage(choiceTipsDOM);
-                });
-
             });
         },
 

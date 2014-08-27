@@ -49,6 +49,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
         completed = True
+        score = 0
 
         results = []
         for choice in self.custom_choices:
@@ -64,16 +65,23 @@ class MRQBlock(QuestionnaireAbstractBlock):
                     choice_completed = False
 
             completed = completed and choice_completed
-            results.append({
+            if choice_completed:
+                score += 1
+
+            choice_result = {
                 'value': choice.value,
                 'selected': choice_selected,
-                'completed': choice_completed,
-                'tips': render_template('templates/html/tip_choice_group.html', {
+            }
+            # Only include tips/results in returned response if we want to display them
+            if not self.hide_results:
+                choice_result['completed'] = choice_completed
+                choice_result['tips'] = render_template('templates/html/tip_choice_group.html', {
                     'self': self,
                     'tips_fragments': choice_tips_fragments,
                     'completed': choice_completed,
-                }),
-            })
+                })
+
+            results.append(choice_result)
 
         self.student_choices = submissions
 
@@ -83,7 +91,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'choices': results,
             'message': self.message,
             'weight': self.weight,
-            'score': sum(1.0 for r in results if r['completed']) / len(results)
+            'score': float(score) / len(results),
         }
 
         log.debug(u'MRQ submissions result: %s', result)
