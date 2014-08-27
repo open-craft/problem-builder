@@ -101,11 +101,8 @@ function MCQBlock(runtime, element, mentoring) {
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
 
-                var tips = _.find(result.tips, function(obj) {
-                    return obj.choice === choiceInputDOM.val();
-                });
-                if (tips) {
-                    mentoring.setContent(choiceTipsDOM, tips.tips);
+                if (result.tips) {
+                    mentoring.setContent(choiceTipsDOM, result.tips);
                 }
 
                 choiceTipsCloseDOM = $('.close', choiceTipsDOM);
@@ -121,14 +118,7 @@ function MCQBlock(runtime, element, mentoring) {
                                         '<div class="close icon-remove-sign fa-times-circle"></div>');
             }
             else if (result.tips) {
-                var tips = _.find(result.tips, function(obj) {
-                    return obj.choice === result.submission;
-                });
-                if (tips) {
-                    messageView.showMessage(tips.tips);
-                } else {
-                    messageView.clearPopupEvents();
-                }
+                messageView.showMessage(result.tips);
             }
         },
 
@@ -194,15 +184,14 @@ function MRQBlock(runtime, element, mentoring) {
                     } else if (!choice.completed) {
                         choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                     }
+
+                    mentoring.setContent(choiceTipsDOM, choice.tips);
+
+                    choiceTipsCloseDOM = $('.close', choiceTipsDOM);
+                    choiceResultDOM.off('click').on('click', function() {
+                        messageView.showMessage(choiceTipsDOM);
+                    });
                 }
-
-                mentoring.setContent(choiceTipsDOM, choice.tips);
-
-                choiceTipsCloseDOM = $('.close', choiceTipsDOM);
-                choiceResultDOM.off('click').on('click', function() {
-                    messageView.showMessage(choiceTipsDOM);
-                });
-
             });
         },
 
