@@ -59,7 +59,8 @@ BLOCKS_CHILDREN = [
     'tip = mentoring:TipBlock',
     'choice = mentoring:ChoiceBlock',
     'html = mentoring:HTMLBlock',
-    'title = mentoring:TitleBlock'
+    'title = mentoring:TitleBlock',
+    'shared-header = mentoring:SharedHeaderBlock',
 ]
 
 setup(

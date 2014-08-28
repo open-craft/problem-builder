@@ -3,9 +3,10 @@
     You need to complete <a href="{{ missing_dependency_url }}">the previous step</a> before
     attempting this step.
   </div>
-  {% if self.title %}
+  {% if self.title or self.header %}
   <div class="title">
     <h2 class="main">{{ self.title.content }}</h2>
+    <div class="header">{{ self.header.content|safe }}</div>
   </div>
   {% endif %}
   {% for name, c in named_children %}

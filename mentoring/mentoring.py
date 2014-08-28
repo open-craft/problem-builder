@@ -35,6 +35,7 @@ from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
 from .title import TitleBlock
+from .header import SharedHeaderBlock
 from .html import HTMLBlock
 from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
@@ -97,7 +98,7 @@ class MentoringBlock(XBlockWithLightChildren):
     @property
     def steps(self):
         return [child for child in self.get_children_objects() if
-                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock))]
+                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock, SharedHeaderBlock))]
 
     @property
     def score(self):
@@ -115,7 +116,7 @@ class MentoringBlock(XBlockWithLightChildren):
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
-            not_instance_of=(MentoringMessageBlock, TitleBlock)
+            not_instance_of=(MentoringMessageBlock, TitleBlock, SharedHeaderBlock)
         )
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
@@ -166,6 +167,16 @@ class MentoringBlock(XBlockWithLightChildren):
         """
         for child in self.get_children_objects():
             if isinstance(child, TitleBlock):
+                return child
+        return None
+
+    @property
+    def header(self):
+        """
+        Return the header child.
+        """
+        for child in self.get_children_objects():
+            if isinstance(child, SharedHeaderBlock):
                 return child
         return None
 
@@ -265,7 +276,7 @@ class MentoringBlock(XBlockWithLightChildren):
         completed = False
         current_child = None
         children = [child for child in self.get_children_objects() \
-                    if not isinstance(child, TitleBlock)]
+                    if not isinstance(child, (TitleBlock, SharedHeaderBlock))]
 
         for child in children:
             if child.name and child.name in submissions:
