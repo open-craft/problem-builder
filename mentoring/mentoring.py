@@ -304,6 +304,7 @@ class MentoringBlock(XBlockWithLightChildren):
                 self.runtime.publish(self, 'grade', {
                     'value': raw_score,
                     'max_value': 1,
+                    'score_type': 'proficiency',
                 })
 
             self.num_attempts += 1
