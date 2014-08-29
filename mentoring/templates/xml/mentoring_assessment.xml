@@ -1,0 +1,28 @@
+<mentoring url_name="{{ url_name }}" display_name="Nav tooltip title" weight="1" mode="assessment">
+    <title>Default Title</title>
+    <html>
+        <p>What is your goal?</p>
+    </html>
+
+    <answer name="goal" />
+
+    <mcq name="mcq_1_1" type="choices">
+        <question>Do you like this MCQ?</question>
+        <choice value="yes">Yes</choice>
+        <choice value="maybenot">Maybe not</choice>
+        <choice value="understand">I don't understand</choice>
+    </mcq>
+
+    <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
+        <question>How much do you rate this MCQ?</question>
+        <choice value="notwant">I don't want to rate it</choice>
+    </mcq>
+
+    <mrq name="mrq_1_1" type="choices">
+        <question>What do you like in this MRQ?</question>
+        <choice value="elegance">Its elegance</choice>
+        <choice value="beauty">Its beauty</choice>
+        <choice value="gracefulness">Its gracefulness</choice>
+        <choice value="bugs">Its bugs</choice>
+    </mrq>
+</mentoring>

@@ -76,7 +76,7 @@ class MentoringBlock(XBlockWithLightChildren):
                            default=0, scope=Scope.user_state, enforce_type=True)
     max_attempts = Integer(help="Number of max attempts for this questions", default=0,
                            scope=Scope.content, enforce_type=True)
-    mode = String(help="Mode of the mentoring. 'standard' or 'accessment'",
+    mode = String(help="Mode of the mentoring. 'standard' or 'assessment'",
                   default='standard', scope=Scope.content)
     step = Integer(help="Keep track of the student assessment progress.",
                    default=0, scope=Scope.user_state, enforce_type=True)
@@ -145,25 +145,19 @@ class MentoringBlock(XBlockWithLightChildren):
 
     @XBlock.json_handler
     def publish_event(self, data, suffix=''):
-
         try:
             event_type = data.pop('event_type')
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
+        self._publish_event(event_type, data)
+
+    def _publish_event(self, event_type, data):
         data['user_id'] = self.scope_ids.user_id
-        data['component_id'] = self._get_unique_id()
+        data['component_id'] = self.url_name
 
         self.runtime.publish(self, event_type, data)
         return {'result':'success'}
-
-    def _get_unique_id(self):
-        try:
-            unique_id = self.location.name
-        except AttributeError:
-            # workaround for xblock workbench
-            unique_id = self.parent.replace('.',  '-')
-        return unique_id
 
     @property
     def title(self):
@@ -251,9 +245,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         raw_score = self.score[0]
 
-        self.runtime.publish(self, 'xblock.mentoring.submitted', {
-            'user_id': self.scope_ids.user_id,
-            'component_id': self._get_unique_id(),
+        self._publish_event('xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
@@ -297,6 +289,8 @@ class MentoringBlock(XBlockWithLightChildren):
                 child.save()
                 completed = child_result['completed']
 
+        event_data = {}
+
         (raw_score, score, correct, incorrect) = self.score
         if current_child == self.steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
@@ -306,9 +300,16 @@ class MentoringBlock(XBlockWithLightChildren):
                     'max_value': 1,
                     'score_type': 'proficiency',
                 })
+                event_data['final_grade'] = raw_score
 
             self.num_attempts += 1
             self.completed = True
+
+        event_data['exercise_id'] = current_child.name
+        event_data['num_attempts'] = self.num_attempts
+        event_data['submitted_answer'] = submissions
+
+        self._publish_event('xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,

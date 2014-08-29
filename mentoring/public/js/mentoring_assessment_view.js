@@ -99,6 +99,10 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         ++active_child;
         while (1) {
             var child = mentoring.displayChild(active_child, options);
+            mentoring.publish_event({
+                event_type: 'xblock.mentoring.assessment.shown',
+                exercise_id: $(child).attr('name')
+            });
             if ((typeof child !== 'undefined') || active_child == mentoring.children.length-1)
                 break;
             ++active_child;
