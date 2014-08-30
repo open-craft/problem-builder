@@ -113,11 +113,21 @@ class MentoringBlock(XBlockWithLightChildren):
 
         return (score, int(round(score*100)), correct, incorrect)
 
+    def _index_steps(self):
+        index = 1
+        for child in self.steps:
+            child.index = index
+            index += 1
+
+
     def student_view(self, context):
+        self._index_steps()
+
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
             not_instance_of=(MentoringMessageBlock, TitleBlock, SharedHeaderBlock)
         )
+
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
