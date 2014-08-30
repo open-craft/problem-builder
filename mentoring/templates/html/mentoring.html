@@ -3,39 +3,44 @@
     You need to complete <a href="{{ missing_dependency_url }}">the previous step</a> before
     attempting this step.
   </div>
+
   {% if self.title or self.header %}
   <div class="title">
-    <h2 class="main">{{ self.title.content }}</h2>
-    <div class="header">{{ self.header.content|safe }}</div>
+    {% if self.title %} <h2 class="main">{{ self.title.content }}</h2> {% endif %}
+    {% if self.header %} <div class="header">{{ self.header.content|safe }}</div> {% endif %}
   </div>
   {% endif %}
-  {% for name, c in named_children %}
-  {{c.body_html|safe}}
-  {% endfor %}
-  {% if self.display_submit %}
 
-  <div class="grade" data-score="{{ self.score.1 }}"
-       data-correct_answer="{{ self.score.2 }}"
-       data-incorrect_answer="{{ self.score.3 }}"
-       data-max_attempts="{{ self.max_attempts }}"
-       data-num_attempts="{{ self.num_attempts }}">
-  </div>
+  <div class="{{self.mode}}-question-block">
+    {% for name, c in named_children %}
+    {{c.body_html|safe}}
+    {% endfor %}
 
-  <div class="submit">
-    {% if self.mode == 'assessment' %}
-    <span class="assessment-checkmark icon-2x"></span>
+    {% if self.display_submit %}
+
+    <div class="grade" data-score="{{ self.score.1 }}"
+         data-correct_answer="{{ self.score.2 }}"
+         data-incorrect_answer="{{ self.score.3 }}"
+         data-max_attempts="{{ self.max_attempts }}"
+         data-num_attempts="{{ self.num_attempts }}">
+    </div>
+
+    <div class="submit">
+      {% if self.mode == 'assessment' %}
+      <span class="assessment-checkmark icon-2x"></span>
+      {% endif %}
+
+      <input type="button" class="input-main" value="Submit" disabled="disabled" />
+
+      {% if self.mode == 'assessment' %}
+      <input type="button" class="input-next" value="Next Question" disabled="disabled" />
+      <input type="button" class="input-review" value="Review grade" disabled="disabled" />
+      <input type="button" class="input-try-again" value="Try again" disabled="disabled" />
+      {% endif %}
+
+      <div class="attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>
+    </div>
     {% endif %}
-
-    <input type="button" class="input-main" value="Submit" disabled="disabled" />
-
-    {% if self.mode == 'assessment' %}
-    <input type="button" class="input-next" value="Next Question" disabled="disabled" />
-    <input type="button" class="input-review" value="Review grade" disabled="disabled" />
-    <input type="button" class="input-try-again" value="Try again" disabled="disabled" />
-    {% endif %}
-
-    <div class="attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>
+    <div class="messages"></div>
   </div>
-  {% endif %}
-  <div class="messages"></div>
 </div>
