@@ -82,6 +82,7 @@ elements:
 
 * `<title>` - Renders the title of the block.
 * `<html>` - May contain arbitrary HTML to be displayed in the block.
+* `<shared-header>` - A specialized HTML block, displayed together with the title as a shared header for every step in assessment mode.
 * `<answer>` - Represents a free-form answer, rendered as a textarea
   element.
 * `<mcq>` - Multiple choice question, rendered as radio buttons.

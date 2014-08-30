@@ -1,5 +1,9 @@
 <mentoring url_name="{{ url_name }}" display_name="Nav tooltip title" weight="1" mode="assessment">
     <title>Default Title</title>
+    <shared-header>
+        <p>This paragraph is shared between <strong>all</strong> questions.</p>
+    </shared-header>
+
     <html>
         <p>What is your goal?</p>
     </html>

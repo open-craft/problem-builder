@@ -95,6 +95,11 @@
     height:33.33px;
 }
 
+.mentoring .assessment-question-block {
+    border: 5px solid #e5ebee;
+    padding: 20px;
+}
+
 .mentoring .assessment-checkmark {
     margin-right: 10px;
 }

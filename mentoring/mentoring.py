@@ -35,6 +35,7 @@ from xblock.fragment import Fragment
 
 from .light_children import XBlockWithLightChildren
 from .title import TitleBlock
+from .header import SharedHeaderBlock
 from .html import HTMLBlock
 from .message import MentoringMessageBlock
 from .utils import get_scenarios_from_path, load_resource, render_template
@@ -97,7 +98,7 @@ class MentoringBlock(XBlockWithLightChildren):
     @property
     def steps(self):
         return [child for child in self.get_children_objects() if
-                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock))]
+                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock, SharedHeaderBlock))]
 
     @property
     def score(self):
@@ -112,11 +113,27 @@ class MentoringBlock(XBlockWithLightChildren):
 
         return (score, int(round(score*100)), correct, incorrect)
 
+    def _index_steps(self):
+        steps = self.steps
+
+        if len(steps) == 1:
+            steps[0].index = ""
+            return
+
+        index = 1
+        for child in steps:
+            child.index = index
+            index += 1
+
+
     def student_view(self, context):
+        self._index_steps()
+
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
-            not_instance_of=(MentoringMessageBlock, TitleBlock)
+            not_instance_of=(MentoringMessageBlock, TitleBlock, SharedHeaderBlock)
         )
+
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
@@ -150,7 +167,7 @@ class MentoringBlock(XBlockWithLightChildren):
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
-        self._publish_event(event_type, data)
+        return self._publish_event(event_type, data)
 
     def _publish_event(self, event_type, data):
         data['user_id'] = self.scope_ids.user_id
@@ -166,6 +183,16 @@ class MentoringBlock(XBlockWithLightChildren):
         """
         for child in self.get_children_objects():
             if isinstance(child, TitleBlock):
+                return child
+        return None
+
+    @property
+    def header(self):
+        """
+        Return the header child.
+        """
+        for child in self.get_children_objects():
+            if isinstance(child, SharedHeaderBlock):
                 return child
         return None
 
@@ -265,7 +292,7 @@ class MentoringBlock(XBlockWithLightChildren):
         completed = False
         current_child = None
         children = [child for child in self.get_children_objects() \
-                    if not isinstance(child, TitleBlock)]
+                    if not isinstance(child, (TitleBlock, SharedHeaderBlock))]
 
         for child in children:
             if child.name and child.name in submissions:

@@ -1,7 +1,6 @@
 <fieldset class="choices questionnaire" data-hide_results="{{self.hide_results}}">
-
   <legend class="question">
-    <h3>QUESTION</h3>
+    <h3 class="question-title">QUESTION {{ self.index }}</h3>
     <p>{{ self.question }}</p>
   </legend>
   <div class="choices-list">
@@ -11,9 +10,8 @@
       <label class="choice-label">
         <input class="choice-selector" type="checkbox" name="{{ self.name }}"
                value="{{ choice.value }}"
-               {% if choice.value in self.student_choices %} checked{% endif %}>
+               {% if choice.value in self.student_choices %} checked{% endif %} />
         {{ choice.content }}
-        </input>
       </label>
       <div class="choice-tips"></div>
     </div>
