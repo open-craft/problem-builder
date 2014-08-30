@@ -114,8 +114,14 @@ class MentoringBlock(XBlockWithLightChildren):
         return (score, int(round(score*100)), correct, incorrect)
 
     def _index_steps(self):
+        steps = self.steps
+
+        if len(steps) == 1:
+            steps[0].index = ""
+            return
+
         index = 1
-        for child in self.steps:
+        for child in steps:
             child.index = index
             index += 1
 
