@@ -4,6 +4,7 @@
 #
 # Authors:
 #          Xavier Antoviaque <xavier@antoviaque.org>
+#          David Gabor Bodor <david.gabor.bodor@gmail.com>
 #
 # This software's license gives you freedom; you can copy, convey,
 # propagate, redistribute and/or modify this program under the terms of
