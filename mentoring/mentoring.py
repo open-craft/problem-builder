@@ -150,7 +150,7 @@ class MentoringBlock(XBlockWithLightChildren):
         except KeyError as e:
             return {'result': 'error', 'message': 'Missing event_type in JSON data'}
 
-        self._publish_event(event_type, data)
+        return self._publish_event(event_type, data)
 
     def _publish_event(self, event_type, data):
         data['user_id'] = self.scope_ids.user_id
