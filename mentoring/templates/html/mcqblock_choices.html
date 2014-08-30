@@ -1,6 +1,6 @@
 <fieldset class="choices questionnaire">
   <legend class="question">
-    <h3>QUESTION</h3>
+    <h3>QUESTION {{ self.index }}</h3>
     <p>{{ self.question }}</p>
   </legend>
   <div class="choices-list">
@@ -8,7 +8,7 @@
     <div class="choice">
       <div class="choice-result icon-2x"></div>
       <label class="choice-label">
-        <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %}> {{ choice.content }}
+        <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %} />{{ choice.content }}
       </label>
       <div class="choice-tips"></div>
     </div>
