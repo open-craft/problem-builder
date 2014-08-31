@@ -7,7 +7,7 @@
   {% if self.title or self.header %}
   <div class="title">
     {% if self.title %} <h2 class="main">{{ self.title.content }}</h2> {% endif %}
-    {% if self.header %} <div class="header">{{ self.header.content|safe }}</div> {% endif %}
+    {% if self.header %} <div class="shared-header">{{ self.header.content|safe }}</div> {% endif %}
   </div>
   {% endif %}
 
