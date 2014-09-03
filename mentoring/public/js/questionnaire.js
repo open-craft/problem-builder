@@ -53,7 +53,7 @@ function MessageView(element, mentoring) {
             }
         },
         clearResult: function() {
-            this.allPopupsDOM.hide();
+            this.allPopupsDOM.html('').hide();
             this.allResultsDOM.removeClass(
                 'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
             );
@@ -101,7 +101,7 @@ function MCQBlock(runtime, element, mentoring) {
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
 
-                if (result.tips) {
+                if (result.tips && choiceInputDOM.val() === result.submission) {
                     mentoring.setContent(choiceTipsDOM, result.tips);
                 }
 
