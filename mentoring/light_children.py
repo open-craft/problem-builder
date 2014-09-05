@@ -99,6 +99,8 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
     @classmethod
     def add_node_as_child(cls, block, xml_child, child_id):
         # Instantiate child
+        if not isinstance(xml_child.tag, str):
+            return
         child_class = cls.get_class_by_element(xml_child.tag)
         child = child_class(block)
         child.name = u'{}_{}'.format(block.name, child_id)

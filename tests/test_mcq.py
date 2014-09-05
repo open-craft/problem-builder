@@ -141,3 +141,34 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(progress.text, '')
         self.assertTrue(progress.find_elements_by_css_selector('img'))
 
+    def test_mcq_with_comments(self):
+        mentoring = self.go_to_page('MCQ With Comments 1')
+        mcq = mentoring.find_element_by_css_selector('fieldset.choices')
+        messages = mentoring.find_element_by_css_selector('.messages')
+        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
+
+        self.assertEqual(messages.text, '')
+        self.assertFalse(messages.find_elements_by_xpath('./*'))
+        self.assertEqual(progress.text, '')
+        self.assertFalse(progress.find_elements_by_xpath('./*'))
+
+        mcq_legend = mcq.find_element_by_css_selector('legend')
+        self.assertEqual(mcq_legend.text, 'Do you like this MCQ?')
+
+        mcq_choices = mcq.find_elements_by_css_selector('.choices .choice label')
+
+        self.assertEqual(len(mcq_choices), 3)
+        self.assertEqual(mcq_choices[0].text, 'Its elegance')
+        self.assertEqual(mcq_choices[1].text, 'Its beauty')
+        self.assertEqual(mcq_choices[2].text, "Its gracefulness")
+        self.assertEqual(mcq_choices[3].text, "Its bugs")
+
+        mcq_choices_input = [
+            mcq_choices[0].find_element_by_css_selector('input'),
+            mcq_choices[1].find_element_by_css_selector('input'),
+            mcq_choices[2].find_element_by_css_selector('input'),
+        ]
+        self.assertEqual(mcq_choices_input[0].get_attribute('value'), 'elegance')
+        self.assertEqual(mcq_choices_input[1].get_attribute('value'), 'beauty')
+        self.assertEqual(mcq_choices_input[2].get_attribute('value'), 'gracefulness')
+        self.assertEqual(mcq_choices_input[3].get_attribute('value'), 'bugs')
