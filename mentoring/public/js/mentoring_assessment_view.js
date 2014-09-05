@@ -46,7 +46,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         active_child = -1;
         displayNextChild();
         tryAgainDOM.hide();
-        submitDOM.show().removeAttr('disabled');
+        submitDOM.show();
         nextDOM.show();
     }
 
