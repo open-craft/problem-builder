@@ -40,6 +40,7 @@ from xblock.plugin import Plugin
 
 from .models import LightChild as LightChildModel
 
+
 try:
     from xmodule_modifiers import replace_jump_to_id_urls
 except:
@@ -126,7 +127,8 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         if not hasattr(self, 'xml_content') or not self.xml_content:
             return
 
-        node = etree.parse(StringIO(self.xml_content)).getroot()
+        parser = etree.XMLParser(remove_comments=True)
+        node = etree.parse(StringIO(self.xml_content), parser=parser).getroot()
         LightChildrenMixin.init_block_from_node(self, node, node.items())
 
     def get_children_objects(self):
