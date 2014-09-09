@@ -29,6 +29,7 @@ from .light_children import LightChild, Scope, String
 
 log = logging.getLogger(__name__)
 
+
 class SharedHeaderBlock(LightChild):
     """
     A shared header block shown under the title.
