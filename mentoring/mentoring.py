@@ -115,6 +115,7 @@ class MentoringBlock(XBlockWithLightChildren):
         return (score, int(round(score * 100)), correct, incorrect)
 
     def _index_steps(self):
+        """Add an index to each step that can be used in the step's title."""
         steps = self.steps
 
         if len(steps) == 1:
