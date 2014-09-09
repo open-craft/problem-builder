@@ -91,6 +91,8 @@ class MentoringBlock(XBlockWithLightChildren):
 
     MENTORING_MODES = ('standard', 'assessment')
 
+    FLOATING_BLOCKS = (TitleBlock, MentoringMessageBlock, SharedHeaderBlock)
+
     @property
     def is_assessment(self):
         return self.mode == 'assessment'
@@ -98,7 +100,7 @@ class MentoringBlock(XBlockWithLightChildren):
     @property
     def steps(self):
         return [child for child in self.get_children_objects() if
-                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock, SharedHeaderBlock))]
+                not isinstance(child, self.FLOATING_BLOCKS + (HTMLBlock,))]
 
     @property
     def score(self):
@@ -131,7 +133,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
-            not_instance_of=(MentoringMessageBlock, TitleBlock, SharedHeaderBlock)
+            not_instance_of=self.FLOATING_BLOCKS,
         )
 
 
@@ -292,7 +294,7 @@ class MentoringBlock(XBlockWithLightChildren):
         completed = False
         current_child = None
         children = [child for child in self.get_children_objects() \
-                    if not isinstance(child, (TitleBlock, SharedHeaderBlock))]
+                    if not isinstance(child, self.FLOATING_BLOCKS)]
 
         for child in children:
             if child.name and child.name in submissions:
