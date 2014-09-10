@@ -32,7 +32,7 @@ from xblock.fields import String, Scope
 from xblock.fragment import Fragment
 
 from .models import Answer
-from .utils import list2csv, render_template, serialize_opaque_key
+from .utils import list2csv, render_template
 
 
 # Globals ###########################################################
@@ -73,7 +73,7 @@ class MentoringDataExportBlock(XBlock):
         return response
 
     def get_csv(self):
-        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
+        course_id = self.xmodule_runtime.course_id
 
         answers = Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
         answers_names = answers.values_list('name', flat=True).distinct().order_by('name')

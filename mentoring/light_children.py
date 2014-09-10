@@ -47,7 +47,7 @@ except:
     # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
     replace_jump_to_id_urls = lambda a, b, c, d, frag, f: frag
 
-from .utils import serialize_opaque_key, XBlockWithChildrenFragmentsMixin
+from .utils import XBlockWithChildrenFragmentsMixin
 
 
 # Globals ###########################################################
@@ -190,7 +190,7 @@ class XBlockWithLightChildren(LightChildrenMixin, XBlock):
         """
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         try:
-            course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
+            course_id = self.xmodule_runtime.course_id
         except AttributeError:
             # TODO-WORKBENCH-WORKAROUND: To allow to load from the workbench
             course_id = 'sample-course'
@@ -303,7 +303,7 @@ class LightChild(Plugin, LightChildrenMixin):
             raise ValueError('LightChild.name field need to be set to a non-null/empty value')
 
         student_id = self.xmodule_runtime.anonymous_student_id
-        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
+        course_id = self.xmodule_runtime.course_id
         url_name = "%s-%s" % (self.xblock_container.url_name, name)
 
         lightchild_data, created = LightChildModel.objects.get_or_create(
