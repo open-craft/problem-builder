@@ -1,4 +1,6 @@
 <div class="xblock-answer" data-completed="{{ self.completed }}">
+  <h3 class="question-title">QUESTION {{ self.index }}</h3>
+  <p>{{ self.question }}</p>
   <textarea
      class="answer editable" cols="50" rows="10" name="input"
      data-min_characters="{{ self.min_characters }}"
