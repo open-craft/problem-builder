@@ -1,6 +1,6 @@
 <fieldset class="rating questionnaire">
   <legend class="question">
-    <h3 class="question-title">QUESTION {{ self.index }}</h3>
+    <h3 class="question-title">QUESTION {% if not self.lonely_step %}{{ self.step_number }}{% endif %}</h3>
     <p>{{ self.question }}</p>
   </legend>
   <div class="choices-list">

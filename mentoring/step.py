@@ -4,6 +4,7 @@ class StepParentMixin(object):
 
     The parent must have a get_children_objects() method.
     """
+
     @property
     def steps(self):
         return [child for child in self.get_children_objects() if isinstance(child, StepMixin)]

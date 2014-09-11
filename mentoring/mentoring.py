@@ -38,6 +38,7 @@ from .title import TitleBlock
 from .header import SharedHeaderBlock
 from .html import HTMLBlock
 from .message import MentoringMessageBlock
+from .step import StepParentMixin
 from .utils import get_scenarios_from_path, load_resource, render_template
 
 
@@ -48,7 +49,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringBlock(XBlockWithLightChildren):
+class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     """
     An XBlock providing mentoring capabilities
 
@@ -98,11 +99,6 @@ class MentoringBlock(XBlockWithLightChildren):
         return self.mode == 'assessment'
 
     @property
-    def steps(self):
-        return [child for child in self.get_children_objects() if
-                not isinstance(child, self.FLOATING_BLOCKS + (HTMLBlock,))]
-
-    @property
     def score(self):
         """Compute the student score taking into account the light child weight."""
         total_child_weight = sum(float(step.weight) for step in self.steps)
@@ -114,22 +110,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         return (score, int(round(score * 100)), correct, incorrect)
 
-    def _index_steps(self):
-        """Add an index to each step that can be used in the step's title."""
-        steps = self.steps
-
-        if len(steps) == 1:
-            steps[0].index = ""
-            return
-
-        index = 1
-        for child in steps:
-            child.index = index
-            index += 1
-
     def student_view(self, context):
-        self._index_steps()
-
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
             not_instance_of=self.FLOATING_BLOCKS,

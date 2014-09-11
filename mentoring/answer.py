@@ -30,6 +30,7 @@ from lazy import lazy
 from xblock.fragment import Fragment
 
 from .light_children import LightChild, Boolean, Scope, String, Integer, Float
+from .step import StepMixin
 from .models import Answer
 from .utils import render_js_template, serialize_opaque_key
 
@@ -41,7 +42,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class AnswerBlock(LightChild):
+class AnswerBlock(LightChild, StepMixin):
     """
     A field where the student enters an answer
 
