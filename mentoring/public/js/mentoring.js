@@ -67,7 +67,7 @@ function MentoringBlock(runtime, element) {
         }
     }
 
-    function readChildren(element) {
+    function readChildren() {
         var doms = $('.xblock-light-child', element);
 
         $.each(doms, function(index, child_dom) {
