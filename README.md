@@ -471,8 +471,14 @@ like the one below:
 
 The default title is "Mentoring Block".
 
-Custom workbench settings
--------------------------
+Workbench installation and settings
+-----------------------------------
+
+Install to the workbench's virtualenv by running the following command form the mentoring repo root:
+
+```bash
+pip install -r requirements.txt
+```
 
 In the main XBlock repository, create the following configuration file
 in `workbench/settings_mentoring.py` in the XBlock repository:
@@ -484,9 +490,6 @@ INSTALLED_APPS += ('mentoring',)
 DATABASES['default']['NAME'] = 'workbench.sqlite'
 ```
 
-Starting the workbench
-----------------------
-
 Because this XBlock uses a Django model, you need to sync the database
 before starting the workbench. Run this from the XBlock repository
 root:
@@ -495,7 +498,8 @@ root:
 $ ./manage.py syncdb --settings=workbench.settings_mentoring
 ```
 
-Then start the workbench:
+Running the workbench
+---------------------
 
 ```bash
 $ ./manage.py runserver 8000 --settings=workbench.settings_mentoring
@@ -510,11 +514,12 @@ From the xblock-mentoring repository root, run the tests with the
 following command:
 
 ```bash
-$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" PYTHONPATH=".:/path/to/xblock" nosetests --with-django
+$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django
 ```
 
-`/path/to/xblock` is the path to the XBlock main repository (the one
-containing the workbench).
+If you have not installed the xblock-sdk in the active virtualenv,
+you might also have to prepend `PYTHONPATH=".:/path/to/xblock"` to the command above.
+(`/path/to/xblock` is the path to the xblock-sdk, where the workbench resides).
 
 Adding custom scenarios to the workbench
 ----------------------------------------
@@ -529,6 +534,14 @@ $ cat > templates/xml/my_mentoring_scenario.xml
 ```
 
 Restart the workbench to take the new scenarios into account.
+
+If you modified a scenario already loaded in the workbench,
+you will also have to purge and rebuild the database:
+
+```bash
+rm workbench.sqlite
+./manage.py syncdb --settings=workbench.settings_mentoring <<<"no"
+```
 
 License
 -------
