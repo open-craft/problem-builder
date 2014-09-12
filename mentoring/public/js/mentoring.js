@@ -18,10 +18,11 @@ function MentoringBlock(runtime, element) {
         feedback_box = ".mentoring .feedback";
         if (target.is(feedback_box)) {
             return;
-        };
+        }
+
         if (target.parents(feedback_box).length>0) {
             return;
-        };
+        }
 
         $(feedback_box).each(function(i, el) {
             el = $(el);
@@ -85,7 +86,7 @@ function MentoringBlock(runtime, element) {
 
     /* Init and display a child. */
     function displayChild(index, options) {
-        var options = options || {};
+        options = options || {};
         options.mode = data.mode;
         if (index >= children.length)
             return  children.length;
@@ -126,7 +127,7 @@ function MentoringBlock(runtime, element) {
         getChildByName: getChildByName,
         step: step,
         publish_event: publish_event
-    }
+    };
 
     if (data.mode === 'standard') {
         MentoringStandardView(runtime, element, mentoring);
