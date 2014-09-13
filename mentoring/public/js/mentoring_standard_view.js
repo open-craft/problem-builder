@@ -1,5 +1,6 @@
 function MentoringStandardView(runtime, element, mentoring) {
     var submitXHR;
+    var submitDOM;
 
     var callIfExists = mentoring.callIfExists;
 
