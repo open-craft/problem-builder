@@ -31,7 +31,7 @@ from xblock.fragment import Fragment
 
 from .light_children import LightChild, Boolean, Scope, String, Integer, Float
 from .models import Answer
-from .utils import render_js_template, serialize_opaque_key
+from .utils import render_js_template
 
 
 # Globals ###########################################################
@@ -144,7 +144,7 @@ class AnswerBlock(LightChild):
 
         # TODO: Why do we need to use `xmodule_runtime` and not `runtime`?
         student_id = self.xmodule_runtime.anonymous_student_id
-        course_id = serialize_opaque_key(self.xmodule_runtime.course_id)
+        course_id = self.xmodule_runtime.course_id
 
         answer_data, created = Answer.objects.get_or_create(
             student_id=student_id,
