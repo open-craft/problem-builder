@@ -23,8 +23,8 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         var data = $('.grade', element).data();
         cleanAll();
         $('.grade', element).html(gradeTemplate(data));
-        reviewDOM.hide()
-        submitDOM.hide()
+        reviewDOM.hide();
+        submitDOM.hide();
         nextDOM.hide();
         tryAgainDOM.show();
 
@@ -192,7 +192,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         }
 
         if (isLastChild()) {
-            nextDOM.hide()
+            nextDOM.hide();
             reviewDOM.show();
         }
 
