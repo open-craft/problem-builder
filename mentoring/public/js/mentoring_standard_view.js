@@ -1,6 +1,6 @@
 function MentoringStandardView(runtime, element, mentoring) {
     var submitXHR;
-    var submitDOM;
+    var submitDOM, messagesDOM;
 
     var callIfExists = mentoring.callIfExists;
 
@@ -8,13 +8,13 @@ function MentoringStandardView(runtime, element, mentoring) {
         messagesDOM.empty().hide();
 
         $.each(results.submitResults || [], function(index, submitResult) {
-            var input = submitResult[0],
-                result = submitResult[1],
-                child = mentoring.getChildByName(element, input);
+            var input = submitResult[0];
+            var result = submitResult[1];
+            var child = mentoring.getChildByName(element, input);
             var options = {
                 max_attempts: results.max_attempts,
                 num_attempts: results.num_attempts
-            }
+            };
             callIfExists(child, 'handleSubmit', result, options);
         });
 

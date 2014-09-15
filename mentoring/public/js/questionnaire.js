@@ -17,15 +17,15 @@ function MessageView(element, mentoring) {
             var tip = $('.tip', popupDOM)[0];
             var data = $(tip).data();
             if (data && data.width) {
-                popupDOM.css('width', data.width)
+                popupDOM.css('width', data.width);
             } else {
-                popupDOM.css('width', '')
+                popupDOM.css('width', '');
             }
 
             if (data && data.height) {
                 popupDOM.css('height', data.height);
             } else {
-                popupDOM.css('height', '')
+                popupDOM.css('height', '');
             }
 
             popupDOM.show();
@@ -45,7 +45,7 @@ function MessageView(element, mentoring) {
         },
         showMessage: function(message) {
             if (_.isString(message)) {
-                mentoring.setContent(this.messageDOM, message)
+                mentoring.setContent(this.messageDOM, message);
                 this.showPopup(this.messageDOM);
             }
             else {
@@ -58,7 +58,7 @@ function MessageView(element, mentoring) {
                 'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
             );
         }
-    }
+    };
 }
 
 function MCQBlock(runtime, element, mentoring) {
@@ -88,11 +88,11 @@ function MCQBlock(runtime, element, mentoring) {
 
             var choiceInputs = $('.choice input', element);
             $.each(choiceInputs, function(index, choiceInput) {
-                var choiceInputDOM = $(choiceInput),
-                    choiceDOM = choiceInputDOM.closest('.choice'),
-                    choiceResultDOM = $('.choice-result', choiceDOM),
-                    choiceTipsDOM = $('.choice-tips', choiceDOM),
-                    choiceTipsCloseDOM;
+                var choiceInputDOM = $(choiceInput);
+                var choiceDOM = choiceInputDOM.closest('.choice');
+                var choiceResultDOM = $('.choice-result', choiceDOM);
+                var choiceTipsDOM = $('.choice-tips', choiceDOM);
+                var choiceTipsCloseDOM;
 
                 if (result.completed && choiceInputDOM.val() === result.submission) {
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
@@ -107,7 +107,7 @@ function MCQBlock(runtime, element, mentoring) {
 
                 choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
-                    if (choiceTipsDOM.html() != '') {
+                    if (choiceTipsDOM.html() !== '') {
                         messageView.showMessage(choiceTipsDOM);
                     }
                 });
@@ -128,10 +128,7 @@ function MCQBlock(runtime, element, mentoring) {
 
         validate: function(){
             var checked = $('input[type=radio]:checked', element);
-            if (checked.length) {
-                return true;
-            }
-            return false;
+            return Boolean(checked.length);
         }
     };
 }
@@ -145,8 +142,8 @@ function MRQBlock(runtime, element, mentoring) {
         },
 
         submit: function() {
-            var checkedCheckboxes = $('input[type=checkbox]:checked', element),
-                checkedValues = [];
+            var checkedCheckboxes = $('input[type=checkbox]:checked', element);
+            var checkedValues = [];
 
             $.each(checkedCheckboxes, function(index, checkedCheckbox) {
                 checkedValues.push($(checkedCheckbox).val());
@@ -165,16 +162,16 @@ function MRQBlock(runtime, element, mentoring) {
                                         '<div class="close icon-remove-sign fa-times-circle"></div>');
             }
 
-            var questionnaireDOM = $('fieldset.questionnaire', element),
-                data = questionnaireDOM.data(),
-                hide_results = (data.hide_results === 'True') ? true : false;
+            var questionnaireDOM = $('fieldset.questionnaire', element);
+            var data = questionnaireDOM.data();
+            var hide_results = (data.hide_results === 'True') ? true : false;
 
             $.each(result.choices, function(index, choice) {
-                var choiceInputDOM = $('.choice input[value='+choice.value+']', element),
-                    choiceDOM = choiceInputDOM.closest('.choice'),
-                    choiceResultDOM = $('.choice-result', choiceDOM),
-                    choiceTipsDOM = $('.choice-tips', choiceDOM),
-                    choiceTipsCloseDOM;
+                var choiceInputDOM = $('.choice input[value='+choice.value+']', element);
+                var choiceDOM = choiceInputDOM.closest('.choice');
+                var choiceResultDOM = $('.choice-result', choiceDOM);
+                var choiceTipsDOM = $('.choice-tips', choiceDOM);
+                var choiceTipsCloseDOM;
 
                 /* show hint if checked or max_attempts is disabled */
                 if (!hide_results &&

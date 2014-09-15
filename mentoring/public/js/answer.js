@@ -49,10 +49,10 @@ function AnswerBlock(runtime, element) {
             if (blockquote_ro.length > 0)
                 return true;
 
-            var input = $(':input', element),
-                input_value = input.val().replace(/^\s+|\s+$/gm,''),
-                answer_length = input_value.length,
-                data = input.data();
+            var input = $(':input', element);
+            var input_value = input.val().replace(/^\s+|\s+$/gm,'');
+            var answer_length = input_value.length;
+            var data = input.data();
 
             // an answer cannot be empty event if min_characters is 0
             if (_.isNumber(data.min_characters)) {
@@ -61,8 +61,7 @@ function AnswerBlock(runtime, element) {
                     return false;
                 }
             }
-
             return true;
         }
-    }
+    };
 }

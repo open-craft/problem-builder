@@ -14,8 +14,8 @@ function MentoringBlock(runtime, element) {
     }
 
     $(document).on("click", function(event, ui) {
-        target = $(event.target);
-        feedback_box = ".mentoring .feedback";
+        var target = $(event.target);
+        var feedback_box = ".mentoring .feedback";
         if (target.is(feedback_box)) {
             return;
         }
@@ -60,8 +60,8 @@ function MentoringBlock(runtime, element) {
     }
 
     function renderDependency() {
-        var warning_dom = $('.missing-dependency', element),
-            data = warning_dom.data();
+        var warning_dom = $('.missing-dependency', element);
+        var data = warning_dom.data();
 
         if (data.missing === 'True') {
             warning_dom.show();
@@ -72,8 +72,8 @@ function MentoringBlock(runtime, element) {
         var doms = $('.xblock-light-child', element);
 
         $.each(doms, function(index, child_dom) {
-            var child_type = $(child_dom).attr('data-type'),
-                child = window[child_type];
+            var child_type = $(child_dom).attr('data-type');
+            var child = window[child_type];
             children_dom.push(child_dom);
             children.push(child);
             if (typeof child !== 'undefined') {
