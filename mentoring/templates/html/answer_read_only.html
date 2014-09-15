@@ -1,4 +1,6 @@
 <div class="xblock-answer" data-completed="{{ self.completed }}">
+  <h3 class="question-title">QUESTION {% if not self.lonely_step %}{{ self.step_number }}{% endif %}</h3>
+  <p>{{ self.question }}</p>
   <blockquote class="answer read_only">
     {{ self.student_input|linebreaksbr }}
   </blockquote>

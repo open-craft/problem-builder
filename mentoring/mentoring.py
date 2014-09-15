@@ -38,6 +38,7 @@ from .title import TitleBlock
 from .header import SharedHeaderBlock
 from .html import HTMLBlock
 from .message import MentoringMessageBlock
+from .step import StepParentMixin
 from .utils import get_scenarios_from_path, load_resource, render_template
 
 
@@ -48,7 +49,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class MentoringBlock(XBlockWithLightChildren):
+class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     """
     An XBlock providing mentoring capabilities
 
@@ -91,14 +92,11 @@ class MentoringBlock(XBlockWithLightChildren):
 
     MENTORING_MODES = ('standard', 'assessment')
 
+    FLOATING_BLOCKS = (TitleBlock, MentoringMessageBlock, SharedHeaderBlock)
+
     @property
     def is_assessment(self):
         return self.mode == 'assessment'
-
-    @property
-    def steps(self):
-        return [child for child in self.get_children_objects() if
-                not isinstance(child, (HTMLBlock, TitleBlock, MentoringMessageBlock, SharedHeaderBlock))]
 
     @property
     def score(self):
@@ -106,34 +104,17 @@ class MentoringBlock(XBlockWithLightChildren):
         total_child_weight = sum(float(step.weight) for step in self.steps)
         if total_child_weight == 0:
             return (0, 0, 0, 0)
-        score = sum(r[1]['score']*r[1]['weight'] \
-                    for r in self.student_results) / total_child_weight
-        correct = sum(1 for r in self.student_results if r[1]['completed'] == True)
-        incorrect = sum(1 for r in self.student_results if r[1]['completed'] == False)
+        score = sum(r[1]['score'] * r[1]['weight'] for r in self.student_results) / total_child_weight
+        correct = sum(1 for r in self.student_results if r[1]['completed'] is True)
+        incorrect = sum(1 for r in self.student_results if r[1]['completed'] is False)
 
-        return (score, int(round(score*100)), correct, incorrect)
-
-    def _index_steps(self):
-        steps = self.steps
-
-        if len(steps) == 1:
-            steps[0].index = ""
-            return
-
-        index = 1
-        for child in steps:
-            child.index = index
-            index += 1
-
+        return (score, int(round(score * 100)), correct, incorrect)
 
     def student_view(self, context):
-        self._index_steps()
-
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
-            not_instance_of=(MentoringMessageBlock, TitleBlock, SharedHeaderBlock)
+            not_instance_of=self.FLOATING_BLOCKS,
         )
-
 
         fragment.add_content(render_template('templates/html/mentoring.html', {
             'self': self,
@@ -142,7 +123,7 @@ class MentoringBlock(XBlockWithLightChildren):
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring.css'))
         fragment.add_javascript_url(
-                    self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+            self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         if self.is_assessment:
             fragment.add_javascript_url(
                 self.runtime.local_resource_url(self, 'public/js/mentoring_assessment_view.js')
@@ -174,7 +155,7 @@ class MentoringBlock(XBlockWithLightChildren):
         data['component_id'] = self.url_name
 
         self.runtime.publish(self, event_type, data)
-        return {'result':'success'}
+        return {'result': 'success'}
 
     @property
     def title(self):
@@ -246,8 +227,7 @@ class MentoringBlock(XBlockWithLightChildren):
 
         if self.has_missing_dependency:
             completed = False
-            message = 'You need to complete all previous steps before being able to complete '+\
-                      'the current one.'
+            message = 'You need to complete all previous steps before being able to complete the current one.'
         elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
@@ -291,8 +271,8 @@ class MentoringBlock(XBlockWithLightChildren):
 
         completed = False
         current_child = None
-        children = [child for child in self.get_children_objects() \
-                    if not isinstance(child, (TitleBlock, SharedHeaderBlock))]
+        children = [child for child in self.get_children_objects()
+                    if not isinstance(child, self.FLOATING_BLOCKS)]
 
         for child in children:
             if child.name and child.name in submissions:
@@ -307,7 +287,7 @@ class MentoringBlock(XBlockWithLightChildren):
                     completed = False
                     break
 
-                self.step = step+1
+                self.step = step + 1
 
                 child_result = child.submit(submission)
                 if 'tips' in child_result:

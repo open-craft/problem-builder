@@ -28,6 +28,7 @@ import logging
 from xblock.fragment import Fragment
 
 from .choice import ChoiceBlock
+from .step import StepMixin
 from .light_children import LightChild, Scope, String, Float
 from .tip import TipBlock
 from .utils import render_template, render_js_template
@@ -40,7 +41,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class QuestionnaireAbstractBlock(LightChild):
+class QuestionnaireAbstractBlock(LightChild, StepMixin):
     """
     An abstract class used for MCQ/MRQ blocks
 

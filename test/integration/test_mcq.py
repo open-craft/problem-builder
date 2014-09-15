@@ -30,6 +30,7 @@ from mentoring.test_base import MentoringBaseTest
 
 # Classes ###########################################################
 
+
 class MCQBlockTest(MentoringBaseTest):
 
     def test_mcq_choices_rating(self):

@@ -30,6 +30,7 @@ from lazy import lazy
 from xblock.fragment import Fragment
 
 from .light_children import LightChild, Boolean, Scope, String, Integer, Float
+from .step import StepMixin
 from .models import Answer
 from .utils import render_js_template
 
@@ -41,7 +42,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
-class AnswerBlock(LightChild):
+class AnswerBlock(LightChild, StepMixin):
     """
     A field where the student enters an answer
 
@@ -53,8 +54,23 @@ class AnswerBlock(LightChild):
                           default=None, scope=Scope.content)
     min_characters = Integer(help="Minimum number of characters allowed for the answer",
                              default=0, scope=Scope.content)
+    question = String(help="Question to ask the student", scope=Scope.content, default="")
     weight = Float(help="Defines the maximum total grade of the light child block.",
                    default=1, scope=Scope.content, enforce_type=True)
+
+    @classmethod
+    def init_block_from_node(cls, block, node, attr):
+        block.light_children = []
+        for child_id, xml_child in enumerate(node):
+            if xml_child.tag == 'question':
+                block.question = xml_child.text
+            else:
+                cls.add_node_as_child(block, xml_child, child_id)
+
+        for name, value in attr:
+            setattr(block, name, value)
+
+        return block
 
     @lazy
     def student_input(self):

@@ -144,16 +144,17 @@ answer element supports the following attributes:
   question. The answer is rendered as a HTML quote instead of a
   textarea element (boolean; defaults to `false`).
 
+It can also have a `<question>` element containing a paragraph of non-formatted plain text.
+
 #### Example
 
 Here is a simple example of a free-form question:
 
 ```xml
 <mentoring url_name="goal_definition" followed_by="getting_feedback" weight="20">
-    <html>
-        <p>What is your goal?</p>
-    </html>
-    <answer name="goal" weight="10"/>
+    <answer name="goal" weight="10">
+        <question>What is your goal?</question>
+    </answer>
 </mentoring>
 ```
 

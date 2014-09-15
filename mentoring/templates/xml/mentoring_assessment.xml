@@ -5,10 +5,12 @@
     </shared-header>
 
     <html>
-        <p>What is your goal?</p>
+        <p>Please answer the questions below.</p>
     </html>
 
-    <answer name="goal" />
+    <answer name="goal">
+        <question>What is your goal?</question>
+    </answer>
 
     <mcq name="mcq_1_1" type="choices">
         <question>Do you like this MCQ?</question>

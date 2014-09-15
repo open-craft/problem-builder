@@ -29,6 +29,7 @@ from .light_children import LightChild, Scope, String
 
 log = logging.getLogger(__name__)
 
+
 class SharedHeaderBlock(LightChild):
     """
     A shared header block shown under the title.
@@ -47,8 +48,7 @@ class SharedHeaderBlock(LightChild):
         return block
 
     def student_view(self, context=None):
-        return Fragment(u"<script type='text/template' id='{}'>\n{}\n</script>".format(
-            'light-child-template',
+        return Fragment(u"<script type='text/template' id='light-child-template'>\n{}\n</script>".format(
             self.content
         ))
 
