@@ -1,5 +1,5 @@
-<vertical>
+<vertical_demo>
     <mentoring url_name="mentoring_first" followed_by="progression_2">
         <answer name="progression_1_answer" />
     </mentoring>
-</vertical>
+</vertical_demo>

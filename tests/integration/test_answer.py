@@ -47,7 +47,7 @@ class AnswerBlockTest(MentoringBaseTest):
         self.assertEqual(header1.text, 'XBlock: Answer Edit 1')
 
         # Check <html> child
-        p = mentoring.find_element_by_css_selector('div.xblock > p')
+        p = mentoring.find_element_by_css_selector('div.xblock p')
         self.assertEqual(p.text, 'This should be displayed in the answer_edit scenario')
 
         # Initial unsubmitted text
