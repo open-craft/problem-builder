@@ -35,10 +35,14 @@ class MentoringProgressionTest(MentoringBaseTest):
         Check that the provided DOM element is a progression warning, and includes a link with a href
         pointing to `link_href`
         """
-        self.assertEqual(warning_dom.text, 'You need to complete the following step before attempting this step.')
+        self.assertEqual(warning_dom.text, 'You need to complete the previous step before attempting this step.')
         warning_link = warning_dom.find_element_by_xpath('./*')
         link_href = 'http://localhost:8081{}'.format(link_href)
         self.assertEqual(warning_link.get_attribute('href'), link_href)
+
+    def assert_warning_is_hidden(self, mentoring):
+        for elem in mentoring.find_elements_by_css_selector('.warning'):
+            self.assertFalse(elem.is_displayed())
 
     def test_progression(self):
         """
@@ -46,7 +50,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         """
         # Initial - Step 1 ok, steps 2&3 redirect to step 1
         mentoring = self.go_to_page('Progression 1')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         mentoring = self.go_to_page('Progression 2')
         warning = mentoring.find_element_by_css_selector('.warning')
@@ -60,7 +64,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         mentoring = self.go_to_page('Progression 1')
         submit = mentoring.find_element_by_css_selector('input.submit')
         submit.click()
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         progress = mentoring.find_element_by_css_selector('.progress > .indicator')
         self.assertEqual(progress.text, '')
@@ -99,14 +103,14 @@ class MentoringProgressionTest(MentoringBaseTest):
         answer.send_keys('This is the answer')
         submit = mentoring.find_element_by_css_selector('input.submit')
         submit.click()
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         progress = mentoring.find_element_by_css_selector('.progress > .indicator')
         self.assertEqual(progress.text, '')
         self.assertTrue(progress.find_elements_by_css_selector('img'))
 
         mentoring = self.go_to_page('Progression 2')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         mentoring = self.go_to_page('Progression 3')
         warning = mentoring.find_element_by_css_selector('.warning')
@@ -122,13 +126,13 @@ class MentoringProgressionTest(MentoringBaseTest):
         self.assertTrue(progress.find_elements_by_css_selector('img'))
 
         mentoring = self.go_to_page('Progression 1')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         mentoring = self.go_to_page('Progression 2')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         mentoring = self.go_to_page('Progression 3')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         # Should be able to complete step 3 too now
         mentoring = self.go_to_page('Progression 3')

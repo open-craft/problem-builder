@@ -61,8 +61,11 @@ class AnswerBlockTest(MentoringBaseTest):
         submit = mentoring.find_element_by_css_selector('input.submit')
         submit.click()
         self.assertEqual(answer1.get_attribute('value'), '')
-        self.assertEqual(progress.text, '')
-        self.assertFalse(progress.find_elements_by_xpath('./*'))
+        # TODO: Cannot test rejection of partial answers, as partial answers
+        # are allowed when dependencies are not enforced, even if the block
+        # reports non-completion.
+        #self.assertEqual(progress.text, '(Not completed)')
+        #self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # Submit an answer
         answer1.send_keys('This is the answer')
