@@ -30,7 +30,6 @@ from workbench.test.selenium_test import SeleniumTest
 
 from .utils import load_scenarios_from_path
 
-
 # Classes ###########################################################
 
 class MentoringBaseTest(SeleniumTest):
@@ -41,7 +40,7 @@ class MentoringBaseTest(SeleniumTest):
         # Use test scenarios
         self.browser.get(self.live_server_url) # Needed to load tests once
         scenarios.SCENARIOS.clear()
-        scenarios_list = load_scenarios_from_path('../tests/xml')
+        scenarios_list = load_scenarios_from_path('../tests/integration/xml')
         for identifier, title, xml in scenarios_list:
             scenarios.add_xml_scenario(identifier, title, xml)
             self.addCleanup(scenarios.remove_scenario, identifier)
