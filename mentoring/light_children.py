@@ -210,9 +210,12 @@ class LightChild(Plugin, LightChildrenMixin):
     Base class for the light children
     """
     entry_point = 'xblock.light_children'
+    block_type = None
 
     def __init__(self, parent):
         self.parent = parent
+        self.location = parent.location
+        self.scope_ids = parent.scope_ids
         self.xblock_container = parent.xblock_container
         self._student_data_loaded = False
 
@@ -312,6 +315,9 @@ class LightChild(Plugin, LightChildrenMixin):
             name=url_name,
         )
         return lightchild_data
+
+    def local_resource_url(self, block, uri):
+        return self.runtime.local_resource_url(block, uri, block_type=self.block_type)
 
 
 class LightChildField(object):

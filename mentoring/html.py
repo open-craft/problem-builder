@@ -56,10 +56,15 @@ class HTMLBlock(LightChild):
         return block
 
     def student_view(self, context=None):
-        return Fragment(u"<script type='text/template' id='{}'>\n{}\n</script>".format(
-            'light-child-template',
-            self.content
-        ))
+        if context.get('as_template', True):
+            return Fragment(u"<script type='text/template' id='{}'>\n{}\n</script>".format(
+                'light-child-template',
+                self.content
+            ))
+
+        # bug? got AssertionError if I don't use unicode here. (assert isinstance(content, unicode))
+        # Although it is set when constructed?
+        return Fragment(unicode(self.content))
 
     def mentoring_view(self, context=None):
         return self.student_view(context)
