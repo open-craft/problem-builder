@@ -14,14 +14,12 @@ class Migration(SchemaMigration):
         # Adding unique constraint on 'Answer', fields ['course_id', 'student_id', 'name']
         db.create_unique('mentoring_answer', ['course_id', 'student_id', 'name'])
 
-
     def backwards(self, orm):
         # Removing unique constraint on 'Answer', fields ['course_id', 'student_id', 'name']
         db.delete_unique('mentoring_answer', ['course_id', 'student_id', 'name'])
 
         # Adding unique constraint on 'Answer', fields ['student_id', 'name']
         db.create_unique('mentoring_answer', ['student_id', 'name'])
-
 
     models = {
         'mentoring.answer': {

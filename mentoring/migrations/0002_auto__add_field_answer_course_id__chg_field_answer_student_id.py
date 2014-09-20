@@ -13,14 +13,12 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(default='default', max_length=50, db_index=True),
                       keep_default=False)
 
-
         # Changing field 'Answer.student_id'
         db.alter_column('mentoring_answer', 'student_id', self.gf('django.db.models.fields.CharField')(max_length=32))
 
     def backwards(self, orm):
         # Deleting field 'Answer.course_id'
         db.delete_column('mentoring_answer', 'course_id')
-
 
         # Changing field 'Answer.student_id'
         db.alter_column('mentoring_answer', 'student_id', self.gf('django.db.models.fields.CharField')(max_length=20))
