@@ -23,17 +23,23 @@
 
 # Imports ###########################################################
 
+from selenium.webdriver.support.ui import WebDriverWait
+
 from mentoring.test_base import MentoringBaseTest
 
 
 # Classes ###########################################################
 
 class AnswerBlockTest(MentoringBaseTest):
+    def wait_until_disabled(self, submit):
+        wait = WebDriverWait(submit, 10)
+        wait.until(lambda s: not s.is_enabled(), "{} should be disabled".format(submit.text))
 
     def test_answer_edit(self):
         """
         Answers of same name should share value accross blocks
         """
+
         # Answer should initially be blank on all instances with the same answer name
         mentoring = self.go_to_page('Answer Edit 2')
         answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
@@ -53,37 +59,34 @@ class AnswerBlockTest(MentoringBaseTest):
         # Initial unsubmitted text
         answer1 = mentoring.find_element_by_css_selector('textarea')
         self.assertEqual(answer1.text, '')
-        # TODO: progress indicator element not available
-        #progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        #self.assertEqual(progress.text, '')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
 
-        # Submit without answer
+        # Submit is disabled for empty answer
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
-        submit.click()
-        self.assertEqual(answer1.get_attribute('value'), '')
-        # TODO: Cannot test rejection of partial answers, as partial answers
-        # are allowed when dependencies are not enforced, even if the block
-        # reports non-completion.
-        # TODO: Besides, element no longer available
-        #self.assertEqual(progress.text, '(Not completed)')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
+        self.assertFalse(submit.is_enabled())
 
-        # Submit an answer
+        # Filling in the answer enables the submit button
         answer1.send_keys('This is the answer')
+        self.assertTrue(submit.is_enabled())
         submit.click()
+        self.wait_until_disabled(submit)
 
         self.assertEqual(answer1.get_attribute('value'), 'This is the answer')
-        # TODO: element no longer available
-        #self.assertEqual(progress.text, '')
-        #self.assertTrue(progress.find_elements_by_css_selector('img'))
+
+        # Modifying the answer re-enables submission
+        answer1.send_keys('. It has a second statement.')
+        self.assertTrue(submit.is_enabled())
+
+        # Submitting a new answer overwrites the previous one
+        submit.click()
+        self.wait_until_disabled(submit)
+        self.assertEqual(answer1.get_attribute('value'), 'This is the answer. It has a second statement.')
 
         # Answer content should show on a different instance with the same name
         mentoring = self.go_to_page('Answer Edit 2')
         answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
-        self.assertEqual(answer1_bis.get_attribute('value'), 'This is the answer')
-        self.assertEqual(answer1_readonly.text, 'This is the answer')
+        self.assertEqual(answer1_bis.get_attribute('value'), 'This is the answer. It has a second statement.')
+        self.assertEqual(answer1_readonly.text, 'This is the answer. It has a second statement.')
 
     def test_answer_blank_read_only(self):
         """
@@ -93,13 +96,12 @@ class AnswerBlockTest(MentoringBaseTest):
         mentoring = self.go_to_page('Answer Blank Read Only')
         answer = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer.text, '')
-        # TODO: progress indicator element not available
-        #progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        #self.assertEqual(progress.text, '')
 
         # Submit should allow to complete
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertTrue(submit.is_enabled())
         submit.click()
-        #self.assertEqual(progress.text, '')
-        #self.assertTrue(progress.find_elements_by_css_selector('img'))
+
+        # Submit is disabled after submission
+        self.wait_until_disabled(submit)
 
