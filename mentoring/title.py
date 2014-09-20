@@ -33,6 +33,7 @@ log = logging.getLogger(__name__)
 
 # Classes ###########################################################
 
+
 class TitleBlock(LightChild):
     """
     A simple html representation of a title, with the mentoring weight.

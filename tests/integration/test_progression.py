@@ -76,7 +76,9 @@ class MentoringProgressionTest(MentoringBaseTest):
 
         messages = mentoring.find_element_by_css_selector('.messages')
         self.assertTrue(messages.is_displayed())
-        self.assertIn('You need to complete all previous steps before being able to complete the current one.', messages.text)
+        self.assertIn(
+            'You need to complete all previous steps before being able to complete the current one.',
+            messages.text)
 
         mentoring = self.go_to_page('Progression 2')
         warning = mentoring.find_element_by_css_selector('.warning')
@@ -107,7 +109,7 @@ class MentoringProgressionTest(MentoringBaseTest):
 
         # Complete step 2 - no more warnings anywhere
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
-        submit.click() # Already filled the textarea in previous step
+        submit.click()  # Already filled the textarea in previous step
         self.wait_until_disabled(submit)
 
         messages = mentoring.find_element_by_css_selector('.messages')

@@ -98,4 +98,3 @@ class AnswerBlockTest(MentoringBaseTest):
 
         # Submit is disabled after submission
         self.wait_until_disabled(submit)
-

@@ -57,4 +57,3 @@ class MentoringTableBlockTest(MentoringBaseTest):
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0].text, 'This is the answer #1')
         self.assertEqual(rows[1].text, 'This is the answer #2')
-

@@ -45,9 +45,8 @@ def commas_to_set(commas_str):
     else:
         return set(commas_str.split(','))
 
-
-
 # Classes ###########################################################
+
 
 class TipBlock(LightChild):
     """

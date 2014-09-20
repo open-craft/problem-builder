@@ -98,9 +98,9 @@ class MentoringTableColumnBlock(LightChild):
         """
         The content of the column
         """
-        fragment, named_children = self.get_children_fragment(context,
-                                              view_name='mentoring_table_view',
-                                              not_instance_of=MentoringTableColumnHeaderBlock)
+        fragment, named_children = self.get_children_fragment(
+            context, view_name='mentoring_table_view',
+            not_instance_of=MentoringTableColumnHeaderBlock)
         fragment.add_content(render_template('templates/html/mentoring-table-column.html', {
             'self': self,
             'named_children': named_children,
@@ -111,9 +111,9 @@ class MentoringTableColumnBlock(LightChild):
         """
         The content of the column's header
         """
-        fragment, named_children = self.get_children_fragment(context,
-                                              view_name='mentoring_table_header_view',
-                                              instance_of=MentoringTableColumnHeaderBlock)
+        fragment, named_children = self.get_children_fragment(
+            context, view_name='mentoring_table_header_view',
+            instance_of=MentoringTableColumnHeaderBlock)
         fragment.add_content(render_template('templates/html/mentoring-table-header.html', {
             'self': self,
             'named_children': named_children,
@@ -126,9 +126,8 @@ class MentoringTableColumnHeaderBlock(LightChild):
     Header content for a given column
     """
     content = String(help="Body of the header", scope=Scope.content, default='')
-    
+
     def mentoring_table_header_view(self, context):
         fragment = super(MentoringTableColumnHeaderBlock, self).children_view(context)
         fragment.add_content(unicode(self.content))
         return fragment
-

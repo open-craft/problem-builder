@@ -33,13 +33,14 @@ from .utils import load_scenarios_from_path
 
 # Classes ###########################################################
 
+
 class MentoringBaseTest(SeleniumTest):
 
     def setUp(self):
         super(MentoringBaseTest, self).setUp()
 
         # Use test scenarios
-        self.browser.get(self.live_server_url) # Needed to load tests once
+        self.browser.get(self.live_server_url)  # Needed to load tests once
         scenarios.SCENARIOS.clear()
         scenarios_list = load_scenarios_from_path('../tests/integration/xml')
         for identifier, title, xml in scenarios_list:
@@ -57,7 +58,6 @@ class MentoringBaseTest(SeleniumTest):
         wait = WebDriverWait(submit, 10)
         wait.until(lambda s: not s.is_enabled(), "{} should be disabled".format(submit.text))
 
-
     def go_to_page(self, page_name, css_selector='div.mentoring'):
         """
         Navigate to the page `page_name`, as listed on the workbench home
@@ -68,4 +68,3 @@ class MentoringBaseTest(SeleniumTest):
         time.sleep(1)
         mentoring = self.browser.find_element_by_css_selector(css_selector)
         return mentoring
-
