@@ -125,7 +125,7 @@ class MCQBlockTest(MentoringBaseTest):
 
         self.assertEqual(mcq1.find_element_by_css_selector(".feedback").text, 'Great!')
         self.assertEqual(mcq2.find_element_by_css_selector(".feedback").text, 'I love good grades.')
-        self.assertEqual(messages.text, 'FEEDBACK\nAll is good now...\nCongratulations!')
+        self.assertIn('All is good now...\nCongratulations!', messages.text)
         self.assertTrue(messages.is_displayed())
 
     def test_mcq_with_comments(self):
