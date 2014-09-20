@@ -48,7 +48,7 @@ class MentoringTableBlockTest(MentoringBaseTest):
         answers = mentoring.find_elements_by_css_selector('textarea')
         answers[0].send_keys('This is the answer #1')
         answers[1].send_keys('This is the answer #2')
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
 
         table = self.go_to_page('Table 2', css_selector='.mentoring-table')

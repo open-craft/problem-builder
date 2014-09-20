@@ -53,17 +53,19 @@ class AnswerBlockTest(MentoringBaseTest):
         # Initial unsubmitted text
         answer1 = mentoring.find_element_by_css_selector('textarea')
         self.assertEqual(answer1.text, '')
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
-        self.assertFalse(progress.find_elements_by_xpath('./*'))
+        # TODO: progress indicator element not available
+        #progress = mentoring.find_element_by_css_selector('.progress > .indicator')
+        #self.assertEqual(progress.text, '')
+        #self.assertFalse(progress.find_elements_by_xpath('./*'))
 
         # Submit without answer
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
         self.assertEqual(answer1.get_attribute('value'), '')
         # TODO: Cannot test rejection of partial answers, as partial answers
         # are allowed when dependencies are not enforced, even if the block
         # reports non-completion.
+        # TODO: Besides, element no longer available
         #self.assertEqual(progress.text, '(Not completed)')
         #self.assertFalse(progress.find_elements_by_xpath('./*'))
 
@@ -72,8 +74,9 @@ class AnswerBlockTest(MentoringBaseTest):
         submit.click()
 
         self.assertEqual(answer1.get_attribute('value'), 'This is the answer')
-        self.assertEqual(progress.text, '')
-        self.assertTrue(progress.find_elements_by_css_selector('img'))
+        # TODO: element no longer available
+        #self.assertEqual(progress.text, '')
+        #self.assertTrue(progress.find_elements_by_css_selector('img'))
 
         # Answer content should show on a different instance with the same name
         mentoring = self.go_to_page('Answer Edit 2')
@@ -90,12 +93,13 @@ class AnswerBlockTest(MentoringBaseTest):
         mentoring = self.go_to_page('Answer Blank Read Only')
         answer = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer.text, '')
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
+        # TODO: progress indicator element not available
+        #progress = mentoring.find_element_by_css_selector('.progress > .indicator')
+        #self.assertEqual(progress.text, '')
 
         # Submit should allow to complete
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
-        self.assertEqual(progress.text, '')
-        self.assertTrue(progress.find_elements_by_css_selector('img'))
+        #self.assertEqual(progress.text, '')
+        #self.assertTrue(progress.find_elements_by_css_selector('img'))
 
