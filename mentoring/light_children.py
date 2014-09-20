@@ -99,6 +99,8 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
 
     @classmethod
     def add_node_as_child(cls, block, xml_child, child_id):
+        if xml_child.tag is etree.Comment:
+                return
         # Instantiate child
         child_class = cls.get_class_by_element(xml_child.tag)
         child = child_class(block)

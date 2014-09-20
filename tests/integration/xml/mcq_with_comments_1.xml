@@ -12,6 +12,8 @@
             <tip require="elegance" width ="600" height = "800">This is something everyone has to like about this MRQ</tip>
             <tip require="beauty" width ="400" height = "600">This is something everyone has to like about beauty</tip>
             <tip reject="bugs" width = "100" height = "200">Nah, there isn\'t any!</tip>
+
+            <!--<message type="on-submit">Thank you for answering!</message> -->
         </mrq>
 
         <message type="completed">
