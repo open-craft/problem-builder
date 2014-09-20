@@ -23,18 +23,12 @@
 
 # Imports ###########################################################
 
-from selenium.webdriver.support.ui import WebDriverWait
-
 from mentoring.test_base import MentoringBaseTest
 
 
 # Classes ###########################################################
 
 class AnswerBlockTest(MentoringBaseTest):
-    def wait_until_disabled(self, submit):
-        wait = WebDriverWait(submit, 10)
-        wait.until(lambda s: not s.is_enabled(), "{} should be disabled".format(submit.text))
-
     def test_answer_edit(self):
         """
         Answers of same name should share value accross blocks

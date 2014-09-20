@@ -23,8 +23,6 @@
 
 # Imports ###########################################################
 
-import time
-
 from mentoring.test_base import MentoringBaseTest
 
 
@@ -48,7 +46,6 @@ class MCQBlockTest(MentoringBaseTest):
     def _get_inputs(self, choices):
         return [choice.find_element_by_css_selector('input') for choice in choices]
 
-
     def test_mcq_choices_rating(self):
         """
         Mentoring MCQ should display tips according to user choice
@@ -58,13 +55,11 @@ class MCQBlockTest(MentoringBaseTest):
         mcq1 = mentoring.find_element_by_css_selector('fieldset.choices')
         mcq2 = mentoring.find_element_by_css_selector('fieldset.rating')
         messages = mentoring.find_element_by_css_selector('.messages')
-        # TODO: progress indicator element not available
-        #progress = mentoring.find_element_by_css_selector('.progress > .indicator')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.find_elements_by_xpath('./*'))
-        #self.assertEqual(progress.text, '')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
+        self.assertFalse(submit.is_enabled())
 
         mcq1_legend = mcq1.find_element_by_css_selector('legend')
         mcq2_legend = mcq2.find_element_by_css_selector('legend')
@@ -99,73 +94,49 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(mcq2_choices_input[4].get_attribute('value'), '5')
         self.assertEqual(mcq2_choices_input[5].get_attribute('value'), 'notwant')
 
-        # Submit without selecting anything
-        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
-        submit.click()
-        time.sleep(1)
-        # TODO: check that the button is not clickable
+        # Submit button disabled without selecting anything
+        self.assertFalse(submit.is_enabled())
 
-        #tips = messages.find_elements_by_xpath('./*')
-        #self.assertEqual(len(tips), 2)
-        #self.assertEqual(tips[0].text, 'To the question "Do you like this MCQ?", you have not provided an answer.')
-        #self.assertEqual(tips[1].text, 'To the question "How much do you rate this MCQ?", you have not provided an answer.')
-        #self.assertEqual(progress.text, '')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
-
-        # Select only one option
+        # Submit button stays disabled when there are unfinished mcqs
         self._selenium_bug_workaround_scroll_to(mcq1)
         mcq1_choices_input[1].click()
-        time.sleep(1)
-        submit.click()
-        # TODO: check that the button is not clickable
+        self.assertFalse(submit.is_enabled())
 
-        #time.sleep(1)
-        #tips = messages.find_elements_by_xpath('./*')
-        #self.assertEqual(len(tips), 2)
-        #self.assertEqual(tips[0].text, 'To the question "Do you like this MCQ?", you answered "Maybe not".\nAh, damn.')
-        #self.assertEqual(tips[1].text, 'To the question "How much do you rate this MCQ?", you have not provided an answer.')
-        #self.assertEqual(progress.text, '')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
-
-        # One with only display tip, one with reject tip - should not complete
+        # Should not show full completion message when wrong answers are selected
         self._selenium_bug_workaround_scroll_to(mcq1)
         mcq1_choices_input[0].click()
         mcq2_choices_input[2].click()
-        time.sleep(1)
+        self.assertTrue(submit.is_enabled())
         submit.click()
+        self.wait_until_disabled(submit)
 
-        time.sleep(1)
-        tips = messages.find_elements_by_xpath('./*')
         self.assertEqual(mcq1.find_element_by_css_selector(".feedback").text, 'Great!')
         self.assertEqual(mcq2.find_element_by_css_selector(".feedback").text, 'Will do better next time...')
-        #self.assertEqual(progress.text, '')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
+        self.assertEqual(messages.text, '')
+        self.assertFalse(messages.is_displayed())
 
-        # Only display tips, to allow to complete
+        # Should show full completion when the right answers are selected
         self._selenium_bug_workaround_scroll_to(mcq1)
         mcq1_choices_input[0].click()
         mcq2_choices_input[3].click()
+        self.assertTrue(submit.is_enabled())
         submit.click()
+        self.wait_until_disabled(submit)
 
-        time.sleep(1)
-        tips = messages.find_elements_by_xpath('./*')
         self.assertEqual(mcq1.find_element_by_css_selector(".feedback").text, 'Great!')
         self.assertEqual(mcq2.find_element_by_css_selector(".feedback").text, 'I love good grades.')
         self.assertEqual(messages.text, 'FEEDBACK\nAll is good now...\nCongratulations!')
-        #self.assertEqual(progress.text, '')
-        #self.assertTrue(progress.find_elements_by_css_selector('img'))
+        self.assertTrue(messages.is_displayed())
 
     def test_mcq_with_comments(self):
         mentoring = self.go_to_page('Mcq With Comments 1')
         mcq = mentoring.find_element_by_css_selector('fieldset.choices')
         messages = mentoring.find_element_by_css_selector('.messages')
-        # TODO: progress indicator element not available
-        #progress = mentoring.find_element_by_css_selector('.progress > .indicator')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.find_elements_by_xpath('./*'))
-        #self.assertEqual(progress.text, '')
-        #self.assertFalse(progress.find_elements_by_xpath('./*'))
+        self.assertFalse(submit.is_enabled())
 
         mcq_legend = mcq.find_element_by_css_selector('legend')
         self.assertEqual(mcq_legend.text, 'QUESTION\nWhat do you like in this MRQ?')

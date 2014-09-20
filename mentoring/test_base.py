@@ -24,6 +24,7 @@
 # Imports ###########################################################
 
 import time
+from selenium.webdriver.support.ui import WebDriverWait
 
 from workbench import scenarios
 from workbench.test.selenium_test import SeleniumTest
@@ -51,6 +52,11 @@ class MentoringBaseTest(SeleniumTest):
         # She knows it's the site by the header
         header1 = self.browser.find_element_by_css_selector('h1')
         self.assertEqual(header1.text, 'XBlock scenarios')
+
+    def wait_until_disabled(self, submit):
+        wait = WebDriverWait(submit, 10)
+        wait.until(lambda s: not s.is_enabled(), "{} should be disabled".format(submit.text))
+
 
     def go_to_page(self, page_name, css_selector='div.mentoring'):
         """
