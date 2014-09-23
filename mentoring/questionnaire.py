@@ -73,14 +73,17 @@ class QuestionnaireAbstractBlock(LightChild, StepMixin):
 
         return block
 
-    def mentoring_view(self, context=None):
+    def student_view(self, context=None):
         name = self.__class__.__name__
+        as_template = context.get('as_template', True)
 
         if str(self.type) not in self.valid_types:
             raise ValueError, u'Invalid value for {}.type: `{}`'.format(name, self.type)
 
         template_path = 'templates/html/{}_{}.html'.format(name.lower(), self.type)
-        html = render_js_template(template_path, {
+
+        render_function = render_js_template if as_template else render_template
+        html = render_function(template_path, {
             'self': self,
             'custom_choices': self.custom_choices
         })
@@ -93,6 +96,9 @@ class QuestionnaireAbstractBlock(LightChild, StepMixin):
                                                                     'public/js/questionnaire.js'))
         fragment.initialize_js(name)
         return fragment
+
+    def mentoring_view(self, context=None):
+        return self.student_view(context)
 
     @property
     def custom_choices(self):
