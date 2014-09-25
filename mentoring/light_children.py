@@ -216,7 +216,10 @@ class LightChild(Plugin, LightChildrenMixin):
 
     def __init__(self, parent):
         self.parent = parent
-        self.location = parent.location
+        try:
+            self.location = parent.location
+        except AttributeError:
+            self.location = None
         self.scope_ids = parent.scope_ids
         self.xblock_container = parent.xblock_container
         self._student_data_loaded = False
