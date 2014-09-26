@@ -56,7 +56,8 @@ class HTMLBlock(LightChild):
         return block
 
     def student_view(self, context=None):
-        if context.get('as_template', True):
+        as_template = context.get('as_template', True) if context is not None else True
+        if as_template:
             return Fragment(u"<script type='text/template' id='{}'>\n{}\n</script>".format(
                 'light-child-template',
                 self.content
