@@ -58,6 +58,14 @@ class MentoringBaseTest(SeleniumTest):
         wait = WebDriverWait(submit, 10)
         wait.until(lambda s: not s.is_enabled(), "{} should be disabled".format(submit.text))
 
+    def wait_until_clickable(self, submit):
+        wait = WebDriverWait(submit, 10)
+        wait.until(lambda s: s.is_displayed() and s.is_enabled(), "{} should be cliclable".format(submit.text))
+
+    def wait_until_text_in(self, text, elem):
+        wait = WebDriverWait(elem, 10)
+        wait.until(lambda elem: text in elem.text, "{} should be in {}".format(text, elem.text))
+
     def go_to_page(self, page_name, css_selector='div.mentoring'):
         """
         Navigate to the page `page_name`, as listed on the workbench home
