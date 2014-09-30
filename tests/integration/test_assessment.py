@@ -53,10 +53,9 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
         @property
         def state(self):
-            state = {}
-            for choice in self._mcq.find_elements_by_css_selector(".choice"):
-                state[choice.text] = choice.find_element_by_css_selector("input").is_selected()
-            return state
+            return {
+                choice.text: choice.find_element_by_css_selector("input").is_selected()
+                for choice in self._mcq.find_elements_by_css_selector(".choice")}
 
         def select(self, text):
             state = {}

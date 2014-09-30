@@ -77,7 +77,7 @@ class QuestionnaireAbstractBlock(LightChild, StepMixin):
         name = self.__class__.__name__
 
         if str(self.type) not in self.valid_types:
-            raise ValueError('Invalid value for {}.type: `{}`'.format(name, self.type))
+            raise ValueError(u'Invalid value for {}.type: `{}`'.format(name, self.type))
 
         template_path = 'templates/html/{}_{}.html'.format(name.lower(), self.type)
         html = render_js_template(template_path, {
