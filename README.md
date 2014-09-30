@@ -518,6 +518,12 @@ following command:
 $ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django
 ```
 
+If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
+
+```bash
+$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django tests/unit
+```
+
 If you have not installed the xblock-sdk in the active virtualenv,
 you might also have to prepend `PYTHONPATH=".:/path/to/xblock"` to the command above.
 (`/path/to/xblock` is the path to the xblock-sdk, where the workbench resides).

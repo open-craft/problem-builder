@@ -1,6 +1,6 @@
-<vertical>
+<vertical_demo>
     <mentoring url_name="answer_edit_2" enforce_dependency="false">
         <answer name="answer_1" read_only="true" />
         <answer name="answer_1" />
     </mentoring>
-</vertical>
+</vertical_demo>

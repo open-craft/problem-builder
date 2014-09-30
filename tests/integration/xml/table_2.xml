@@ -1,4 +1,4 @@
-<vertical>
+<vertical_demo>
     <mentoring display_submit="false" enforce_dependency="false">
         <mentoring-table type="table_test" url_name="table_2">
             <column>
@@ -12,4 +12,4 @@
             </column>
         </mentoring-table>
     </mentoring>
-</vertical>
+</vertical_demo>

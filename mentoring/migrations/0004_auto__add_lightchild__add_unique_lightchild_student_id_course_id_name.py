@@ -23,14 +23,12 @@ class Migration(SchemaMigration):
         # Adding unique constraint on 'LightChild', fields ['student_id', 'course_id', 'name']
         db.create_unique('mentoring_lightchild', ['student_id', 'course_id', 'name'])
 
-
     def backwards(self, orm):
         # Removing unique constraint on 'LightChild', fields ['student_id', 'course_id', 'name']
         db.delete_unique('mentoring_lightchild', ['student_id', 'course_id', 'name'])
 
         # Deleting model 'LightChild'
         db.delete_table('mentoring_lightchild')
-
 
     models = {
         'mentoring.answer': {

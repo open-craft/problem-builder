@@ -35,10 +35,14 @@ class MentoringProgressionTest(MentoringBaseTest):
         Check that the provided DOM element is a progression warning, and includes a link with a href
         pointing to `link_href`
         """
-        self.assertEqual(warning_dom.text, 'You need to complete the following step before attempting this step.')
+        self.assertEqual(warning_dom.text, 'You need to complete the previous step before attempting this step.')
         warning_link = warning_dom.find_element_by_xpath('./*')
         link_href = 'http://localhost:8081{}'.format(link_href)
         self.assertEqual(warning_link.get_attribute('href'), link_href)
+
+    def assert_warning_is_hidden(self, mentoring):
+        for elem in mentoring.find_elements_by_css_selector('.warning'):
+            self.assertFalse(elem.is_displayed())
 
     def test_progression(self):
         """
@@ -46,44 +50,35 @@ class MentoringProgressionTest(MentoringBaseTest):
         """
         # Initial - Step 1 ok, steps 2&3 redirect to step 1
         mentoring = self.go_to_page('Progression 1')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertFalse(submit.is_enabled())
 
         mentoring = self.go_to_page('Progression 2')
         warning = mentoring.find_element_by_css_selector('.warning')
         self.assert_warning(warning, '/jump_to_id/mentoring_first')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertFalse(submit.is_enabled())
 
         mentoring = self.go_to_page('Progression 3')
         warning = mentoring.find_element_by_css_selector('.warning')
         self.assert_warning(warning, '/jump_to_id/mentoring_first')
-
-        # Submit step 1 without completing it - no change should be registered
-        mentoring = self.go_to_page('Progression 1')
-        submit = mentoring.find_element_by_css_selector('input.submit')
-        submit.click()
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
-
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
-        self.assertFalse(progress.find_elements_by_xpath('./*'))
-
-        mentoring = self.go_to_page('Progression 2')
-        warning = mentoring.find_element_by_css_selector('.warning')
-        self.assert_warning(warning, '/jump_to_id/mentoring_first')
-
-        mentoring = self.go_to_page('Progression 3')
-        warning = mentoring.find_element_by_css_selector('.warning')
-        self.assert_warning(warning, '/jump_to_id/mentoring_first')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertFalse(submit.is_enabled())
 
         # Should be impossible to complete step 2
         mentoring = self.go_to_page('Progression 2')
         answer = mentoring.find_element_by_css_selector('textarea')
         answer.send_keys('This is the answer')
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
+        self.wait_until_disabled(submit)
 
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
-        self.assertFalse(progress.find_elements_by_xpath('./*'))
+        messages = mentoring.find_element_by_css_selector('.messages')
+        self.assertTrue(messages.is_displayed())
+        self.assertIn(
+            'You need to complete all previous steps before being able to complete the current one.',
+            messages.text)
 
         mentoring = self.go_to_page('Progression 2')
         warning = mentoring.find_element_by_css_selector('.warning')
@@ -97,47 +92,44 @@ class MentoringProgressionTest(MentoringBaseTest):
         mentoring = self.go_to_page('Progression 1')
         answer = mentoring.find_element_by_css_selector('textarea')
         answer.send_keys('This is the answer')
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.wait_until_disabled(submit)
+        self.assert_warning_is_hidden(mentoring)
 
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
-        self.assertTrue(progress.find_elements_by_css_selector('img'))
-
-        mentoring = self.go_to_page('Progression 2')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        messages = mentoring.find_element_by_css_selector('.messages')
+        self.assertFalse(messages.is_displayed())
 
         mentoring = self.go_to_page('Progression 3')
         warning = mentoring.find_element_by_css_selector('.warning')
         self.assert_warning(warning, '/jump_to_id/progression_2')
 
-        # Complete step 2 - no more warnings anywhere
         mentoring = self.go_to_page('Progression 2')
-        submit = mentoring.find_element_by_css_selector('input.submit')
-        submit.click() # Already filled the textarea in previous step
+        self.assert_warning_is_hidden(mentoring)
 
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
-        self.assertTrue(progress.find_elements_by_css_selector('img'))
+        # Complete step 2 - no more warnings anywhere
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        submit.click()  # Already filled the textarea in previous step
+        self.wait_until_disabled(submit)
+
+        messages = mentoring.find_element_by_css_selector('.messages')
+        self.assertFalse(messages.is_displayed())
 
         mentoring = self.go_to_page('Progression 1')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         mentoring = self.go_to_page('Progression 2')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         mentoring = self.go_to_page('Progression 3')
-        self.assertFalse(mentoring.find_elements_by_css_selector('.warning'))
+        self.assert_warning_is_hidden(mentoring)
 
         # Should be able to complete step 3 too now
-        mentoring = self.go_to_page('Progression 3')
         answer = mentoring.find_element_by_css_selector('textarea')
         answer.send_keys('This is the answer')
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
+        self.wait_until_disabled(submit)
 
-        progress = mentoring.find_element_by_css_selector('.progress > .indicator')
-        self.assertEqual(progress.text, '')
-        self.assertTrue(progress.find_elements_by_css_selector('img'))
-
+        messages = mentoring.find_element_by_css_selector('.messages')
+        self.assertFalse(messages.is_displayed())

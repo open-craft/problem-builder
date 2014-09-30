@@ -48,12 +48,12 @@ class MentoringTableBlockTest(MentoringBaseTest):
         answers = mentoring.find_elements_by_css_selector('textarea')
         answers[0].send_keys('This is the answer #1')
         answers[1].send_keys('This is the answer #2')
-        submit = mentoring.find_element_by_css_selector('input.submit')
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         submit.click()
+        self.wait_until_disabled(submit)
 
         table = self.go_to_page('Table 2', css_selector='.mentoring-table')
         rows = table.find_elements_by_css_selector('td')
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0].text, 'This is the answer #1')
         self.assertEqual(rows[1].text, 'This is the answer #2')
-

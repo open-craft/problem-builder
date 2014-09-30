@@ -69,7 +69,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     url_name = String(help="Name of the current step, used for URL building",
                       default='mentoring-default', scope=Scope.content)
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
-                                 default=False, scope=Scope.content)
+                                 default=False, scope=Scope.content, enforce_type=True)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
     xml_content = String(help="XML content", default='', scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.",

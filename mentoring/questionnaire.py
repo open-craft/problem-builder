@@ -78,7 +78,7 @@ class QuestionnaireAbstractBlock(LightChild, StepMixin):
         as_template = context.get('as_template', True)
 
         if str(self.type) not in self.valid_types:
-            raise ValueError, u'Invalid value for {}.type: `{}`'.format(name, self.type)
+            raise ValueError(u'Invalid value for {}.type: `{}`'.format(name, self.type))
 
         template_path = 'templates/html/{}_{}.html'.format(name.lower(), self.type)
 

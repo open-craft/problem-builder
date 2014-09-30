@@ -1,6 +1,6 @@
-<vertical>
+<vertical_demo>
     <mentoring url_name="table_1" enforce_dependency="false">
         <answer name="table_1_answer_1" />
         <answer name="table_1_answer_2" />
     </mentoring>
-</vertical>
+</vertical_demo>

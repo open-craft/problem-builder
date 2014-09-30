@@ -6,6 +6,7 @@ from mentoring import MentoringBlock
 import mentoring
 from mentoring.step import StepMixin, StepParentMixin
 
+
 class Parent(StepParentMixin):
     def get_children_objects(self):
         return list(self._children)
@@ -18,10 +19,15 @@ class Parent(StepParentMixin):
             except AttributeError:
                 pass
 
-class Step(StepMixin):
-    def __init__(self): pass
 
-class NotAStep(object): pass
+class Step(StepMixin):
+    def __init__(self):
+        pass
+
+
+class NotAStep(object):
+    pass
+
 
 class TestStepMixin(unittest.TestCase):
     def test_single_step_is_returned_correctly(self):
@@ -38,7 +44,6 @@ class TestStepMixin(unittest.TestCase):
         block._set_children_for_test(step1, 1, "2", "Step", NotAStep(), False, step2, NotAStep())
 
         self.assertSequenceEqual(block.steps, [step1, step2])
-
 
     def test_proper_number_is_returned_for_step(self):
         block = Parent()
@@ -73,4 +78,3 @@ class TestStepMixin(unittest.TestCase):
 
         self.assertFalse(step1.lonely_step)
         self.assertFalse(step2.lonely_step)
-
