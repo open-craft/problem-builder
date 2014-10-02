@@ -38,6 +38,8 @@ from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
 
+from xblockutils.publish_event import PublishEventMixin
+
 from .models import LightChild as LightChildModel
 
 
@@ -166,7 +168,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         return fragment, named_child_frags
 
 
-class XBlockWithLightChildren(LightChildrenMixin, XBlock):
+class XBlockWithLightChildren(LightChildrenMixin, XBlock, PublishEventMixin):
     """
     XBlock base class with support for LightChild
     """

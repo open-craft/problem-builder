@@ -152,21 +152,12 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         return fragment
 
-    @XBlock.json_handler
-    def publish_event(self, data, suffix=''):
-        try:
-            event_type = data.pop('event_type')
-        except KeyError as e:
-            return {'result': 'error', 'message': 'Missing event_type in JSON data'}
-
-        return self._publish_event(event_type, data)
-
-    def _publish_event(self, event_type, data):
-        data['user_id'] = self.scope_ids.user_id
-        data['component_id'] = self.url_name
-
-        self.runtime.publish(self, event_type, data)
-        return {'result': 'success'}
+    @property
+    def additional_publish_event_data(self):
+        return {
+            'user_id': self.scope_ids.user_id,
+            'component_id': self.url_name,
+        }
 
     @property
     def title(self):
@@ -262,7 +253,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         raw_score = self.score.raw
 
-        self._publish_event('xblock.mentoring.submitted', {
+        self.publish_event_from_python('xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
@@ -327,7 +318,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
 
-        self._publish_event('xblock.mentoring.assessment.submitted', event_data)
+        self.publish_event_from_python('xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,
