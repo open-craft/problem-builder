@@ -33,7 +33,7 @@ from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 
-from .light_children import XBlockWithLightChildren
+from .light_children import XBlockWithLightChildren, get_xml_content
 from .title import TitleBlock
 from .header import SharedHeaderBlock
 from .html import HTMLBlock
@@ -71,6 +71,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=False, scope=Scope.content, enforce_type=True)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
+    # See get_xml_content from light_children.
     xml_content = String(help="XML content", default='', scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.",
                    default=1, scope=Scope.content, enforce_type=True)
@@ -373,7 +374,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         fragment = Fragment()
         fragment.add_content(render_template('templates/html/mentoring_edit.html', {
             'self': self,
-            'xml_content': self.xml_content or self.default_xml_content,
+            'xml_content': get_xml_content(self)
         }))
         fragment.add_javascript_url(
             self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
