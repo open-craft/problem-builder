@@ -55,16 +55,6 @@ from .utils import XBlockWithChildrenFragmentsMixin
 log = logging.getLogger(__name__)
 
 
-def get_xml_content(block):
-    """
-    Because we get the XML content dynamically, we can't use the String field's
-    default kwarg to fall back on. Therefore any time we need to access the
-    xml_content's value, we need to do it through this function.
-    """
-    default = getattr(block, 'default_xml_content', '')
-    value = getattr(block, 'xml_content', '')
-    return value or default
-
 # Classes ###########################################################
 
 class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
@@ -93,7 +83,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         log.debug('parse_xml called')
         block = runtime.construct_xblock_from_class(cls, keys)
         cls.init_block_from_node(block, node, node.items())
-        block.xml_content = get_xml_content(block) or etree.tostring(node)
+        block.xml_content = getattr(block, 'xml_content', '') or etree.tostring(node)
         return block
 
     @classmethod
@@ -136,12 +126,11 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         Load light children from the `xml_content` attribute
         """
         self.light_children = []
-        xml_content = get_xml_content(self)
-        if not xml_content:
+        if not hasattr(self, 'xml_content') or not self.xml_content:
             return
 
         parser = etree.XMLParser(remove_comments=True)
-        node = etree.parse(StringIO(xml_content), parser=parser).getroot()
+        node = etree.parse(StringIO(self.xml_content), parser=parser).getroot()
         LightChildrenMixin.init_block_from_node(self, node, node.items())
 
     def get_children_objects(self):
