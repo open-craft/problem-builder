@@ -47,7 +47,12 @@ from .utils import get_scenarios_from_path, load_resource, render_template
 log = logging.getLogger(__name__)
 
 
+def default_xml_content():
+    return render_template('templates/xml/mentoring_default.xml', {
+        'url_name': 'mentoring-{}'.format(uuid.uuid4())})
+
 # Classes ###########################################################
+
 
 class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     """
@@ -71,7 +76,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=False, scope=Scope.content, enforce_type=True)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
-    xml_content = String(help="XML content", default='', scope=Scope.content)
+    xml_content = String(help="XML content", default=default_xml_content, scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.",
                    default=1, scope=Scope.content, enforce_type=True)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions",
@@ -373,7 +378,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         fragment = Fragment()
         fragment.add_content(render_template('templates/html/mentoring_edit.html', {
             'self': self,
-            'xml_content': self.xml_content or self.default_xml_content,
+            'xml_content': self.xml_content,
         }))
         fragment.add_javascript_url(
             self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
@@ -419,13 +424,6 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         log.debug(u'Response from Studio: {}'.format(response))
         return response
-
-    @property
-    def default_xml_content(self):
-        return render_template('templates/xml/mentoring_default.xml', {
-            'self': self,
-            'url_name': self.url_name_with_default,
-        })
 
     @property
     def url_name_with_default(self):
