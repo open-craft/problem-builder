@@ -23,7 +23,7 @@
 
 # Imports ###########################################################
 
-from mentoring.test_base import MentoringBaseTest
+from .base_test import MentoringBaseTest
 
 
 # Classes ###########################################################
