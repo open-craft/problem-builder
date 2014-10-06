@@ -126,7 +126,9 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         Load light children from the `xml_content` attribute
         """
         self.light_children = []
-        if not hasattr(self, 'xml_content') or not self.xml_content:
+        no_content = (not hasattr(self, 'xml_content') or not self.xml_content
+                      or callable(self.xml_content))
+        if no_content:
             return
 
         parser = etree.XMLParser(remove_comments=True)

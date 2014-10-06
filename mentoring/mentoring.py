@@ -49,7 +49,8 @@ log = logging.getLogger(__name__)
 
 def default_xml_content():
     return render_template('templates/xml/mentoring_default.xml', {
-        'url_name': 'mentoring-{}'.format(uuid.uuid4())})
+            'url_name': 'mentoring-{}'.format(uuid.uuid4())})
+
 
 # Classes ###########################################################
 
@@ -98,6 +99,8 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     MENTORING_MODES = ('standard', 'assessment')
 
     FLOATING_BLOCKS = (TitleBlock, MentoringMessageBlock, SharedHeaderBlock)
+
+    FIELDS_TO_INIT = ('xml_content',)
 
     @property
     def is_assessment(self):
