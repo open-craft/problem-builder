@@ -21,8 +21,6 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-# Imports ###########################################################
-
 import logging
 import os
 import pkg_resources
@@ -32,39 +30,33 @@ from cStringIO import StringIO
 from django.template import Context, Template
 from xblock.fragment import Fragment
 
+from xblockutils.resources import ResourceLoader
 
-# Globals ###########################################################
 
 log = logging.getLogger(__name__)
 
 
-# Functions #########################################################
+loader = ResourceLoader(__name__)
+
 
 def load_resource(resource_path):
-    """
-    Gets the content of a resource
-    """
-    resource_content = pkg_resources.resource_string(__name__, resource_path)
-    return unicode(resource_content)
+    return loader.load_unicode(resource_path)
 
 
 def render_template(template_path, context={}):
-    """
-    Evaluate a template by resource path, applying the provided context
-    """
-    template_str = load_resource(template_path)
-    template = Template(template_str)
-    return template.render(Context(context))
+    return loader.render_template(template_path, context)
 
 
-def render_js_template(template_path, context={}, id='light-child-template'):
-    """
-    Render a js template.
-    """
-    return u"<script type='text/template' id='{}'>\n{}\n</script>".format(
-        id,
-        render_template(template_path, context)
-    )
+def render_js_template(template_path, context={}, unique_id='light-child-template'):
+    return loader.render_js_template(template_path, unique_id, context)
+
+
+def get_scenarios_from_path(scenarios_path, include_identifier=False):
+    return loader.load_scenarios_from_path(scenarios_path, include_identifier)
+
+
+def load_scenarios_from_path(scenarios_path):
+    return loader.load_scenarios_from_path(scenarios_path, include_identifier=True)
 
 
 def list2csv(row):
@@ -77,40 +69,6 @@ def list2csv(row):
     f.seek(0)
     return f.read()
 
-
-def get_scenarios_from_path(scenarios_path, include_identifier=False):
-    """
-    Returns an array of (title, xmlcontent) from files contained in a specified directory,
-    formatted as expected for the return value of the workbench_scenarios() method
-    """
-    base_fullpath = os.path.dirname(os.path.realpath(__file__))
-    scenarios_fullpath = os.path.join(base_fullpath, scenarios_path)
-
-    scenarios = []
-    if os.path.isdir(scenarios_fullpath):
-        for template in os.listdir(scenarios_fullpath):
-            if not template.endswith('.xml'):
-                continue
-            identifier = template[:-4]
-            title = identifier.replace('_', ' ').title()
-            template_path = os.path.join(scenarios_path, template)
-            scenario = unicode(render_template(template_path, {"url_name": identifier}))
-            if not include_identifier:
-                scenarios.append((title, scenario))
-            else:
-                scenarios.append((identifier, title, scenario))
-
-    return scenarios
-
-
-def load_scenarios_from_path(scenarios_path):
-    """
-    Load all xml files contained in a specified directory, as workbench scenarios
-    """
-    return get_scenarios_from_path(scenarios_path, include_identifier=True)
-
-
-# Classes ###########################################################
 
 class XBlockWithChildrenFragmentsMixin(object):
     def get_children_fragment(self, context, view_name='student_view', instance_of=None,
