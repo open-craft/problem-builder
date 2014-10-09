@@ -31,7 +31,7 @@ from .choice import ChoiceBlock
 from .step import StepMixin
 from .light_children import LightChild, Scope, String, Float
 from .tip import TipBlock
-from .utils import render_template, render_js_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -82,14 +82,14 @@ class QuestionnaireAbstractBlock(LightChild, StepMixin):
 
         template_path = 'templates/html/{}_{}.html'.format(name.lower(), self.type)
 
-        render_function = render_js_template if as_template else render_template
+        render_function = loader.custom_render_js_template if as_template else loader.render_template
         html = render_function(template_path, {
             'self': self,
             'custom_choices': self.custom_choices
         })
 
         fragment = Fragment(html)
-        fragment.add_css(render_template('public/css/questionnaire.css', {
+        fragment.add_css(loader.render_template('public/css/questionnaire.css', {
             'self': self
         }))
         fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,

@@ -28,7 +28,7 @@ import logging
 
 from .light_children import List, Scope, Boolean
 from .questionnaire import QuestionnaireAbstractBlock
-from .utils import render_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -73,7 +73,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
                 choice_result['completed'] = choice_completed
-                choice_result['tips'] = render_template('templates/html/tip_choice_group.html', {
+                choice_result['tips'] = loader.render_template('templates/html/tip_choice_group.html', {
                     'self': self,
                     'tips_fragments': choice_tips_fragments,
                     'completed': choice_completed,

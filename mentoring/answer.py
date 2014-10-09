@@ -32,7 +32,7 @@ from xblock.fragment import Fragment
 from .light_children import LightChild, Boolean, Scope, String, Integer, Float
 from .step import StepMixin
 from .models import Answer
-from .utils import render_js_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -92,11 +92,11 @@ class AnswerBlock(LightChild, StepMixin):
 
     def mentoring_view(self, context=None):
         if not self.read_only:
-            html = render_js_template('templates/html/answer_editable.html', {
+            html = loader.custom_render_js_template('templates/html/answer_editable.html', {
                 'self': self,
             })
         else:
-            html = render_js_template('templates/html/answer_read_only.html', {
+            html = loader.custom_render_js_template('templates/html/answer_read_only.html', {
                 'self': self,
             })
 
@@ -108,7 +108,7 @@ class AnswerBlock(LightChild, StepMixin):
         return fragment
 
     def mentoring_table_view(self, context=None):
-        html = render_js_template('templates/html/answer_table.html', {
+        html = loader.custom_render_js_template('templates/html/answer_table.html', {
             'self': self,
         })
         fragment = Fragment(html)

@@ -26,7 +26,7 @@
 import logging
 
 from .light_children import LightChild, Scope, String
-from .utils import render_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -47,7 +47,7 @@ class MentoringMessageBlock(LightChild):
 
     def mentoring_view(self, context=None):
         fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')
-        fragment.add_content(render_template('templates/html/message.html', {
+        fragment.add_content(loader.render_template('templates/html/message.html', {
             'self': self,
             'named_children': named_children,
         }))

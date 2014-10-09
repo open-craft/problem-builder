@@ -40,7 +40,7 @@ from .header import SharedHeaderBlock
 from .html import HTMLBlock
 from .message import MentoringMessageBlock
 from .step import StepParentMixin
-from .utils import get_scenarios_from_path, load_resource, render_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -127,7 +127,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             not_instance_of=self.FLOATING_BLOCKS,
         )
 
-        fragment.add_content(render_template('templates/html/mentoring.html', {
+        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
@@ -145,8 +145,8 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             )
 
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(load_resource('templates/html/mentoring_attempts.html'), "text/html")
-        fragment.add_resource(load_resource('templates/html/mentoring_grade.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
 
@@ -374,7 +374,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         Editing view in Studio
         """
         fragment = Fragment()
-        fragment.add_content(render_template('templates/html/mentoring_edit.html', {
+        fragment.add_content(loader.render_template('templates/html/mentoring_edit.html', {
             'self': self,
             'xml_content': self.xml_content,
         }))
@@ -442,4 +442,4 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         """
         Scenarios displayed by the workbench. Load them from external (private) repository
         """
-        return get_scenarios_from_path('templates/xml')
+        return loader.load_scenarios_from_path('templates/xml')

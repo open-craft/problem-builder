@@ -28,7 +28,7 @@ import logging
 
 from .light_children import Scope, String
 from .questionnaire import QuestionnaireAbstractBlock
-from .utils import render_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -59,7 +59,7 @@ class MCQBlock(QuestionnaireAbstractBlock):
             if submission in tip.display_with_defaults:
                 tips_fragments.append(tip.render())
 
-        formatted_tips = render_template('templates/html/tip_choice_group.html', {
+        formatted_tips = loader.render_template('templates/html/tip_choice_group.html', {
             'self': self,
             'tips_fragments': tips_fragments,
             'completed': correct,

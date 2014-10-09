@@ -36,27 +36,12 @@ from xblockutils.resources import ResourceLoader
 log = logging.getLogger(__name__)
 
 
-loader = ResourceLoader(__name__)
+class MentoringResourceLoader(ResourceLoader):
+    def custom_render_js_template(self, template_path, context={}):
+        return self.render_js_template(template_path, 'light-child-template', context)
 
 
-def load_resource(resource_path):
-    return loader.load_unicode(resource_path)
-
-
-def render_template(template_path, context={}):
-    return loader.render_template(template_path, context)
-
-
-def render_js_template(template_path, context={}, unique_id='light-child-template'):
-    return loader.render_js_template(template_path, unique_id, context)
-
-
-def get_scenarios_from_path(scenarios_path, include_identifier=False):
-    return loader.load_scenarios_from_path(scenarios_path, include_identifier)
-
-
-def load_scenarios_from_path(scenarios_path):
-    return loader.load_scenarios_from_path(scenarios_path, include_identifier=True)
+loader = MentoringResourceLoader(__name__)
 
 
 def list2csv(row):
