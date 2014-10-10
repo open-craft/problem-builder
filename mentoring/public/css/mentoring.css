@@ -78,8 +78,13 @@
 
 .mentoring .checkmark-correct {
     font-size: 22pt;
-    color: #006600;
     color: #629b2b;
+    float: left;
+}
+
+.mentoring .checkmark-partially-correct {
+    font-size: 22pt;
+    color: #e37222;
     float: left;
 }
 
