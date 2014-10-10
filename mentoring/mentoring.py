@@ -115,8 +115,9 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         score = sum(r[1]['score'] * r[1]['weight'] for r in self.student_results) / total_child_weight
         correct = sum(1 for r in self.student_results if r[1]['completed'] is True)
         incorrect = sum(1 for r in self.student_results if r[1]['completed'] is False)
+        partially_correct = sum(1 for r in self.student_results if r[1].get('partially_completed', False) is True)
 
-        return (score, int(round(score * 100)), correct, incorrect)
+        return (score, int(round(score * 100)), correct, incorrect, partially_correct)
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
@@ -247,7 +248,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             for result in submit_results:
                 self.student_results.append(result)
 
-            (raw_score, score, correct, incorrect) = self.score
+            (raw_score, score, correct, incorrect, partially_correct) = self.score
             self.runtime.publish(self, 'grade', {
                 'value': raw_score,
                 'max_value': 1,
@@ -303,10 +304,11 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                 self.student_results.append([child.name, child_result])
                 child.save()
                 completed = child_result['completed']
+                partially_completed = child_result.get('partially_completed', False)
 
         event_data = {}
 
-        (raw_score, score, correct, incorrect) = self.score
+        (raw_score, score, correct, incorrect, partially_correct) = self.score
         if current_child == self.steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             if not self.max_attempts_reached:
@@ -328,13 +330,15 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         return {
             'completed': completed,
+            'partially_completed': partially_completed,
             'attempted': self.attempted,
             'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts,
             'step': self.step,
             'score': score,
             'correct_answer': correct,
-            'incorrect_answer': incorrect
+            'incorrect_answer': incorrect,
+            'partially_correct_answer': partially_correct,
         }
 
     @XBlock.json_handler

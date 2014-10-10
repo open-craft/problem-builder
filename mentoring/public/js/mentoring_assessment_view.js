@@ -128,6 +128,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         $('.grade', element).data('score', result.score);
         $('.grade', element).data('correct_answer', result.correct_answer);
         $('.grade', element).data('incorrect_answer', result.incorrect_answer);
+        $('.grade', element).data('partially_correct_answer', result.partially_correct_answer);
         $('.grade', element).data('max_attempts', result.max_attempts);
         $('.grade', element).data('num_attempts', result.num_attempts);
         $('.attempts', element).data('max_attempts', result.max_attempts);
@@ -135,6 +136,9 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         if (result.completed) {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
+        }
+        else if (result.partially_completed) {
+            checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
         }
         else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');

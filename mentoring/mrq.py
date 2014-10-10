@@ -49,6 +49,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
         completed = True
+        partially_completed = False
         score = 0
 
         results = []
@@ -65,6 +66,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
                     choice_completed = False
 
             completed = completed and choice_completed
+            partially_completed = partially_completed or choice_completed
             if choice_completed:
                 score += 1
 
@@ -85,9 +87,13 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         self.student_choices = submissions
 
+        if completed:
+            partially_completed = False
+
         result = {
             'submissions': submissions,
             'completed': completed,
+            'partially_completed': partially_completed,
             'choices': results,
             'message': self.message,
             'weight': self.weight,
