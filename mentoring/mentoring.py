@@ -49,9 +49,9 @@ log = logging.getLogger(__name__)
 
 
 def default_xml_content():
-    return render_template('templates/xml/mentoring_default.xml', {
-            'url_name': 'mentoring-{}'.format(uuid.uuid4())})
-
+    return loader.render_template(
+        'templates/xml/mentoring_default.xml',
+        {'url_name': 'mentoring-{}'.format(uuid.uuid4())})
 
 # Classes ###########################################################
 
@@ -66,6 +66,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     student is a) provided mentoring advices and asked to alter his answer, or b) is given the
     ok to continue.
     """
+
     attempted = Boolean(help="Has the student attempted this mentoring step?",
                         default=False, scope=Scope.user_state)
     completed = Boolean(help="Has the student completed this mentoring step?",
@@ -79,7 +80,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=False, scope=Scope.content, enforce_type=True)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
-    xml_content = String(help="XML content", default=default_xml_content, scope=Scope.content)
+    xml_content = String(help="XML content", default=default_xml_content(), scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.",
                    default=1, scope=Scope.content, enforce_type=True)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions",
