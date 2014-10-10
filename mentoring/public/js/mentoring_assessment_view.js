@@ -134,13 +134,11 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         $('.attempts', element).data('max_attempts', result.max_attempts);
         $('.attempts', element).data('num_attempts', result.num_attempts);
 
-        if (result.completed) {
-            checkmark.addClass('checkmark-correct icon-ok fa-check');
-        }
-        else if (result.partially_completed) {
+        if (result.completed === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
-        }
-        else {
+        } else if (result.completed) {
+            checkmark.addClass('checkmark-correct icon-ok fa-check');
+        } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
         }
 

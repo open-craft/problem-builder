@@ -115,7 +115,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         score = sum(r[1]['score'] * r[1]['weight'] for r in self.student_results) / total_child_weight
         correct = sum(1 for r in self.student_results if r[1]['completed'] is True)
         incorrect = sum(1 for r in self.student_results if r[1]['completed'] is False)
-        partially_correct = sum(1 for r in self.student_results if r[1].get('partially_completed', False) is True)
+        partially_correct = sum(1 for r in self.student_results if r[1]['completed'] is 'partial')
 
         return (score, int(round(score * 100)), correct, incorrect, partially_correct)
 
@@ -217,7 +217,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                 child_result = child.submit(submission)
                 submit_results.append([child.name, child_result])
                 child.save()
-                completed = completed and child_result['completed']
+                completed = completed and (child_result['completed'] is True)
 
         if self.max_attempts_reached:
             message = self.get_message_html('max_attempts_reached')
@@ -257,7 +257,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         if not self.completed and self.max_attempts > 0:
             self.num_attempts += 1
 
-        self.completed = bool(completed)
+        self.completed = completed is True
 
         raw_score = self.score[0]
 
@@ -304,7 +304,6 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                 self.student_results.append([child.name, child_result])
                 child.save()
                 completed = child_result['completed']
-                partially_completed = child_result.get('partially_completed', False)
 
         event_data = {}
 
@@ -330,7 +329,6 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         return {
             'completed': completed,
-            'partially_completed': partially_completed,
             'attempted': self.attempted,
             'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts,

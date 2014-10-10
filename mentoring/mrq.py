@@ -48,8 +48,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
-        completed = True
-        partially_completed = False
         score = 0
 
         results = []
@@ -65,8 +63,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
                         (choice_selected and choice.value in tip.reject_with_defaults)):
                     choice_completed = False
 
-            completed = completed and choice_completed
-            partially_completed = partially_completed or choice_completed
             if choice_completed:
                 score += 1
 
@@ -87,13 +83,11 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         self.student_choices = submissions
 
-        if completed:
-            partially_completed = False
+        completed = False if score <= 0 else True if score >= len(results) else 'partial'
 
         result = {
             'submissions': submissions,
             'completed': completed,
-            'partially_completed': partially_completed,
             'choices': results,
             'message': self.message,
             'weight': self.weight,
