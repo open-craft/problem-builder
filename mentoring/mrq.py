@@ -83,11 +83,11 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         self.student_choices = submissions
 
-        completed = False if score <= 0 else True if score >= len(results) else 'partial'
+        status = 'incorrect' if score <= 0 else 'correct' if score >= len(results) else 'partial'
 
         result = {
             'submissions': submissions,
-            'completed': completed,
+            'status': status,
             'choices': results,
             'message': self.message,
             'weight': self.weight,

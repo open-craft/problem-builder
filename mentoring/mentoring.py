@@ -113,9 +113,9 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         if total_child_weight == 0:
             return (0, 0, 0, 0)
         score = sum(r[1]['score'] * r[1]['weight'] for r in self.student_results) / total_child_weight
-        correct = sum(1 for r in self.student_results if r[1]['completed'] is True)
-        incorrect = sum(1 for r in self.student_results if r[1]['completed'] is False)
-        partially_correct = sum(1 for r in self.student_results if r[1]['completed'] is 'partial')
+        correct = sum(1 for r in self.student_results if r[1]['status'] == 'correct')
+        incorrect = sum(1 for r in self.student_results if r[1]['status'] == 'incorrect')
+        partially_correct = sum(1 for r in self.student_results if r[1]['status'] == 'partial')
 
         return (score, int(round(score * 100)), correct, incorrect, partially_correct)
 
@@ -217,7 +217,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                 child_result = child.submit(submission)
                 submit_results.append([child.name, child_result])
                 child.save()
-                completed = completed and (child_result['completed'] is True)
+                completed = completed and (child_result['status'] == 'correct')
 
         if self.max_attempts_reached:
             message = self.get_message_html('max_attempts_reached')
@@ -303,7 +303,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                     del child_result['tips']
                 self.student_results.append([child.name, child_result])
                 child.save()
-                completed = child_result['completed']
+                completed = child_result['status'] == 'correct'
 
         event_data = {}
 
