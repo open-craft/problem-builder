@@ -25,6 +25,7 @@
 
 import logging
 import uuid
+from collections import namedtuple
 
 from lxml import etree
 from StringIO import StringIO
@@ -54,6 +55,7 @@ def default_xml_content():
 
 # Classes ###########################################################
 
+Score = namedtuple("Score", ["raw", "percentage", "correct", "incorrect", "partially_correct"])
 
 class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     """
@@ -117,7 +119,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         incorrect = sum(1 for r in self.student_results if r[1]['status'] == 'incorrect')
         partially_correct = sum(1 for r in self.student_results if r[1]['status'] == 'partial')
 
-        return (score, int(round(score * 100)), correct, incorrect, partially_correct)
+        return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
     def student_view(self, context):
         fragment, named_children = self.get_children_fragment(
@@ -248,9 +250,8 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             for result in submit_results:
                 self.student_results.append(result)
 
-            (raw_score, score, correct, incorrect, partially_correct) = self.score
             self.runtime.publish(self, 'grade', {
-                'value': raw_score,
+                'value': self.score.raw,
                 'max_value': 1,
             })
 
@@ -259,7 +260,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         self.completed = completed is True
 
-        raw_score = self.score[0]
+        raw_score = self.score.raw
 
         self._publish_event('xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
@@ -307,16 +308,17 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         event_data = {}
 
-        (raw_score, score, correct, incorrect, partially_correct) = self.score
+        score = self.score
+
         if current_child == self.steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             if not self.max_attempts_reached:
                 self.runtime.publish(self, 'grade', {
-                    'value': raw_score,
+                    'value': score.raw,
                     'max_value': 1,
                     'score_type': 'proficiency',
                 })
-                event_data['final_grade'] = raw_score
+                event_data['final_grade'] = score.raw
 
             self.num_attempts += 1
             self.completed = True
@@ -333,10 +335,10 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts,
             'step': self.step,
-            'score': score,
-            'correct_answer': correct,
-            'incorrect_answer': incorrect,
-            'partially_correct_answer': partially_correct,
+            'score': score.percentage,
+            'correct_answer': score.correct,
+            'incorrect_answer': score.incorrect,
+            'partially_correct_answer': score.partially_correct,
         }
 
     @XBlock.json_handler
