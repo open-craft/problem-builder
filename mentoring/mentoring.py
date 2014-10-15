@@ -254,7 +254,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         raw_score = self.score.raw
 
-        self.publish_event_from_python('xblock.mentoring.submitted', {
+        self.publish_event_from_dict('xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
@@ -319,7 +319,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
 
-        self.publish_event_from_python('xblock.mentoring.assessment.submitted', event_data)
+        self.publish_event_from_dict('xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,
