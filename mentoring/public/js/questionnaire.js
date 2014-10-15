@@ -94,7 +94,7 @@ function MCQBlock(runtime, element, mentoring) {
                 var choiceTipsDOM = $('.choice-tips', choiceDOM);
                 var choiceTipsCloseDOM;
 
-                if (result.completed && choiceInputDOM.val() === result.submission) {
+                if (result.status === "correct" && choiceInputDOM.val() === result.submission) {
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                 }
                 else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {

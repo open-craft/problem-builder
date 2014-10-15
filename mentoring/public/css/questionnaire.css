@@ -17,6 +17,7 @@
 }
 
 .mentoring .questionnaire .choice-result.checkmark-correct,
+.mentoring .questionnaire .choice-result.checkmark-partially-correct,
 .mentoring .questionnaire .choice-result.checkmark-incorrect {
     text-align:center;
 }

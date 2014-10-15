@@ -52,31 +52,31 @@ class MCQBlock(QuestionnaireAbstractBlock):
     def submit(self, submission):
         log.debug(u'Received MCQ submission: "%s"', submission)
 
-        completed = True
+        correct = True
         tips_fragments = []
         for tip in self.get_tips():
-            completed = completed and self.is_tip_completed(tip, submission)
+            correct = correct and self.is_tip_correct(tip, submission)
             if submission in tip.display_with_defaults:
                 tips_fragments.append(tip.render())
 
         formatted_tips = render_template('templates/html/tip_choice_group.html', {
             'self': self,
             'tips_fragments': tips_fragments,
-            'completed': completed,
+            'completed': correct,
         })
 
         self.student_choice = submission
         result = {
             'submission': submission,
-            'completed': completed,
+            'status': 'correct' if correct else 'incorrect',
             'tips': formatted_tips,
             'weight': self.weight,
-            'score': 1 if completed else 0,
+            'score': 1 if correct else 0,
         }
         log.debug(u'MCQ submission result: %s', result)
         return result
 
-    def is_tip_completed(self, tip, submission):
+    def is_tip_correct(self, tip, submission):
         if not submission:
             return False
 

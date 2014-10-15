@@ -121,18 +121,18 @@ class AnswerBlock(LightChild, StepMixin):
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
             'student_input': self.student_input,
-            'completed': self.completed,
+            'status': self.status,
             'weight': self.weight,
-            'score': 1 if self.completed else 0,
+            'score': 1 if self.status == 'correct' else 0,
         }
 
     @property
-    def completed(self):
+    def status(self):
         answer_length_ok = self.student_input
         if self.min_characters > 0:
             answer_length_ok = len(self.student_input.strip()) >= self.min_characters
 
-        return bool(self.read_only or answer_length_ok)
+        return 'correct' if (self.read_only or answer_length_ok) else 'incorrect'
 
     def save(self):
         """

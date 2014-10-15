@@ -224,6 +224,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assert_persistent_elements_present(mentoring)
         self.assertIn("Note: if you retake this assessment, only your final score counts.", mentoring.text)
         self.assertIn("You answered 4 questions correctly.", mentoring.text)
+        self.assertIn("You answered 0 questions partially correct.", mentoring.text)
         self.assertIn("You answered 0 questions incorrectly.", mentoring.text)
 
         self.assert_hidden(submit)
