@@ -136,7 +136,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         if (result.completed === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
-        } else if (result.completed) {
+        } else if (result.completed === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');

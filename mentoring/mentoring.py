@@ -304,7 +304,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                     del child_result['tips']
                 self.student_results.append([child.name, child_result])
                 child.save()
-                completed = child_result['status'] == 'correct'
+                completed = child_result['status']
 
         event_data = {}
 
