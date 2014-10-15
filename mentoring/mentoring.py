@@ -25,6 +25,8 @@
 
 import logging
 import uuid
+import re
+
 from collections import namedtuple
 
 from lxml import etree
@@ -48,10 +50,23 @@ from .utils import loader
 log = logging.getLogger(__name__)
 
 
-def default_xml_content():
+def _default_xml_content():
     return loader.render_template(
         'templates/xml/mentoring_default.xml',
         {'url_name': 'mentoring-{}'.format(uuid.uuid4())})
+
+
+def _is_default_xml_content(value):
+    UUID_PATTERN = '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
+    DUMMY_UUID = '12345678-1234-1234-1234-123456789abc'
+
+    expected = _default_xml_content()
+
+    expected = re.sub(UUID_PATTERN, DUMMY_UUID, expected)
+    value = re.sub(UUID_PATTERN, DUMMY_UUID, value)
+
+    return value == expected
+
 
 # Classes ###########################################################
 
@@ -67,6 +82,10 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     ok to continue.
     """
 
+    @staticmethod
+    def is_default_xml_content(value):
+        return _is_default_xml_content(value)
+
     attempted = Boolean(help="Has the student attempted this mentoring step?",
                         default=False, scope=Scope.user_state)
     completed = Boolean(help="Has the student completed this mentoring step?",
@@ -80,7 +99,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=False, scope=Scope.content, enforce_type=True)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
-    xml_content = String(help="XML content", default=default_xml_content(), scope=Scope.content)
+    xml_content = String(help="XML content", default=_default_xml_content, scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.",
                    default=1, scope=Scope.content, enforce_type=True)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions",

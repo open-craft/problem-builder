@@ -86,11 +86,15 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         block = runtime.construct_xblock_from_class(cls, keys)
         cls.init_block_from_node(block, node, node.items())
 
-        xml_content_value = getattr(block, 'xml_content', None)
-        xml_content_field = getattr(block.__class__, 'xml_content', None)
-        default_xml_content = getattr(xml_content_field, 'default', None)
+        def _is_default(value):
+            xml_content_field = getattr(block.__class__, 'xml_content', None)
+            default_value = getattr(xml_content_field, 'default', None)
+            return value == default_value
 
-        if xml_content_value == default_xml_content:
+        is_default = getattr(block, 'is_default_xml_content', _is_default)
+        xml_content = getattr(block, 'xml_content', None)
+
+        if is_default(xml_content):
             block.xml_content = etree.tostring(node)
 
         return block
