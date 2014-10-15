@@ -26,7 +26,7 @@ function AnswerBlock(runtime, element) {
 
             this.clearResult();
 
-            if (result.completed) {
+            if (result.status === "correct") {
                 checkmark.addClass('checkmark-correct icon-ok fa-check');
             }
             else {
