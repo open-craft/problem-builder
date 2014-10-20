@@ -25,6 +25,8 @@
 
 import logging
 import uuid
+import re
+
 from collections import namedtuple
 
 from lxml import etree
@@ -40,7 +42,7 @@ from .header import SharedHeaderBlock
 from .html import HTMLBlock
 from .message import MentoringMessageBlock
 from .step import StepParentMixin
-from .utils import get_scenarios_from_path, load_resource, render_template
+from .utils import loader
 
 
 # Globals ###########################################################
@@ -48,9 +50,22 @@ from .utils import get_scenarios_from_path, load_resource, render_template
 log = logging.getLogger(__name__)
 
 
-def default_xml_content():
-    return render_template('templates/xml/mentoring_default.xml', {
-            'url_name': 'mentoring-{}'.format(uuid.uuid4())})
+def _default_xml_content():
+    return loader.render_template(
+        'templates/xml/mentoring_default.xml',
+        {'url_name': 'mentoring-{}'.format(uuid.uuid4())})
+
+
+def _is_default_xml_content(value):
+    UUID_PATTERN = '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
+    DUMMY_UUID = '12345678-1234-1234-1234-123456789abc'
+
+    expected = _default_xml_content()
+
+    expected = re.sub(UUID_PATTERN, DUMMY_UUID, expected)
+    value = re.sub(UUID_PATTERN, DUMMY_UUID, value)
+
+    return value == expected
 
 
 # Classes ###########################################################
@@ -66,6 +81,11 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     student is a) provided mentoring advices and asked to alter his answer, or b) is given the
     ok to continue.
     """
+
+    @staticmethod
+    def is_default_xml_content(value):
+        return _is_default_xml_content(value)
+
     attempted = Boolean(help="Has the student attempted this mentoring step?",
                         default=False, scope=Scope.user_state)
     completed = Boolean(help="Has the student completed this mentoring step?",
@@ -79,7 +99,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
                                  default=False, scope=Scope.content, enforce_type=True)
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
-    xml_content = String(help="XML content", default=default_xml_content, scope=Scope.content)
+    xml_content = String(help="XML content", default=_default_xml_content, scope=Scope.content)
     weight = Float(help="Defines the maximum total grade of the block.",
                    default=1, scope=Scope.content, enforce_type=True)
     num_attempts = Integer(help="Number of attempts a user has answered for this questions",
@@ -127,7 +147,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             not_instance_of=self.FLOATING_BLOCKS,
         )
 
-        fragment.add_content(render_template('templates/html/mentoring.html', {
+        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
             'self': self,
             'named_children': named_children,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
@@ -145,28 +165,19 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
             )
 
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(load_resource('templates/html/mentoring_attempts.html'), "text/html")
-        fragment.add_resource(load_resource('templates/html/mentoring_grade.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
 
         return fragment
 
-    @XBlock.json_handler
-    def publish_event(self, data, suffix=''):
-        try:
-            event_type = data.pop('event_type')
-        except KeyError as e:
-            return {'result': 'error', 'message': 'Missing event_type in JSON data'}
-
-        return self._publish_event(event_type, data)
-
-    def _publish_event(self, event_type, data):
-        data['user_id'] = self.scope_ids.user_id
-        data['component_id'] = self.url_name
-
-        self.runtime.publish(self, event_type, data)
-        return {'result': 'success'}
+    @property
+    def additional_publish_event_data(self):
+        return {
+            'user_id': self.scope_ids.user_id,
+            'component_id': self.url_name,
+        }
 
     @property
     def title(self):
@@ -262,7 +273,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         raw_score = self.score.raw
 
-        self._publish_event('xblock.mentoring.submitted', {
+        self.publish_event_from_dict('xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
@@ -327,7 +338,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
 
-        self._publish_event('xblock.mentoring.assessment.submitted', event_data)
+        self.publish_event_from_dict('xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,
@@ -383,7 +394,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         Editing view in Studio
         """
         fragment = Fragment()
-        fragment.add_content(render_template('templates/html/mentoring_edit.html', {
+        fragment.add_content(loader.render_template('templates/html/mentoring_edit.html', {
             'self': self,
             'xml_content': self.xml_content,
         }))
@@ -451,4 +462,4 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         """
         Scenarios displayed by the workbench. Load them from external (private) repository
         """
-        return get_scenarios_from_path('templates/xml')
+        return loader.load_scenarios_from_path('templates/xml')

@@ -1,4 +1,4 @@
-from mentoring.test_base import MentoringBaseTest
+from .base_test import MentoringBaseTest
 
 
 class MentoringAssessmentTest(MentoringBaseTest):

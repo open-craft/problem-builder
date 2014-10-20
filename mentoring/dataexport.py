@@ -32,7 +32,7 @@ from xblock.fields import String, Scope
 from xblock.fragment import Fragment
 
 from .models import Answer
-from .utils import list2csv, render_template
+from .utils import list2csv, loader
 
 
 # Globals ###########################################################
@@ -50,7 +50,7 @@ class MentoringDataExportBlock(XBlock):
                           scope=Scope.settings)
 
     def student_view(self, context):
-        html = render_template('templates/html/dataexport.html', {
+        html = loader.render_template('templates/html/dataexport.html', {
             'self': self,
         })
 

@@ -38,6 +38,8 @@ from xblock.core import XBlock
 from xblock.fragment import Fragment
 from xblock.plugin import Plugin
 
+from xblockutils.publish_event import PublishEventMixin
+
 from .models import LightChild as LightChildModel
 
 
@@ -83,7 +85,18 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         log.debug('parse_xml called')
         block = runtime.construct_xblock_from_class(cls, keys)
         cls.init_block_from_node(block, node, node.items())
-        block.xml_content = getattr(block, 'xml_content', '') or etree.tostring(node)
+
+        def _is_default(value):
+            xml_content_field = getattr(block.__class__, 'xml_content', None)
+            default_value = getattr(xml_content_field, 'default', None)
+            return value == default_value
+
+        is_default = getattr(block, 'is_default_xml_content', _is_default)
+        xml_content = getattr(block, 'xml_content', None)
+
+        if is_default(xml_content):
+            block.xml_content = etree.tostring(node)
+
         return block
 
     @classmethod
@@ -166,7 +179,7 @@ class LightChildrenMixin(XBlockWithChildrenFragmentsMixin):
         return fragment, named_child_frags
 
 
-class XBlockWithLightChildren(LightChildrenMixin, XBlock):
+class XBlockWithLightChildren(LightChildrenMixin, XBlock, PublishEventMixin):
     """
     XBlock base class with support for LightChild
     """
