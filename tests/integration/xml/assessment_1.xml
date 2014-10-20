@@ -1,4 +1,4 @@
-<mentoring url_name="mentoring-assessment" display_name="Nav tooltip title" weight="1" mode="assessment">
+<mentoring url_name="mentoring-assessment" display_name="Nav tooltip title" weight="1" mode="assessment" max_attempts="2">
     <title>A Simple Assessment</title>
     <shared-header>
         <p>This paragraph is shared between <strong>all</strong> questions.</p>
