@@ -15,26 +15,24 @@ function MentoringBlock(runtime, element) {
 
     $(document).on("click", function(event, ui) {
         var target = $(event.target);
-        var feedback_box = ".mentoring .feedback";
-        if (target.is(feedback_box)) {
-            return;
+        var question_feedback_selector = ".mentoring .feedback";
+        var item_feedback_parent_selector = '.choice';
+        var item_feedback_selector = ".choice .choice-tips";
+
+        function clickedInside(selector, parent_selector){
+            return target.is(selector) || target.parents(parent_selector).length>0;
         }
 
-        if (target.parents(feedback_box).length>0) {
-            return;
-        }
-
-        $(feedback_box).each(function(i, el) {
-            el = $(el);
-            if (el.is(":hidden")) {
-                return;
-            }
-            el.hide();
-            publish_event({
-                event_type:'xblock.mentoring.feedback.closed',
-                content: el.text()
+        if (!clickedInside(question_feedback_selector, question_feedback_selector)) {
+            $(question_feedback_selector).not(':hidden').each(function (i, el) {
+                $(el).hide();
+                publish_event({event_type: 'xblock.mentoring.feedback.closed', content: $(el).text()});
             });
-        });
+        }
+
+        if (!clickedInside(item_feedback_selector, item_feedback_parent_selector)) {
+            $(item_feedback_selector).not(':hidden').hide();
+        }
     });
 
     function callIfExists(obj, fn) {
