@@ -10,6 +10,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     function cleanAll() {
         // clean checkmark state
         checkmark.removeClass('checkmark-correct icon-ok fa-check');
+        checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
 
         /* hide all children */
