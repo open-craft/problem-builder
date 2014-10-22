@@ -1,3 +1,4 @@
 -e .
 unicodecsv==0.9.4
 -e git://github.com/nosedjango/nosedjango.git@ed7d7f9aa969252ff799ec159f828eaa8c1cbc5a#egg=nosedjango-dev
+-e git://github.com/edx-solutions/xblock-utils.git#egg=xblock-utils
