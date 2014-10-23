@@ -70,7 +70,9 @@ setup(
     packages=['mentoring', 'mentoring.migrations'],
     install_requires=[
         'XBlock',
+        'xblock-utils',
     ],
+    dependency_links = ['http://github.com/edx-solutions/xblock-utils/tarball/master#egg=xblock-utils'],
     entry_points={
         'xblock.v1': BLOCKS,
         'xblock.light_children': BLOCKS_CHILDREN,
