@@ -78,8 +78,8 @@ class MentoringAssessmentTest(MentoringBaseTest):
     def go_to_workbench_main_page(self):
         self.browser.get(self.live_server_url)
 
-    def go_to_assessment_1(self):
-        mentoring = self.go_to_page('Assessment 1')
+    def go_to_assessment(self, number):
+        mentoring = self.go_to_page('Assessment %s' % number)
 
         class Namespace(object):
             pass
@@ -93,15 +93,22 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
         return mentoring, controls
 
-    def at_step_1_freeform_answer(self, mentoring, controls, text_input, result, saved_value=""):
-        self.wait_until_text_in("QUESTION 1", mentoring)
+    @staticmethod
+    def question_text(number):
+        if number:
+            return "QUESTION %s" % number
+        else:
+            return "QUESTION"
+
+    def freeform_answer(self, number, mentoring, controls, text_input, result, saved_value="", last=False):
+        self.wait_until_text_in(self.question_text(number), mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring)
 
         answer = mentoring.find_element_by_css_selector("textarea.answer.editable")
 
         self.assertIn("Please answer the questions below.", mentoring.text)
-        self.assertIn("QUESTION 1", mentoring.text)
+        self.assertIn(self.question_text(number), mentoring.text)
         self.assertIn("What is your goal?", mentoring.text)
 
         self.assertEquals(saved_value, answer.get_attribute("value"))
@@ -114,25 +121,53 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assertEquals(text_input, answer.get_attribute("value"))
 
         self.assert_clickable(controls.submit)
-        self.assert_disabled(controls.next_question)
+        self.ending_controls(controls, last)
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.try_again)
 
         controls.submit.click()
 
-        self.wait_until_clickable(controls.next_question)
+        self.do_submit_wait(controls, last)
         self._assert_checkmark(mentoring, result)
-        controls.next_question.click()
+        self.do_post(controls, last)
 
-    def at_step_2_single_choice_question(self, mentoring, controls, choice_name, result):
-        self.wait_until_text_in("QUESTION 2", mentoring)
+    def ending_controls(self, controls, last):
+        if last:
+            self.assert_hidden(controls.next_question)
+            self.assert_disabled(controls.review)
+        else:
+            self.assert_disabled(controls.next_question)
+            self.assert_hidden(controls.review)
+
+    def selected_controls(self, controls, last):
+        self.assert_clickable(controls.submit)
+        if last:
+            self.assert_hidden(controls.next_question)
+            self.assert_disabled(controls.review)
+        else:
+            self.assert_disabled(controls.next_question)
+            self.assert_hidden(controls.review)
+
+    def do_submit_wait(self, controls, last):
+        if last:
+            self.wait_until_clickable(controls.review)
+        else:
+            self.wait_until_clickable(controls.next_question)
+
+    def do_post(self, controls, last):
+        if last:
+            controls.review.click()
+        else:
+            controls.next_question.click()
+
+    def single_choice_question(self, number, mentoring, controls, choice_name, result, last=False):
+        self.wait_until_text_in(self.question_text(number), mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring)
         self.assertIn("Do you like this MCQ?", mentoring.text)
 
         self.assert_disabled(controls.submit)
-        self.assert_disabled(controls.next_question)
-        self.assert_hidden(controls.review)
+        self.ending_controls(controls, last)
         self.assert_hidden(controls.try_again)
 
         choices = self._GetChoices(mentoring)
@@ -143,25 +178,23 @@ class MentoringAssessmentTest(MentoringBaseTest):
         expected_state[choice_name] = True
         self.assertEquals(choices.state, expected_state)
 
-        self.assert_clickable(controls.submit)
-        self.assert_disabled(controls.next_question)
-        self.assert_hidden(controls.review)
-        self.assert_hidden(controls.try_again)
+        self.selected_controls(controls, last)
 
         controls.submit.click()
 
-        self.wait_until_clickable(controls.next_question)
+        self.do_submit_wait(controls, last)
         self._assert_checkmark(mentoring, result)
-        controls.next_question.click()
 
-    def at_step_3_rating_question(self, mentoring, controls, choice_name, result):
-        self.wait_until_text_in("QUESTION 3", mentoring)
+        self.do_post(controls, last)
+
+    def rating_question(self, number, mentoring, controls, choice_name, result, last=False):
+        self.wait_until_text_in(self.question_text(number), mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring)
         self.assertIn("How much do you rate this MCQ?", mentoring.text)
 
         self.assert_disabled(controls.submit)
-        self.assert_disabled(controls.next_question)
+        self.ending_controls(controls, last)
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.try_again)
 
@@ -177,30 +210,25 @@ class MentoringAssessmentTest(MentoringBaseTest):
         expected_choices[choice_name] = True
         self.assertEquals(choices.state, expected_choices)
 
-        self.assert_clickable(controls.submit)
-        self.assert_disabled(controls.next_question)
-        self.assert_hidden(controls.review)
-        self.assert_hidden(controls.try_again)
+        self.ending_controls(controls, last)
 
         controls.submit.click()
 
-        self.wait_until_clickable(controls.next_question)
+        self.do_submit_wait(controls, last)
         self._assert_checkmark(mentoring, result)
-        controls.next_question.click()
+        self.do_post(controls, last)
 
-    def peek_at_step_4_multiple_choice_question(self, mentoring, controls):
-        self.wait_until_text_in("QUESTION 4", mentoring)
+    def peek_at_multiple_choice_question(self, number, mentoring, controls, last=False):
+        self.wait_until_text_in(self.question_text(number), mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring)
         self.assertIn("What do you like in this MRQ?", mentoring.text)
 
         self.assert_disabled(controls.submit)
-        self.assert_hidden(controls.next_question)
-        self.assert_disabled(controls.review)
-        self.assert_hidden(controls.try_again)
+        self.ending_controls(controls, last)
 
-    def at_step_4_multiple_choice_question(self, mentoring, controls, choice_names, result):
-        self.peek_at_step_4_multiple_choice_question(mentoring, controls)
+    def multiple_choice_question(self, number, mentoring, controls, choice_names, result, last=False):
+        self.peek_at_multiple_choice_question(number, mentoring, controls, last=last)
 
         choices = self._GetChoices(mentoring)
         expected_choices = {
@@ -217,18 +245,15 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
         self.assertEquals(choices.state, expected_choices)
 
-        self.assert_clickable(controls.submit)
-        self.assert_hidden(controls.next_question)
-        self.assert_disabled(controls.review)
-        self.assert_hidden(controls.try_again)
+        self.selected_controls(controls, last)
 
         controls.submit.click()
 
-        self.wait_until_clickable(controls.review)
+        self.do_submit_wait(controls, last)
         self._assert_checkmark(mentoring, result)
         controls.review.click()
 
-    def peek_at_step_5_review(self, mentoring, controls, expected):
+    def peek_at_review(self, mentoring, controls, expected):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), mentoring)
         self.assert_persistent_elements_present(mentoring)
         if expected["num_attempts"] < expected["max_attempts"]:
@@ -243,37 +268,52 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assert_hidden(controls.review)
 
     def test_assessment(self):
-        mentoring, controls = self.go_to_assessment_1()
+        mentoring, controls = self.go_to_assessment(1)
 
-        self.at_step_1_freeform_answer(mentoring, controls, 'This is the answer', CORRECT)
-        self.at_step_2_single_choice_question(mentoring, controls, 'Maybe not', INCORRECT)
-        self.at_step_3_rating_question(mentoring, controls, "5 - Extremely good", CORRECT)
-        self.peek_at_step_4_multiple_choice_question(mentoring, controls)
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT)
+        self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
+        self.rating_question(3, mentoring, controls, "5 - Extremely good", CORRECT)
+        self.peek_at_multiple_choice_question(4, mentoring, controls, last=True)
 
         # see if assessment remembers the current step
         self.go_to_workbench_main_page()
-        mentoring, controls = self.go_to_assessment_1()
+        mentoring, controls = self.go_to_assessment(1)
 
-        self.at_step_4_multiple_choice_question(mentoring, controls, ("Its beauty",), PARTIAL)
+        self.multiple_choice_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
 
         expected_results = {
                 "correct": 2, "partial": 1, "incorrect": 1, "percentage": 63,
                 "num_attempts": 1, "max_attempts": 2}
-        self.peek_at_step_5_review(mentoring, controls, expected_results)
+        self.peek_at_review(mentoring, controls, expected_results)
 
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
 
-        self.at_step_1_freeform_answer(mentoring, controls, 'This is a different answer', CORRECT,
+        self.freeform_answer(1, mentoring, controls, 'This is a different answer', CORRECT,
                 saved_value='This is the answer')
-        self.at_step_2_single_choice_question(mentoring, controls, 'Yes', CORRECT)
-        self.at_step_3_rating_question(mentoring, controls, "1 - Not good at all", INCORRECT)
+        self.single_choice_question(2, mentoring, controls, 'Yes', CORRECT)
+        self.rating_question(3, mentoring, controls, "1 - Not good at all", INCORRECT)
 
         user_selection =  ("Its elegance", "Its beauty", "Its gracefulness")
-        self.at_step_4_multiple_choice_question(mentoring, controls, user_selection, CORRECT)
+        self.multiple_choice_question(4, mentoring, controls, user_selection, CORRECT, last=True)
 
         expected_results = {
                 "correct": 3, "partial": 0, "incorrect": 1, "percentage": 75,
                 "num_attempts": 2, "max_attempts": 2}
-        self.peek_at_step_5_review(mentoring, controls, expected_results)
+        self.peek_at_review(mentoring, controls, expected_results)
         self.assert_disabled(controls.try_again)
+
+    def test_single_question_assessment(self):
+        """
+        No 'Next Question' button on single question assessment.
+        """
+        mentoring, controls = self.go_to_assessment(2)
+        self.single_choice_question(0, mentoring, controls, 'Maybe not', INCORRECT, last=True)
+
+        expected_results = {
+            "correct": 0, "partial": 0, "incorrect": 1, "percentage": 0,
+            "num_attempts": 1, "max_attempts": 2}
+
+        self.peek_at_review(mentoring, controls, expected_results)
+
+        controls.try_again.click()
