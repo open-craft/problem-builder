@@ -39,7 +39,6 @@ from xblock.fragment import Fragment
 from .light_children import XBlockWithLightChildren
 from .title import TitleBlock
 from .header import SharedHeaderBlock
-from .html import HTMLBlock
 from .message import MentoringMessageBlock
 from .step import StepParentMixin
 from .utils import loader
@@ -142,6 +141,9 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
     def student_view(self, context):
+        # Migrate stored data if necessary
+        self.migrate_fields()
+
         fragment, named_children = self.get_children_fragment(
             context, view_name='mentoring_view',
             not_instance_of=self.FLOATING_BLOCKS,
@@ -171,6 +173,18 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         fragment.initialize_js('MentoringBlock')
 
         return fragment
+
+    def migrate_fields(self):
+        """
+        Migrate data stored in the fields, when a format change breaks backward-compatibility with
+        previous data formats
+        """
+        # Partial answers replaced the `completed` with `status` in `self.student_results`
+        if self.student_results and 'completed' in self.student_results[0][1]:
+            # Rename the field and use the new value format (text instead of boolean)
+            for result in self.student_results:
+                result[1]['status'] = 'correct' if result[1]['completed'] else 'incorrect'
+                del result[1]['completed']
 
     @property
     def additional_publish_event_data(self):
