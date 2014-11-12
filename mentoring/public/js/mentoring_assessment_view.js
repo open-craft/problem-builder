@@ -48,7 +48,9 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         displayNextChild();
         tryAgainDOM.hide();
         submitDOM.show();
-        nextDOM.show();
+        if (! isLastChild()) {
+            nextDOM.show();
+        }
     }
 
     function tryAgain() {

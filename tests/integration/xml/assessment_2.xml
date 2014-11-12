@@ -1,0 +1,21 @@
+<mentoring url_name="mentoring-assessment-2" display_name="Nav tooltip title" weight="1" mode="assessment" max_attempts="2">
+    <title>A Simple Assessment</title>
+    <shared-header>
+        <p>This paragraph is shared between <strong>all</strong> questions.</p>
+    </shared-header>
+
+    <html>
+        <p>Please answer the questions below.</p>
+    </html>
+
+    <mcq name="mcq_1_1" type="choices">
+        <question>Do you like this MCQ?</question>
+        <choice value="yes">Yes</choice>
+        <choice value="maybenot">Maybe not</choice>
+        <choice value="understand">I don't understand</choice>
+
+        <tip display="yes">Great!</tip>
+        <tip reject="maybenot">Ah, damn.</tip>
+        <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
+    </mcq>
+</mentoring>
