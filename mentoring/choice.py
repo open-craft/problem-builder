@@ -26,6 +26,7 @@
 import logging
 
 from .light_children import LightChild, Scope, String
+from .utils import loader, ContextConstants
 
 
 # Globals ###########################################################
@@ -41,3 +42,16 @@ class ChoiceBlock(LightChild):
     """
     value = String(help="Value of the choice when selected", scope=Scope.content, default="")
     content = String(help="Human-readable version of the choice value", scope=Scope.content, default="")
+    has_children = True
+
+    def render(self):
+        # return self.content
+        """
+        Returns a fragment containing the formatted tip
+        """
+        fragment, named_children = self.get_children_fragment({ContextConstants.AS_TEMPLATE: False})
+        fragment.add_content(loader.render_template('templates/html/choice.html', {
+            'self': self,
+            'named_children': named_children,
+        }))
+        return self.xblock_container.fragment_text_rewriting(fragment)

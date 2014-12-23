@@ -36,7 +36,7 @@ class AnswerBlockTest(MentoringBaseTest):
 
         # Answer should initially be blank on all instances with the same answer name
         mentoring = self.go_to_page('Answer Edit 2')
-        answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
+        answer1_bis = mentoring.find_element_by_css_selector('textarea')
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer1_bis.get_attribute('value'), '')
         self.assertEqual(answer1_readonly.text, '')
@@ -47,7 +47,7 @@ class AnswerBlockTest(MentoringBaseTest):
         self.assertEqual(header1.text, 'XBlock: Answer Edit 1')
 
         # Check <html> child
-        p = mentoring.find_element_by_css_selector('div.xblock p')
+        p = mentoring.find_element_by_css_selector('p')
         self.assertEqual(p.text, 'This should be displayed in the answer_edit scenario')
 
         # Initial unsubmitted text
@@ -77,7 +77,7 @@ class AnswerBlockTest(MentoringBaseTest):
 
         # Answer content should show on a different instance with the same name
         mentoring = self.go_to_page('Answer Edit 2')
-        answer1_bis = mentoring.find_element_by_css_selector('.xblock textarea')
+        answer1_bis = mentoring.find_element_by_css_selector('textarea')
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer1_bis.get_attribute('value'), 'This is the answer. It has a second statement.')
         self.assertEqual(answer1_readonly.text, 'This is the answer. It has a second statement.')

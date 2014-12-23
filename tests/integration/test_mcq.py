@@ -183,3 +183,21 @@ class MCQBlockTest(MentoringBaseTest):
 
             mentoring.click()
             self.assertFalse(item_feedback_popup.is_displayed())
+
+    def test_mcq_html_choices(self):
+        mentoring = self.go_to_page('Mrq With Html Choices')
+        choices_list = mentoring.find_element_by_css_selector(".choices-list")
+
+        contents = [
+            "<b>Its elegance</b>",
+            "<i>Its beauty</i>",
+            "<strong>Its gracefulness</strong>",
+            '<span style="font-color:red">Its bugs</span>'
+        ]
+
+        for index, expected_content in enumerate(contents):
+            choice_wrapper = choices_list.find_elements_by_css_selector(".choice")[index]
+            choice_label = choice_wrapper.find_element_by_css_selector(".choice-label .choice-text")
+            light_child = choice_label.find_element_by_css_selector(".xblock-light-child")
+            content = light_child.find_element_by_css_selector("div").get_attribute('innerHTML')
+            self.assertEqual(content, expected_content)

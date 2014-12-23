@@ -31,7 +31,7 @@ from .choice import ChoiceBlock
 from .step import StepMixin
 from .light_children import LightChild, Scope, String, Float
 from .tip import TipBlock
-from .utils import loader
+from .utils import loader, ContextConstants
 
 
 # Globals ###########################################################
@@ -75,7 +75,7 @@ class QuestionnaireAbstractBlock(LightChild, StepMixin):
 
     def student_view(self, context=None):
         name = self.__class__.__name__
-        as_template = context.get('as_template', True) if context is not None else True
+        as_template = context.get(ContextConstants.AS_TEMPLATE, True) if context is not None else True
 
         if str(self.type) not in self.valid_types:
             raise ValueError(u'Invalid value for {}.type: `{}`'.format(name, self.type))
