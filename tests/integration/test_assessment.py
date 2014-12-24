@@ -317,3 +317,4 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.peek_at_review(mentoring, controls, expected_results)
 
         controls.try_again.click()
+        self.wait_until_text_in(self.question_text(0), mentoring)
