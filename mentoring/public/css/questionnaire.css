@@ -81,8 +81,8 @@
     line-height: 1.3;
 }
 
-.mentoring .choices-list .choice-text > div.xblock-light-child,
-.mentoring .choices-list .choice-text > div.xblock-light-child > div{
+.mentoring .choices-list .choice-text > .xblock-light-child,
+.mentoring .choices-list .choice-text > .xblock-light-child > .html_child{
     /*
     HTML Light Child content is wrapped in two divs: div.xblock-light-child and just div
     On the other hand, choice are usually rendered inline.

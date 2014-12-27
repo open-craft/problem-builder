@@ -51,6 +51,8 @@ class HTMLBlock(LightChild):
         block.light_children = []
 
         node.tag = 'div'
+        node_classes = (cls for cls in [node.get('class', ''), 'html_child'] if cls)
+        node.set('class', " ".join(node_classes))
         block.content = unicode(etree.tostring(node))
         node.tag = 'html'
 
