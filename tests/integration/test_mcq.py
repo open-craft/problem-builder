@@ -23,12 +23,14 @@
 
 # Imports ###########################################################
 
+import ddt
 from .base_test import MentoringBaseTest
 
 
 # Classes ###########################################################
 
 
+@ddt.ddt
 class MCQBlockTest(MentoringBaseTest):
 
     def _selenium_bug_workaround_scroll_to(self, mcq_legend):
@@ -46,6 +48,10 @@ class MCQBlockTest(MentoringBaseTest):
     def _get_inputs(self, choices):
         return [choice.find_element_by_css_selector('input') for choice in choices]
 
+    def assert_messages_empty(self, messages):
+        self.assertEqual(messages.text, '')
+        self.assertFalse(messages.find_elements_by_xpath('./*'))
+
     def test_mcq_choices_rating(self):
         """
         Mentoring MCQ should display tips according to user choice
@@ -57,8 +63,7 @@ class MCQBlockTest(MentoringBaseTest):
         messages = mentoring.find_element_by_css_selector('.messages')
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
-        self.assertEqual(messages.text, '')
-        self.assertFalse(messages.find_elements_by_xpath('./*'))
+        self.assert_messages_empty(messages)
         self.assertFalse(submit.is_enabled())
 
         mcq1_legend = mcq1.find_element_by_css_selector('legend')
@@ -183,3 +188,49 @@ class MCQBlockTest(MentoringBaseTest):
 
             mentoring.click()
             self.assertFalse(item_feedback_popup.is_displayed())
+
+    def _get_questionnaire_options(self, questionnaire):
+        result = []
+        # this could be a list comprehension, but a bit complicated one - hence explicit loop
+        for choice_wrapper in questionnaire.find_elements_by_css_selector(".choice"):
+            choice_label = choice_wrapper.find_element_by_css_selector(".choice-label .choice-text")
+            light_child = choice_label.find_element_by_css_selector(".xblock-light-child")
+            result.append(light_child.find_element_by_css_selector("div").get_attribute('innerHTML'))
+
+        return result
+
+    @ddt.data(
+        'Mrq With Html Choices',
+        'Mcq With Html Choices'
+    )
+    def test_questionnaire_html_choices(self, page):
+        mentoring = self.go_to_page(page)
+        choices_list = mentoring.find_element_by_css_selector(".choices-list")
+        messages = mentoring.find_element_by_css_selector('.messages')
+
+        expected_options = [
+            "<b>Its elegance</b>",
+            "<i>Its beauty</i>",
+            "<strong>Its gracefulness</strong>",
+            '<span style="font-color:red">Its bugs</span>'
+        ]
+
+        options = self._get_questionnaire_options(choices_list)
+        self.assertEqual(expected_options, options)
+
+        self.assert_messages_empty(messages)
+
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertFalse(submit.is_enabled())
+
+        inputs = choices_list.find_elements_by_css_selector('input.choice-selector')
+        self._selenium_bug_workaround_scroll_to(choices_list)
+        inputs[0].click()
+        inputs[1].click()
+        inputs[2].click()
+
+        self.assertTrue(submit.is_enabled())
+        submit.click()
+        self.wait_until_disabled(submit)
+
+        self.assertIn('Congratulations!', messages.text)

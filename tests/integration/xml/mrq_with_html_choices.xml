@@ -1,0 +1,24 @@
+<vertical_demo>
+    <mentoring url_name="mcq_with_comments" display_name="MRQ Exercise 7" weight="1" enforce_dependency="false">
+        <title>MRQ With Resizable popups</title>
+        <mrq name="mrq_1_1_7" type="choices">
+            <question>What do you like in this MRQ?</question>
+            <choice value="elegance"><html><b>Its elegance</b></html></choice>
+            <choice value="beauty"><html><i>Its beauty</i></html></choice>
+            <choice value="gracefulness"><html><strong>Its gracefulness</strong></html></choice>
+            <choice value="bugs"><html><span style="font-color:red">Its bugs</span></html></choice>
+
+            <tip require="gracefulness" width ="200" height = "200">This MRQ is indeed very graceful</tip>
+            <tip require="elegance" width ="600" height = "800">This is something everyone has to like about this MRQ</tip>
+            <tip require="beauty" width ="400" height = "600">This is something everyone has to like about beauty</tip>
+            <tip reject="bugs" width = "100" height = "200">Nah, there isn\'t any!</tip>
+        </mrq>
+
+        <message type="completed">
+            <html><p>Congratulations!</p></html>
+        </message>
+        <message type="incomplete">
+            <html><p>Still some work to do...</p></html>
+        </message>
+    </mentoring>
+</vertical_demo>

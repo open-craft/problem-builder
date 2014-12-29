@@ -89,3 +89,7 @@ class XBlockWithChildrenFragmentsMixin(object):
         for name, child_fragment in named_children:
             fragment.add_content(child_fragment.content)
         return fragment
+
+
+class ContextConstants(object):
+    AS_TEMPLATE = 'as_template'

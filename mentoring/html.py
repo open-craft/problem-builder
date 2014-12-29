@@ -33,6 +33,7 @@ from .light_children import LightChild, Scope, String
 
 
 # Globals ###########################################################
+from .utils import ContextConstants
 
 log = logging.getLogger(__name__)
 
@@ -50,13 +51,15 @@ class HTMLBlock(LightChild):
         block.light_children = []
 
         node.tag = 'div'
+        node_classes = (cls for cls in [node.get('class', ''), 'html_child'] if cls)
+        node.set('class', " ".join(node_classes))
         block.content = unicode(etree.tostring(node))
         node.tag = 'html'
 
         return block
 
     def student_view(self, context=None):
-        as_template = context.get('as_template', True) if context is not None else True
+        as_template = context.get(ContextConstants.AS_TEMPLATE, True) if context is not None else True
         if as_template:
             return Fragment(u"<script type='text/template' id='{}'>\n{}\n</script>".format(
                 'light-child-template',
