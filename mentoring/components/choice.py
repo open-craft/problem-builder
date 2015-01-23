@@ -23,35 +23,15 @@
 
 # Imports ###########################################################
 
-import logging
-
-from .light_children import LightChild, Scope, String
-from .utils import loader, ContextConstants
-
-
-# Globals ###########################################################
-
-log = logging.getLogger(__name__)
-
+from xblock.core import XBlock
+from xblock.fields import Scope, String
 
 # Classes ###########################################################
 
-class ChoiceBlock(LightChild):
+
+class ChoiceBlock(XBlock):
     """
     Custom choice of an answer for a MCQ/MRQ
     """
     value = String(help="Value of the choice when selected", scope=Scope.content, default="")
     content = String(help="Human-readable version of the choice value", scope=Scope.content, default="")
-    has_children = True
-
-    def render(self):
-        # return self.content
-        """
-        Returns a fragment containing the formatted tip
-        """
-        fragment, named_children = self.get_children_fragment({ContextConstants.AS_TEMPLATE: False})
-        fragment.add_content(loader.render_template('templates/html/choice.html', {
-            'self': self,
-            'named_children': named_children,
-        }))
-        return self.xblock_container.fragment_text_rewriting(fragment)

@@ -481,29 +481,11 @@ Install to the workbench's virtualenv by running the following command form the 
 pip install -r requirements.txt
 ```
 
-In the main XBlock repository, create the following configuration file
-in `workbench/settings_mentoring.py` in the XBlock repository:
-
-```python
-from settings import *
-
-INSTALLED_APPS += ('mentoring',)
-DATABASES['default']['NAME'] = 'workbench.sqlite'
-```
-
-Because this XBlock uses a Django model, you need to sync the database
-before starting the workbench. Run this from the XBlock repository
-root:
-
-```bash
-$ ./manage.py syncdb --settings=workbench.settings_mentoring
-```
-
 Running the workbench
 ---------------------
 
 ```bash
-$ ./manage.py runserver 8000 --settings=workbench.settings_mentoring
+$ ./manage.py runserver 8000
 ```
 
 Access it at [http://localhost:8000/](http://localhost:8000).
@@ -515,13 +497,13 @@ From the xblock-mentoring repository root, run the tests with the
 following command:
 
 ```bash
-$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django
+$ nosetests --with-django
 ```
 
 If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
 
 ```bash
-$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django tests/unit
+$ nosetests --with-django tests/unit
 ```
 
 If you have not installed the xblock-sdk in the active virtualenv,
@@ -542,16 +524,8 @@ $ cat > templates/xml/my_mentoring_scenario.xml
 
 Restart the workbench to take the new scenarios into account.
 
-If you modified a scenario already loaded in the workbench,
-you will also have to purge and rebuild the database:
-
-```bash
-rm workbench.sqlite
-./manage.py syncdb --settings=workbench.settings_mentoring <<<"no"
-```
-
 License
 -------
 
-The Image Explorer XBlock is available under the GNU Affero General
+The Mentoring XBlock is available under the GNU Affero General
 Public License (AGPLv3).

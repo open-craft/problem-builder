@@ -4,17 +4,15 @@
     attempting this step.
   </div>
 
-  {% if self.title or self.header %}
+  {% if title or header %}
   <div class="title">
-    {% if self.title %} <h2 class="main">{{ self.title.content }}</h2> {% endif %}
-    {% if self.header %} <div class="shared-header">{{ self.header.content|safe }}</div> {% endif %}
+    {% if title %} <h2 class="main">{{ title }}</h2> {% endif %}
+    {% if header %} {{ header|safe }} {% endif %}
   </div>
   {% endif %}
 
   <div class="{{self.mode}}-question-block">
-    {% for name, c in named_children %}
-    {{c.body_html|safe}}
-    {% endfor %}
+    {{child_content|safe}}
 
     {% if self.display_submit %}
 

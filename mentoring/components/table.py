@@ -24,22 +24,22 @@
 # Imports ###########################################################
 
 import errno
-import logging
 
-from xblock.fields import Scope
+from xblock.core import XBlock
+from xblock.fields import Scope, String
+from xblock.fragment import Fragment
 
-from .light_children import LightChild, String
-from .utils import loader
-
+from xblockutils.resources import ResourceLoader
+loader = ResourceLoader(__name__)
 
 # Globals ###########################################################
 
-log = logging.getLogger(__name__)
-
+loader = ResourceLoader(__name__)
 
 # Classes ###########################################################
 
-class MentoringTableBlock(LightChild):
+
+class MentoringTableBlock(XBlock):
     """
     Table-type display of information from mentoring blocks
 
@@ -50,11 +50,19 @@ class MentoringTableBlock(LightChild):
     has_children = True
 
     def student_view(self, context):
-        fragment, columns_frags = self.get_children_fragment(context, view_name='mentoring_table_view')
-        f, header_frags = self.get_children_fragment(context, view_name='mentoring_table_header_view')
+        fragment = Fragment()
+        columns_frags = []
+        header_frags = []
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            column_fragment = child.render('mentoring_table_view', context)
+            fragment.add_frag_resources(column_fragment)
+            columns_frags.append((child.name, column_fragment))
+            header_fragment = child.render('mentoring_table_header_view', context)
+            fragment.add_frag_resources(header_fragment)
+            header_frags.append((child.name, header_fragment))
 
-        bg_image_url = self.runtime.local_resource_url(self.xblock_container,
-                                                       'public/img/{}-bg.png'.format(self.type))
+        bg_image_url = self.runtime.local_resource_url(self, 'public/img/{}-bg.png'.format(self.type))
 
         # Load an optional description for the background image, for accessibility
         try:
@@ -72,12 +80,9 @@ class MentoringTableBlock(LightChild):
             'bg_image_url': bg_image_url,
             'bg_image_description': bg_image_description,
         }))
-        fragment.add_css_url(self.runtime.local_resource_url(self.xblock_container,
-                                                             'public/css/mentoring-table.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
-                                                                    'public/js/vendor/jquery-shorten.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self.xblock_container,
-                                                                    'public/js/mentoring-table.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring-table.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/jquery-shorten.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring-table.js'))
         fragment.initialize_js('MentoringTableBlock')
 
         return fragment
@@ -87,47 +92,66 @@ class MentoringTableBlock(LightChild):
         return self.student_view(context)
 
 
-class MentoringTableColumnBlock(LightChild):
+class MentoringTableColumnBlock(XBlock):
     """
     Individual column of a mentoring table
     """
     header = String(help="Header of the column", scope=Scope.content, default=None)
     has_children = True
 
-    def mentoring_table_view(self, context):
-        """
-        The content of the column
-        """
-        fragment, named_children = self.get_children_fragment(
-            context, view_name='mentoring_table_view',
-            not_instance_of=MentoringTableColumnHeaderBlock)
-        fragment.add_content(loader.render_template('templates/html/mentoring-table-column.html', {
+    def _render_table_view(self, view_name, id_filter, template, context):
+        fragment = Fragment()
+        named_children = []
+        for child_id in self.children:
+            if id_filter(child_id):
+                child = self.runtime.get_block(child_id)
+                child_frag = child.render(view_name, context)
+                fragment.add_frag_resources(child_frag)
+                named_children.append((child.name, child_frag))
+
+        fragment.add_content(loader.render_template('templates/html/{}'.format(template), {
             'self': self,
             'named_children': named_children,
         }))
         return fragment
+
+    def mentoring_table_view(self, context):
+        """
+        The content of the column
+        """
+        return self._render_table_view(
+            view_name='mentoring_table_view',
+            id_filter=lambda child_id: not issubclass(self._get_child_class(child_id), MentoringTableColumnHeaderBlock),
+            template='mentoring-table-column.html',
+            context=context
+        )
 
     def mentoring_table_header_view(self, context):
         """
         The content of the column's header
         """
-        fragment, named_children = self.get_children_fragment(
-            context, view_name='mentoring_table_header_view',
-            instance_of=MentoringTableColumnHeaderBlock)
-        fragment.add_content(loader.render_template('templates/html/mentoring-table-header.html', {
-            'self': self,
-            'named_children': named_children,
-        }))
-        return fragment
+        return self._render_table_view(
+            view_name='mentoring_table_header_view',
+            id_filter=lambda child_id: issubclass(self._get_child_class(child_id), MentoringTableColumnHeaderBlock),
+            template='mentoring-table-header.html',
+            context=context
+        )
+
+    def _get_child_class(self, child_id):
+        """
+        Helper method to get a block type from a usage_id without loading the block.
+
+        Returns the XBlock subclass of the child block.
+        """
+        type_name = self.runtime.id_reader.get_block_type(self.runtime.id_reader.get_definition_id(child_id))
+        return self.runtime.load_block_type(type_name)
 
 
-class MentoringTableColumnHeaderBlock(LightChild):
+class MentoringTableColumnHeaderBlock(XBlock):
     """
     Header content for a given column
     """
     content = String(help="Body of the header", scope=Scope.content, default='')
 
     def mentoring_table_header_view(self, context):
-        fragment = super(MentoringTableColumnHeaderBlock, self).children_view(context)
-        fragment.add_content(unicode(self.content))
-        return fragment
+        return Fragment(unicode(self.content))

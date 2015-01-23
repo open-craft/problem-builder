@@ -25,10 +25,10 @@
 
 import logging
 
+from xblock.fields import Scope, String
+from xblockutils.resources import ResourceLoader
 
-from .light_children import Scope, String
 from .questionnaire import QuestionnaireAbstractBlock
-from .utils import loader
 
 
 # Globals ###########################################################
@@ -59,7 +59,7 @@ class MCQBlock(QuestionnaireAbstractBlock):
             if submission in tip.display_with_defaults:
                 tips_fragments.append(tip.render())
 
-        formatted_tips = loader.render_template('templates/html/tip_choice_group.html', {
+        formatted_tips = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
             'self': self,
             'tips_fragments': tips_fragments,
             'completed': correct,

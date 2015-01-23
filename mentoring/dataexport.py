@@ -30,17 +30,29 @@ from webob import Response
 from xblock.core import XBlock
 from xblock.fields import String, Scope
 from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
 
-from .models import Answer
-from .utils import list2csv, loader
 
 
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
 
+# Utils ###########################################################
+
+def list2csv(row):
+    """
+    Convert a list to a CSV string (single row)
+    """
+    f = StringIO()
+    writer = unicodecsv.writer(f, encoding='utf-8')
+    writer.writerow(row)
+    f.seek(0)
+    return f.read()
+
 
 # Classes ###########################################################
+
 
 class MentoringDataExportBlock(XBlock):
     """
@@ -50,7 +62,7 @@ class MentoringDataExportBlock(XBlock):
                           scope=Scope.settings)
 
     def student_view(self, context):
-        html = loader.render_template('templates/html/dataexport.html', {
+        html = ResourceLoader(__name__).render_template('templates/html/dataexport.html', {
             'self': self,
         })
 

@@ -11,7 +11,7 @@
         <input class="choice-selector" type="checkbox" name="{{ self.name }}"
                value="{{ choice.value }}"
                {% if choice.value in self.student_choices %} checked{% endif %} />
-        {{ choice.render.body_html|safe }}
+        {{ choice.content|safe }}
       </label>
       <div class="choice-tips"></div>
     </div>

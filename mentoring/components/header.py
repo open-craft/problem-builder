@@ -22,38 +22,13 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import logging
-from lxml import etree
-from xblock.fragment import Fragment
-from .light_children import LightChild, Scope, String
-
-log = logging.getLogger(__name__)
+from .html import HTMLBlock
 
 
-class SharedHeaderBlock(LightChild):
+class SharedHeaderBlock(HTMLBlock):
     """
     A shared header block shown under the title.
     """
+    FIXED_CSS_CLASS = "shared-header"
 
-    content = String(help="HTML content of the header", scope=Scope.content, default="")
-
-    @classmethod
-    def init_block_from_node(cls, block, node, attr):
-        block.light_children = []
-
-        node.tag = 'div'
-        block.content = unicode(etree.tostring(node))
-        node.tag = 'shared-header'
-
-        return block
-
-    def student_view(self, context=None):
-        return Fragment(u"<script type='text/template' id='light-child-template'>\n{}\n</script>".format(
-            self.content
-        ))
-
-    def mentoring_view(self, context=None):
-        return self.student_view(context)
-
-    def mentoring_table_view(self, context=None):
-        return self.student_view(context)
+    pass

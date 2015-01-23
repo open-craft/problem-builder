@@ -45,29 +45,27 @@ def package_data(pkg, root_list):
 BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
     'mentoring-dataexport = mentoring:MentoringDataExportBlock',
-]
 
-BLOCKS_CHILDREN = [
-    'mentoring-table = mentoring:MentoringTableBlock',
-    'column = mentoring:MentoringTableColumnBlock',
-    'header = mentoring:MentoringTableColumnHeaderBlock',
-    'answer = mentoring:AnswerBlock',
-    'quizz = mentoring:MCQBlock',
-    'mcq = mentoring:MCQBlock',
-    'mrq = mentoring:MRQBlock',
-    'message = mentoring:MentoringMessageBlock',
-    'tip = mentoring:TipBlock',
-    'choice = mentoring:ChoiceBlock',
-    'html = mentoring:HTMLBlock',
-    'title = mentoring:TitleBlock',
-    'shared-header = mentoring:SharedHeaderBlock',
+    'mentoring-table = mentoring.components:MentoringTableBlock',
+    'column = mentoring.components:MentoringTableColumnBlock',
+    'header = mentoring.components:MentoringTableColumnHeaderBlock',
+    'answer = mentoring.components:AnswerBlock',
+    'quizz = mentoring.components:MCQBlock',
+    'mcq = mentoring.components:MCQBlock',
+    'mrq = mentoring.components:MRQBlock',
+    'message = mentoring.components:MentoringMessageBlock',
+    'tip = mentoring.components:TipBlock',
+    'choice = mentoring.components:ChoiceBlock',
+    'html = mentoring.components:HTMLBlock',
+    'title = mentoring.components:TitleBlock',
+    'shared-header = mentoring.components:SharedHeaderBlock',
 ]
 
 setup(
     name='xblock-mentoring',
     version='0.1',
     description='XBlock - Mentoring',
-    packages=['mentoring', 'mentoring.migrations'],
+    packages=['mentoring'],
     install_requires=[
         'XBlock',
         'xblock-utils',
@@ -75,7 +73,6 @@ setup(
     dependency_links = ['http://github.com/edx-solutions/xblock-utils/tarball/master#egg=xblock-utils'],
     entry_points={
         'xblock.v1': BLOCKS,
-        'xblock.light_children': BLOCKS_CHILDREN,
     },
-    package_data=package_data("mentoring", ["static", "templates", "public", "migrations"]),
+    package_data=package_data("mentoring", ["static", "templates", "public"]),
 )

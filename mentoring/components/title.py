@@ -23,18 +23,13 @@
 
 # Imports ###########################################################
 
-import logging
-
-from .light_children import LightChild, Scope, String
-
-# Globals ###########################################################
-
-log = logging.getLogger(__name__)
+from xblock.core import XBlock
+from xblock.fields import Scope, String
 
 # Classes ###########################################################
 
 
-class TitleBlock(LightChild):
+class TitleBlock(XBlock):
     """
     A simple html representation of a title, with the mentoring weight.
     """

@@ -23,16 +23,11 @@
 
 # Imports ###########################################################
 
-import logging
 
-from .light_children import LightChild, Scope, String
-from .utils import loader
-
-
-# Globals ###########################################################
-
-log = logging.getLogger(__name__)
-
+from xblock.core import XBlock
+from xblock.fields import Scope, String
+from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
 
 # Functions #########################################################
 
@@ -48,7 +43,7 @@ def commas_to_set(commas_str):
 # Classes ###########################################################
 
 
-class TipBlock(LightChild):
+class TipBlock(XBlock):
     """
     Each choice can define a tip depending on selection
     """
@@ -64,12 +59,18 @@ class TipBlock(LightChild):
         """
         Returns a fragment containing the formatted tip
         """
-        fragment, named_children = self.get_children_fragment({})
-        fragment.add_content(loader.render_template('templates/html/tip.html', {
+        fragment = Fragment()
+        child_content = u""
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            child_fragment = child.render('mentoring_view', {})
+            fragment.add_frag_resources(child_fragment)
+            child_content += child_fragment.content
+        fragment.add_content(ResourceLoader(__name__).render_template('templates/html/tip.html', {
             'self': self,
-            'named_children': named_children,
+            'child_content': child_content,
         }))
-        return self.xblock_container.fragment_text_rewriting(fragment)
+        return fragment  # TODO: fragment_text_rewriting
 
     @property
     def display_with_defaults(self):

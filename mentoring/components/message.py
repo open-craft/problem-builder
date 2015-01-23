@@ -23,20 +23,17 @@
 
 # Imports ###########################################################
 
-import logging
-
-from .light_children import LightChild, Scope, String
-from .utils import loader
 
 
-# Globals ###########################################################
-
-log = logging.getLogger(__name__)
+from xblock.core import XBlock
+from xblock.fields import Scope, String
+from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
 
 
 # Classes ###########################################################
 
-class MentoringMessageBlock(LightChild):
+class MentoringMessageBlock(XBlock):
     """
     A message which can be conditionally displayed at the mentoring block level,
     for example upon completion of the block
@@ -46,9 +43,15 @@ class MentoringMessageBlock(LightChild):
     has_children = True
 
     def mentoring_view(self, context=None):
-        fragment, named_children = self.get_children_fragment(context, view_name='mentoring_view')
-        fragment.add_content(loader.render_template('templates/html/message.html', {
+        fragment = Fragment()
+        child_content = u""
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            child_fragment = child.render('mentoring_view', context)
+            fragment.add_frag_resources(child_fragment)
+            child_content += child_fragment.content
+        fragment.add_content(ResourceLoader(__name__).render_template('templates/html/message.html', {
             'self': self,
-            'named_children': named_children,
+            'child_content': child_content,
         }))
         return fragment
