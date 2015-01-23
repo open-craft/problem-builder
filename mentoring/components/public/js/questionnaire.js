@@ -61,10 +61,12 @@ function MessageView(element, mentoring) {
     };
 }
 
-function MCQBlock(runtime, element, mentoring) {
+function MCQBlock(runtime, element) {
     return {
         mode: null,
+        mentoring: null,
         init: function(options) {
+            this.mentoring = options.mentoring;
             this.mode = options.mode;
             $('input[type=radio]', element).on('change', options.onChange);
         },
@@ -82,6 +84,8 @@ function MCQBlock(runtime, element, mentoring) {
         handleSubmit: function(result) {
             if (this.mode === 'assessment')
                 return;
+
+            mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
             messageView.clearResult();
@@ -123,7 +127,7 @@ function MCQBlock(runtime, element, mentoring) {
         },
 
         clearResult: function() {
-            MessageView(element, mentoring).clearResult();
+            MessageView(element, this.mentoring).clearResult();
         },
 
         validate: function(){
@@ -136,7 +140,9 @@ function MCQBlock(runtime, element, mentoring) {
 function MRQBlock(runtime, element, mentoring) {
     return {
         mode: null,
+        mentoring: null,
         init: function(options) {
+            this.mentoring = options.mentoring;
             this.mode = options.mode;
             $('input[type=checkbox]', element).on('change', options.onChange);
         },
@@ -154,6 +160,8 @@ function MRQBlock(runtime, element, mentoring) {
         handleSubmit: function(result, options) {
             if (this.mode === 'assessment')
                 return;
+
+            mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
 
@@ -193,7 +201,7 @@ function MRQBlock(runtime, element, mentoring) {
         },
 
         clearResult: function() {
-            MessageView(element, mentoring).clearResult();
+            MessageView(element, this.mentoring).clearResult();
         },
 
         validate: function(){

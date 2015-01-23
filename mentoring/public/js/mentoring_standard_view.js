@@ -73,23 +73,12 @@ function MentoringStandardView(runtime, element, mentoring) {
             onChange: onChange
         };
 
-        mentoring.displayChildren(options);
+        mentoring.initChildren(options);
 
         mentoring.renderAttempts();
         mentoring.renderDependency();
 
         validateXBlock();
-    }
-
-    function handleRefreshResults(results) {
-        $(element).html(results.html);
-        mentoring.readChildren();
-        initXBlockView();
-    }
-
-    function refreshXBlock() {
-        var handlerUrl = runtime.handlerUrl(element, 'view');
-        $.post(handlerUrl, '{}').success(handleRefreshResults);
     }
 
     // validate all children
@@ -100,8 +89,7 @@ function MentoringStandardView(runtime, element, mentoring) {
 
         if ((data.max_attempts > 0) && (data.num_attempts >= data.max_attempts)) {
             is_valid = false;
-        }
-        else {
+        } else {
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
                 if (child && child.name !== undefined) {
@@ -112,15 +100,12 @@ function MentoringStandardView(runtime, element, mentoring) {
                 }
             }
         }
-
         if (!is_valid) {
             submitDOM.attr('disabled','disabled');
-        }
-        else {
+        } else {
             submitDOM.removeAttr("disabled");
         }
     }
 
-    // We need to manually refresh, XBlocks are currently loaded together with the section
-    refreshXBlock(element);
+    initXBlockView();
 }
