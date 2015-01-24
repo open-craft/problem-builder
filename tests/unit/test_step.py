@@ -1,22 +1,25 @@
-import copy
 import unittest
-from mock import MagicMock, Mock
 
-from xblock.field_data import DictFieldData
-
-from mentoring import MentoringBlock
-from mentoring.step import StepMixin, StepParentMixin
+from mentoring.components.step import StepMixin, StepParentMixin
+from mock import Mock
 
 
 class Parent(StepParentMixin):
-    def get_children_objects(self):
-        return list(self._children)
+    @property
+    def children(self):
+        """ Return an ID for each of our chilren"""
+        return range(0, len(self._children))
+
+    @property
+    def runtime(self):
+        return Mock(get_block=lambda i: self._children[i])
 
     def _set_children_for_test(self, *children):
         self._children = children
-        for child in self._children:
+        for idx, child in enumerate(self._children):
             try:
-                child.parent = self
+                child.get_parent = lambda: self
+                child.scope_ids = Mock(usage_id=idx)
             except AttributeError:
                 pass
 
@@ -36,7 +39,8 @@ class TestStepMixin(unittest.TestCase):
         step = Step()
         block._children = [step]
 
-        self.assertSequenceEqual(block.steps, [step])
+        steps = [block.runtime.get_block(cid) for cid in block.steps]
+        self.assertSequenceEqual(steps, [step])
 
     def test_only_steps_are_returned(self):
         block = Parent()
@@ -44,7 +48,8 @@ class TestStepMixin(unittest.TestCase):
         step2 = Step()
         block._set_children_for_test(step1, 1, "2", "Step", NotAStep(), False, step2, NotAStep())
 
-        self.assertSequenceEqual(block.steps, [step1, step2])
+        steps = [block.runtime.get_block(cid) for cid in block.steps]
+        self.assertSequenceEqual(steps, [step1, step2])
 
     def test_proper_number_is_returned_for_step(self):
         block = Parent()
@@ -79,37 +84,3 @@ class TestStepMixin(unittest.TestCase):
 
         self.assertFalse(step1.lonely_step)
         self.assertFalse(step2.lonely_step)
-
-
-class TestFieldMigration(unittest.TestCase):
-    """
-    Test mentoring fields data migration
-    """
-
-    def test_partial_completion_status_migration(self):
-        """
-        Changed `completed` to `status` in `self.student_results` to accomodate partial responses
-        """
-        # Instantiate a mentoring block with the old format
-        student_results = [
-            [ u'goal',
-                {   u'completed': True,
-                    u'score': 1,
-                    u'student_input': u'test',
-                    u'weight': 1}],
-            [ u'mcq_1_1',
-                {   u'completed': False,
-                    u'score': 0,
-                    u'submission': u'maybenot',
-                    u'weight': 1}],
-        ]
-        mentoring = MentoringBlock(MagicMock(), DictFieldData({'student_results': student_results}), Mock())
-        self.assertEqual(copy.deepcopy(student_results), mentoring.student_results)
-
-        migrated_student_results = copy.deepcopy(student_results)
-        migrated_student_results[0][1]['status'] = 'correct'
-        migrated_student_results[1][1]['status'] = 'incorrect'
-        del migrated_student_results[0][1]['completed']
-        del migrated_student_results[1][1]['completed']
-        mentoring.migrate_fields()
-        self.assertEqual(migrated_student_results, mentoring.student_results)

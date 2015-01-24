@@ -23,11 +23,10 @@
 
 # Imports ###########################################################
 
-
+from lxml import etree
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float
 from xblock.fragment import Fragment
-
 from xblockutils.resources import ResourceLoader
 
 from .choice import ChoiceBlock
@@ -67,7 +66,7 @@ class QuestionnaireAbstractBlock(XBlock, StepMixin):
                 block.question = xml_child.text
             elif xml_child.tag == 'message' and xml_child.get('type') == 'on-submit':
                 block.message = (xml_child.text or '').strip()
-            else:
+            elif xml_child.tag is not etree.Comment:
                 block.runtime.add_node_as_child(block, xml_child, id_generator)
 
         return block

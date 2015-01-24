@@ -1,6 +1,4 @@
 <span class="choice-text">
   {% if self.content %}{{ self.content }}{% endif %}
-  {% for name, c in named_children %}
-    {{c.body_html|safe}}
-  {% endfor %}
+  {{ child_content|safe }}
 </span>

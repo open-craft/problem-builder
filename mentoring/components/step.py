@@ -9,10 +9,12 @@ class StepParentMixin(object):
         Generator returning the usage_id for all of this XBlock's 
         children that are "Steps"
         """
+        step_ids = []
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if isinstance(child, StepMixin):
-                yield child_id
+                step_ids.append(child_id)
+        return step_ids
 
 
 class StepMixin(object):
