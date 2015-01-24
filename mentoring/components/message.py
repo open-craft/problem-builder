@@ -25,33 +25,17 @@
 
 
 
-from xblock.core import XBlock
+from .common import BlockWithContent
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
-from xblockutils.resources import ResourceLoader
 
 
 # Classes ###########################################################
 
-class MentoringMessageBlock(XBlock):
+class MentoringMessageBlock(BlockWithContent):
     """
     A message which can be conditionally displayed at the mentoring block level,
     for example upon completion of the block
     """
+    TEMPLATE = 'templates/html/message.html'
     content = String(help="Message to display upon completion", scope=Scope.content, default="")
     type = String(help="Type of message", scope=Scope.content, default="completed")
-    has_children = True
-
-    def mentoring_view(self, context=None):
-        fragment = Fragment()
-        child_content = u""
-        for child_id in self.children:
-            child = self.runtime.get_block(child_id)
-            child_fragment = child.render('mentoring_view', context)
-            fragment.add_frag_resources(child_fragment)
-            child_content += child_fragment.content
-        fragment.add_content(ResourceLoader(__name__).render_template('templates/html/message.html', {
-            'self': self,
-            'child_content': child_content,
-        }))
-        return fragment

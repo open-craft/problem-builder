@@ -23,11 +23,8 @@
 
 # Imports ###########################################################
 
-
-from xblock.core import XBlock
+from .common import BlockWithContent
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
-from xblockutils.resources import ResourceLoader
 
 # Functions #########################################################
 
@@ -43,34 +40,18 @@ def commas_to_set(commas_str):
 # Classes ###########################################################
 
 
-class TipBlock(XBlock):
+class TipBlock(BlockWithContent):
     """
     Each choice can define a tip depending on selection
     """
+    TEMPLATE = 'templates/html/tip.html'
+
     content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
     display = String(help="List of choices to display the tip for", scope=Scope.content, default=None)
     reject = String(help="List of choices to reject", scope=Scope.content, default=None)
     require = String(help="List of choices to require", scope=Scope.content, default=None)
     width = String(help="Width of the tip popup", scope=Scope.content, default='')
     height = String(help="Height of the tip popup", scope=Scope.content, default='')
-    has_children = True
-
-    def render(self):
-        """
-        Returns a fragment containing the formatted tip
-        """
-        fragment = Fragment()
-        child_content = u""
-        for child_id in self.children:
-            child = self.runtime.get_block(child_id)
-            child_fragment = child.render('mentoring_view', {})
-            fragment.add_frag_resources(child_fragment)
-            child_content += child_fragment.content
-        fragment.add_content(ResourceLoader(__name__).render_template('templates/html/tip.html', {
-            'self': self,
-            'child_content': child_content,
-        }))
-        return fragment  # TODO: fragment_text_rewriting
 
     @property
     def display_with_defaults(self):

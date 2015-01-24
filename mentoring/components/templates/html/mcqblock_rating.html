@@ -35,7 +35,7 @@
     <div class="choice">
       <div class="choice-result fa icon-2x"></div>
       <label><input type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == '{{ choice.value }}' %} checked{% endif %} />
-          {{ choice.render.content|safe }}
+          {{ choice.get_html|safe }}
       </label>
       <div class="choice-tips"></div>
     </div>

@@ -1,6 +1,6 @@
 <div class="tip-choice-group">
-  {% for tip_fragment in tips_fragments %}
-    {{ tip_fragment.body_html|safe }}
+  {% for tip_html in tips_html %}
+    {{ tip_html|safe }}
   {% endfor %}
 </div>
 <div class="close icon-remove-sign fa fa-times-circle"></div>

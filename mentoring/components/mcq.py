@@ -53,15 +53,15 @@ class MCQBlock(QuestionnaireAbstractBlock):
         log.debug(u'Received MCQ submission: "%s"', submission)
 
         correct = True
-        tips_fragments = []
+        tips_html = []
         for tip in self.get_tips():
             correct = correct and self.is_tip_correct(tip, submission)
             if submission in tip.display_with_defaults:
-                tips_fragments.append(tip.render())
+                tips_html.append(tip.get_html())
 
         formatted_tips = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
             'self': self,
-            'tips_fragments': tips_fragments,
+            'tips_html': tips_html,
             'completed': correct,
         })
 

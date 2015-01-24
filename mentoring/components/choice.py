@@ -23,36 +23,17 @@
 
 # Imports ###########################################################
 
-from xblock.core import XBlock
+from .common import BlockWithContent
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
-from xblockutils.resources import ResourceLoader
 
 # Classes ###########################################################
 
 
-class ChoiceBlock(XBlock):
+class ChoiceBlock(BlockWithContent):
     """
     Custom choice of an answer for a MCQ/MRQ
     """
+    TEMPLATE = 'templates/html/choice.html'
+
     value = String(help="Value of the choice when selected", scope=Scope.content, default="")
     content = String(help="Human-readable version of the choice value", scope=Scope.content, default="")
-
-    has_children = True
-
-    def render(self):
-        """
-        Returns a fragment containing the formatted choice
-        """
-        fragment = Fragment()
-        child_content = u""
-        for child_id in self.children:
-            child = self.runtime.get_block(child_id)
-            child_fragment = child.render('mentoring_view', {})
-            fragment.add_frag_resources(child_fragment)
-            child_content += child_fragment.content
-        fragment.add_content(ResourceLoader(__name__).render_template('templates/html/choice.html', {
-            'self': self,
-            'child_content': child_content,
-        }))
-        return fragment  # TODO: fragment_text_rewriting

@@ -52,11 +52,11 @@ class MRQBlock(QuestionnaireAbstractBlock):
         results = []
         for choice in self.custom_choices:
             choice_completed = True
-            choice_tips_fragments = []
+            choice_tips_html = []
             choice_selected = choice.value in submissions
             for tip in self.get_tips():
                 if choice.value in tip.display_with_defaults:
-                    choice_tips_fragments.append(tip.render())
+                    choice_tips_html.append(tip.get_html())
 
                 if ((not choice_selected and choice.value in tip.require_with_defaults) or
                         (choice_selected and choice.value in tip.reject_with_defaults)):
@@ -74,7 +74,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
                 choice_result['completed'] = choice_completed
                 choice_result['tips'] = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
                     'self': self,
-                    'tips_fragments': choice_tips_fragments,
+                    'tips_html': choice_tips_html,
                     'completed': choice_completed,
                 })
 
