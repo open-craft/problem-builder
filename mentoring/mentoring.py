@@ -37,7 +37,7 @@ from xblock.fragment import Fragment
 from components.title import TitleBlock
 from components.header import SharedHeaderBlock
 from components.message import MentoringMessageBlock
-from components.step import StepParentMixin
+from components.step import StepParentMixin, StepMixin
 
 from xblockutils.resources import ResourceLoader
 
@@ -375,8 +375,9 @@ class MentoringBlock(XBlock, StepParentMixin):
 
         completed = False
         current_child = None
-        children = [child for child in self.get_children_objects()
-                    if not isinstance(child, self.FLOATING_BLOCKS)]
+        children = [self.runtime.get_block(child_id) for child_id in self.children]
+        children = [child for child in children if not isinstance(child, self.FLOATING_BLOCKS)]
+        steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
 
         for child in children:
             if child.name and child.name in submissions:
@@ -385,7 +386,7 @@ class MentoringBlock(XBlock, StepParentMixin):
                 # Assessment mode doesn't allow to modify answers
                 # This will get the student back at the step he should be
                 current_child = child
-                step = children.index(child)
+                step = steps.index(child)
                 if self.step > step or self.max_attempts_reached:
                     step = self.step
                     completed = False
@@ -397,14 +398,13 @@ class MentoringBlock(XBlock, StepParentMixin):
                 if 'tips' in child_result:
                     del child_result['tips']
                 self.student_results.append([child.name, child_result])
-                child.save()
                 completed = child_result['status']
 
         event_data = {}
 
         score = self.score
 
-        if current_child == self.steps[-1]:
+        if current_child == steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             if not self.max_attempts_reached:
                 self.runtime.publish(self, 'grade', {
@@ -421,7 +421,7 @@ class MentoringBlock(XBlock, StepParentMixin):
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
 
-        self.publish_event_from_dict('xblock.mentoring.assessment.submitted', event_data)
+        self.runtime.publish(self, 'xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,

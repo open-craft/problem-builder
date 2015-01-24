@@ -10,7 +10,7 @@ function MentoringStandardView(runtime, element, mentoring) {
         $.each(results.submitResults || [], function(index, submitResult) {
             var input = submitResult[0];
             var result = submitResult[1];
-            var child = mentoring.getChildByName(element, input);
+            var child = mentoring.getChildByName(input);
             var options = {
                 max_attempts: results.max_attempts,
                 num_attempts: results.num_attempts

@@ -12,6 +12,7 @@ function MentoringBlock(runtime, element) {
         children: children,
         initChildren: initChildren,
         getChildByName: getChildByName,
+        hideAllChildren: hideAllChildren,
         step: step,
         publish_event: publish_event
     };
@@ -87,7 +88,13 @@ function MentoringBlock(runtime, element) {
         }
     }
 
-    function getChildByName(element, name) {
+    function hideAllChildren() {
+        for (var i=0; i < children.length; i++) {
+            $(children[i].element).hide();
+        }
+    }
+
+    function getChildByName(name) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             if (child && child.name === name) {
