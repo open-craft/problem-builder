@@ -176,6 +176,7 @@ class MCQBlockTest(MentoringBaseTest):
             choice_wrapper = choices_list.find_elements_by_css_selector(".choice")[index]
             choice_wrapper.find_element_by_css_selector(".choice-selector").click()  # clicking on actual radio button
             submit.click()
+            self.wait_until_disabled(submit)
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
             choice_wrapper.click()
             item_feedback_icon.click()  # clicking on item feedback icon
@@ -193,9 +194,8 @@ class MCQBlockTest(MentoringBaseTest):
         result = []
         # this could be a list comprehension, but a bit complicated one - hence explicit loop
         for choice_wrapper in questionnaire.find_elements_by_css_selector(".choice"):
-            choice_label = choice_wrapper.find_element_by_css_selector(".choice-label .choice-text")
-            light_child = choice_label.find_element_by_css_selector(".xblock-light-child")
-            result.append(light_child.find_element_by_css_selector("div").get_attribute('innerHTML'))
+            choice_label = choice_wrapper.find_element_by_css_selector("label .choice-text")
+            result.append(choice_label.find_element_by_css_selector("div.html_child").get_attribute('innerHTML'))
 
         return result
 

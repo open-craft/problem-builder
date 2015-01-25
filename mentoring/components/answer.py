@@ -155,6 +155,7 @@ class AnswerBlock(XBlock, StepMixin):
             if not self.student_input_shared.get(course_id):
                 self.student_input_shared[course_id] = {}
             self.student_input_shared[course_id][self.name] = self.student_input_raw
+            self.save()
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
             'student_input': self.student_input,

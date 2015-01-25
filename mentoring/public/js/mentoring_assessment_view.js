@@ -13,6 +13,9 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
 
+        // Clear all selections
+        $('input[type=radio], input[type=checkbox]').prop('checked', false);
+
         // hide all children
         mentoring.hideAllChildren();
 

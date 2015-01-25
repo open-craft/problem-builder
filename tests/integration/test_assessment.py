@@ -3,7 +3,7 @@ from .base_test import MentoringBaseTest
 CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
 
 class MentoringAssessmentTest(MentoringBaseTest):
-    def _selenium_bug_workaround_scroll_to(self, mentoring):
+    def _selenium_bug_workaround_scroll_to(self, mentoring, question):
         """Workaround for selenium bug:
 
         Some version of Selenium has a bug that prevents scrolling
@@ -20,8 +20,9 @@ class MentoringAssessmentTest(MentoringBaseTest):
         hopefully, this gives us enough room for the full step with the
         control buttons to fit.
         """
+        self.browser.execute_script("$('header.banner').remove();")  # Hide the Workbench header which can obscure other elements we need
         controls = mentoring.find_element_by_css_selector("div.submit")
-        title = mentoring.find_element_by_css_selector("h3.question-title")
+        title = question.find_element_by_css_selector("h3.question-title")
         controls.click()
         title.click()
 
@@ -45,8 +46,8 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assertFalse(elem.is_enabled())
 
     class _GetChoices(object):
-        def __init__(self, mentoring, selector=".choices"):
-            self._mcq = mentoring.find_element_by_css_selector(selector)
+        def __init__(self, question, selector=".choices"):
+            self._mcq = question.find_element_by_css_selector(selector)
 
         @property
         def text(self):
@@ -101,9 +102,9 @@ class MentoringAssessmentTest(MentoringBaseTest):
             return "QUESTION"
 
     def freeform_answer(self, number, mentoring, controls, text_input, result, saved_value="", last=False):
-        self.wait_until_text_in(self.question_text(number), mentoring)
+        question = self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring)
+        self._selenium_bug_workaround_scroll_to(mentoring, question)
 
         answer = mentoring.find_element_by_css_selector("textarea.answer.editable")
 
@@ -161,16 +162,17 @@ class MentoringAssessmentTest(MentoringBaseTest):
             controls.next_question.click()
 
     def single_choice_question(self, number, mentoring, controls, choice_name, result, last=False):
-        self.wait_until_text_in(self.question_text(number), mentoring)
+        question = self.expect_question_visible(number, mentoring)
+
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring)
-        self.assertIn("Do you like this MCQ?", mentoring.text)
+
+        self.assertIn("Do you like this MCQ?", question.text)
 
         self.assert_disabled(controls.submit)
         self.ending_controls(controls, last)
         self.assert_hidden(controls.try_again)
 
-        choices = self._GetChoices(mentoring)
+        choices = self._GetChoices(question)
         expected_state = {"Yes": False, "Maybe not": False, "I don't understand": False}
         self.assertEquals(choices.state, expected_state)
 
@@ -188,9 +190,9 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.do_post(controls, last)
 
     def rating_question(self, number, mentoring, controls, choice_name, result, last=False):
-        self.wait_until_text_in(self.question_text(number), mentoring)
+        question = self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring)
+        self._selenium_bug_workaround_scroll_to(mentoring, question)
         self.assertIn("How much do you rate this MCQ?", mentoring.text)
 
         self.assert_disabled(controls.submit)
@@ -218,19 +220,37 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self._assert_checkmark(mentoring, result)
         self.do_post(controls, last)
 
-    def peek_at_multiple_choice_question(self, number, mentoring, controls, last=False):
+    def expect_question_visible(self, number, mentoring):
+        question_text = self.question_text(number)
         self.wait_until_text_in(self.question_text(number), mentoring)
+        question_div = None
+        for xblock_div in mentoring.find_elements_by_css_selector('div.xblock-v1'):
+            header_text = xblock_div.find_elements_by_css_selector('h3.question-title')
+            if header_text and question_text in header_text[0].text:
+                question_div = xblock_div
+                self.assertTrue(xblock_div.is_displayed())
+            elif header_text:
+                self.assertFalse(xblock_div.is_displayed())
+            # else this is an HTML block or something else, not a question step
+
+        self.assertIsNotNone(question_div)
+        return question_div
+
+    def peek_at_multiple_choice_question(self, number, mentoring, controls, last=False):
+        question = self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring)
+        self._selenium_bug_workaround_scroll_to(mentoring, question)
         self.assertIn("What do you like in this MRQ?", mentoring.text)
 
         self.assert_disabled(controls.submit)
         self.ending_controls(controls, last)
 
-    def multiple_choice_question(self, number, mentoring, controls, choice_names, result, last=False):
-        self.peek_at_multiple_choice_question(number, mentoring, controls, last=last)
+        return question
 
-        choices = self._GetChoices(mentoring)
+    def multiple_choice_question(self, number, mentoring, controls, choice_names, result, last=False):
+        question = self.peek_at_multiple_choice_question(number, mentoring, controls, last=last)
+
+        choices = self._GetChoices(question)
         expected_choices = {
             "Its elegance": False,
             "Its beauty": False,
