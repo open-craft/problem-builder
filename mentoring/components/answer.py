@@ -26,7 +26,7 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Boolean, Float, Integer, Reference, String
+from xblock.fields import Scope, Boolean, Dict, Float, Integer, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from .step import StepMixin
@@ -47,15 +47,20 @@ class AnswerBlock(XBlock, StepMixin):
     Must be included as a child of a mentoring block. Answers are persisted as django model instances
     to make them searchable and referenceable across xblocks.
     """
+    name = String(
+        help="The ID of this block. Should be unique unless you want the answer to be used in multiple places.",
+        default="",
+        scope=Scope.content
+    )
     read_only = Boolean(
         help="Display as a read-only field",
         default=False,
         scope=Scope.content
     )
-    default_from = Reference(
+    default_from = String(
         help="If specified, get the default value from this answer.",
         default=None,
-        scope=Scope.settings
+        scope=Scope.content
     )
     min_characters = Integer(
         help="Minimum number of characters allowed for the answer",
@@ -78,6 +83,10 @@ class AnswerBlock(XBlock, StepMixin):
         scope=Scope.user_state,
         default=""
     )
+    # Shared student input - share answers among all Answer blocks in the course with the same name 
+    student_input_shared = Dict(
+        scope=Scope.preferences,
+    )
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
@@ -95,11 +104,18 @@ class AnswerBlock(XBlock, StepMixin):
 
         return block
 
+    def _get_course_id(self):
+        """ Get a course ID if available """
+        return getattr(self.runtime, 'course_id', 'all')
+
     @property
     def student_input(self):
         """
         The student input value, or a default which may come from another block.
         """
+        course_id = self._get_course_id()
+        if self.name and self.name in self.student_input_shared.get(course_id, {}):
+            self.student_input_raw = self.student_input_shared[course_id][self.name]
         student_input = self.student_input_raw
 
         # Default value can be set from another answer's current value
@@ -135,6 +151,10 @@ class AnswerBlock(XBlock, StepMixin):
     def submit(self, submission):
         if not self.read_only:
             self.student_input_raw = submission[0]['value'].strip()
+            course_id = self._get_course_id()
+            if not self.student_input_shared.get(course_id):
+                self.student_input_shared[course_id] = {}
+            self.student_input_shared[course_id][self.name] = self.student_input_raw
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
             'student_input': self.student_input,
