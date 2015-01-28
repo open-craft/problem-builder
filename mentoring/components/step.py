@@ -17,6 +17,7 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
+from .utils import child_isinstance
 
 
 class StepParentMixin(object):
@@ -27,15 +28,9 @@ class StepParentMixin(object):
     @property
     def steps(self):
         """
-        Generator returning the usage_id for all of this XBlock's
-        children that are "Steps"
+        Get the usage_ids of all of this XBlock's children that are "Steps"
         """
-        step_ids = []
-        for child_id in self.children:
-            child = self.runtime.get_block(child_id)
-            if isinstance(child, StepMixin):
-                step_ids.append(child_id)
-        return step_ids
+        return [child_id for child_id in self.children if child_isinstance(self, child_id, StepMixin)]
 
 
 class StepMixin(object):

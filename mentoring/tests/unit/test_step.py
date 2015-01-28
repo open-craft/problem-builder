@@ -12,7 +12,11 @@ class Parent(StepParentMixin):
 
     @property
     def runtime(self):
-        return Mock(get_block=lambda i: self._children[i])
+        return Mock(
+            get_block=lambda i: self._children[i],
+            load_block_type=lambda i: type(self._children[i]),
+            id_reader=Mock(get_definition_id=lambda i: i, get_block_type=lambda i: i)
+        )
 
     def _set_children_for_test(self, *children):
         self._children = children
@@ -24,7 +28,11 @@ class Parent(StepParentMixin):
                 pass
 
 
-class Step(StepMixin):
+class BaseClass(object):
+    pass
+
+
+class Step(BaseClass, StepMixin):
     def __init__(self):
         pass
 

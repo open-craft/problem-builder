@@ -25,6 +25,8 @@
 
 import errno
 
+from .utils import child_isinstance
+
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
@@ -120,7 +122,7 @@ class MentoringTableColumnBlock(XBlock):
         """
         return self._render_table_view(
             view_name='mentoring_table_view',
-            id_filter=lambda child_id: not issubclass(self._get_child_class(child_id), MentoringTableColumnHeaderBlock),
+            id_filter=lambda child_id: not child_isinstance(self, child_id, MentoringTableColumnHeaderBlock),
             template='mentoring-table-column.html',
             context=context
         )
@@ -131,19 +133,10 @@ class MentoringTableColumnBlock(XBlock):
         """
         return self._render_table_view(
             view_name='mentoring_table_header_view',
-            id_filter=lambda child_id: issubclass(self._get_child_class(child_id), MentoringTableColumnHeaderBlock),
+            id_filter=lambda child_id: child_isinstance(self, child_id, MentoringTableColumnHeaderBlock),
             template='mentoring-table-header.html',
             context=context
         )
-
-    def _get_child_class(self, child_id):
-        """
-        Helper method to get a block type from a usage_id without loading the block.
-
-        Returns the XBlock subclass of the child block.
-        """
-        type_name = self.runtime.id_reader.get_block_type(self.runtime.id_reader.get_definition_id(child_id))
-        return self.runtime.load_block_type(type_name)
 
 
 class MentoringTableColumnHeaderBlock(XBlock):
