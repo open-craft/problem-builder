@@ -1,6 +1,8 @@
 Mentoring XBlock
 ----------------
 
+[![Build Status](https://travis-ci.org/open-craft/xblock-mentoring.svg?branch=master)](https://travis-ci.org/open-craft/xblock-mentoring)
+
 This XBlock allows to automate the workflow of real-life mentoring,
 within an edX course.
 
