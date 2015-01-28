@@ -34,9 +34,7 @@ from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 
-from components.title import TitleBlock
-from components.header import SharedHeaderBlock
-from components.message import MentoringMessageBlock
+from components import TitleBlock, SharedHeaderBlock, MentoringMessageBlock
 from components.step import StepParentMixin, StepMixin
 
 from xblockutils.resources import ResourceLoader
@@ -162,7 +160,7 @@ class MentoringBlock(XBlock, StepParentMixin):
     @property
     def score(self):
         """Compute the student score taking into account the weight of each step."""
-        weights = [float(self.runtime.get_block(step_id).weight) for step_id in self.steps]
+        weights = (float(self.runtime.get_block(step_id).weight) for step_id in self.steps)
         total_child_weight = sum(weights)
         if total_child_weight == 0:
             return (0, 0, 0, 0)
@@ -177,25 +175,24 @@ class MentoringBlock(XBlock, StepParentMixin):
         # Migrate stored data if necessary
         self.migrate_fields()
 
-        title = ""
-        header = ""
 
         fragment = Fragment()
+        title = u""
+        header = u""
         child_content = u""
+
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if isinstance(child, TitleBlock):
                 title = child.content
-                continue
             elif isinstance(child, SharedHeaderBlock):
                 header = child.render('mentoring_view', context).content
-                continue
             elif isinstance(child, MentoringMessageBlock):
-                # TODO
-                continue
-            child_fragment = child.render('mentoring_view', context)
-            fragment.add_frag_resources(child_fragment)
-            child_content += child_fragment.content
+                pass  # TODO
+            else:
+                child_fragment = child.render('mentoring_view', context)
+                fragment.add_frag_resources(child_fragment)
+                child_content += child_fragment.content
 
         fragment.add_content(loader.render_template('templates/html/mentoring.html', {
             'self': self,
@@ -205,17 +202,9 @@ class MentoringBlock(XBlock, StepParentMixin):
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring.css'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        if self.is_assessment:
-            fragment.add_javascript_url(
-                self.runtime.local_resource_url(self, 'public/js/mentoring_assessment_view.js')
-            )
-        else:
-            fragment.add_javascript_url(
-                self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js')
-            )
-
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        js_file = 'public/js/mentoring_{}_view.js'.format('assessment' if self.is_assessment else 'standard')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, js_file))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")

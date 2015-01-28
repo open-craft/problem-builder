@@ -44,11 +44,10 @@ def list2csv(row):
     """
     Convert a list to a CSV string (single row)
     """
-    f = StringIO()
-    writer = unicodecsv.writer(f, encoding='utf-8')
-    writer.writerow(row)
-    f.seek(0)
-    return f.read()
+    with StringIO() as f:
+        writer = unicodecsv.writer(f, encoding='utf-8')
+        writer.writerow(row)
+        return f.getvalue()
 
 
 # Classes ###########################################################

@@ -30,7 +30,6 @@ from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 
 from xblockutils.resources import ResourceLoader
-loader = ResourceLoader(__name__)
 
 # Globals ###########################################################
 
