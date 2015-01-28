@@ -1,0 +1,9 @@
+[REPORTS]
+reports=no
+include-ids=yes
+
+[FORMAT]
+max-line-length=120
+
+[MESSAGES CONTROL]
+disable=invalid-name

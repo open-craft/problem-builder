@@ -16,16 +16,16 @@ class TestFieldMigration(unittest.TestCase):
         """
         # Instantiate a mentoring block with the old format
         student_results = [
-            [ u'goal',
-                {   u'completed': True,
-                    u'score': 1,
-                    u'student_input': u'test',
-                    u'weight': 1}],
-            [ u'mcq_1_1',
-                {   u'completed': False,
-                    u'score': 0,
-                    u'submission': u'maybenot',
-                    u'weight': 1}],
+            [u'goal',
+                {u'completed': True,
+                 u'score': 1,
+                 u'student_input': u'test',
+                 u'weight': 1}],
+            [u'mcq_1_1',
+                {u'completed': False,
+                 u'score': 0,
+                 u'submission': u'maybenot',
+                 u'weight': 1}],
         ]
         mentoring = MentoringBlock(MagicMock(), DictFieldData({'student_results': student_results}), Mock())
         self.assertEqual(copy.deepcopy(student_results), mentoring.student_results)

@@ -28,6 +28,7 @@ from xblock.fields import Scope, String
 
 # Functions #########################################################
 
+
 def commas_to_set(commas_str):
     """
     Converts a comma-separated string to a set

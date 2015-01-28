@@ -23,13 +23,11 @@
 
 # Imports ###########################################################
 
-
-
 from .common import BlockWithContent
 from xblock.fields import Scope, String
 
-
 # Classes ###########################################################
+
 
 class MentoringMessageBlock(BlockWithContent):
     """

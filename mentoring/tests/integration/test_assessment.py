@@ -2,6 +2,7 @@ from .base_test import MentoringBaseTest
 
 CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
 
+
 class MentoringAssessmentTest(MentoringBaseTest):
     def _selenium_bug_workaround_scroll_to(self, mentoring, question):
         """Workaround for selenium bug:
@@ -20,7 +21,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
         hopefully, this gives us enough room for the full step with the
         control buttons to fit.
         """
-        self.browser.execute_script("$('header.banner').remove();")  # Hide the Workbench header which can obscure other elements we need
         controls = mentoring.find_element_by_css_selector("div.submit")
         title = question.find_element_by_css_selector("h3.question-title")
         controls.click()
@@ -41,10 +41,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assertIn("A Simple Assessment", mentoring.text)
         self.assertIn("This paragraph is shared between all questions.", mentoring.text)
 
-    def assert_disabled(self, elem):
-        self.assertTrue(elem.is_displayed())
-        self.assertFalse(elem.is_enabled())
-
     class _GetChoices(object):
         def __init__(self, question, selector=".choices"):
             self._mcq = question.find_element_by_css_selector(selector)
@@ -60,7 +56,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
                 for choice in self._mcq.find_elements_by_css_selector(".choice")}
 
         def select(self, text):
-            state = {}
             for choice in self._mcq.find_elements_by_css_selector(".choice"):
                 if choice.text == text:
                     choice.find_element_by_css_selector("input").click()
@@ -74,7 +69,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
         for name, count in states.items():
             self.assertEqual(len(mentoring.find_elements_by_css_selector(".checkmark-{}".format(name))), count)
-
 
     def go_to_workbench_main_page(self):
         self.browser.get(self.live_server_url)
@@ -302,24 +296,27 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.multiple_choice_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
 
         expected_results = {
-                "correct": 2, "partial": 1, "incorrect": 1, "percentage": 63,
-                "num_attempts": 1, "max_attempts": 2}
+            "correct": 2, "partial": 1, "incorrect": 1, "percentage": 63,
+            "num_attempts": 1, "max_attempts": 2
+        }
         self.peek_at_review(mentoring, controls, expected_results)
 
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
 
-        self.freeform_answer(1, mentoring, controls, 'This is a different answer', CORRECT,
-                saved_value='This is the answer')
+        self.freeform_answer(
+            1, mentoring, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
+        )
         self.single_choice_question(2, mentoring, controls, 'Yes', CORRECT)
         self.rating_question(3, mentoring, controls, "1 - Not good at all", INCORRECT)
 
-        user_selection =  ("Its elegance", "Its beauty", "Its gracefulness")
+        user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
         self.multiple_choice_question(4, mentoring, controls, user_selection, CORRECT, last=True)
 
         expected_results = {
-                "correct": 3, "partial": 0, "incorrect": 1, "percentage": 75,
-                "num_attempts": 2, "max_attempts": 2}
+            "correct": 3, "partial": 0, "incorrect": 1, "percentage": 75,
+            "num_attempts": 2, "max_attempts": 2
+        }
         self.peek_at_review(mentoring, controls, expected_results)
         self.assert_disabled(controls.try_again)
 
@@ -332,7 +329,8 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
         expected_results = {
             "correct": 0, "partial": 0, "incorrect": 1, "percentage": 0,
-            "num_attempts": 1, "max_attempts": 2}
+            "num_attempts": 1, "max_attempts": 2
+        }
 
         self.peek_at_review(mentoring, controls, expected_results)
 

@@ -71,8 +71,9 @@ class MRQBlock(QuestionnaireAbstractBlock):
             }
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
+                loader = ResourceLoader(__name__)
                 choice_result['completed'] = choice_completed
-                choice_result['tips'] = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
+                choice_result['tips'] = loader.render_template('templates/html/tip_choice_group.html', {
                     'self': self,
                     'tips_html': choice_tips_html,
                     'completed': choice_completed,

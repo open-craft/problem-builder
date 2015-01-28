@@ -24,8 +24,10 @@
 # Imports ###########################################################
 
 import logging
+import unicodecsv
 
 from itertools import groupby
+from StringIO import StringIO
 from webob import Response
 from xblock.core import XBlock
 from xblock.fields import String, Scope
@@ -33,12 +35,12 @@ from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 
 
-
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
 
 # Utils ###########################################################
+
 
 def list2csv(row):
     """
@@ -84,16 +86,18 @@ class MentoringDataExportBlock(XBlock):
         return response
 
     def get_csv(self):
-        course_id = self.xmodule_runtime.course_id
+        # course_id = self.xmodule_runtime.course_id
 
-        answers = Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
+        # TODO: Fix this method - not working yet with rewrite away from LightChildren.
+        raise NotImplementedError
+        answers = []  # Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
         answers_names = answers.values_list('name', flat=True).distinct().order_by('name')
 
         # Header line
         yield list2csv([u'student_id'] + list(answers_names))
 
         if answers_names:
-            for k, student_answers in groupby(answers, lambda x: x.student_id):
+            for _, student_answers in groupby(answers, lambda x: x.student_id):
                 row = []
                 next_answer_idx = 0
                 for answer in student_answers:

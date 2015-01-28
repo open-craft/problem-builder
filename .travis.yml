@@ -9,6 +9,6 @@ install:
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/test-requirements.txt"
     - "pip install -r requirements.txt"
-script: python run_tests.py --with-coverage --cover-package=mentoring
+script: python run_tests.py --with-coverage --cover-package=mentoring && pep8 mentoring --max-line-length=120 && pylint mentoring --disable=all --enable=function-redefined,undefined-variable,unused-variable
 notifications:
   email: false

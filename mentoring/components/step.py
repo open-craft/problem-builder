@@ -18,6 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
+
 class StepParentMixin(object):
     """
     An XBlock mixin for a parent block containing Step children
@@ -26,7 +27,7 @@ class StepParentMixin(object):
     @property
     def steps(self):
         """
-        Generator returning the usage_id for all of this XBlock's 
+        Generator returning the usage_id for all of this XBlock's
         children that are "Steps"
         """
         step_ids = []

@@ -31,6 +31,7 @@ from xblock.fragment import Fragment
 
 # Classes ###########################################################
 
+
 class HTMLBlock(XBlock):
     """
     Render content as HTML

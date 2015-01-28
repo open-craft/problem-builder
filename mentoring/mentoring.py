@@ -86,8 +86,11 @@ class MentoringBlock(XBlock, StepParentMixin):
     )
     url_name = String(
         help="Name of the current step, used for URL building",
-        default='mentoring-default',  # TODO in future: set this to xblock.fields.UNIQUE_ID and remove self.url_name_with_default
+        default='mentoring-default',
         scope=Scope.content
+        # TODO in future: set this field's default to xblock.fields.UNIQUE_ID
+        # and remove self.url_name_with_default. Waiting until UNIQUE_ID support
+        # is available in edx-platform's pinned version of xblock. (See XBlock PR 249)
     )
     enforce_dependency = Boolean(
         help="Should the next step be the current block to complete?",
@@ -175,7 +178,6 @@ class MentoringBlock(XBlock, StepParentMixin):
         # Migrate stored data if necessary
         self.migrate_fields()
 
-
         fragment = Fragment()
         title = u""
         header = u""
@@ -258,7 +260,7 @@ class MentoringBlock(XBlock, StepParentMixin):
         Returns True if the student needs to complete another step before being able to complete
         the current one, and False otherwise
         """
-        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name_with_default)  # TODO: Fix
+        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name_with_default)
 
     @property
     def next_step_url(self):

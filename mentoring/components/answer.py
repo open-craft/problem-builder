@@ -83,7 +83,7 @@ class AnswerBlock(XBlock, StepMixin):
         scope=Scope.user_state,
         default=""
     )
-    # Shared student input - share answers among all Answer blocks in the course with the same name 
+    # Shared student input - share answers among all Answer blocks in the course with the same name
     student_input_shared = Dict(
         scope=Scope.preferences,
     )
