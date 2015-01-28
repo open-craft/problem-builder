@@ -73,7 +73,7 @@ class AnswerBlock(XBlock, StepMixin):
         default=""
     )
     weight = Float(
-        help="Defines the maximum total grade of the light child block.",
+        help="Defines the maximum total grade of the answer block.",
         default=1,
         scope=Scope.settings,
         enforce_type=True

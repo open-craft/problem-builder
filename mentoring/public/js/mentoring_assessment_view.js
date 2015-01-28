@@ -14,7 +14,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
 
         // Clear all selections
-        $('input[type=radio], input[type=checkbox]').prop('checked', false);
+        $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
 
         // hide all children
         mentoring.hideAllChildren();
@@ -79,13 +79,18 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         reviewDOM.bind('click', renderGrade);
         tryAgainDOM.bind('click', tryAgain);
 
-        active_child = mentoring.step-1;
+        active_child = mentoring.step;
 
         var options = {
             onChange: onChange
         };
         mentoring.initChildren(options);
-        displayNextChild();
+        if (isDone()) {
+            renderGrade();
+        } else {
+            active_child = active_child - 1;
+            displayNextChild();
+        }
 
         mentoring.renderDependency();
     }
