@@ -24,8 +24,6 @@
 # Imports ###########################################################
 
 import logging
-import uuid
-import re
 
 from collections import namedtuple
 
@@ -36,42 +34,24 @@ from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 
-from .light_children import XBlockWithLightChildren
-from .title import TitleBlock
-from .header import SharedHeaderBlock
-from .message import MentoringMessageBlock
-from .step import StepParentMixin
-from .utils import loader
+from components import TitleBlock, SharedHeaderBlock, MentoringMessageBlock
+from components.step import StepParentMixin, StepMixin
 
+from xblockutils.resources import ResourceLoader
 
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
+loader = ResourceLoader(__name__)
 
-
-def _default_xml_content():
-    return loader.render_template(
-        'templates/xml/mentoring_default.xml',
-        {'url_name': 'mentoring-{}'.format(uuid.uuid4())})
-
-
-def _is_default_xml_content(value):
-    UUID_PATTERN = '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}'
-    DUMMY_UUID = '12345678-1234-1234-1234-123456789abc'
-
-    expected = _default_xml_content()
-
-    expected = re.sub(UUID_PATTERN, DUMMY_UUID, expected)
-    value = re.sub(UUID_PATTERN, DUMMY_UUID, value)
-
-    return value == expected
-
+default_xml_content = loader.render_template('templates/xml/mentoring_default.xml', {})
 
 # Classes ###########################################################
 
 Score = namedtuple("Score", ["raw", "percentage", "correct", "incorrect", "partially_correct"])
 
-class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
+
+class MentoringBlock(XBlock, StepParentMixin):
     """
     An XBlock providing mentoring capabilities
 
@@ -83,45 +63,98 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
     @staticmethod
     def is_default_xml_content(value):
-        return _is_default_xml_content(value)
+        return value == default_xml_content
 
-    attempted = Boolean(help="Has the student attempted this mentoring step?",
-                        default=False, scope=Scope.user_state)
-    completed = Boolean(help="Has the student completed this mentoring step?",
-                        default=False, scope=Scope.user_state)
-    next_step = String(help="url_name of the next step the student must complete (global to all blocks)",
-                       default='mentoring_first', scope=Scope.preferences)
-    followed_by = String(help="url_name of the step after the current mentoring block in workflow",
-                         default=None, scope=Scope.content)
-    url_name = String(help="Name of the current step, used for URL building",
-                      default='mentoring-default', scope=Scope.content)
-    enforce_dependency = Boolean(help="Should the next step be the current block to complete?",
-                                 default=False, scope=Scope.content, enforce_type=True)
+    # Content
+    MENTORING_MODES = ('standard', 'assessment')
+    mode = String(
+        help="Mode of the mentoring. 'standard' or 'assessment'",
+        default='standard',
+        scope=Scope.content,
+        values=MENTORING_MODES
+    )
+    followed_by = String(
+        help="url_name of the step after the current mentoring block in workflow.",
+        default=None,
+        scope=Scope.content
+    )
+    max_attempts = Integer(
+        help="Number of max attempts for this questions",
+        default=0,
+        scope=Scope.content,
+        enforce_type=True
+    )
+    url_name = String(
+        help="Name of the current step, used for URL building",
+        default='mentoring-default',
+        scope=Scope.content
+        # TODO in future: set this field's default to xblock.fields.UNIQUE_ID
+        # and remove self.url_name_with_default. Waiting until UNIQUE_ID support
+        # is available in edx-platform's pinned version of xblock. (See XBlock PR 249)
+    )
+    enforce_dependency = Boolean(
+        help="Should the next step be the current block to complete?",
+        default=False,
+        scope=Scope.content,
+        enforce_type=True
+    )
     display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
-    xml_content = String(help="XML content", default=_default_xml_content, scope=Scope.content)
-    weight = Float(help="Defines the maximum total grade of the block.",
-                   default=1, scope=Scope.content, enforce_type=True)
-    num_attempts = Integer(help="Number of attempts a user has answered for this questions",
-                           default=0, scope=Scope.user_state, enforce_type=True)
-    max_attempts = Integer(help="Number of max attempts for this questions", default=0,
-                           scope=Scope.content, enforce_type=True)
-    mode = String(help="Mode of the mentoring. 'standard' or 'assessment'",
-                  default='standard', scope=Scope.content)
-    step = Integer(help="Keep track of the student assessment progress.",
-                   default=0, scope=Scope.user_state, enforce_type=True)
-    student_results = List(help="Store results of student choices.", default=[],
-                           scope=Scope.user_state)
+    xml_content = String(help="XML content", default=default_xml_content, scope=Scope.content)
 
-    display_name = String(help="Display name of the component", default="Mentoring XBlock",
-                          scope=Scope.settings)
+    # Settings
+    weight = Float(
+        help="Defines the maximum total grade of the block.",
+        default=1,
+        scope=Scope.settings,
+        enforce_type=True
+    )
+    display_name = String(
+        help="Display name of the component",
+        default="Mentoring XBlock",
+        scope=Scope.settings
+    )
+
+    # User state
+    attempted = Boolean(
+        help="Has the student attempted this mentoring step?",
+        default=False,
+        scope=Scope.user_state
+    )
+    completed = Boolean(
+        help="Has the student completed this mentoring step?",
+        default=False,
+        scope=Scope.user_state
+    )
+    num_attempts = Integer(
+        help="Number of attempts a user has answered for this questions",
+        default=0,
+        scope=Scope.user_state,
+        enforce_type=True
+    )
+    step = Integer(
+        help="Keep track of the student assessment progress.",
+        default=0,
+        scope=Scope.user_state,
+        enforce_type=True
+    )
+    student_results = List(
+        help="Store results of student choices.",
+        default=[],
+        scope=Scope.user_state
+    )
+
+    # Global user state
+    next_step = String(
+        help="url_name of the next step the student must complete (global to all blocks)",
+        default='mentoring_first',
+        scope=Scope.preferences
+    )
+
     icon_class = 'problem'
     has_score = True
-
-    MENTORING_MODES = ('standard', 'assessment')
+    has_children = True
 
     FLOATING_BLOCKS = (TitleBlock, MentoringMessageBlock, SharedHeaderBlock)
-
-    FIELDS_TO_INIT = ('xml_content',)
 
     @property
     def is_assessment(self):
@@ -129,8 +162,9 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
     @property
     def score(self):
-        """Compute the student score taking into account the light child weight."""
-        total_child_weight = sum(float(step.weight) for step in self.steps)
+        """Compute the student score taking into account the weight of each step."""
+        weights = (float(self.runtime.get_block(step_id).weight) for step_id in self.steps)
+        total_child_weight = sum(weights)
         if total_child_weight == 0:
             return (0, 0, 0, 0)
         score = sum(r[1]['score'] * r[1]['weight'] for r in self.student_results) / total_child_weight
@@ -144,28 +178,35 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         # Migrate stored data if necessary
         self.migrate_fields()
 
-        fragment, named_children = self.get_children_fragment(
-            context, view_name='mentoring_view',
-            not_instance_of=self.FLOATING_BLOCKS,
-        )
+        fragment = Fragment()
+        title = u""
+        header = u""
+        child_content = u""
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if isinstance(child, TitleBlock):
+                title = child.content
+            elif isinstance(child, SharedHeaderBlock):
+                header = child.render('mentoring_view', context).content
+            elif isinstance(child, MentoringMessageBlock):
+                pass  # TODO
+            else:
+                child_fragment = child.render('mentoring_view', context)
+                fragment.add_frag_resources(child_fragment)
+                child_content += child_fragment.content
 
         fragment.add_content(loader.render_template('templates/html/mentoring.html', {
             'self': self,
-            'named_children': named_children,
+            'title': title,
+            'header': header,
+            'child_content': child_content,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring.css'))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        if self.is_assessment:
-            fragment.add_javascript_url(
-                self.runtime.local_resource_url(self, 'public/js/mentoring_assessment_view.js')
-            )
-        else:
-            fragment.add_javascript_url(
-                self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js')
-            )
-
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        js_file = 'public/js/mentoring_{}_view.js'.format('assessment' if self.is_assessment else 'standard')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, js_file))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
@@ -190,7 +231,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     def additional_publish_event_data(self):
         return {
             'user_id': self.scope_ids.user_id,
-            'component_id': self.url_name,
+            'component_id': self.url_name_with_default,
         }
 
     @property
@@ -219,7 +260,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         Returns True if the student needs to complete another step before being able to complete
         the current one, and False otherwise
         """
-        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name)
+        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name_with_default)
 
     @property
     def next_step_url(self):
@@ -227,6 +268,24 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         Returns the URL of the next step's page
         """
         return '/jump_to_id/{}'.format(self.next_step)
+
+    @XBlock.json_handler
+    def view(self, data, suffix=''):
+        """
+        Current HTML view of the XBlock, for refresh by client
+        """
+        frag = self.student_view({})
+        return {'html': frag.content}
+
+    @XBlock.json_handler
+    def publish_event(self, data, suffix=''):
+        """
+        Publish data for analytics purposes
+        """
+        event_type = data.pop('event_type')
+        self.runtime.publish(self, event_type, data)
+
+        return {'result': 'ok'}
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
@@ -238,7 +297,8 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         submit_results = []
         completed = True
-        for child in self.get_children_objects():
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
@@ -264,7 +324,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         if self.has_missing_dependency:
             completed = False
             message = 'You need to complete all previous steps before being able to complete the current one.'
-        elif completed and self.next_step == self.url_name:
+        elif completed and self.next_step == self.url_name_with_default:
             self.next_step = self.followed_by
 
         # Once it was completed, lock score
@@ -287,7 +347,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         raw_score = self.score.raw
 
-        self.publish_event_from_dict('xblock.mentoring.submitted', {
+        self.runtime.publish(self, 'xblock.mentoring.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
@@ -306,8 +366,9 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
 
         completed = False
         current_child = None
-        children = [child for child in self.get_children_objects()
-                    if not isinstance(child, self.FLOATING_BLOCKS)]
+        children = [self.runtime.get_block(child_id) for child_id in self.children]
+        children = [child for child in children if not isinstance(child, self.FLOATING_BLOCKS)]
+        steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
 
         for child in children:
             if child.name and child.name in submissions:
@@ -316,7 +377,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                 # Assessment mode doesn't allow to modify answers
                 # This will get the student back at the step he should be
                 current_child = child
-                step = children.index(child)
+                step = steps.index(child)
                 if self.step > step or self.max_attempts_reached:
                     step = self.step
                     completed = False
@@ -328,14 +389,13 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
                 if 'tips' in child_result:
                     del child_result['tips']
                 self.student_results.append([child.name, child_result])
-                child.save()
                 completed = child_result['status']
 
         event_data = {}
 
         score = self.score
 
-        if current_child == self.steps[-1]:
+        if current_child == steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             if not self.max_attempts_reached:
                 self.runtime.publish(self, 'grade', {
@@ -352,7 +412,7 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
 
-        self.publish_event_from_dict('xblock.mentoring.assessment.submitted', event_data)
+        self.runtime.publish(self, 'xblock.mentoring.assessment.submitted', event_data)
 
         return {
             'completed': completed,
@@ -390,18 +450,13 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     def max_attempts_reached(self):
         return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
 
-    def get_message_fragment(self, message_type):
-        for child in self.get_children_objects():
-            if isinstance(child, MentoringMessageBlock) and child.type == message_type:
-                frag = self.render_child(child, 'mentoring_view', {})
-                return self.fragment_text_rewriting(frag)
-
     def get_message_html(self, message_type):
-        fragment = self.get_message_fragment(message_type)
-        if fragment:
-            return fragment.body_html()
-        else:
-            return ''
+        html = u""
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if isinstance(child, MentoringMessageBlock) and child.type == message_type:
+                html += child.render('mentoring_view', {}).content  # TODO: frament_text_rewriting ?
+        return html
 
     def studio_view(self, context):
         """
@@ -461,13 +516,12 @@ class MentoringBlock(XBlockWithLightChildren, StepParentMixin):
     def url_name_with_default(self):
         """
         Ensure the `url_name` is set to a unique, non-empty value.
-        This should ideally be handled by Studio, but we need to declare the attribute
-        to be able to use it from the workbench, and when this happen Studio doesn't set
-        a unique default value - this property gives either the set value, or if none is set
-        a randomized default value
+        In future once hte pinned version of XBlock is updated,
+        we can remove this and change the field to use the
+        xblock.fields.UNIQUE_ID flag instead.
         """
         if self.url_name == 'mentoring-default':
-            return 'mentoring-{}'.format(uuid.uuid4())
+            return self.scope_ids.usage_id
         else:
             return self.url_name
 

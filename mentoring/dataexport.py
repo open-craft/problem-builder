@@ -24,23 +24,40 @@
 # Imports ###########################################################
 
 import logging
+import unicodecsv
 
 from itertools import groupby
+from StringIO import StringIO
 from webob import Response
 from xblock.core import XBlock
 from xblock.fields import String, Scope
 from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
 
-from .models import Answer
-from .utils import list2csv, loader
-
+from .components.answer import AnswerBlock, Answer
 
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
+loader = ResourceLoader(__name__)
+
+# Utils ###########################################################
+
+
+def list2csv(row):
+    """
+    Convert a list to a CSV string (single row)
+    """
+    f = StringIO()
+    writer = unicodecsv.writer(f, encoding='utf-8')
+    writer.writerow(row)
+    result = f.getvalue()
+    f.close()
+    return result
 
 
 # Classes ###########################################################
+
 
 class MentoringDataExportBlock(XBlock):
     """
@@ -50,20 +67,16 @@ class MentoringDataExportBlock(XBlock):
                           scope=Scope.settings)
 
     def student_view(self, context):
+        """
+        Main view of the data export block
+        """
+        # Count how many 'Answer' blocks are in this course:
+        num_answer_blocks = sum(1 for i in self._get_answer_blocks())
         html = loader.render_template('templates/html/dataexport.html', {
-            'self': self,
+            'download_url': self.runtime.handler_url(self, 'download_csv'),
+            'num_answer_blocks': num_answer_blocks,
         })
-
-        fragment = Fragment(html)
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/dataexport.js'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/dataexport.css'))
-
-        fragment.initialize_js('MentoringDataExportBlock')
-
-        return fragment
-
-    def studio_view(self, context):
-        return Fragment(u'Studio view body')
+        return Fragment(html)
 
     @XBlock.handler
     def download_csv(self, request, suffix=''):
@@ -73,8 +86,7 @@ class MentoringDataExportBlock(XBlock):
         return response
 
     def get_csv(self):
-        course_id = self.xmodule_runtime.course_id
-
+        course_id = getattr(self.runtime, "course_id", "all")
         answers = Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
         answers_names = answers.values_list('name', flat=True).distinct().order_by('name')
 
@@ -82,7 +94,7 @@ class MentoringDataExportBlock(XBlock):
         yield list2csv([u'student_id'] + list(answers_names))
 
         if answers_names:
-            for k, student_answers in groupby(answers, lambda x: x.student_id):
+            for _, student_answers in groupby(answers, lambda x: x.student_id):
                 row = []
                 next_answer_idx = 0
                 for answer in student_answers:
@@ -99,3 +111,23 @@ class MentoringDataExportBlock(XBlock):
 
                 if row:
                     yield list2csv(row)
+
+    def _get_answer_blocks(self):
+        """
+        Generator.
+        Searches the tree of XBlocks that includes this data export block
+        (i.e. search the current course)
+        and returns all the AnswerBlock blocks that we can see.
+        """
+        root_block = self
+        while root_block.parent:
+            root_block = root_block.get_parent()
+
+        block_ids_left = set([root_block.scope_ids.usage_id])
+
+        while block_ids_left:
+            block = self.runtime.get_block(block_ids_left.pop())
+            if isinstance(block, AnswerBlock):
+                yield block
+            elif block.has_children:
+                block_ids_left |= set(block.children)

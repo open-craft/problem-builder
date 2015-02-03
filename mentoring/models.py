@@ -53,12 +53,18 @@ class Answer(models.Model):
 
 class LightChild(models.Model):
     """
-    Django model used to store LightChild student data that need to be shared and queried accross
-    XBlock instances (workaround). Since this is temporary, `data` are stored in json.
+    DEPRECATED.
+    Django model previously used to store LightChild student data.
+
+    This is not used at all by any of the mentoring blocks but will
+    be kept here for the purpose of migrating data for other
+    LightChildren that are converted to XBlocks and need to migrate
+    data from Django to native XBlock fields.
     """
 
     class Meta:
         app_label = 'mentoring'
+        managed = False  # Don't create this table. This class is only to migrate data from an existing table.
         unique_together = (('student_id', 'course_id', 'name'),)
 
     name = models.CharField(max_length=100, db_index=True)

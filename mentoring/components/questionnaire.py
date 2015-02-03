@@ -1,0 +1,126 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2014 Harvard
+#
+# Authors:
+#          Xavier Antoviaque <xavier@antoviaque.org>
+#
+# This software's license gives you freedom; you can copy, convey,
+# propagate, redistribute and/or modify this program under the terms of
+# the GNU Affero General Public License (AGPL) as published by the Free
+# Software Foundation (FSF), either version 3 of the License, or (at your
+# option) any later version of the AGPL published by the FSF.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero
+# General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program in a file in the toplevel directory called
+# "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# Imports ###########################################################
+
+from lxml import etree
+from xblock.core import XBlock
+from xblock.fields import Scope, String, Float
+from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
+
+from .choice import ChoiceBlock
+from .step import StepMixin
+from .tip import TipBlock
+
+# Classes ###########################################################
+
+
+class QuestionnaireAbstractBlock(XBlock, StepMixin):
+    """
+    An abstract class used for MCQ/MRQ blocks
+
+    Must be a child of a MentoringBlock. Allow to display a tip/advice depending on the
+    values entered by the student, and supports multiple types of multiple-choice
+    set, with preset choices and author-defined values.
+    """
+    type = String(help="Type of questionnaire", scope=Scope.content, default="choices")
+    question = String(help="Question to ask the student", scope=Scope.content, default="")
+    message = String(help="General feedback provided when submiting", scope=Scope.content, default="")
+    weight = Float(help="Defines the maximum total grade of the light child block.",
+                   default=1, scope=Scope.content, enforce_type=True)
+
+    valid_types = ('choices')
+    has_children = True
+
+    @classmethod
+    def parse_xml(cls, node, runtime, keys, id_generator):
+        block = runtime.construct_xblock_from_class(cls, keys)
+
+        # Load XBlock properties from the XML attributes:
+        for name, value in node.items():
+            setattr(block, name, value)
+
+        for xml_child in node:
+            if xml_child.tag == 'question':
+                block.question = xml_child.text
+            elif xml_child.tag == 'message' and xml_child.get('type') == 'on-submit':
+                block.message = (xml_child.text or '').strip()
+            elif xml_child.tag is not etree.Comment:
+                block.runtime.add_node_as_child(block, xml_child, id_generator)
+
+        return block
+
+    def student_view(self, context=None):
+        name = getattr(self, "unmixed_class", self.__class__).__name__
+
+        if str(self.type) not in self.valid_types:
+            raise ValueError(u'Invalid value for {}.type: `{}`'.format(name, self.type))
+
+        template_path = 'templates/html/{}_{}.html'.format(name.lower(), self.type)
+        loader = ResourceLoader(__name__)
+
+        html = loader.render_template(template_path, {
+            'self': self,
+            'custom_choices': self.custom_choices
+        })
+
+        fragment = Fragment(html)
+        fragment.add_css(loader.render_template('public/css/questionnaire.css', {
+            'self': self
+        }))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire.js'))
+        fragment.initialize_js(name)
+        return fragment
+
+    def mentoring_view(self, context=None):
+        return self.student_view(context)
+
+    @property
+    def custom_choices(self):
+        custom_choices = []
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if isinstance(child, ChoiceBlock):
+                custom_choices.append(child)
+        return custom_choices
+
+    def get_tips(self):
+        """
+        Returns the tips contained in this block
+        """
+        tips = []
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if isinstance(child, TipBlock):
+                tips.append(child)
+        return tips
+
+    def get_submission_display(self, submission):
+        """
+        Get the human-readable version of a submission value
+        """
+        for choice in self.custom_choices:
+            if choice.value == submission:
+                return choice.content
+        return submission

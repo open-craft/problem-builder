@@ -1,4 +1,4 @@
-<mentoring url_name="{{ url_name }}" display_name="Nav tooltip title" weight="1" mode="assessment" max_attempts="10">
+<mentoring display_name="Nav tooltip title" weight="1" mode="assessment" max_attempts="10">
     <title>Default Title</title>
     <shared-header>
         <p>This paragraph is shared between <strong>all</strong> questions.</p>

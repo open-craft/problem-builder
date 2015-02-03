@@ -1,9 +1,21 @@
 function MentoringBlock(runtime, element) {
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var data = $('.mentoring', element).data();
-    var children_dom = []; // Keep track of children. A Child need a single object scope for its data.
-    var children = [];
+    var children = runtime.children(element);
     var step = data.step;
+
+    var mentoring = {
+        callIfExists: callIfExists,
+        setContent: setContent,
+        renderAttempts: renderAttempts,
+        renderDependency: renderDependency,
+        children: children,
+        initChildren: initChildren,
+        getChildByName: getChildByName,
+        hideAllChildren: hideAllChildren,
+        step: step,
+        publish_event: publish_event
+    };
 
     function publish_event(data) {
         $.ajax({
@@ -66,44 +78,23 @@ function MentoringBlock(runtime, element) {
         }
     }
 
-    function readChildren() {
-        var doms = $('.xblock-light-child', element);
-
-        $.each(doms, function(index, child_dom) {
-            var child_type = $(child_dom).attr('data-type');
-            var child = window[child_type];
-            children_dom.push(child_dom);
-            children.push(child);
-            if (typeof child !== 'undefined') {
-                child = child(runtime, child_dom, mentoring);
-                child.name = $(child_dom).attr('name');
-                children[children.length-1] = child;
-            }
-        });
-    }
-
-    /* Init and display a child. */
-    function displayChild(index, options) {
+    function initChildren(options) {
         options = options || {};
+        options.mentoring = mentoring;
         options.mode = data.mode;
-        if (index >= children.length)
-            return  children.length;
-
-        var template = $('#light-child-template', children_dom[index]).html();
-        $(children_dom[index]).append(template);
-        $(children_dom[index]).show();
-        var child = children[index];
-        callIfExists(child, 'init', options);
-        return child;
+        for (var i=0; i < children.length; i++) {
+            var child = children[i];
+            callIfExists(child, 'init', options);
+        }
     }
 
-    function displayChildren(options) {
-        $.each(children_dom, function(index) {
-            displayChild(index, options);
-        });
+    function hideAllChildren() {
+        for (var i=0; i < children.length; i++) {
+            $(children[i].element).hide();
+        }
     }
 
-    function getChildByName(element, name) {
+    function getChildByName(name) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
             if (child && child.name === name) {
@@ -111,21 +102,6 @@ function MentoringBlock(runtime, element) {
             }
         }
     }
-
-    var mentoring = {
-        callIfExists: callIfExists,
-        setContent: setContent,
-        renderAttempts: renderAttempts,
-        renderDependency: renderDependency,
-        readChildren: readChildren,
-        children_dom: children_dom,
-        children: children,
-        displayChild: displayChild,
-        displayChildren: displayChildren,
-        getChildByName: getChildByName,
-        step: step,
-        publish_event: publish_event
-    };
 
     if (data.mode === 'standard') {
         MentoringStandardView(runtime, element, mentoring);

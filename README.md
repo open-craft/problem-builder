@@ -1,6 +1,8 @@
 Mentoring XBlock
 ----------------
 
+[![Build Status](https://travis-ci.org/open-craft/xblock-mentoring.svg?branch=master)](https://travis-ci.org/open-craft/xblock-mentoring)
+
 This XBlock allows to automate the workflow of real-life mentoring,
 within an edX course.
 
@@ -511,22 +513,21 @@ Access it at [http://localhost:8000/](http://localhost:8000).
 Running tests
 -------------
 
+First, make sure the [XBlock SDK (Workbench)](https://github.com/edx/xblock-sdk)
+is installed in the same virtual environment as xblock-mentoring.
+
 From the xblock-mentoring repository root, run the tests with the
 following command:
 
 ```bash
-$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django
+$ ./run_tests.py
 ```
 
 If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
 
 ```bash
-$ DJANGO_SETTINGS_MODULE="workbench.settings_mentoring" nosetests --with-django tests/unit
+$ ./run_tests.py mentoring/tests/unit
 ```
-
-If you have not installed the xblock-sdk in the active virtualenv,
-you might also have to prepend `PYTHONPATH=".:/path/to/xblock"` to the command above.
-(`/path/to/xblock` is the path to the xblock-sdk, where the workbench resides).
 
 Adding custom scenarios to the workbench
 ----------------------------------------
@@ -542,16 +543,8 @@ $ cat > templates/xml/my_mentoring_scenario.xml
 
 Restart the workbench to take the new scenarios into account.
 
-If you modified a scenario already loaded in the workbench,
-you will also have to purge and rebuild the database:
-
-```bash
-rm workbench.sqlite
-./manage.py syncdb --settings=workbench.settings_mentoring <<<"no"
-```
-
 License
 -------
 
-The Image Explorer XBlock is available under the GNU Affero General
+The Mentoring XBlock is available under the GNU Affero General
 Public License (AGPLv3).

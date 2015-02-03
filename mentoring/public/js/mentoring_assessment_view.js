@@ -13,8 +13,11 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
 
-        /* hide all children */
-        $(':nth-child(2)', mentoring.children_dom).remove();
+        // Clear all selections
+        $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
+
+        // hide all children
+        mentoring.hideAllChildren();
 
         $('.grade').html('');
         $('.attempts').html('');
@@ -76,9 +79,18 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         reviewDOM.bind('click', renderGrade);
         tryAgainDOM.bind('click', tryAgain);
 
-        active_child = mentoring.step-1;
-        mentoring.readChildren();
-        displayNextChild();
+        active_child = mentoring.step;
+
+        var options = {
+            onChange: onChange
+        };
+        mentoring.initChildren(options);
+        if (isDone()) {
+            renderGrade();
+        } else {
+            active_child = active_child - 1;
+            displayNextChild();
+        }
 
         mentoring.renderDependency();
     }
@@ -92,24 +104,16 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     }
 
     function displayNextChild() {
-        var options = {
-            onChange: onChange
-        };
-
         cleanAll();
 
         // find the next real child block to display. HTMLBlock are always displayed
-        ++active_child;
-        while (1) {
-            var child = mentoring.displayChild(active_child, options);
-            mentoring.publish_event({
-                event_type: 'xblock.mentoring.assessment.shown',
-                exercise_id: $(child).attr('name')
-            });
-            if ((typeof child !== 'undefined') || active_child == mentoring.children.length-1)
-                break;
-            ++active_child;
-        }
+        active_child++;
+        var child = mentoring.children[active_child];
+        $(child.element).show();
+        mentoring.publish_event({
+            event_type: 'xblock.mentoring.assessment.shown',
+            exercise_id: child.name
+        });
 
         if (isDone())
             renderGrade();
@@ -151,8 +155,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         if (result.step != active_child+1) {
             active_child = result.step-1;
             displayNextChild();
-        }
-        else {
+        } else {
             nextDOM.removeAttr("disabled");
             reviewDOM.removeAttr("disabled");
         }

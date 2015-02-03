@@ -1,6 +1,7 @@
 *~
 *.pyc
+/.coverage
 /xblock_mentoring.egg-info
-/workbench.sqlite
+/workbench.*
 /dist
 /templates
