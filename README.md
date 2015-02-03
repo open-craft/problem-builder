@@ -483,11 +483,29 @@ Install to the workbench's virtualenv by running the following command form the 
 pip install -r requirements.txt
 ```
 
+In the main XBlock repository, create the following configuration file
+in `workbench/settings_mentoring.py` in the XBlock repository:
+
+```python
+from settings import *
+
+INSTALLED_APPS += ('mentoring',)
+DATABASES['default']['NAME'] = 'workbench.sqlite'
+```
+
+Because this XBlock uses a Django model, you need to sync the database
+before starting the workbench. Run this from the XBlock repository
+root:
+
+```bash
+$ ./manage.py syncdb --settings=workbench.settings_mentoring
+```
+
 Running the workbench
 ---------------------
 
 ```bash
-$ ./manage.py runserver 8000
+$ ./manage.py runserver 8000 --settings=workbench.settings_mentoring
 ```
 
 Access it at [http://localhost:8000/](http://localhost:8000).

@@ -23,10 +23,10 @@
 
 # Imports ###########################################################
 
-import json
 import logging
 import unicodecsv
 
+from itertools import groupby
 from StringIO import StringIO
 from webob import Response
 from xblock.core import XBlock
@@ -34,7 +34,7 @@ from xblock.fields import String, Scope
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 
-from .components import AnswerBlock
+from .components.answer import AnswerBlock, Answer
 
 # Globals ###########################################################
 
@@ -86,69 +86,31 @@ class MentoringDataExportBlock(XBlock):
         return response
 
     def get_csv(self):
-        """
-        Download all student answers as a CSV.
-
-        Columns are: student_id, [name of each answer block is a separate column]
-        """
-        answers_names = []  # List of the '.name' of each answer property
-        student_answers = {}  # Dict of student ID: {answer_name: answer, ...}
-        for answer_block in self._get_answer_blocks():
-            answers_names.append(answer_block.name)
-            student_data = self._get_students_data(answer_block)  # Tuples of (student ID, student input)
-            for student_id, student_answer in student_data:
-                if student_id not in student_answers:
-                    student_answers[student_id] = {}
-                student_answers[student_id][answer_block.name] = student_answer
-
-        # Sort things:
-        answers_names.sort()
-        student_answers_sorted = list(student_answers.iteritems())
-        student_answers_sorted.sort(key=lambda entry: entry[0])  # Sort by student ID
+        course_id = getattr(self.runtime, "course_id", "all")
+        answers = Answer.objects.filter(course_id=course_id).order_by('student_id', 'name')
+        answers_names = answers.values_list('name', flat=True).distinct().order_by('name')
 
         # Header line
         yield list2csv([u'student_id'] + list(answers_names))
 
         if answers_names:
-            for student_id, answers in student_answers_sorted:
-                row = [student_id]
-                for name in answers_names:
-                    row.append(answers.get(name, u""))
-                yield list2csv(row)
+            for _, student_answers in groupby(answers, lambda x: x.student_id):
+                row = []
+                next_answer_idx = 0
+                for answer in student_answers:
+                    if not row:
+                        row = [answer.student_id]
 
-    def _get_students_data(self, answer_block):
-        """
-        Efficiently query for the answers entered by ALL students.
-        (Note: The XBlock API only allows querying for the current
-        student, so we have to use other APIs)
+                    while answer.name != answers_names[next_answer_idx]:
+                        # Still add answer row to CSV when they don't exist in DB
+                        row.append('')
+                        next_answer_idx += 1
 
-        Yields tuples of (student_id, student_answer)
-        """
-        usage_id = answer_block.scope_ids.usage_id
-        # Check if we're in edX:
-        try:
-            from courseware.models import StudentModule
-            usage_id = usage_id.for_branch(None).version_agnostic()
-            entries = StudentModule.objects.filter(module_state_key=unicode(usage_id)).values('student_id', 'state')
-            for entry in entries:
-                state = json.loads(entry['state'])
-                if 'student_input_raw' in state:
-                    yield (entry['student_id'], state['student_input_raw'])
-        except ImportError:
-            pass
-        # Check if we're in the XBlock SDK:
-        try:
-            from workbench.models import XBlockState
-            rows = XBlockState.objects.filter(scope="usage", scope_id=usage_id).exclude(user_id=None)
-            for entry in rows.values('user_id', 'state'):
-                state = json.loads(entry['state'])
-                if 'student_input_raw' in state:
-                    yield (entry['user_id'], state['student_input_raw'])
-        except ImportError:
-            pass
-        # Something else - return only the data
-        # for the current user.
-        yield (answer_block.scope_ids.user_id, answer_block.student_input_raw)
+                    row.append(answer.student_input)
+                    next_answer_idx += 1
+
+                if row:
+                    yield list2csv(row)
 
     def _get_answer_blocks(self):
         """

@@ -24,9 +24,12 @@
 # Imports ###########################################################
 
 import logging
+from lazy import lazy
+
+from mentoring.models import Answer
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Boolean, Dict, Float, Integer, String
+from xblock.fields import Scope, Boolean, Float, Integer, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from .step import StepMixin
@@ -78,15 +81,6 @@ class AnswerBlock(XBlock, StepMixin):
         scope=Scope.settings,
         enforce_type=True
     )
-    # This is the internal value of student_input. Don't access directly - use student_input instead.
-    student_input_raw = String(
-        scope=Scope.user_state,
-        default=""
-    )
-    # Shared student input - share answers among all Answer blocks in the course with the same name
-    student_input_shared = Dict(
-        scope=Scope.preferences,
-    )
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
@@ -108,19 +102,29 @@ class AnswerBlock(XBlock, StepMixin):
         """ Get a course ID if available """
         return getattr(self.runtime, 'course_id', 'all')
 
-    @property
+    def _get_student_id(self):
+        """ Get student anonymous ID or normal ID """
+        try:
+            return self.runtime.anonymous_student_id
+        except AttributeError:
+            return self.scope_ids.user_id
+
+    @lazy
     def student_input(self):
         """
         The student input value, or a default which may come from another block.
+        Read from a Django model, since XBlock API doesn't yet support course-scoped
+        fields or generating instructor reports across many student responses.
         """
-        course_id = self._get_course_id()
-        if self.name and self.name in self.student_input_shared.get(course_id, {}):
-            self.student_input_raw = self.student_input_shared[course_id][self.name]
-        student_input = self.student_input_raw
+        # Only attempt to locate a model object for this block when the answer has a name
+        if not self.name:
+            return ''
+
+        student_input = self.get_model_object().student_input
 
         # Default value can be set from another answer's current value
         if not student_input and self.default_from:
-            student_input = self.runtime.get_block(self.default_from).student_input
+            student_input = self.get_model_object(name=self.default_from).student_input
 
         return student_input
 
@@ -150,11 +154,7 @@ class AnswerBlock(XBlock, StepMixin):
 
     def submit(self, submission):
         if not self.read_only:
-            self.student_input_raw = submission[0]['value'].strip()
-            course_id = self._get_course_id()
-            if not self.student_input_shared.get(course_id):
-                self.student_input_shared[course_id] = {}
-            self.student_input_shared[course_id][self.name] = self.student_input_raw
+            self.student_input = submission[0]['value'].strip()
             self.save()
             log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
@@ -175,3 +175,41 @@ class AnswerBlock(XBlock, StepMixin):
     @property
     def completed(self):
         return self.status == 'correct'
+
+    def save(self):
+        """
+        Replicate data changes on the related Django model used for sharing of data accross XBlocks
+        """
+        super(AnswerBlock, self).save()
+
+        student_id = self._get_student_id()
+        if not student_id:
+            return  # save() gets called from the workbench homepage sometimes when there is no student ID
+
+        # Only attempt to locate a model object for this block when the answer has a name
+        if self.name:
+            answer_data = self.get_model_object()
+            if answer_data.student_input != self.student_input and not self.read_only:
+                answer_data.student_input = self.student_input
+                answer_data.save()
+
+    def get_model_object(self, name=None):
+        """
+        Fetches the Answer model object for the answer named `name`
+        """
+        # By default, get the model object for the current answer's name
+        if not name:
+            name = self.name
+        # Consistency check - we should have a name by now
+        if not name:
+            raise ValueError('AnswerBlock.name field need to be set to a non-null/empty value')
+
+        student_id = self._get_student_id()
+        course_id = self._get_course_id()
+
+        answer_data, _ = Answer.objects.get_or_create(
+            student_id=student_id,
+            course_id=course_id,
+            name=name,
+        )
+        return answer_data
