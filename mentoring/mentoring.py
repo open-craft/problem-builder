@@ -98,7 +98,12 @@ class MentoringBlock(XBlock, StepParentMixin):
         scope=Scope.content,
         enforce_type=True
     )
-    display_submit = Boolean(help="Allow to submit current block?", default=True, scope=Scope.content)
+    display_submit = Boolean(
+        help="Allow submission of the current block?",
+        default=True,
+        scope=Scope.content,
+        enforce_type=True
+    )
     xml_content = String(help="XML content", default=default_xml_content, scope=Scope.content)
 
     # Settings
@@ -212,6 +217,9 @@ class MentoringBlock(XBlock, StepParentMixin):
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
 
         fragment.initialize_js('MentoringBlock')
+
+        if not self.display_submit:
+            self.runtime.publish(self, 'progress', {})
 
         return fragment
 
