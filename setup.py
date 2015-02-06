@@ -74,5 +74,5 @@ setup(
     entry_points={
         'xblock.v1': BLOCKS,
     },
-    package_data=package_data("mentoring", ["static", "templates", "public"]),
+    package_data=package_data("mentoring", ["components", "templates", "public", "migrations"]),
 )
