@@ -1,0 +1,5 @@
+<vertical_demo>
+    <mentoring url_name="answer_blank_read_only" enforce_dependency="false" display_submit="false">
+        <answer name="answer_blank"/>
+    </mentoring>
+</vertical_demo>
