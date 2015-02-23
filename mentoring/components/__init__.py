@@ -6,5 +6,3 @@ from .mrq import MRQBlock
 from .message import MentoringMessageBlock
 from .table import MentoringTableBlock, MentoringTableColumnBlock, MentoringTableColumnHeaderBlock
 from .tip import TipBlock
-from .title import TitleBlock
-from .header import SharedHeaderBlock

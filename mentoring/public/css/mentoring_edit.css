@@ -1,3 +1,13 @@
-.mentoring-edit .module-actions .error-message {
-    color: red;
+/* Custom appearance for our "Add" buttons */
+.xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover {
+  background-color: #ccc;
+  border-color: #888;
+  cursor: default;
 }

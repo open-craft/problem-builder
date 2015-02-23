@@ -1,12 +1,8 @@
-<mentoring url_name="mentoring-assessment-2" display_name="Nav tooltip title" weight="1" mode="assessment" max_attempts="2">
-    <title>A Simple Assessment</title>
-    <shared-header>
+<mentoring url_name="mentoring-assessment-2" display_name="A Simple Assessment" weight="1" mode="assessment" max_attempts="2">
+    <html_demo>
         <p>This paragraph is shared between <strong>all</strong> questions.</p>
-    </shared-header>
-
-    <html>
         <p>Please answer the questions below.</p>
-    </html>
+    </html_demo>
 
     <mcq name="mcq_1_1" type="choices">
         <question>Do you like this MCQ?</question>

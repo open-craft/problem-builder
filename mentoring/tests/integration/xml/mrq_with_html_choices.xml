@@ -1,6 +1,5 @@
 <vertical_demo>
-    <mentoring url_name="mcq_with_comments" display_name="MRQ Exercise 7" weight="1" enforce_dependency="false">
-        <title>MRQ With Resizable popups</title>
+    <mentoring url_name="mcq_with_comments" display_name="MRQ With Resizable popups" weight="1" enforce_dependency="false">
         <mrq name="mrq_1_1_7" type="choices">
             <question>What do you like in this MRQ?</question>
             <choice value="elegance"><html><b>Its elegance</b></html></choice>

@@ -4,10 +4,9 @@
     attempting this step.
   </div>
 
-  {% if title or header %}
+  {% if title %}
   <div class="title">
     {% if title %} <h2>{{ title }}</h2> {% endif %}
-    {% if header %} {{ header|safe }} {% endif %}
   </div>
   {% endif %}
 
