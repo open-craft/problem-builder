@@ -4,14 +4,13 @@
         <p>Please answer the questions below.</p>
     </html_demo>
 
-    <mcq name="mcq_1_1" type="choices">
-        <question>Do you like this MCQ?</question>
+    <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
         <choice value="yes">Yes</choice>
         <choice value="maybenot">Maybe not</choice>
         <choice value="understand">I don't understand</choice>
 
-        <tip display="yes">Great!</tip>
-        <tip reject="maybenot">Ah, damn.</tip>
-        <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
+        <tip values="yes">Great!</tip>
+        <tip values="maybenot">Ah, damn.</tip>
+        <tip values="understand"><div id="test-custom-html">Really?</div></tip>
     </mcq>
 </mentoring>

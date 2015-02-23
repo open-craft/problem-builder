@@ -3,8 +3,5 @@
    {% if width %}data-width="{{width}}"{% endif %}
    {% if height %}data-height="{{height}}"{% endif %}
    >
-  {% if self.content %}
-    <p>{{ self.content }}</p>
-  {% endif %}
-  {{ child_content|safe }}
+   <p>{{ content|safe }}</p>
 </div>

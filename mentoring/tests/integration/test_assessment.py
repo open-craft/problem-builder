@@ -91,9 +91,9 @@ class MentoringAssessmentTest(MentoringBaseTest):
     @staticmethod
     def question_text(number):
         if number:
-            return "QUESTION %s" % number
+            return "Question %s" % number
         else:
-            return "QUESTION"
+            return "Question"
 
     def freeform_answer(self, number, mentoring, controls, text_input, result, saved_value="", last=False):
         question = self.expect_question_visible(number, mentoring)

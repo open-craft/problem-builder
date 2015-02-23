@@ -1,6 +1,6 @@
 <fieldset class="choices questionnaire">
   <legend class="question">
-    <h3 class="question-title">QUESTION {% if not self.lonely_step %}{{ self.step_number }}{% endif %}</h3>
+    {% if not hide_header %}<h3 class="question-title">{{ self.display_name }}</h3>{% endif %}
     <p>{{ self.question }}</p>
   </legend>
   <div class="choices-list">
@@ -9,7 +9,7 @@
       <div class="choice-result fa icon-2x"></div>
       <label class="choice-label">
         <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"{% if self.student_choice == choice.value %} checked{% endif %} />
-          {{ choice.get_html|safe }}
+          <span class="choice-text">{{ choice.content|safe }}</span>
       </label>
       <div class="choice-tips"></div>
     </div>

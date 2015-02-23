@@ -68,8 +68,8 @@ class MCQBlockTest(MentoringBaseTest):
 
         mcq1_legend = mcq1.find_element_by_css_selector('legend')
         mcq2_legend = mcq2.find_element_by_css_selector('legend')
-        self.assertEqual(mcq1_legend.text, 'QUESTION 1\nDo you like this MCQ?')
-        self.assertEqual(mcq2_legend.text, 'QUESTION 2\nHow much do you rate this MCQ?')
+        self.assertEqual(mcq1_legend.text, 'Question 1\nDo you like this MCQ?')
+        self.assertEqual(mcq2_legend.text, 'Question 2\nHow do you rate this MCQ?')
 
         mcq1_choices = mcq1.find_elements_by_css_selector('.choices .choice label')
         mcq2_choices = mcq2.find_elements_by_css_selector('.rating .choice label')
@@ -144,7 +144,7 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertFalse(submit.is_enabled())
 
         mcq_legend = mcq.find_element_by_css_selector('legend')
-        self.assertEqual(mcq_legend.text, 'QUESTION\nWhat do you like in this MRQ?')
+        self.assertEqual(mcq_legend.text, 'Question\nWhat do you like in this MRQ?')
 
         mcq_choices = mcq.find_elements_by_css_selector('.choices .choice label')
 
@@ -195,7 +195,7 @@ class MCQBlockTest(MentoringBaseTest):
         # this could be a list comprehension, but a bit complicated one - hence explicit loop
         for choice_wrapper in questionnaire.find_elements_by_css_selector(".choice"):
             choice_label = choice_wrapper.find_element_by_css_selector("label .choice-text")
-            result.append(choice_label.find_element_by_css_selector("div.html_child").get_attribute('innerHTML'))
+            result.append(choice_label.get_attribute('innerHTML'))
 
         return result
 
