@@ -1,3 +1,13 @@
+/* Display of url_name below content */
+.url-name-footer {
+  font-style: italic;
+}
+
+.url-name-footer .url-name {
+  margin: 0 10px;
+  font-family: monospace;
+}
+
 /* Custom appearance for our "Add" buttons */
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
   width: 200px;

@@ -79,14 +79,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         scope=Scope.content,
         enforce_type=True
     )
-    url_name = String(
-        help="Name of the current step, used for URL building",
-        default='mentoring-default',
-        scope=Scope.content
-        # TODO in future: set this field's default to xblock.fields.UNIQUE_ID
-        # and remove self.url_name_with_default. Waiting until UNIQUE_ID support
-        # is available in edx-platform's pinned version of xblock. (See XBlock PR 249)
-    )
     enforce_dependency = Boolean(
         help="Should the next step be the current block to complete?",
         default=False,
@@ -239,7 +231,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     def additional_publish_event_data(self):
         return {
             'user_id': self.scope_ids.user_id,
-            'component_id': self.url_name_with_default,
+            'component_id': self.url_name,
         }
 
     @property
@@ -248,7 +240,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Returns True if the student needs to complete another step before being able to complete
         the current one, and False otherwise
         """
-        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name_with_default)
+        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name)
 
     @property
     def next_step_url(self):
@@ -256,6 +248,17 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Returns the URL of the next step's page
         """
         return '/jump_to_id/{}'.format(self.next_step)
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the usage_id.
+        """
+        try:
+            return super(MentoringBlock, self).url_name
+        except AttributeError:
+            return unicode(self.scope_ids.usage_id)
 
     @XBlock.json_handler
     def view(self, data, suffix=''):
@@ -312,7 +315,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         if self.has_missing_dependency:
             completed = False
             message = 'You need to complete all previous steps before being able to complete the current one.'
-        elif completed and self.next_step == self.url_name_with_default:
+        elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
         # Once it was completed, lock score
@@ -501,6 +504,9 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         fragment = super(MentoringBlock, self).author_edit_view(context)
         fragment.add_content(loader.render_template('templates/html/mentoring_add_buttons.html', {}))
+        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+            "url_name": self.url_name
+        }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
         fragment.initialize_js('MentoringEditComponents')
