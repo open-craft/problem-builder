@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+This contains the old version of mentoring_default.xml (using the v1 schema)
+Changes from the original:
+ - a <shared-header> was added to test that migration.
+ - the display_name was removed to avoid the warning about overwriting a display_name
+   since v2 only supports display_name rather than separate "title" and "display_name"
+-->
+<mentoring xmlns:option="http://code.edx.org/xblock/option">
+    <option:xml_content>
+        <![CDATA[
+            <mentoring url_name="some_url_name" weight="1" mode="standard">
+                <title>Default Title</title>
+                <shared-header>
+                    <p>This paragraph is shared between <strong>all</strong> questions.</p>
+                </shared-header>
+                <html>
+                    <p>Please answer the questions below.</p>
+                </html>
+
+                <answer name="goal">
+                    <question>What is your goal?</question>
+                </answer>
+
+                <mcq name="mcq_1_1" type="choices">
+                    <question>Do you like this MCQ?</question>
+                    <choice value="yes">Yes</choice>
+                    <choice value="maybenot">Maybe not</choice>
+                    <choice value="understand">I don't understand</choice>
+
+                    <tip display="yes">Great!</tip>
+                    <tip reject="maybenot">Ah, damn.</tip>
+                    <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
+                </mcq>
+
+                <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
+                    <question>How much do you rate this MCQ?</question>
+                    <choice value="notwant">I don't want to rate it</choice>
+
+                    <tip display="4,5">I love good grades.</tip>
+                    <tip reject="1,2,3">Will do better next time...</tip>
+                    <tip reject="notwant">Your loss!</tip>
+                </mcq>
+
+                <mrq name="mrq_1_1" type="choices">
+                    <question>What do you like in this MRQ?</question>
+                    <choice value="elegance">Its elegance</choice>
+                    <choice value="beauty">Its beauty</choice>
+                    <choice value="gracefulness">Its gracefulness</choice>
+                    <choice value="bugs">Its bugs</choice>
+
+                    <tip require="gracefulness">This MRQ is indeed very graceful</tip>
+                    <tip require="elegance,beauty">This is something everyone has to like about this MRQ</tip>
+                    <tip reject="bugs">Nah, there isn't any!</tip>
+
+                    <message type="on-submit">Thank you for answering!</message>
+                </mrq>
+
+                <message type="completed">
+                    <html><p>Congratulations!</p></html>
+                </message>
+                <message type="incomplete">
+                    <html><p>Still some work to do...</p></html>
+                </message>
+            </mentoring>
+        ]]>
+    </option:xml_content>
+</mentoring>
