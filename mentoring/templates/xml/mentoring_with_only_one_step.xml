@@ -18,9 +18,9 @@
     </mrq>
 
     <message type="completed">
-        <html><p>Congratulations!</p></html>
+        <p>Congratulations!</p>
     </message>
     <message type="incomplete">
-        <html><p>Still some work to do...</p></html>
+        <p>Still some work to do...</p>
     </message>
 </mentoring>

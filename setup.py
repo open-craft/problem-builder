@@ -47,7 +47,6 @@ BLOCKS = [
     'mentoring-dataexport = mentoring:MentoringDataExportBlock',
 
     'mentoring-table = mentoring.components:MentoringTableBlock',
-    'html = mentoring.components:HTMLBlock',
     'mentoring-column = mentoring.components:MentoringTableColumn',
     'mentoring-answer = mentoring.components:AnswerBlock',
     'mentoring-answer-recap = mentoring.components:AnswerRecapBlock',

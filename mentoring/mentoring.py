@@ -190,7 +190,18 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             if isinstance(child, MentoringMessageBlock):
                 pass  # TODO
             else:
-                child_fragment = child.render('mentoring_view', context)
+                try:
+                    child_fragment = child.render('mentoring_view', context)
+                except NoSuchViewError:
+                    if child.scope_ids.block_type == 'html':
+                        if getattr(self.runtime, 'is_author_mode', False):
+                            # html block doesn't support mentoring_view, and if we use student_view Studio will wrap
+                            # it in HTML that we don't want in the preview. So just render its HTML directly:
+                            child_fragment = Fragment(child.data)
+                        else:
+                            child_fragment = child.render('student_view', context)
+                    else:
+                        raise  # This type of child is not supported.
                 fragment.add_frag_resources(child_fragment)
                 child_content += child_fragment.content
 
