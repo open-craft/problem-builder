@@ -39,7 +39,7 @@ class AnswerBlockTest(MentoringBaseTest):
         answer1_bis = mentoring.find_element_by_css_selector('textarea')
         answer1_readonly = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
         self.assertEqual(answer1_bis.get_attribute('value'), '')
-        self.assertEqual(answer1_readonly.text, '')
+        self.assertEqual(answer1_readonly.text, 'No answer yet.')
 
         # Another answer with the same name
         mentoring = self.go_to_page('Answer Edit 1')
@@ -89,7 +89,7 @@ class AnswerBlockTest(MentoringBaseTest):
         # Check initial state
         mentoring = self.go_to_page('Answer Blank Read Only')
         answer = mentoring.find_element_by_css_selector('blockquote.answer.read_only')
-        self.assertEqual(answer.text, '')
+        self.assertEqual(answer.text, 'No answer yet.')
 
         # Submit should allow to complete
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')

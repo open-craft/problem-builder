@@ -8,8 +8,7 @@
             <p>Please answer the question below.</p>
         </html_demo>
 
-        <answer name="goal">
-            <question>What is your goal?</question>
+        <answer name="goal" question="What is your goal?">
         </answer>
     </mentoring>
     <mentoring display_name="Mentoring Block 2 (Assessment)" mode="assessment">
@@ -17,11 +16,9 @@
             <p>Please answer the question below.</p>
         </html_demo>
 
-        <answer name="inspired">
-            <question>Who has inspired you the most?</question>
+        <answer name="inspired" question="Who has inspired you the most?">
         </answer>
-        <answer name="meaning">
-            <question>What is the meaning of life?</question>
+        <answer name="meaning" question="What is the meaning of life?">
         </answer>
     </mentoring>
 

@@ -1,7 +1,12 @@
-<div class="xblock-answer" data-completed="{{ self.completed }}">
-  <h3 class="question-title">QUESTION {% if not self.lonely_step %}{{ self.step_number }}{% endif %}</h3>
-  <p>{{ self.question }}</p>
+{% load i18n %}
+<div class="xblock-answer" data-completed="{{ student_input|yesno:"true,false" }}">
+  {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
+  {% if description %}<p>{{ description|safe }}</p>{% endif %}
   <blockquote class="answer read_only">
-    {{ self.student_input|linebreaksbr }}
+    {% if student_input %}
+      {{ student_input|linebreaksbr }}
+    {% else %}
+      <em>{% trans "No answer yet." %}</em>
+    {% endif %}
   </blockquote>
 </div>

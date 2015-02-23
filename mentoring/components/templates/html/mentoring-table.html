@@ -1,17 +1,21 @@
 <div class="mentoring-table {{ self.type }}" style="background-image: url({{ bg_image_url }})">
   <div class="cont-text-sr">{{ bg_image_description }}</div>
   <table>
-    {% if header_frags %}
+    {% if header_values %}
     <thead>
-      {% for name, c in header_frags %}
-      {{c.body_html|safe}}
+      {% for header in header_values %}
+        <th>{{ header|safe }}</th>
       {% endfor %}
     </thead>
     {% endif %}
     <tbody>
       <tr>
-        {% for name, c in columns_frags %}
-        {{c.body_html|safe}}
+        {% for content in content_values %}
+        <td>
+          <div class="mentoring-column">
+            {{content|safe}}
+          </div>
+        </td>
         {% endfor %}
       </tr>
     </tbody>

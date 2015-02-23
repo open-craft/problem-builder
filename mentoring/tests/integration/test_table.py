@@ -40,8 +40,8 @@ class MentoringTableBlockTest(MentoringBaseTest):
 
         rows = table.find_elements_by_css_selector('td')
         self.assertEqual(len(rows), 2)
-        self.assertEqual(rows[0].text, '')
-        self.assertEqual(rows[1].text, '')
+        self.assertEqual(rows[0].text, 'No answer yet.')
+        self.assertEqual(rows[1].text, 'No answer yet.')
 
         # Fill the answers - they should appear in the table
         mentoring = self.go_to_page('Table 1')

@@ -3,8 +3,7 @@
         <p>Please answer the questions below.</p>
     </html_demo>
 
-    <answer name="goal">
-        <question>What is your goal?</question>
+    <answer name="goal" question="What is your goal?">
     </answer>
 
     <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">

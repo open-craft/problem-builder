@@ -25,13 +25,14 @@
 
 import errno
 
-from .utils import child_isinstance
 
 from xblock.core import XBlock
+from xblock.exceptions import NoSuchViewError
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 
 from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
 # Globals ###########################################################
 
@@ -40,47 +41,61 @@ loader = ResourceLoader(__name__)
 # Classes ###########################################################
 
 
-class MentoringTableBlock(XBlock):
+class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlock):
     """
     Table-type display of information from mentoring blocks
 
     Used to present summary of information entered by the students in mentoring blocks.
     Supports different types of formatting through the `type` parameter.
     """
-    type = String(help="Variant of the table to display", scope=Scope.content, default='')
+    display_name = String(
+        display_name="Display name",
+        help="Title of the table",
+        default="Answers Table",
+        scope=Scope.settings
+    )
+    type = String(
+        display_name="Special Mode",
+        help="Variant of the table that will display a specific background image.",
+        scope=Scope.content,
+        default='',
+        values=[
+            {"display_name": "Normal", "value": ""},
+            {"display_name": "Immunity Map Assumptions", "value": "immunity-map-assumptions"},
+            {"display_name": "Immunity Map", "value": "immunity-map"},
+        ],
+    )
+    editable_fields = ("type", )
     has_children = True
 
     def student_view(self, context):
+        context = context or {}
         fragment = Fragment()
-        columns_frags = []
-        header_frags = []
+        header_values = []
+        content_values = []
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
-            column_fragment = child.render('mentoring_table_view', context)
-            fragment.add_frag_resources(column_fragment)
-            columns_frags.append((child.name, column_fragment))
-            header_fragment = child.render('mentoring_table_header_view', context)
-            fragment.add_frag_resources(header_fragment)
-            header_frags.append((child.name, header_fragment))
+            # Child should be an instance of MentoringTableColumn
+            header_values.append(child.header)
+            child_frag = child.render('mentoring_view', context)
+            content_values.append(child_frag.content)
+            fragment.add_frag_resources(child_frag)
+        context['header_values'] = header_values if any(header_values) else None
+        context['content_values'] = content_values
 
-        bg_image_url = self.runtime.local_resource_url(self, 'public/img/{}-bg.png'.format(self.type))
+        if self.type:
+            # Load an optional background image:
+            context['bg_image_url'] = self.runtime.local_resource_url(self, 'public/img/{}-bg.png'.format(self.type))
+            # Load an optional description for the background image, for accessibility
+            try:
+                context['bg_image_description'] = loader.load_unicode('static/text/table-{}.txt'.format(self.type))
+            except IOError as e:
+                if e.errno == errno.ENOENT:
+                    pass
+                else:
+                    raise
 
-        # Load an optional description for the background image, for accessibility
-        try:
-            bg_image_description = loader.load_unicode('static/text/table-{}.txt'.format(self.type))
-        except IOError as e:
-            if e.errno == errno.ENOENT:
-                bg_image_description = ''
-            else:
-                raise
-
-        fragment.add_content(loader.render_template('templates/html/mentoring-table.html', {
-            'self': self,
-            'columns_frags': columns_frags,
-            'header_frags': header_frags,
-            'bg_image_url': bg_image_url,
-            'bg_image_description': bg_image_description,
-        }))
+        fragment.add_content(loader.render_template('templates/html/mentoring-table.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring-table.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/jquery-shorten.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring-table.js'))
@@ -92,58 +107,57 @@ class MentoringTableBlock(XBlock):
         # Allow to render within mentoring blocks, or outside
         return self.student_view(context)
 
-
-class MentoringTableColumnBlock(XBlock):
-    """
-    Individual column of a mentoring table
-    """
-    header = String(help="Header of the column", scope=Scope.content, default=None)
-    has_children = True
-
-    def _render_table_view(self, view_name, id_filter, template, context):
-        fragment = Fragment()
-        named_children = []
-        for child_id in self.children:
-            if id_filter(child_id):
-                child = self.runtime.get_block(child_id)
-                child_frag = child.render(view_name, context)
-                fragment.add_frag_resources(child_frag)
-                named_children.append((child.name, child_frag))
-
-        fragment.add_content(loader.render_template('templates/html/{}'.format(template), {
-            'self': self,
-            'named_children': named_children,
-        }))
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add choices and tips.
+        """
+        fragment = super(MentoringTableBlock, self).author_edit_view(context)
+        fragment.add_content(loader.render_template('templates/html/mentoring-table-add-button.html', {}))
+        # Share styles with the questionnaire edit CSS:
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         return fragment
 
-    def mentoring_table_view(self, context):
-        """
-        The content of the column
-        """
-        return self._render_table_view(
-            view_name='mentoring_table_view',
-            id_filter=lambda child_id: not child_isinstance(self, child_id, MentoringTableColumnHeaderBlock),
-            template='mentoring-table-column.html',
-            context=context
-        )
 
-    def mentoring_table_header_view(self, context):
-        """
-        The content of the column's header
-        """
-        return self._render_table_view(
-            view_name='mentoring_table_header_view',
-            id_filter=lambda child_id: child_isinstance(self, child_id, MentoringTableColumnHeaderBlock),
-            template='mentoring-table-header.html',
-            context=context
-        )
-
-
-class MentoringTableColumnHeaderBlock(XBlock):
+class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlock):
     """
-    Header content for a given column
+    A column in a mentoring table. Has a header and can contain HTML and AnswerRecapBlocks.
     """
-    content = String(help="Body of the header", scope=Scope.content, default='')
+    display_name = String(display_name="Display Name", default="Column")
+    header = String(
+        display_name="Header",
+        help="Header of this column",
+        default="",
+        scope=Scope.content,
+        multiline_editor="html",
+    )
+    editable_fields = ("header", )
+    has_children = True
 
-    def mentoring_table_header_view(self, context):
-        return Fragment(unicode(self.content))
+    def fallback_view(self, view_name, context):
+        context = context or {}
+        fragment = Fragment()
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if child.scope_ids.block_type == "html":
+                # HTML block current doesn't support "mentoring_view" and if "student_view" is used, it gets wrapped
+                # with HTML we don't want. So just grab its HTML directly.
+                child_frag = Fragment(child.data)
+            else:
+                child_frag = child.render(view_name, context)
+            fragment.add_content(child_frag.content)
+            fragment.add_frag_resources(child_frag)
+        return fragment
+
+    def author_preview_view(self, context):
+        return self.author_edit_view(context)
+
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add choices and tips.
+        """
+        fragment = super(MentoringTableColumn, self).author_edit_view(context)
+        fragment.content = u"<div style=\"font-weight: bold;\">{}</div>".format(self.header) + fragment.content
+        fragment.add_content(loader.render_template('templates/html/mentoring-column-add-button.html', {}))
+        # Share styles with the questionnaire edit CSS:
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
+        return fragment
