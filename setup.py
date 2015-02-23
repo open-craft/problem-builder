@@ -60,7 +60,7 @@ BLOCKS = [
 
 setup(
     name='xblock-mentoring',
-    version='0.1',
+    version='2.0',
     description='XBlock - Mentoring',
     packages=['mentoring'],
     install_requires=[

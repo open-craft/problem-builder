@@ -54,45 +54,8 @@ Usage
 -----
 
 When you add the `Mentoring` component to a course in the studio, the
-block is field with default XML content, shown in the screenshot below.
-
-![Edit View](https://raw.githubusercontent.com/edx-solutions/xblock-mentoring/1fb5e3ece6f34b6cf33c956a4fba1d7cbb7349a2/doc/img/edit-view.png)
-
-The wrapping `<mentoring>` supports the following attributes:
-
-* `weight` - The number of points for this block (float; defaults to `1`).
-* `max_attempts` - The maximum number of of times the student can
-  submit an answer for this block. Set to zero for no limit. (integer;
-  defaults to `0`)
-* `url_name` - A unique identifier for this block. Used to refer to
-  this block from other blocks and to be able to declare dependencies
-  (string; a default unique value is generated when block is created).
-* `followed_by` - The `url_name` of the next block the student should
-  go to after completing this block. (string; defaults to `None`).
-* `enforce_dependency` - Whether to enforce dependencies on this block
-  as specified with `followed_by`. When set to `true`, the student
-  will only be allowed to attempt this block after finishing the
-  block that specifies the current block in its `followed_by`
-  attribute (boolean; defaults to `false`).
-* `mode` - The mentoring mode to use for this block. Two mentoring
-  modes are currently supported: `standard` and `assessement`. For
-  more information on the modes see the sectino below (string;
-  defaults to `standard`)
-
-The wrapping `<mentoring>` element can contain the following child
-elements:
-
-* `<title>` - Renders the title of the block.
-* `<html>` - May contain arbitrary HTML to be displayed in the block.
-* `<shared-header>` - A specialized HTML block, displayed together with the title as a shared header for every step in assessment mode.
-* `<answer>` - Represents a free-form answer, rendered as a textarea
-  element.
-* `<mcq>` - Multiple choice question, rendered as radio buttons.
-* `<mrq>` - Multiple response question, rendered as checkboxes.
-* `<mentoring-table>` - Displays answers to free-form questions in a
-  HTML table.
-* `<message>` - Declares feedback text that is displayed when the
-  student submits an answer (ignored in `assessment` mode).
+built-it editing tools guide you through the process of configuring the
+block and adding individual questions.
 
 ### Mentoring modes
 
@@ -126,41 +89,9 @@ Score review and the "Try Again" button:
 
 ### Free-form questions
 
-Free-form questions are represented by an `<answer>` element. The
-answer element supports the following attributes:
+Free-form questions are represented by a "Long Answer" component. 
 
-* `name` - Sets the name of the question. The name can be used to
-  refer to the question when displaying the answer in another block.
-  The name is not visible to the student. Should be unique within a
-  course.
-* `weight` - The weight is used when computing total grade/score of
-  the mentoring block. The larger the weight, the more influence this
-  question will have on the grade. Value of zero means this question
-  has no influence on the grade (float, defaults to `1`).
-* `min_characters` - The minimum length of the answer. If the answer
-  contains less than the specified number of characters, the answer is
-  considered invalid and the student will not be allowed to submit the
-  answer (integer; defaults to `0`).
-* `read_only` - Whether the answer should be rendered read-only. This
-  only makes sense when displaying an answer to a previously answered
-  question. The answer is rendered as a HTML quote instead of a
-  textarea element (boolean; defaults to `false`).
-
-It can also have a `<question>` element containing a paragraph of non-formatted plain text.
-
-#### Example
-
-Here is a simple example of a free-form question:
-
-```xml
-<mentoring url_name="goal_definition" followed_by="getting_feedback" weight="20">
-    <answer name="goal" weight="10">
-        <question>What is your goal?</question>
-    </answer>
-</mentoring>
-```
-
-Screenshot before answering the question:
+Example screenshot before answering the question:
 
 ![Answer Initial](https://raw.githubusercontent.com/edx-solutions/xblock-mentoring/1fb5e3ece6f34b6cf33c956a4fba1d7cbb7349a2/doc/img/answer-1.png)
 
@@ -168,18 +99,9 @@ Screenshot after answering the question:
 
 ![Answer Complete](https://raw.githubusercontent.com/edx-solutions/xblock-mentoring/1fb5e3ece6f34b6cf33c956a4fba1d7cbb7349a2/doc/img/answer-2.png)
 
-The second example shows how to display the answer that the student
-submitted in the previous step. The only difference is that the
-`read_only` attribute is set to `true`.
-
-```xml
-<mentoring url_name="getting_feedback">
-    <html>
-        <p>The goal you entered was:</p>
-    </html>
-    <answer name="goal" read_only="true" />
-</mentoring>
-```
+You can add "Long Answer Recap" components to mentoring blocks later on
+in the course to provide a read-only view of any answer that the student
+entered earlier.
 
 The read-only answer is rendered as a quote in the LMS:
 
@@ -439,40 +361,9 @@ After submitting a wrong answer two times:
 
 ### Custom tip popup window size
 
-You can specify `width` and `height` attributes to the `tip` child to
+You can specify `width` and `height` attributes of any Tip component to
 customize the popup window size. The value of those attribute should
-be valid CSS.
-
-```xml
-<mentoring url_name="mcq_1" enforce_dependency="false">
-    <mrq name="mrq_1_1" type="choices">
-        <question>What do you like in this MRQ?</question>
-        <choice value="elegance">Its elegance</choice>
-        ...
-        <tip require="elegance" width="50px" height="20px">
-          This is something everyone has to like about this MRQ.
-        </tip>
-    </mrq>
-</mentoring>
-```
-
-### Custom Nav title
-
-The Nav title (the black tooltip showed on hover on the Units Nav bar)
-is a list of the `display_name` attributes of all the blocks present
-in that Unit.
-
-So two Mentoring blocks like the following will result in a tooltip
-like the one below:
-
-```xml
-<mentoring url_name="mentoring-0a06b184" weight="20" display_name="First Mentoring block">
-<mentoring url_name="mentoring-1a04badd" weight="20" display_name="Second Mentoring block">
-```
-
-![Nav Title](https://cloud.githubusercontent.com/assets/1225294/2820216/b0228fd8-cef7-11e3-98e1-5fdbf49b706a.png)
-
-The default title is "Mentoring Block".
+be valid CSS (e.g. `50px`).
 
 Workbench installation and settings
 -----------------------------------
@@ -542,6 +433,17 @@ $ cat > templates/xml/my_mentoring_scenario.xml
 ```
 
 Restart the workbench to take the new scenarios into account.
+
+Upgrading from Version 1
+------------------------
+
+To upgrade a course from the earlier version of this XBlock, run the following
+command on a system with edx-platform and xblock-mentoring installed:
+
+```bash
+$ SERVICE_VARIANT=cms DJANGO_SETTINGS_MODULE="cms.envs.devstack" python -m mentoring.v1.upgrade "Org/Course/Run"
+```
+Where "Org/Course/Run" is replaced with the ID of the course to upgrade.
 
 License
 -------
