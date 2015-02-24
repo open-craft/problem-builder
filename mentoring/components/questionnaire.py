@@ -60,6 +60,12 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     values entered by the student, and supports multiple types of multiple-choice
     set, with preset choices and author-defined values.
     """
+    name = String(
+        display_name="Question ID (name)",
+        help="The ID of this question (required). Should be unique within this mentoring component.",
+        default="",
+        scope=Scope.content
+    )
     question = String(
         display_name="Question",
         help="Question to ask the student",
@@ -79,7 +85,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         scope=Scope.content,
         enforce_type=True
     )
-    editable_fields = ('question', 'message', 'weight')
+    editable_fields = ('name', 'question', 'message', 'weight')
     has_children = True
 
     @classmethod
@@ -168,6 +174,25 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         return fragment
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data. Instead of checking fields like self.name, check the
+        fields set on data, e.g. data.name. This allows the same validation method to be re-used
+        for the studio editor. Any errors found should be added to "validation".
+
+        This method should not return any value or raise any exceptions.
+        All of this XBlock's fields should be found in "data", even if they aren't being changed
+        or aren't even set (i.e. are defaults).
+        """
+        super(QuestionnaireAbstractBlock, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+        if not data.name:
+            add_error(u"A unique Question ID is required.")
+        elif ' ' in data.name:
+            add_error(u"Question ID should not contain spaces.")
 
     def validate(self):
         """
