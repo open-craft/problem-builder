@@ -523,6 +523,15 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.initialize_js('MentoringEditComponents')
         return fragment
 
+    def get_content_titles(self):
+        """
+        By default, each Sequential block in a course ("Subsection" in Studio parlance) will
+        display the display_name of each descendant in a tooltip above the content. We don't
+        want that - we only want to display the mentoring block as a whole as one item.
+        Otherwise things like "Choice (yes) (Correct)" will appear in the tooltip.
+        """
+        return [self.display_name]
+
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
         """
