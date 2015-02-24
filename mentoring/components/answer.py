@@ -96,26 +96,31 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
     to make them searchable and referenceable across xblocks.
     """
     name = String(
+        display_name="Question ID (name)",
         help="The ID of this block. Should be unique unless you want the answer to be used in multiple places.",
         default="",
         scope=Scope.content
     )
     default_from = String(
-        help="If specified, get the default value from this answer.",
+        display_name="Default From",
+        help="If a question ID is specified, get the default value from this answer.",
         default=None,
         scope=Scope.content
     )
     min_characters = Integer(
+        display_name="Min. Allowed Characters",
         help="Minimum number of characters allowed for the answer",
         default=0,
         scope=Scope.content
     )
     question = String(
+        display_name="Question",
         help="Question to ask the student",
         scope=Scope.content,
         default=""
     )
     weight = Float(
+        display_name="Weight",
         help="Defines the maximum total grade of the answer block.",
         default=1,
         scope=Scope.settings,
