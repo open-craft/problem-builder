@@ -1,46 +1,38 @@
-<mentoring url_name="mentoring-assessment-1" display_name="Nav tooltip title" weight="1" mode="assessment" max_attempts="2">
-    <title>A Simple Assessment</title>
-    <shared-header>
+<mentoring url_name="mentoring-assessment-1" display_name="A Simple Assessment" weight="1" mode="assessment" max_attempts="2">
+    <html_demo>
         <p>This paragraph is shared between <strong>all</strong> questions.</p>
-    </shared-header>
 
-    <html>
         <p>Please answer the questions below.</p>
-    </html>
+    </html_demo>
 
-    <answer name="goal">
-        <question>What is your goal?</question>
-    </answer>
+    <answer name="goal" question="What is your goal?" />
 
-    <mcq name="mcq_1_1" type="choices">
-        <question>Do you like this MCQ?</question>
+    <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
         <choice value="yes">Yes</choice>
         <choice value="maybenot">Maybe not</choice>
         <choice value="understand">I don't understand</choice>
 
-        <tip display="yes">Great!</tip>
-        <tip reject="maybenot">Ah, damn.</tip>
-        <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
+        <tip values="yes">Great!</tip>
+        <tip values="maybenot">Ah, damn.</tip>
+        <tip values="understand"><div id="test-custom-html">Really?</div></tip>
     </mcq>
 
-    <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
-        <question>How much do you rate this MCQ?</question>
+    <rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How much do you rate this MCQ?" correct_choices="4,5">
         <choice value="notwant">I don't want to rate it</choice>
 
-        <tip display="4,5">I love good grades.</tip>
-        <tip reject="1,2,3">Will do better next time...</tip>
-        <tip reject="notwant">Your loss!</tip>
-    </mcq>
+        <tip values="4,5">I love good grades.</tip>
+        <tip values="1,2,3">Will do better next time...</tip>
+        <tip values="notwant">Your loss!</tip>
+    </rating>
 
-    <mrq name="mrq_1_1" type="choices">
-        <question>What do you like in this MRQ?</question>
+    <mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices="gracefulness,elegance,beauty">
         <choice value="elegance">Its elegance</choice>
         <choice value="beauty">Its beauty</choice>
         <choice value="gracefulness">Its gracefulness</choice>
         <choice value="bugs">Its bugs</choice>
 
-        <tip require="gracefulness">This MRQ is indeed very graceful</tip>
-        <tip require="elegance,beauty">This is something everyone has to like about this MRQ</tip>
-        <tip reject="bugs">Nah, there isn't any!</tip>
+        <tip values="gracefulness">This MRQ is indeed very graceful</tip>
+        <tip values="elegance,beauty">This is something everyone has to like about this MRQ</tip>
+        <tip values="bugs">Nah, there isn't any!</tip>
     </mrq>
 </mentoring>

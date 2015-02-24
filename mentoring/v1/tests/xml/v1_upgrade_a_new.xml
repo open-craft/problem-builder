@@ -1,0 +1,40 @@
+<mentoring url_name="some_url_name" weight="1" mode="standard" display_name="Default Title">
+  <html>
+    <p>This paragraph is shared between <strong>all</strong> questions.</p>
+  </html>
+  <html>
+    <p>Please answer the questions below.</p>
+  </html>
+  <answer name="goal" question="What is your goal?"/>
+  <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
+    <choice value="yes">Yes</choice>
+    <choice value="maybenot">Maybe not</choice>
+    <choice value="understand">I don't understand</choice>
+    <tip values="yes">Great!</tip>
+    <tip values="maybenot">Ah, damn.</tip>
+    <tip values="understand">
+      <div id="test-custom-html">Really?</div>
+    </tip>
+  </mcq>
+  <rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How much do you rate this MCQ?" correct_choices="4,5">
+    <choice value="notwant">I don't want to rate it</choice>
+    <tip values="4,5">I love good grades.</tip>
+    <tip values="1,2,3">Will do better next time...</tip>
+    <tip values="notwant">Your loss!</tip>
+  </rating>
+  <mrq name="mrq_1_1" question="What do you like in this MRQ?" message="Thank you for answering!" required_choices="gracefulness,elegance,beauty">
+    <choice value="elegance">Its elegance</choice>
+    <choice value="beauty">Its beauty</choice>
+    <choice value="gracefulness">Its gracefulness</choice>
+    <choice value="bugs">Its bugs</choice>
+    <tip values="gracefulness">This MRQ is indeed very graceful</tip>
+    <tip values="elegance,beauty">This is something everyone has to like about this MRQ</tip>
+    <tip values="bugs">Nah, there isn't any!</tip>
+  </mrq>
+  <message type="completed">
+    <p>Congratulations!</p>
+  </message>
+  <message type="incomplete">
+    <p>Still some work to do...</p>
+  </message>
+</mentoring>

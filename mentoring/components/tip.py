@@ -23,8 +23,14 @@
 
 # Imports ###########################################################
 
-from .common import BlockWithContent
-from xblock.fields import Scope, String
+from lxml import etree
+
+from xblock.core import XBlock
+from xblock.fields import Scope, String, List
+from xblock.fragment import Fragment
+from xblock.validation import ValidationMessage
+from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin
 
 # Functions #########################################################
 
@@ -41,28 +47,70 @@ def commas_to_set(commas_str):
 # Classes ###########################################################
 
 
-class TipBlock(BlockWithContent):
+class TipBlock(StudioEditableXBlockMixin, XBlock):
     """
     Each choice can define a tip depending on selection
     """
-    TEMPLATE = 'templates/html/tip.html'
-
     content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
-    display = String(help="List of choices to display the tip for", scope=Scope.content, default=None)
-    reject = String(help="List of choices to reject", scope=Scope.content, default=None)
-    require = String(help="List of choices to require", scope=Scope.content, default=None)
+    values = List(
+        display_name="For Choices",
+        help="List of choice value[s] to display the tip for",
+        scope=Scope.content,
+        default=[],
+    )
     width = String(help="Width of the tip popup", scope=Scope.content, default='')
     height = String(help="Height of the tip popup", scope=Scope.content, default='')
+    editable_fields = ('values', 'content', 'width', 'height')
 
     @property
-    def display_with_defaults(self):
-        display = commas_to_set(self.display)
-        return display | self.reject_with_defaults | self.require_with_defaults
+    def display_name(self):
+        return u"Tip for {}".format(u", ".join([unicode(v) for v in self.values]))
 
-    @property
-    def reject_with_defaults(self):
-        return commas_to_set(self.reject)
+    def fallback_view(self, view_name, context):
+        html = ResourceLoader(__name__).render_template("templates/html/tip.html", {
+            'content': self.content,
+            'width': self.width,
+            'height': self.height,
+        })
+        return Fragment(html)
 
-    @property
-    def require_with_defaults(self):
-        return commas_to_set(self.require)
+    def clean_studio_edits(self, data):
+        """
+        Clean up the edits during studio_view save
+        """
+        if "values" in data:
+            data["values"] = list([unicode(v) for v in set(data["values"])])
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data.
+        """
+        super(TipBlock, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        try:
+            valid_values = set(self.get_parent().all_choice_values)
+        except Exception:
+            pass
+        else:
+            for val in set(data.values) - valid_values:
+                add_error(u"A choice value listed for this tip does not exist: {}".format(val))
+
+    @classmethod
+    def parse_xml(cls, node, runtime, keys, id_generator):
+        """
+        Construct this XBlock from the given XML node.
+        """
+        block = runtime.construct_xblock_from_class(cls, keys)
+
+        block.values = [unicode(val).strip() for val in node.get('values', '').split(',')]
+        block.width = node.get('width', '')
+        block.height = node.get('height', '')
+
+        block.content = unicode(node.text or u"")
+        for child in node:
+            block.content += etree.tostring(child, encoding='unicode')
+
+        return block

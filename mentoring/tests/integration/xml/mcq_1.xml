@@ -1,28 +1,26 @@
 <vertical_demo>
     <mentoring url_name="mcq_1" enforce_dependency="false">
-        <mcq name="mcq_1_1" type="choices">
-            <question>Do you like this MCQ?</question>
+        <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
             <choice value="yes">Yes</choice>
             <choice value="maybenot">Maybe not</choice>
             <choice value="understand">I don't understand</choice>
 
-            <tip display="yes">Great!</tip>
-            <tip reject="maybenot">Ah, damn.</tip>
-            <tip reject="understand"><html><div id="test-custom-html">Really?</div></html></tip>
+            <tip values="yes">Great!</tip>
+            <tip values="maybenot">Ah, damn.</tip>
+            <tip values="understand"><div id="test-custom-html">Really?</div></tip>
         </mcq>
 
-        <mcq name="mcq_1_2" type="rating" low="Not good at all" high="Extremely good">
-            <question>How much do you rate this MCQ?</question>
+        <rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How do you rate this MCQ?" correct_choices="4,5">
             <choice value="notwant">I don't want to rate it</choice>
 
-            <tip display="4,5">I love good grades.</tip>
-            <tip reject="1,2,3">Will do better next time...</tip>
-            <tip reject="notwant">Your loss!</tip>
-        </mcq>
+            <tip values="4,5">I love good grades.</tip>
+            <tip values="1,2,3">Will do better next time...</tip>
+            <tip values="notwant">Your loss!</tip>
+        </rating>
 
         <message type="completed">
             All is good now...
-            <html><p>Congratulations!</p></html>
+            <p>Congratulations!</p>
         </message>
     </mentoring>
 </vertical_demo>

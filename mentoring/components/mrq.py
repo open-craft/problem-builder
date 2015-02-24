@@ -26,6 +26,7 @@
 import logging
 
 from xblock.fields import List, Scope, Boolean
+from xblock.validation import ValidationMessage
 from .questionnaire import QuestionnaireAbstractBlock
 from xblockutils.resources import ResourceLoader
 
@@ -42,7 +43,35 @@ class MRQBlock(QuestionnaireAbstractBlock):
     An XBlock used to ask multiple-response questions
     """
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
-    hide_results = Boolean(help="Hide results", scope=Scope.content, default=False)
+    required_choices = List(
+        display_name="Required Choices",
+        help=(
+            "Enter the value[s] that students must select for this MRQ to be considered correct. "
+            "Separate multiple required choices with a comma."
+        ),
+        scope=Scope.content,
+        list_editor="comma-separated",
+        default=[],
+    )
+    ignored_choices = List(
+        display_name="Ignored Choices",
+        help=(
+            "Enter the value[s] that are neither correct nor incorrect. "
+            "Any values not listed as required or ignored will be considered wrong."
+        ),
+        scope=Scope.content,
+        list_editor="comma-separated",
+        default=[],
+    )
+    hide_results = Boolean(display_name="Hide results", scope=Scope.content, default=False)
+    editable_fields = ('question', 'required_choices', 'ignored_choices', 'message', 'weight', 'hide_results', )
+
+    def describe_choice_correctness(self, choice_value):
+        if choice_value in self.required_choices:
+            return u"Required"
+        elif choice_value in self.ignored_choices:
+            return u"Ignored"
+        return u"Not Acceptable"
 
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
@@ -54,13 +83,14 @@ class MRQBlock(QuestionnaireAbstractBlock):
             choice_completed = True
             choice_tips_html = []
             choice_selected = choice.value in submissions
-            for tip in self.get_tips():
-                if choice.value in tip.display_with_defaults:
-                    choice_tips_html.append(tip.get_html())
-
-                if ((not choice_selected and choice.value in tip.require_with_defaults) or
-                        (choice_selected and choice.value in tip.reject_with_defaults)):
+            if choice.value in self.required_choices:
+                if not choice_selected:
                     choice_completed = False
+            elif choice_selected and choice.value not in self.ignored_choices:
+                choice_completed = False
+            for tip in self.get_tips():
+                if choice.value in tip.values:
+                    choice_tips_html.append(tip.render('mentoring_view').content)
 
             if choice_completed:
                 score += 1
@@ -96,3 +126,27 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
         log.debug(u'MRQ submissions result: %s', result)
         return result
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data.
+        """
+        super(MRQBlock, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        all_values = set(self.all_choice_values)
+        required = set(data.required_choices)
+        ignored = set(data.ignored_choices)
+
+        if len(required) < len(data.required_choices):
+            add_error(u"Duplicate required choices set")
+        if len(ignored) < len(data.ignored_choices):
+            add_error(u"Duplicate ignored choices set")
+        for val in required.intersection(ignored):
+            add_error(u"A choice is listed as both required and ignored: {}".format(val))
+        for val in (required - all_values):
+            add_error(u"A choice value listed as required does not exist: {}".format(val))
+        for val in (ignored - all_values):
+            add_error(u"A choice value listed as ignored does not exist: {}".format(val))

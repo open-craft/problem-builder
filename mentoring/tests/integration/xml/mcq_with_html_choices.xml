@@ -1,24 +1,22 @@
 <vertical_demo>
-    <mentoring url_name="mcq_with_comments" display_name="MCQ Exercise 7" weight="1" enforce_dependency="false">
-        <title>MRQ With Resizable popups</title>
-        <mcq name="mrq_1_1_7" type="choices">
-            <question>What do you like in this MRQ?</question>
-            <choice value="elegance"><html><b>Its elegance</b></html></choice>
-            <choice value="beauty"><html><i>Its beauty</i></html></choice>
-            <choice value="gracefulness"><html><strong>Its gracefulness</strong></html></choice>
-            <choice value="bugs"><html><span style="font-color:red">Its bugs</span></html></choice>
+    <mentoring url_name="mcq_with_comments" display_name="MCQ With Resizable popups" weight="1" enforce_dependency="false">
+        <mcq name="mrq_1_1_7" question="What do you like in this MCQ?" correct_choices="gracefulness,elegance,beauty">
+            <choice value="elegance"><b>Its elegance</b></choice>
+            <choice value="beauty"><i>Its beauty</i></choice>
+            <choice value="gracefulness"><strong>Its gracefulness</strong></choice>
+            <choice value="bugs"><span style="font-color:red">Its bugs</span></choice>
 
-            <tip require="gracefulness" width ="200" height = "200">This MRQ is indeed very graceful</tip>
-            <tip require="elegance" width ="600" height = "800">This is something everyone has to like about this MRQ</tip>
-            <tip require="beauty" width ="400" height = "600">This is something everyone has to like about beauty</tip>
-            <tip reject="bugs" width = "100" height = "200">Nah, there isn\'t any!</tip>
+            <tip values="gracefulness" width ="200" height = "200">This MCQ is indeed very graceful</tip>
+            <tip values="elegance" width ="600" height = "800">This is something everyone has to like about this MCQ</tip>
+            <tip values="beauty" width ="400" height = "600">This is something everyone has to like about beauty</tip>
+            <tip values="bugs" width = "100" height = "200">Nah, there isn\'t any!</tip>
         </mcq>
 
         <message type="completed">
-            <html><p>Congratulations!</p></html>
+            <p>Congratulations!</p>
         </message>
         <message type="incomplete">
-            <html><p>Still some work to do...</p></html>
+            <p>Still some work to do...</p>
         </message>
     </mentoring>
 </vertical_demo>

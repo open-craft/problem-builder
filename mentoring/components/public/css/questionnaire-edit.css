@@ -1,0 +1,10 @@
+/* Custom appearance for our "Add" buttons */
+.xblock .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
+  width: 200px;
+  height: 30px;
+  line-height: 30px;
+}
+
+.wrapper-xblock.level-page .xblock-render {
+	padding: 10px;
+}

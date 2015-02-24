@@ -29,9 +29,10 @@ from lazy import lazy
 from mentoring.models import Answer
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Boolean, Float, Integer, String
+from xblock.fields import Scope, Float, Integer, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin
 from .step import StepMixin
 
 
@@ -43,7 +44,51 @@ loader = ResourceLoader(__name__)
 # Classes ###########################################################
 
 
-class AnswerBlock(XBlock, StepMixin):
+class AnswerMixin(object):
+    """
+    Mixin to give an XBlock the ability to read/write data to the Answers DB table.
+    """
+    name = String(
+        display_name="Answer ID",
+        help="The ID of the long answer. Should be unique unless you want the answer to be used in multiple places.",
+        default="",
+        scope=Scope.content,
+    )
+
+    def _get_course_id(self):
+        """ Get a course ID if available """
+        return getattr(self.runtime, 'course_id', 'all')
+
+    def _get_student_id(self):
+        """ Get student anonymous ID or normal ID """
+        try:
+            return self.runtime.anonymous_student_id
+        except AttributeError:
+            return self.scope_ids.user_id
+
+    def get_model_object(self, name=None):
+        """
+        Fetches the Answer model object for the answer named `name`
+        """
+        # By default, get the model object for the current answer's name
+        if not name:
+            name = self.name
+        # Consistency check - we should have a name by now
+        if not name:
+            raise ValueError('AnswerBlock.name field need to be set to a non-null/empty value')
+
+        student_id = self._get_student_id()
+        course_id = self._get_course_id()
+
+        answer_data, _ = Answer.objects.get_or_create(
+            student_id=student_id,
+            course_id=course_id,
+            name=name,
+        )
+        return answer_data
+
+
+class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
     """
     A field where the student enters an answer
 
@@ -53,11 +98,6 @@ class AnswerBlock(XBlock, StepMixin):
     name = String(
         help="The ID of this block. Should be unique unless you want the answer to be used in multiple places.",
         default="",
-        scope=Scope.content
-    )
-    read_only = Boolean(
-        help="Display as a read-only field",
-        default=False,
         scope=Scope.content
     )
     default_from = String(
@@ -82,32 +122,11 @@ class AnswerBlock(XBlock, StepMixin):
         enforce_type=True
     )
 
-    @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator):
-        block = runtime.construct_xblock_from_class(cls, keys)
+    editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from')
 
-        # Load XBlock properties from the XML attributes:
-        for name, value in node.items():
-            setattr(block, name, value)
-
-        for xml_child in node:
-            if xml_child.tag == 'question':
-                block.question = xml_child.text
-            else:
-                block.runtime.add_node_as_child(block, xml_child, id_generator)
-
-        return block
-
-    def _get_course_id(self):
-        """ Get a course ID if available """
-        return getattr(self.runtime, 'course_id', 'all')
-
-    def _get_student_id(self):
-        """ Get student anonymous ID or normal ID """
-        try:
-            return self.runtime.anonymous_student_id
-        except AttributeError:
-            return self.scope_ids.user_id
+    @property
+    def display_name(self):
+        return u"Question {}".format(self.step_number) if not self.lonely_step else u"Question"
 
     @lazy
     def student_input(self):
@@ -129,14 +148,9 @@ class AnswerBlock(XBlock, StepMixin):
         return student_input
 
     def mentoring_view(self, context=None):
-        if not self.read_only:
-            html = loader.render_template('templates/html/answer_editable.html', {
-                'self': self,
-            })
-        else:
-            html = loader.render_template('templates/html/answer_read_only.html', {
-                'self': self,
-            })
+        context = context or {}
+        context['self'] = self
+        html = loader.render_template('templates/html/answer_editable.html', context)
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
@@ -144,19 +158,10 @@ class AnswerBlock(XBlock, StepMixin):
         fragment.initialize_js('AnswerBlock')
         return fragment
 
-    def mentoring_table_view(self, context=None):
-        html = loader.render_template('templates/html/answer_table.html', {
-            'self': self,
-        })
-        fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer_table.css'))
-        return fragment
-
     def submit(self, submission):
-        if not self.read_only:
-            self.student_input = submission[0]['value'].strip()
-            self.save()
-            log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
+        self.student_input = submission[0]['value'].strip()
+        self.save()
+        log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return {
             'student_input': self.student_input,
             'status': self.status,
@@ -170,7 +175,7 @@ class AnswerBlock(XBlock, StepMixin):
         if self.min_characters > 0:
             answer_length_ok = len(self.student_input.strip()) >= self.min_characters
 
-        return 'correct' if (self.read_only or answer_length_ok) else 'incorrect'
+        return 'correct' if answer_length_ok else 'incorrect'
 
     @property
     def completed(self):
@@ -189,27 +194,42 @@ class AnswerBlock(XBlock, StepMixin):
         # Only attempt to locate a model object for this block when the answer has a name
         if self.name:
             answer_data = self.get_model_object()
-            if answer_data.student_input != self.student_input and not self.read_only:
+            if answer_data.student_input != self.student_input:
                 answer_data.student_input = self.student_input
                 answer_data.save()
 
-    def get_model_object(self, name=None):
-        """
-        Fetches the Answer model object for the answer named `name`
-        """
-        # By default, get the model object for the current answer's name
-        if not name:
-            name = self.name
-        # Consistency check - we should have a name by now
-        if not name:
-            raise ValueError('AnswerBlock.name field need to be set to a non-null/empty value')
 
-        student_id = self._get_student_id()
-        course_id = self._get_course_id()
+class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
+    """
+    A block that displays an answer previously entered by the student (read-only).
+    """
+    display_name = String(
+        display_name="Title",
+        help="Title of this answer recap section",
+        scope=Scope.content,
+        default="",
+    )
+    description = String(
+        help="Description of this answer (optional). Can include HTML.",
+        scope=Scope.content,
+        default="",
+        display_name="Description",
+    )
+    editable_fields = ('name', 'display_name', 'description')
 
-        answer_data, _ = Answer.objects.get_or_create(
-            student_id=student_id,
-            course_id=course_id,
-            name=name,
-        )
-        return answer_data
+    @property
+    def student_input(self):
+        if self.name:
+            return self.get_model_object().student_input
+        return ''
+
+    def fallback_view(self, view_name, context=None):
+        context = context or {}
+        context['title'] = self.display_name
+        context['description'] = self.description
+        context['student_input'] = self.student_input
+        html = loader.render_template('templates/html/answer_read_only.html', context)
+
+        fragment = Fragment(html)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
+        return fragment

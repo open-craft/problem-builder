@@ -1,30 +1,22 @@
 <vertical_demo>
-    <html>
+    <html_demo>
         <p>Below are two mentoring blocks and a grade export block that
         should be able to export their data as CSV.</p>
-    </html>
+    </html_demo>
     <mentoring display_name="Mentoring Block 1" mode="standard">
-        <title>Mentoring Block 1</title>
-        <html>
+        <html_demo>
             <p>Please answer the question below.</p>
-        </html>
+        </html_demo>
 
-        <answer name="goal">
-            <question>What is your goal?</question>
-        </answer>
+        <answer name="goal" question="What is your goal?" />
     </mentoring>
-    <mentoring display_name="Mentoring Block 1" mode="assessment">
-        <title>Mentoring Block 2 (Assessment)</title>
-        <html>
+    <mentoring display_name="Mentoring Block 2 (Assessment)" mode="assessment">
+        <html_demo>
             <p>Please answer the question below.</p>
-        </html>
+        </html_demo>
 
-        <answer name="inspired">
-            <question>Who has inspired you the most?</question>
-        </answer>
-        <answer name="meaning">
-            <question>What is the meaning of life?</question>
-        </answer>
+        <answer name="inspired" question="Who has inspired you the most?"/>
+        <answer name="meaning" question="What is the meaning of life?" />
     </mentoring>
 
     <mentoring-dataexport display_name="Data Export Test" />

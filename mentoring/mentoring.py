@@ -27,31 +27,30 @@ import logging
 
 from collections import namedtuple
 
-from lxml import etree
-from StringIO import StringIO
-
 from xblock.core import XBlock
+from xblock.exceptions import NoSuchViewError
 from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
+from xblock.validation import ValidationMessage
 
-from components import TitleBlock, SharedHeaderBlock, MentoringMessageBlock
+from components import MentoringMessageBlock
 from components.step import StepParentMixin, StepMixin
 
 from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
-default_xml_content = loader.render_template('templates/xml/mentoring_default.xml', {})
-
 # Classes ###########################################################
 
 Score = namedtuple("Score", ["raw", "percentage", "correct", "incorrect", "partially_correct"])
 
 
-class MentoringBlock(XBlock, StepParentMixin):
+@XBlock.needs("i18n")
+class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioContainerXBlockMixin):
     """
     An XBlock providing mentoring capabilities
 
@@ -60,14 +59,10 @@ class MentoringBlock(XBlock, StepParentMixin):
     student is a) provided mentoring advices and asked to alter his answer, or b) is given the
     ok to continue.
     """
-
-    @staticmethod
-    def is_default_xml_content(value):
-        return value == default_xml_content
-
     # Content
     MENTORING_MODES = ('standard', 'assessment')
     mode = String(
+        display_name="Mode",
         help="Mode of the mentoring. 'standard' or 'assessment'",
         default='standard',
         scope=Scope.content,
@@ -84,14 +79,6 @@ class MentoringBlock(XBlock, StepParentMixin):
         scope=Scope.content,
         enforce_type=True
     )
-    url_name = String(
-        help="Name of the current step, used for URL building",
-        default='mentoring-default',
-        scope=Scope.content
-        # TODO in future: set this field's default to xblock.fields.UNIQUE_ID
-        # and remove self.url_name_with_default. Waiting until UNIQUE_ID support
-        # is available in edx-platform's pinned version of xblock. (See XBlock PR 249)
-    )
     enforce_dependency = Boolean(
         help="Should the next step be the current block to complete?",
         default=False,
@@ -104,7 +91,13 @@ class MentoringBlock(XBlock, StepParentMixin):
         scope=Scope.content,
         enforce_type=True
     )
-    xml_content = String(help="XML content", default=default_xml_content, scope=Scope.content)
+    xml_content = String(
+        help="Not used for version 2. This field is here only to preserve the data needed to upgrade from v1 to v2.",
+        display_name="XML content",
+        default='',
+        scope=Scope.content,
+        multiline_editor=True
+    )
 
     # Settings
     weight = Float(
@@ -114,8 +107,8 @@ class MentoringBlock(XBlock, StepParentMixin):
         enforce_type=True
     )
     display_name = String(
-        help="Display name of the component",
-        default="Mentoring XBlock",
+        help="Title to display",
+        default="Mentoring Questions",
         scope=Scope.settings
     )
 
@@ -155,11 +148,17 @@ class MentoringBlock(XBlock, StepParentMixin):
         scope=Scope.preferences
     )
 
+    editable_fields = (
+        'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
+        'display_submit', 'weight', 'display_name',
+    )
     icon_class = 'problem'
     has_score = True
     has_children = True
 
-    FLOATING_BLOCKS = (TitleBlock, MentoringMessageBlock, SharedHeaderBlock)
+    def _(self, text):
+        """ translate text """
+        return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def is_assessment(self):
@@ -171,7 +170,7 @@ class MentoringBlock(XBlock, StepParentMixin):
         weights = (float(self.runtime.get_block(step_id).weight) for step_id in self.steps)
         total_child_weight = sum(weights)
         if total_child_weight == 0:
-            return (0, 0, 0, 0)
+            return Score(0, 0, 0, 0, 0)
         score = sum(r[1]['score'] * r[1]['weight'] for r in self.student_results) / total_child_weight
         correct = sum(1 for r in self.student_results if r[1]['status'] == 'correct')
         incorrect = sum(1 for r in self.student_results if r[1]['status'] == 'incorrect')
@@ -184,27 +183,31 @@ class MentoringBlock(XBlock, StepParentMixin):
         self.migrate_fields()
 
         fragment = Fragment()
-        title = u""
-        header = u""
         child_content = u""
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
-            if isinstance(child, TitleBlock):
-                title = child.content
-            elif isinstance(child, SharedHeaderBlock):
-                header = child.render('mentoring_view', context).content
-            elif isinstance(child, MentoringMessageBlock):
+            if isinstance(child, MentoringMessageBlock):
                 pass  # TODO
             else:
-                child_fragment = child.render('mentoring_view', context)
+                try:
+                    child_fragment = child.render('mentoring_view', context)
+                except NoSuchViewError:
+                    if child.scope_ids.block_type == 'html':
+                        if getattr(self.runtime, 'is_author_mode', False):
+                            # html block doesn't support mentoring_view, and if we use student_view Studio will wrap
+                            # it in HTML that we don't want in the preview. So just render its HTML directly:
+                            child_fragment = Fragment(child.data)
+                        else:
+                            child_fragment = child.render('student_view', context)
+                    else:
+                        raise  # This type of child is not supported.
                 fragment.add_frag_resources(child_fragment)
                 child_content += child_fragment.content
 
         fragment.add_content(loader.render_template('templates/html/mentoring.html', {
             'self': self,
-            'title': title,
-            'header': header,
+            'title': self.display_name,
             'child_content': child_content,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
@@ -239,28 +242,8 @@ class MentoringBlock(XBlock, StepParentMixin):
     def additional_publish_event_data(self):
         return {
             'user_id': self.scope_ids.user_id,
-            'component_id': self.url_name_with_default,
+            'component_id': self.url_name,
         }
-
-    @property
-    def title(self):
-        """
-        Returns the title child.
-        """
-        for child in self.get_children_objects():
-            if isinstance(child, TitleBlock):
-                return child
-        return None
-
-    @property
-    def header(self):
-        """
-        Return the header child.
-        """
-        for child in self.get_children_objects():
-            if isinstance(child, SharedHeaderBlock):
-                return child
-        return None
 
     @property
     def has_missing_dependency(self):
@@ -268,7 +251,7 @@ class MentoringBlock(XBlock, StepParentMixin):
         Returns True if the student needs to complete another step before being able to complete
         the current one, and False otherwise
         """
-        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name_with_default)
+        return self.enforce_dependency and (not self.completed) and (self.next_step != self.url_name)
 
     @property
     def next_step_url(self):
@@ -276,6 +259,17 @@ class MentoringBlock(XBlock, StepParentMixin):
         Returns the URL of the next step's page
         """
         return '/jump_to_id/{}'.format(self.next_step)
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the usage_id.
+        """
+        try:
+            return super(MentoringBlock, self).url_name
+        except AttributeError:
+            return unicode(self.scope_ids.usage_id)
 
     @XBlock.json_handler
     def view(self, data, suffix=''):
@@ -332,7 +326,7 @@ class MentoringBlock(XBlock, StepParentMixin):
         if self.has_missing_dependency:
             completed = False
             message = 'You need to complete all previous steps before being able to complete the current one.'
-        elif completed and self.next_step == self.url_name_with_default:
+        elif completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
         # Once it was completed, lock score
@@ -375,7 +369,7 @@ class MentoringBlock(XBlock, StepParentMixin):
         completed = False
         current_child = None
         children = [self.runtime.get_block(child_id) for child_id in self.children]
-        children = [child for child in children if not isinstance(child, self.FLOATING_BLOCKS)]
+        children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
         steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
 
         for child in children:
@@ -466,72 +460,84 @@ class MentoringBlock(XBlock, StepParentMixin):
                 html += child.render('mentoring_view', {}).content  # TODO: frament_text_rewriting ?
         return html
 
-    def studio_view(self, context):
+    def clean_studio_edits(self, data):
         """
-        Editing view in Studio
+        Given POST data dictionary 'data', clean the data before validating it.
+        e.g. fix capitalization, remove trailing spaces, etc.
         """
-        fragment = Fragment()
-        fragment.add_content(loader.render_template('templates/html/mentoring_edit.html', {
-            'self': self,
-            'xml_content': self.xml_content,
+        if data.get('mode') == 'assessment' and 'max_attempts' not in data:
+            # assessment has a default of 2 max_attempts
+            data['max_attempts'] = 2
+
+    def validate(self):
+        """
+        Validates the state of this XBlock except for individual field values.
+        """
+        validation = super(MentoringBlock, self).validate()
+        a_child_has_issues = False
+        message_types_present = set()
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            # Check if the child has any errors:
+            if not child.validate().empty:
+                a_child_has_issues = True
+            # Ensure there is only one "message" block of each type:
+            if isinstance(child, MentoringMessageBlock):
+                msg_type = child.type
+                if msg_type in message_types_present:
+                    validation.add(ValidationMessage(
+                        ValidationMessage.ERROR,
+                        self._(u"There should only be one '{}' message component.".format(msg_type))
+                    ))
+                message_types_present.add(msg_type)
+        if a_child_has_issues:
+            validation.add(ValidationMessage(
+                ValidationMessage.ERROR,
+                self._(u"A component inside this mentoring block has issues.")
+            ))
+        return validation
+
+    def author_preview_view(self, context):
+        """
+        Child blocks can override this to add a custom preview shown to authors in Studio when
+        not editing this block's children.
+        """
+        fragment = self.student_view(context)
+        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+            "url_name": self.url_name
         }))
-        fragment.add_javascript_url(
-            self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
-        fragment.add_css_url(
-            self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
-
-        fragment.initialize_js('MentoringEditBlock')
-
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
         return fragment
 
-    @XBlock.json_handler
-    def studio_submit(self, submissions, suffix=''):
-        log.info(u'Received studio submissions: {}'.format(submissions))
-
-        success = True
-        xml_content = submissions['xml_content']
-        try:
-            content = etree.parse(StringIO(xml_content))
-        except etree.XMLSyntaxError as e:
-            response = {
-                'result': 'error',
-                'message': e.message
-            }
-            success = False
-        else:
-            root = content.getroot()
-            if 'mode' in root.attrib:
-                if root.attrib['mode'] not in self.MENTORING_MODES:
-                    response = {
-                        'result': 'error',
-                        'message': "Invalid mentoring mode: should be 'standard' or 'assessment'"
-                    }
-                    success = False
-                elif root.attrib['mode'] == 'assessment' and 'max_attempts' not in root.attrib:
-                    # assessment has a default of 2 max_attempts
-                    root.attrib['max_attempts'] = '2'
-
-            if success:
-                response = {
-                    'result': 'success',
-                }
-                self.xml_content = etree.tostring(content, pretty_print=True)
-
-        log.debug(u'Response from Studio: {}'.format(response))
-        return response
-
-    @property
-    def url_name_with_default(self):
+    def author_edit_view(self, context):
         """
-        Ensure the `url_name` is set to a unique, non-empty value.
-        In future once hte pinned version of XBlock is updated,
-        we can remove this and change the field to use the
-        xblock.fields.UNIQUE_ID flag instead.
+        Add some HTML to the author view that allows authors to add child blocks.
         """
-        if self.url_name == 'mentoring-default':
-            return self.scope_ids.usage_id
-        else:
-            return self.url_name
+        fragment = super(MentoringBlock, self).author_edit_view(context)
+        fragment.add_content(loader.render_template('templates/html/mentoring_add_buttons.html', {}))
+        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+            "url_name": self.url_name
+        }))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+        fragment.initialize_js('MentoringEditComponents')
+        return fragment
+
+    @classmethod
+    def parse_xml(cls, node, runtime, keys, id_generator):
+        """
+        To avoid collisions with e.g. the existing <html> XBlock in edx-platform,
+        we prefix all of the mentoring block tags with "mentoring-". However,
+        using that prefix in the XML is optional. This method adds that prefix
+        in when parsing XML in a mentoring context.
+        """
+        PREFIX_TAGS = ("answer", "answer-recap", "quizz", "mcq", "mrq", "rating", "message", "tip", "choice", "column")
+        for element in node.iter():
+            # We have prefixed all our XBlock entry points with "mentoring-". But using the "mentoring-"
+            # prefix in the XML is optional:
+            if element.tag in PREFIX_TAGS:
+                element.tag = "mentoring-{}".format(element.tag)
+        return super(MentoringBlock, cls).parse_xml(node, runtime, keys, id_generator)
 
     @staticmethod
     def workbench_scenarios():

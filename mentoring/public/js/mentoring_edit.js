@@ -1,24 +1,21 @@
-function MentoringEditBlock(runtime, element) {
-    var xmlEditorTextarea = $('.block-xml-editor', element),
-        xmlEditor = CodeMirror.fromTextArea(xmlEditorTextarea[0], { mode: 'xml' });
-
-    $('.save-button', element).bind('click', function() {
-        var handlerUrl = runtime.handlerUrl(element, 'studio_submit'),
-            data = {
-                'xml_content': xmlEditor.getValue(),
-            };
-
-        $('.error-message', element).html();
-        $.post(handlerUrl, JSON.stringify(data)).done(function(response) {
-            if (response.result === 'success') {
-                window.location.reload(false);
-            } else {
-                $('.error-message', element).html('Error: '+response.message);
-            }
+function MentoringEditComponents(runtime, element) {
+    "use strict";
+    // Disable "add" buttons when a message of that type already exists:
+    var $buttons = $('.add-xblock-component-button[data-category=mentoring-message]', element);
+    var updateButtons = function() {
+        $buttons.each(function() {
+            var msg_type = $(this).data('boilerplate');
+            $(this).toggleClass('disabled', $('.xblock .message.'+msg_type).length > 0);
         });
+    };
+    updateButtons();
+    $buttons.click(function(ev) {
+        if ($(this).is('.disabled')) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        } else {
+            $(this).addClass('disabled');
+        }
     });
-
-    $('.cancel-button', element).bind('click', function() {
-        runtime.notify('cancel', {});
-    });
+    runtime.listenTo('deleted-child', updateButtons);
 }

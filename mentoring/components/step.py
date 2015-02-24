@@ -17,7 +17,20 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-from .utils import child_isinstance
+from lazy import lazy
+from xblockutils.helpers import child_isinstance
+
+
+def _normalize_id(key):
+    """
+    Helper method to normalize a key to avoid issues where some keys have version/branch and others don't.
+    e.g. self.scope_ids.usage_id != self.runtime.get_block(self.scope_ids.usage_id).scope_ids.usage_id
+    """
+    if hasattr(key, "for_branch"):
+        key = key.for_branch(None)
+    if hasattr(key, "for_version"):
+        key = key.for_version(None)
+    return key
 
 
 class StepParentMixin(object):
@@ -30,19 +43,31 @@ class StepParentMixin(object):
         """
         Get the usage_ids of all of this XBlock's children that are "Steps"
         """
-        return [child_id for child_id in self.children if child_isinstance(self, child_id, StepMixin)]
+        return [_normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, StepMixin)]
 
 
 class StepMixin(object):
     """
     An XBlock mixin for a child block that is a "Step"
     """
-    @property
-    def step_number(self):
-        return list(self.get_parent().steps).index(self.scope_ids.usage_id) + 1
+    has_author_view = True
 
-    @property
+    @lazy
+    def step_number(self):
+        return list(self.get_parent().steps).index(_normalize_id(self.scope_ids.usage_id)) + 1
+
+    @lazy
     def lonely_step(self):
-        if self.scope_ids.usage_id not in self.get_parent().steps:
+        if _normalize_id(self.scope_ids.usage_id) not in self.get_parent().steps:
             raise ValueError("Step's parent should contain Step", self, self.get_parent().steps)
         return len(self.get_parent().steps) == 1
+
+    def author_view(self, context):
+        context = context or {}
+        context['hide_header'] = True
+        return self.mentoring_view(context)
+
+    def author_preview_view(self, context):
+        context = context or {}
+        context['hide_header'] = True
+        return self.student_view(context)

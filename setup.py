@@ -47,23 +47,20 @@ BLOCKS = [
     'mentoring-dataexport = mentoring:MentoringDataExportBlock',
 
     'mentoring-table = mentoring.components:MentoringTableBlock',
-    'column = mentoring.components:MentoringTableColumnBlock',
-    'header = mentoring.components:MentoringTableColumnHeaderBlock',
-    'answer = mentoring.components:AnswerBlock',
-    'quizz = mentoring.components:MCQBlock',
-    'mcq = mentoring.components:MCQBlock',
-    'mrq = mentoring.components:MRQBlock',
-    'message = mentoring.components:MentoringMessageBlock',
-    'tip = mentoring.components:TipBlock',
-    'choice = mentoring.components:ChoiceBlock',
-    'html = mentoring.components:HTMLBlock',
-    'title = mentoring.components:TitleBlock',
-    'shared-header = mentoring.components:SharedHeaderBlock',
+    'mentoring-column = mentoring.components:MentoringTableColumn',
+    'mentoring-answer = mentoring.components:AnswerBlock',
+    'mentoring-answer-recap = mentoring.components:AnswerRecapBlock',
+    'mentoring-mcq = mentoring.components:MCQBlock',
+    'mentoring-rating = mentoring.components:RatingBlock',
+    'mentoring-mrq = mentoring.components:MRQBlock',
+    'mentoring-message = mentoring.components:MentoringMessageBlock',
+    'mentoring-tip = mentoring.components:TipBlock',
+    'mentoring-choice = mentoring.components:ChoiceBlock',
 ]
 
 setup(
     name='xblock-mentoring',
-    version='0.1',
+    version='2.0',
     description='XBlock - Mentoring',
     packages=['mentoring'],
     install_requires=[

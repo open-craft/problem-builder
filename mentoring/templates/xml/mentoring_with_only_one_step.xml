@@ -1,27 +1,23 @@
-<mentoring display_name="Nav tooltip title" weight="1" mode="standard">
-    <title>Default Title</title>
-    <html>
+<mentoring display_name="Default Title" weight="1" mode="standard">
+    <html_demo>
         <p>Please answer the questions below.</p>
-    </html>
+    </html_demo>
 
-    <mrq name="mrq_1_1" type="choices">
-        <question>What do you like in this MRQ?</question>
+    <mrq name="mrq_1_1" question="What do you like in this MRQ?" message="Thank you for answering!" required_choices="gracefulness,elegance,beauty">
         <choice value="elegance">Its elegance</choice>
         <choice value="beauty">Its beauty</choice>
         <choice value="gracefulness">Its gracefulness</choice>
         <choice value="bugs">Its bugs</choice>
 
-        <tip require="gracefulness">This MRQ is indeed very graceful</tip>
-        <tip require="elegance,beauty">This is something everyone has to like about this MRQ</tip>
-        <tip reject="bugs">Nah, there isn't any!</tip>
-
-        <message type="on-submit">Thank you for answering!</message>
+        <tip values="gracefulness">This MRQ is indeed very graceful</tip>
+        <tip values="elegance,beauty">This is something everyone has to like about this MRQ</tip>
+        <tip values="bugs">Nah, there aren't any!</tip>
     </mrq>
 
     <message type="completed">
-        <html><p>Congratulations!</p></html>
+        <p>Congratulations!</p>
     </message>
     <message type="incomplete">
-        <html><p>Still some work to do...</p></html>
+        <p>Still some work to do...</p>
     </message>
 </mentoring>
