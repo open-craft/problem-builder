@@ -314,22 +314,6 @@ questions.
 
 ![Mentoring Table](https://raw.githubusercontent.com/edx-solutions/xblock-mentoring/1fb5e3ece6f34b6cf33c956a4fba1d7cbb7349a2/doc/img/mentoring-table.png)
 
-### Data export
-
-The Data export XBlock allows the instructor team to export all the
-student answers to questions from the entire course as a CSV file. To
-use the Data Export XBlock, you must make sure that
-`"mentoring-dataexport"` is present  in the `advanced_modules` list
-under `Settings -> Advanced` in the Studio.
-
-The Data export XBlock renders a button that will download a CSV file
-when clicked.
-
-![Data Export XBlock](https://raw.githubusercontent.com/edx-solutions/xblock-mentoring/1fb5e3ece6f34b6cf33c956a4fba1d7cbb7349a2/doc/img/dataexport.png)
-
-The Data export XBlock is intented to be used as a tool by admins in
-the Studio, and is not meant to be published on a live course.
-
 ### Maximum Attempts
 
 You can set the number of maximum attempts for the unit completion by

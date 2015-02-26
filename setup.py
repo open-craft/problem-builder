@@ -44,7 +44,6 @@ def package_data(pkg, root_list):
 
 BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
-    'mentoring-dataexport = mentoring:MentoringDataExportBlock',
 
     'mentoring-table = mentoring.components:MentoringTableBlock',
     'mentoring-column = mentoring.components:MentoringTableColumn',
