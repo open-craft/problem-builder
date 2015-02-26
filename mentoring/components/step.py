@@ -65,9 +65,15 @@ class StepMixin(object):
     def author_view(self, context):
         context = context or {}
         context['hide_header'] = True
-        return self.mentoring_view(context)
+        try:
+            return self.mentoring_view(context)
+        except AttributeError:
+            return self.fallback_view('mentoring_view', context)
 
     def author_preview_view(self, context):
         context = context or {}
         context['hide_header'] = True
-        return self.student_view(context)
+        try:
+            return self.student_view(context)
+        except AttributeError:
+            return self.fallback_view('student_view', context)
