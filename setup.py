@@ -62,7 +62,7 @@ setup(
     name='xblock-mentoring',
     version='2.0',
     description='XBlock - Mentoring',
-    packages=['mentoring'],
+    packages=['mentoring', 'mentoring.v1'],
     install_requires=[
         'XBlock',
         'xblock-utils',
