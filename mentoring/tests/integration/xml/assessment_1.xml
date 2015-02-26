@@ -5,6 +5,13 @@
         <p>Please answer the questions below.</p>
     </html_demo>
 
+    <html_demo>
+        We need an XBlock with JavaScript here to test that it doesn't interfere
+        with the assessment, since it will show up in runtime(element).children,
+        but it is not a "step" element:
+    </html_demo>
+    <acid/> 
+
     <answer name="goal" question="What is your goal?" />
 
     <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">

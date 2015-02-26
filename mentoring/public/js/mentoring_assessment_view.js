@@ -16,8 +16,8 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         // Clear all selections
         $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
 
-        // hide all children
-        mentoring.hideAllChildren();
+        // hide all questions
+        mentoring.hideAllSteps();
 
         $('.grade').html('');
         $('.attempts').html('');
@@ -96,11 +96,11 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     }
 
     function isLastChild() {
-        return (active_child == mentoring.children.length-1);
+        return (active_child == mentoring.steps.length-1);
     }
 
     function isDone() {
-        return (active_child == mentoring.children.length);
+        return (active_child == mentoring.steps.length);
     }
 
     function displayNextChild() {
@@ -108,7 +108,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         // find the next real child block to display. HTMLBlock are always displayed
         active_child++;
-        var child = mentoring.children[active_child];
+        var child = mentoring.steps[active_child];
         $(child.element).show();
         mentoring.publish_event({
             event_type: 'xblock.mentoring.assessment.shown',
@@ -164,7 +164,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     function submit() {
         var success = true;
         var data = {};
-        var child = mentoring.children[active_child];
+        var child = mentoring.steps[active_child];
         if (child && child.name !== undefined) {
             data[child.name] = callIfExists(child, 'submit');
         }
@@ -178,12 +178,12 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     function validateXBlock() {
         var is_valid = true;
         var data = $('.attempts', element).data();
-        var children = mentoring.children;
+        var steps = mentoring.steps;
 
         // if ((data.max_attempts > 0) && (data.num_attempts >= data.max_attempts)) {
         //     is_valid = false;
         // }
-        var child = mentoring.children[active_child];
+        var child = mentoring.steps[active_child];
         if (child && child.name !== undefined) {
             var child_validation = callIfExists(child, 'validate');
             if (_.isBoolean(child_validation)) {

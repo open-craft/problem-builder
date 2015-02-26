@@ -141,7 +141,7 @@ function RatingBlock(runtime, element) {
     return MCQBlock(runtime, element);
 }
 
-function MRQBlock(runtime, element, mentoring) {
+function MRQBlock(runtime, element) {
     return {
         mode: null,
         mentoring: null,

@@ -135,6 +135,15 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     def mentoring_view(self, context=None):
         return self.student_view(context)
 
+    def assessment_step_view(self, context=None):
+        """
+        assessment_step_view is the same as mentoring_view, except its DIV will have a different
+        class (.xblock-v1-assessment_step_view) that we use for assessments to hide all the
+        steps with CSS and to detect which children of mentoring are "Steps" and which are just
+        decorative elements/instructions.
+        """
+        return self.mentoring_view(context)
+
     @property
     def custom_choices(self):
         custom_choices = []

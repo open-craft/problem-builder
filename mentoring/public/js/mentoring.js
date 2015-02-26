@@ -2,6 +2,7 @@ function MentoringBlock(runtime, element) {
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var data = $('.mentoring', element).data();
     var children = runtime.children(element);
+    var steps = runtime.children(element).filter(function(c) { return c.element.className.indexOf('assessment_step_view') > -1; });
     var step = data.step;
 
     var mentoring = {
@@ -12,8 +13,9 @@ function MentoringBlock(runtime, element) {
         children: children,
         initChildren: initChildren,
         getChildByName: getChildByName,
-        hideAllChildren: hideAllChildren,
+        hideAllSteps: hideAllSteps,
         step: step,
+        steps: steps,
         publish_event: publish_event
     };
 
@@ -88,9 +90,9 @@ function MentoringBlock(runtime, element) {
         }
     }
 
-    function hideAllChildren() {
-        for (var i=0; i < children.length; i++) {
-            $(children[i].element).hide();
+    function hideAllSteps() {
+        for (var i=0; i < steps.length; i++) {
+            $(steps[i].element).hide();
         }
     }
 

@@ -152,7 +152,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
 
         return student_input
 
-    def mentoring_view(self, context=None):
+    def fallback_view(self, view_name, context=None):
         context = context or {}
         context['self'] = self
         html = loader.render_template('templates/html/answer_editable.html', context)
