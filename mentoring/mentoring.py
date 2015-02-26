@@ -44,12 +44,18 @@ from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContain
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
+_default_theme_config = {
+    'package': 'mentoring',
+    'locations': ['public/themes/lms.css']
+}
+
 # Classes ###########################################################
 
 Score = namedtuple("Score", ["raw", "percentage", "correct", "incorrect", "partially_correct"])
 
 
 @XBlock.needs("i18n")
+@XBlock.wants('settings')
 class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioContainerXBlockMixin):
     """
     An XBlock providing mentoring capabilities
@@ -156,13 +162,30 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     has_score = True
     has_children = True
 
+    block_settings_key = 'mentoring'
+    theme_key = 'theme'
+
     def _(self, text):
         """ translate text """
         return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def is_assessment(self):
+        """ Checks if mentoring XBlock is in assessment mode """
         return self.mode == 'assessment'
+
+    def get_theme(self):
+        """
+        Gets theme settings from settings service. Falls back to default (LMS) theme
+        if settings service is not available, xblock theme settings are not set or does
+        contain mentoring theme settings.
+        """
+        settings_service = self.runtime.service(self, "settings")
+        if settings_service:
+            xblock_settings = settings_service.get_settings_bucket(self)
+            if xblock_settings and self.theme_key in xblock_settings:
+                return xblock_settings[self.theme_key]
+        return _default_theme_config
 
     @property
     def score(self):
@@ -177,6 +200,12 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         partially_correct = sum(1 for r in self.student_results if r[1]['status'] == 'partial')
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
+
+    def include_theme_files(self, fragment):
+        theme = self.get_theme()
+        theme_package, theme_files = theme['package'], theme['locations']
+        for theme_file in theme_files:
+            fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
 
     def student_view(self, context):
         # Migrate stored data if necessary
@@ -219,6 +248,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
 
+        self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
         try:
             from workbench.runtime import WorkbenchRuntime
@@ -515,6 +545,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
+        self.include_theme_files(fragment)
         return fragment
 
     def author_edit_view(self, context):
