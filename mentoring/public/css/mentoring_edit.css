@@ -1,9 +1,9 @@
 /* Display of url_name below content */
-.url-name-footer {
+.xblock[data-block-type=mentoring] .url-name-footer {
   font-style: italic;
 }
 
-.url-name-footer .url-name {
+.xblock[data-block-type=mentoring] .url-name-footer .url-name {
   margin: 0 10px;
   font-family: monospace;
 }
