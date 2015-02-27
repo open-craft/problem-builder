@@ -74,17 +74,16 @@ class MCQBlock(QuestionnaireAbstractBlock):
             if submission in tip.values:
                 tips_html.append(tip.render('mentoring_view').content)
 
-        formatted_tips = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
-            'self': self,
-            'tips_html': tips_html,
-            'completed': correct,
-        })
+        if tips_html:
+            formatted_tips = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
+                'tips_html': tips_html,
+            })
 
         self.student_choice = submission
         result = {
             'submission': submission,
             'status': 'correct' if correct else 'incorrect',
-            'tips': formatted_tips,
+            'tips': formatted_tips if tips_html else None,
             'weight': self.weight,
             'score': 1 if correct else 0,
         }
