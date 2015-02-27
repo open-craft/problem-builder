@@ -25,7 +25,7 @@
 
 from lxml import etree
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Float, List
+from xblock.fields import Scope, String, Float, List, UNIQUE_ID
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
@@ -61,10 +61,11 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     set, with preset choices and author-defined values.
     """
     name = String(
+        # This doesn't need to be a field but is kept for backwards compatibility with v1 student data
         display_name="Question ID (name)",
         help="The ID of this question (required). Should be unique within this mentoring component.",
-        default="",
-        scope=Scope.content
+        default=UNIQUE_ID,
+        scope=Scope.settings,  # Must be scope.settings, or the unique ID will change every time this block is edited
     )
     question = String(
         display_name="Question",
@@ -85,7 +86,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         scope=Scope.content,
         enforce_type=True
     )
-    editable_fields = ('name', 'question', 'message', 'weight')
+    editable_fields = ('question', 'message', 'weight')
     has_children = True
 
     @classmethod

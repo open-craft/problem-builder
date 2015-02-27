@@ -24,6 +24,7 @@
 # Imports ###########################################################
 
 from lxml import etree
+import uuid
 
 from xblock.core import XBlock
 from xblock.fields import Scope, String
@@ -50,15 +51,19 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
         scope=Scope.content,
         default="",
     )
-    editable_fields = ('value', 'content')
+    editable_fields = ('content', )
 
-    @property
-    def display_name(self):
-        try:
-            status = self.get_parent().describe_choice_correctness(self.value)
-        except Exception:
-            status = u"Out of Context"  # Parent block should implement describe_choice_correctness()
-        return u"Choice ({}) ({})".format(self.value, status)
+    def __getattribute__(self, name):
+        """
+        Provide a read-only display name without adding a display_name field to the class.
+        """
+        if name == "display_name":
+            try:
+                status = self.get_parent().describe_choice_correctness(self.value)
+            except Exception:
+                status = u"Out of Context"  # Parent block should implement describe_choice_correctness()
+            return u"Choice ({})".format(status)
+        return super(ChoiceBlock, self).__getattribute__(name)
 
     def fallback_view(self, view_name, context):
         return Fragment(u'<span class="choice-text">{}</span>'.format(self.content))
@@ -77,13 +82,39 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
         if not data.content.strip():
             add_error(u"No choice text set yet.")
 
+    def validate(self):
+        """
+        Validates the state of this XBlock.
+        """
+        validation = super(ChoiceBlock, self).validate()
+        if self.get_parent().all_choice_values.count(self.value) > 1:
+            validation.add(
+                ValidationMessage(ValidationMessage.ERROR, (
+                    u"This choice has a non-unique ID and won't work properly. "
+                    "This can happen if you duplicate a choice rather than use the Add Choice button."
+                ))
+            )
+        print(self.get_parent().all_choice_values)
+        return validation
+
+    @classmethod
+    def get_template(cls, template_id):
+        """
+        Used to interact with Studio's create_xblock method to instantiate pre-defined templates.
+        """
+        # Generate a random 'value' value. We can't just use default=UNIQUE_ID on the field,
+        # because that doesn't work properly with import/export, re-run, or duplicating the block
+        if template_id == 'studio_default':
+            return {'metadata': {'value': uuid.uuid4().hex[:7]}, 'data': {}}
+        return {'metadata': {}, 'data': {}}
+
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
         """
         Construct this XBlock from the given XML node.
         """
         block = runtime.construct_xblock_from_class(cls, keys)
-        for field_name in cls.editable_fields:
+        for field_name in ('value', 'content'):
             if field_name in node.attrib:
                 setattr(block, field_name, node.attrib[field_name])
 

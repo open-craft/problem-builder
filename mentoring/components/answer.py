@@ -31,9 +31,11 @@ from mentoring.models import Answer
 from xblock.core import XBlock
 from xblock.fields import Scope, Float, Integer, String
 from xblock.fragment import Fragment
+from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from .step import StepMixin
+import uuid
 
 
 # Globals ###########################################################
@@ -79,6 +81,18 @@ class AnswerMixin(object):
             name=name,
         )
         return answer_data
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data.
+        """
+        super(AnswerMixin, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        if not data.name:
+            add_error(u"A Question ID is required.")
 
 
 class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
@@ -196,14 +210,24 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
                 answer_data.student_input = self.student_input
                 answer_data.save()
 
+    @classmethod
+    def get_template(cls, template_id):
+        """
+        Used to interact with Studio's create_xblock method to instantiate pre-defined templates.
+        """
+        # Generate a random 'name' value
+        if template_id == 'studio_default':
+            return {'metadata': {'name': uuid.uuid4().hex[:7]}, 'data': {}}
+        return {'metadata': {}, 'data': {}}
+
 
 class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
     A block that displays an answer previously entered by the student (read-only).
     """
     name = String(
-        display_name="Answer ID",
-        help="The ID of the answer to display.",
+        display_name="Question ID",
+        help="The ID of the question for which to display the student's answer.",
         scope=Scope.content,
     )
     display_name = String(
