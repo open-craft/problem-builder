@@ -48,9 +48,10 @@ class MCQBlock(QuestionnaireAbstractBlock):
 
     correct_choices = List(
         display_name="Correct Choice[s]",
-        help="Enter the value[s] that students may select for this question to be considered correct. ",
+        help="Specify the value[s] that students may select for this question to be considered correct.",
         scope=Scope.content,
-        list_editor="comma-separated",
+        list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
+        list_style='set',  # Underered, unique items. Affects the UI editor.
     )
     editable_fields = QuestionnaireAbstractBlock.editable_fields + ('correct_choices', )
 
@@ -111,16 +112,24 @@ class RatingBlock(MCQBlock):
     FIXED_VALUES = ["1", "2", "3", "4", "5"]
     correct_choices = List(
         display_name="Accepted Choice[s]",
-        help="Enter the rating value[s] that students may select for this question to be considered correct. ",
+        help="Specify the rating value[s] that students may select for this question to be considered correct.",
         scope=Scope.content,
-        list_editor="comma-separated",
         default=FIXED_VALUES,
+        list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
+        list_style='set',  # Underered, unique items. Affects the UI editor.
     )
     editable_fields = MCQBlock.editable_fields + ('low', 'high')
 
     @property
     def all_choice_values(self):
         return self.FIXED_VALUES + [c.value for c in self.custom_choices]
+
+    @property
+    def human_readable_choices(self):
+        display_names = ["1 - {}".format(self.low), "2", "3", "4", "5 - {}".format(self.high)]
+        return [
+            {"display_name": dn, "value": val} for val, dn in zip(self.FIXED_VALUES, display_names)
+            ] + super(RatingBlock, self).human_readable_choices
 
     def author_edit_view(self, context):
         """

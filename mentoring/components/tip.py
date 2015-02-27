@@ -23,6 +23,7 @@
 
 # Imports ###########################################################
 
+from django.utils.html import strip_tags
 from lxml import etree
 
 from xblock.core import XBlock
@@ -31,18 +32,6 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
-
-# Functions #########################################################
-
-
-def commas_to_set(commas_str):
-    """
-    Converts a comma-separated string to a set
-    """
-    if not commas_str:
-        return set()
-    else:
-        return set(commas_str.split(','))
 
 # Classes ###########################################################
 
@@ -54,9 +43,11 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
     content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
     values = List(
         display_name="For Choices",
-        help="List of choice value[s] to display the tip for",
+        help="List of choices for which to display this tip",
         scope=Scope.content,
         default=[],
+        list_values_provider=lambda self: self.get_parent().human_readable_choices,
+        list_style='set',  # Underered, unique items. Affects the UI editor.
     )
     width = String(help="Width of the tip popup", scope=Scope.content, default='')
     height = String(help="Height of the tip popup", scope=Scope.content, default='')
@@ -64,7 +55,14 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
 
     @property
     def display_name(self):
-        return u"Tip for {}".format(u", ".join([unicode(v) for v in self.values]))
+        values_list = []
+        for entry in self.get_parent().human_readable_choices:
+            if entry["value"] in self.values:
+                display_name = strip_tags(entry["display_name"])  # Studio studio_view can't handle html in display_name
+                if len(display_name) > 20:
+                    display_name = display_name[:20] + u'…'
+                values_list.append(display_name)
+        return u"Tip for {}".format(u", ".join(values_list))
 
     def fallback_view(self, view_name, context):
         html = ResourceLoader(__name__).render_template("templates/html/tip.html", {

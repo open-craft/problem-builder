@@ -45,22 +45,21 @@ class MRQBlock(QuestionnaireAbstractBlock):
     student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
     required_choices = List(
         display_name="Required Choices",
-        help=(
-            "Enter the value[s] that students must select for this MRQ to be considered correct. "
-            "Separate multiple required choices with a comma."
-        ),
+        help=("Specify the value[s] that students must select for this MRQ to be considered correct. "),
         scope=Scope.content,
-        list_editor="comma-separated",
+        list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
+        list_style='set',  # Underered, unique items. Affects the UI editor.
         default=[],
     )
     ignored_choices = List(
         display_name="Ignored Choices",
         help=(
-            "Enter the value[s] that are neither correct nor incorrect. "
+            "Specify the value[s] that are neither correct nor incorrect. "
             "Any values not listed as required or ignored will be considered wrong."
         ),
         scope=Scope.content,
-        list_editor="comma-separated",
+        list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
+        list_style='set',  # Underered, unique items. Affects the UI editor.
         default=[],
     )
     hide_results = Boolean(display_name="Hide results", scope=Scope.content, default=False)

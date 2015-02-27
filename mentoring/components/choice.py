@@ -73,7 +73,7 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
 
         if not data.value.strip():
-            add_error(u"No value set yet.")
+            add_error(u"No value set. This choice will not work correctly.")
         if not data.content.strip():
             add_error(u"No choice text set yet.")
 

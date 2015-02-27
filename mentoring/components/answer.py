@@ -48,13 +48,6 @@ class AnswerMixin(object):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
-    name = String(
-        display_name="Answer ID",
-        help="The ID of the long answer. Should be unique unless you want the answer to be used in multiple places.",
-        default="",
-        scope=Scope.content,
-    )
-
     def _get_course_id(self):
         """ Get a course ID if available """
         return getattr(self.runtime, 'course_id', 'all')
@@ -208,6 +201,11 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
     A block that displays an answer previously entered by the student (read-only).
     """
+    name = String(
+        display_name="Answer ID",
+        help="The ID of the answer to display.",
+        scope=Scope.content,
+    )
     display_name = String(
         display_name="Title",
         help="Title of this answer recap section",

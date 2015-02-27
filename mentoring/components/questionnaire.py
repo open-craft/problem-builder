@@ -156,6 +156,18 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     def all_choice_values(self):
         return [c.value for c in self.custom_choices]
 
+    @property
+    def human_readable_choices(self):
+        return [{"display_name": c.content, "value": c.value} for c in self.custom_choices]
+
+    @staticmethod
+    def choice_values_provider(question):
+        """
+        Get a list a {"display_name": "Choice Description", "value": value}
+        objects for use with studio_view editor.
+        """
+        return question.human_readable_choices
+
     def get_tips(self):
         """
         Returns the tips contained in this block
