@@ -53,16 +53,18 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
     )
     editable_fields = ('content', )
 
+    @property
+    def studio_display_name(self):
+        try:
+            status = self.get_parent().describe_choice_correctness(self.value)
+        except Exception:
+            status = u"Out of Context"  # Parent block should implement describe_choice_correctness()
+        return u"Choice ({})".format(status)
+
     def __getattribute__(self, name):
-        """
-        Provide a read-only display name without adding a display_name field to the class.
-        """
+        """ Provide a read-only display name without adding a display_name field to the class. """
         if name == "display_name":
-            try:
-                status = self.get_parent().describe_choice_correctness(self.value)
-            except Exception:
-                status = u"Out of Context"  # Parent block should implement describe_choice_correctness()
-            return u"Choice ({})".format(status)
+            return self.studio_display_name
         return super(ChoiceBlock, self).__getattribute__(name)
 
     def fallback_view(self, view_name, context):

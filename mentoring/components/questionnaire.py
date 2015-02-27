@@ -43,15 +43,6 @@ loader = ResourceLoader(__name__)
 # Classes ###########################################################
 
 
-class property_with_default(property):
-    """
-    Decorator for creating a dynamic display_name property that looks like an XBlock field. This
-    is needed for Studio container page blocks as studio will try to read
-    BlockClass.display_name.default
-    """
-    default = u"Question"
-
-
 class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, StepMixin, XBlock):
     """
     An abstract class used for MCQ/MRQ blocks
@@ -114,9 +105,15 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         return block
 
-    @property_with_default
-    def display_name(self):
+    @property
+    def studio_display_name(self):
         return u"Question {}".format(self.step_number) if not self.lonely_step else u"Question"
+
+    def __getattribute__(self, name):
+        """ Provide a read-only display name without adding a display_name field to the class. """
+        if name == "display_name":
+            return self.studio_display_name
+        return super(QuestionnaireAbstractBlock, self).__getattribute__(name)
 
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
