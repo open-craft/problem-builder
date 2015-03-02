@@ -223,7 +223,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """
         # Generate a random 'name' value
         if template_id == 'studio_default':
-            return {'metadata': {'name': uuid.uuid4().hex[:7]}, 'data': {}}
+            return {'data': {'name': uuid.uuid4().hex[:7]}}
         return {'metadata': {}, 'data': {}}
 
 

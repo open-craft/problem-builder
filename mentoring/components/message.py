@@ -85,7 +85,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
         """
         Used to interact with Studio's create_xblock method to instantiate pre-defined templates.
         """
-        return {'metadata': {'type': template_id, 'content': "Message goes here."}, 'data': {}}
+        return {'data': {'type': template_id, 'content': "Message goes here."}}
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):

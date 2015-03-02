@@ -107,7 +107,7 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
         # Generate a random 'value' value. We can't just use default=UNIQUE_ID on the field,
         # because that doesn't work properly with import/export, re-run, or duplicating the block
         if template_id == 'studio_default':
-            return {'metadata': {'value': uuid.uuid4().hex[:7]}, 'data': {}}
+            return {'data': {'value': uuid.uuid4().hex[:7]}}
         return {'metadata': {}, 'data': {}}
 
     @classmethod
