@@ -133,6 +133,12 @@ class MRQBlock(QuestionnaireAbstractBlock):
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
 
+        def choice_name(choice_value):
+            for choice in self.human_readable_choices:
+                if choice["value"] == choice_value:
+                    return choice["display_name"]
+            return choice_value
+
         all_values = set(self.all_choice_values)
         required = set(data.required_choices)
         ignored = set(data.ignored_choices)
@@ -142,8 +148,8 @@ class MRQBlock(QuestionnaireAbstractBlock):
         if len(ignored) < len(data.ignored_choices):
             add_error(u"Duplicate ignored choices set")
         for val in required.intersection(ignored):
-            add_error(u"A choice is listed as both required and ignored: {}".format(val))
+            add_error(u"A choice is listed as both required and ignored: {}".format(choice_name(val)))
         for val in (required - all_values):
-            add_error(u"A choice value listed as required does not exist: {}".format(val))
+            add_error(u"A choice value listed as required does not exist: {}".format(choice_name(val)))
         for val in (ignored - all_values):
-            add_error(u"A choice value listed as ignored does not exist: {}".format(val))
+            add_error(u"A choice value listed as ignored does not exist: {}".format(choice_name(val)))
