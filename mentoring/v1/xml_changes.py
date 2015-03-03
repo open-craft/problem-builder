@@ -69,9 +69,9 @@ class TableColumnHeader(Change):
     </mentoring-table>
     with
     <mentoring-table>
-         <column header="Answer 1">
+         <mentoring-column header="Answer 1">
              <answer-recap name="answer_1" />
-         </column>
+         </mentoring-column>
     </mentoring-table>
     """
     @staticmethod
@@ -79,6 +79,7 @@ class TableColumnHeader(Change):
         return node.tag == "column" and node.getparent().tag == "mentoring-table"
 
     def apply(self):
+        self.node.tag = "mentoring-column"
         header_html = u""
         to_remove = []
         for child in list(self.node):
@@ -100,6 +101,19 @@ class TableColumnHeader(Change):
         self.node.text = None
         if header_html:
             self.node.attrib["header"] = header_html
+
+
+class PrefixMessageElements(Change):
+    """
+    <message> is renamed to <mentoring-message> since it only works as a direct child of
+    <mentoring> and <message> could collide with other future XBlocks.
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag == "message" and node.getparent().tag == "mentoring"
+
+    def apply(self):
+        self.node.tag = "mentoring-message"
 
 
 class QuizzToMCQ(Change):
@@ -241,6 +255,7 @@ xml_changes = (
     RemoveTitle,
     UnwrapHTML,
     TableColumnHeader,
+    PrefixMessageElements,
     QuizzToMCQ,
     MCQToRating,
     ReadOnlyAnswerToRecap,

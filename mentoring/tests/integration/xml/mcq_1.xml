@@ -18,9 +18,9 @@
             <tip values="notwant">Your loss!</tip>
         </rating>
 
-        <message type="completed">
+        <mentoring-message type="completed">
             All is good now...
             <p>Congratulations!</p>
-        </message>
+        </mentoring-message>
     </mentoring>
 </vertical_demo>

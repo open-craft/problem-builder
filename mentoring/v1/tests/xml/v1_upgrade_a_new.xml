@@ -31,10 +31,10 @@
     <tip values="elegance,beauty">This is something everyone has to like about this MRQ</tip>
     <tip values="bugs">Nah, there isn't any!</tip>
   </mrq>
-  <message type="completed">
+  <mentoring-message type="completed">
     <p>Congratulations!</p>
-  </message>
-  <message type="incomplete">
+  </mentoring-message>
+  <mentoring-message type="incomplete">
     <p>Still some work to do...</p>
-  </message>
+  </mentoring-message>
 </mentoring>

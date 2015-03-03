@@ -540,22 +540,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         return [self.display_name]
 
-    @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator):
-        """
-        To avoid collisions with e.g. the existing <html> XBlock in edx-platform,
-        we prefix all of the mentoring block tags with "mentoring-". However,
-        using that prefix in the XML is optional. This method adds that prefix
-        in when parsing XML in a mentoring context.
-        """
-        PREFIX_TAGS = ("answer", "answer-recap", "quizz", "mcq", "mrq", "rating", "message", "tip", "choice", "column")
-        for element in node.iter():
-            # We have prefixed all our XBlock entry points with "mentoring-". But using the "mentoring-"
-            # prefix in the XML is optional:
-            if element.tag in PREFIX_TAGS:
-                element.tag = "mentoring-{}".format(element.tag)
-        return super(MentoringBlock, cls).parse_xml(node, runtime, keys, id_generator)
-
     @staticmethod
     def workbench_scenarios():
         """

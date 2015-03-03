@@ -12,11 +12,11 @@
             <tip values="bugs" width = "100" height = "200">Nah, there isn\'t any!</tip>
         </mcq>
 
-        <message type="completed">
+        <mentoring-message type="completed">
             <p>Congratulations!</p>
-        </message>
-        <message type="incomplete">
+        </mentoring-message>
+        <mentoring-message type="incomplete">
             <p>Still some work to do...</p>
-        </message>
+        </mentoring-message>
     </mentoring>
 </vertical_demo>

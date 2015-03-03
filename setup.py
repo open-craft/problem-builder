@@ -47,12 +47,20 @@ BLOCKS = [
 
     'mentoring-table = mentoring:MentoringTableBlock',
     'mentoring-column = mentoring:MentoringTableColumn',
+    'answer = mentoring:AnswerBlock',
+    'answer-recap = mentoring:AnswerRecapBlock',
+    'mcq = mentoring:MCQBlock',
+    'rating = mentoring:RatingBlock',
+    'mrq = mentoring:MRQBlock',
+    'mentoring-message = mentoring:MentoringMessageBlock',
+    'tip = mentoring:TipBlock',
+    'choice = mentoring:ChoiceBlock',
+    # Deprecated:
     'mentoring-answer = mentoring:AnswerBlock',
     'mentoring-answer-recap = mentoring:AnswerRecapBlock',
     'mentoring-mcq = mentoring:MCQBlock',
     'mentoring-rating = mentoring:RatingBlock',
     'mentoring-mrq = mentoring:MRQBlock',
-    'mentoring-message = mentoring:MentoringMessageBlock',
     'mentoring-tip = mentoring:TipBlock',
     'mentoring-choice = mentoring:ChoiceBlock',
 ]
