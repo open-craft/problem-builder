@@ -1,4 +1,4 @@
 ddt
 unicodecsv==0.9.4
--e git+https://github.com/open-craft/xblock-utils.git@1b8f21a9627f4d24041b6f7d8adc9f433e28ae07#egg=xblock-utils
+-e git+https://github.com/open-craft/xblock-utils.git@387a3ed97725d167862014e2367548ff54e4c1b7#egg=xblock-utils
 -e .
