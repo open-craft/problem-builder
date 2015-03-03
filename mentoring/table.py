@@ -149,7 +149,7 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
         return fragment
 
     def author_preview_view(self, context):
-        return self.author_edit_view(context)
+        return self.fallback_view('mentoring_view', context)
 
     def author_edit_view(self, context):
         """
