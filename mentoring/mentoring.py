@@ -33,8 +33,8 @@ from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
-from components import MentoringMessageBlock
-from components.step import StepParentMixin, StepMixin
+from .message import MentoringMessageBlock
+from .step import StepParentMixin, StepMixin
 
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin

@@ -45,16 +45,16 @@ def package_data(pkg, root_list):
 BLOCKS = [
     'mentoring = mentoring:MentoringBlock',
 
-    'mentoring-table = mentoring.components:MentoringTableBlock',
-    'mentoring-column = mentoring.components:MentoringTableColumn',
-    'mentoring-answer = mentoring.components:AnswerBlock',
-    'mentoring-answer-recap = mentoring.components:AnswerRecapBlock',
-    'mentoring-mcq = mentoring.components:MCQBlock',
-    'mentoring-rating = mentoring.components:RatingBlock',
-    'mentoring-mrq = mentoring.components:MRQBlock',
-    'mentoring-message = mentoring.components:MentoringMessageBlock',
-    'mentoring-tip = mentoring.components:TipBlock',
-    'mentoring-choice = mentoring.components:ChoiceBlock',
+    'mentoring-table = mentoring:MentoringTableBlock',
+    'mentoring-column = mentoring:MentoringTableColumn',
+    'mentoring-answer = mentoring:AnswerBlock',
+    'mentoring-answer-recap = mentoring:AnswerRecapBlock',
+    'mentoring-mcq = mentoring:MCQBlock',
+    'mentoring-rating = mentoring:RatingBlock',
+    'mentoring-mrq = mentoring:MRQBlock',
+    'mentoring-message = mentoring:MentoringMessageBlock',
+    'mentoring-tip = mentoring:TipBlock',
+    'mentoring-choice = mentoring:ChoiceBlock',
 ]
 
 setup(
@@ -70,5 +70,5 @@ setup(
     entry_points={
         'xblock.v1': BLOCKS,
     },
-    package_data=package_data("mentoring", ["components", "templates", "public", "migrations"]),
+    package_data=package_data("mentoring", ["templates", "public", "migrations"]),
 )

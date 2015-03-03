@@ -26,7 +26,7 @@
 import logging
 from lazy import lazy
 
-from mentoring.models import Answer
+from .models import Answer
 
 from xblock.core import XBlock
 from xblock.fields import Scope, Float, Integer, String

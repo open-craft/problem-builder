@@ -33,6 +33,7 @@ from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
 from .choice import ChoiceBlock
+from .mentoring import MentoringBlock
 from .step import StepMixin
 from .tip import TipBlock
 
@@ -125,8 +126,13 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         context['custom_choices'] = self.custom_choices
 
         fragment = Fragment(loader.render_template(template_path, context))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire.js'))
+        # If we use local_resource_url(self, ...) the runtime may insert many identical copies
+        # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible
+        block_with_resources = self.get_parent()
+        if not isinstance(block_with_resources, MentoringBlock):
+            block_with_resources = self
+        fragment.add_css_url(self.runtime.local_resource_url(block_with_resources, 'public/css/questionnaire.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(block_with_resources, 'public/js/questionnaire.js'))
         fragment.initialize_js(name)
         return fragment
 
