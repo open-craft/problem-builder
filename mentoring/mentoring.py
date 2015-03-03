@@ -219,6 +219,14 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
 
+        # Workbench doesn't have font awesome, so add it:
+        try:
+            from workbench.runtime import WorkbenchRuntime
+            if isinstance(self.runtime, WorkbenchRuntime):
+                fragment.add_css_url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
+        except ImportError:
+            pass
+
         fragment.initialize_js('MentoringBlock')
 
         if not self.display_submit:
