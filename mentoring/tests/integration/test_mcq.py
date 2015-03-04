@@ -209,8 +209,8 @@ class MCQBlockTest(MentoringBaseTest):
         messages = mentoring.find_element_by_css_selector('.messages')
 
         expected_options = [
-            "<b>Its elegance</b>",
-            "<i>Its beauty</i>",
+            "<strong>Its elegance</strong>",
+            "<em>Its beauty</em>",
             "<strong>Its gracefulness</strong>",
             '<span style="font-color:red">Its bugs</span>'
         ]

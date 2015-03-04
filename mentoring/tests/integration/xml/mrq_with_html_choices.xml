@@ -1,8 +1,8 @@
 <vertical_demo>
     <mentoring url_name="mcq_with_comments" display_name="MRQ With Resizable popups" weight="1" enforce_dependency="false">
         <mrq name="mrq_1_1_7" question="What do you like in this MRQ?" required_choices="elegance,beauty,gracefulness">
-            <choice value="elegance"><b>Its elegance</b></choice>
-            <choice value="beauty"><i>Its beauty</i></choice>
+            <choice value="elegance"><strong>Its elegance</strong></choice>
+            <choice value="beauty"><em>Its beauty</em></choice>
             <choice value="gracefulness"><strong>Its gracefulness</strong></choice>
             <choice value="bugs"><span style="font-color:red">Its bugs</span></choice>
 
