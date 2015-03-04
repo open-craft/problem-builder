@@ -27,6 +27,7 @@ import logging
 
 from xblock.fields import Scope, String, List
 from xblock.fragment import Fragment
+from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
 from .questionnaire import QuestionnaireAbstractBlock
@@ -100,6 +101,33 @@ class MCQBlock(QuestionnaireAbstractBlock):
         fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         return fragment
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data.
+        """
+        super(MCQBlock, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        def choice_name(choice_value):
+            for choice in self.human_readable_choices:
+                if choice["value"] == choice_value:
+                    return choice["display_name"]
+            return choice_value
+
+        all_values = set(self.all_choice_values)
+        correct = set(data.correct_choices)
+
+        if not all_values:
+            add_error(u"No choices set yet.")
+        elif not correct:
+            add_error(u"You must indicate the correct answer[s], or the student will always get this question wrong.")
+        if len(correct) < len(data.correct_choices):
+            add_error(u"Duplicate correct choices set")
+        for val in (correct - all_values):
+            add_error(u"A choice value listed as correct does not exist: {}".format(choice_name(val)))
 
 
 class RatingBlock(MCQBlock):
