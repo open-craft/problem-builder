@@ -1,0 +1,16 @@
+<mentoring url_name="mentoring-assessment-2" display_name="A Simple Assessment" weight="1" mode="assessment" max_attempts="2">
+    <html_demo>
+        <p>This paragraph is shared between <strong>all</strong> questions.</p>
+        <p>Please answer the questions below.</p>
+    </html_demo>
+
+    <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
+        <choice value="yes">Yes</choice>
+        <choice value="maybenot">Maybe not</choice>
+        <choice value="understand">I don't understand</choice>
+
+        <tip values="yes">Great!</tip>
+        <tip values="maybenot">Ah, damn.</tip>
+        <tip values="understand"><div id="test-custom-html">Really?</div></tip>
+    </mcq>
+</mentoring>

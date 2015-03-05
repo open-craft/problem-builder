@@ -1,0 +1,18 @@
+.themed-xblock.mentoring .checkmark-incorrect {
+    color: #c1373f;
+}
+
+.themed-xblock.mentoring .checkmark-incorrect::before {
+    content: "\f00d";
+}
+
+.themed-xblock.mentoring .grade .checkmark-incorrect {
+    margin-left: 0;
+    margin-right: 10px;
+    width: 29px;
+}
+
+div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
+    display: block;
+    margin-bottom: 1.41575em;
+}

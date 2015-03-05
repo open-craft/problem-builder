@@ -1,9 +1,9 @@
-from .base_test import MentoringBaseTest
+from .base_test import MentoringAssessmentBaseTest, GetChoices
 
 CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
 
 
-class MentoringAssessmentTest(MentoringBaseTest):
+class MentoringAssessmentTest(MentoringAssessmentBaseTest):
     def _selenium_bug_workaround_scroll_to(self, mentoring, question):
         """Workaround for selenium bug:
 
@@ -41,27 +41,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assertIn("A Simple Assessment", mentoring.text)
         self.assertIn("This paragraph is shared between all questions.", mentoring.text)
 
-    class _GetChoices(object):
-        def __init__(self, question, selector=".choices"):
-            self._mcq = question.find_element_by_css_selector(selector)
-
-        @property
-        def text(self):
-            return self._mcq.text
-
-        @property
-        def state(self):
-            return {
-                choice.text: choice.find_element_by_css_selector("input").is_selected()
-                for choice in self._mcq.find_elements_by_css_selector(".choice")}
-
-        def select(self, text):
-            for choice in self._mcq.find_elements_by_css_selector(".choice"):
-                if choice.text == text:
-                    choice.find_element_by_css_selector("input").click()
-                    return
-            raise AssertionError("Expected selectable item present: {}".format(text))
-
     def _assert_checkmark(self, mentoring, result):
         """Assert that only the desired checkmark is present."""
         states = {CORRECT: 0, INCORRECT: 0, PARTIAL: 0}
@@ -72,28 +51,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
     def go_to_workbench_main_page(self):
         self.browser.get(self.live_server_url)
-
-    def go_to_assessment(self, number):
-        mentoring = self.go_to_page('Assessment %s' % number)
-
-        class Namespace(object):
-            pass
-
-        controls = Namespace()
-
-        controls.submit = mentoring.find_element_by_css_selector("input.input-main")
-        controls.next_question = mentoring.find_element_by_css_selector("input.input-next")
-        controls.review = mentoring.find_element_by_css_selector("input.input-review")
-        controls.try_again = mentoring.find_element_by_css_selector("input.input-try-again")
-
-        return mentoring, controls
-
-    @staticmethod
-    def question_text(number):
-        if number:
-            return "Question %s" % number
-        else:
-            return "Question"
 
     def freeform_answer(self, number, mentoring, controls, text_input, result, saved_value="", last=False):
         question = self.expect_question_visible(number, mentoring)
@@ -166,7 +123,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.ending_controls(controls, last)
         self.assert_hidden(controls.try_again)
 
-        choices = self._GetChoices(question)
+        choices = GetChoices(question)
         expected_state = {"Yes": False, "Maybe not": False, "I don't understand": False}
         self.assertEquals(choices.state, expected_state)
 
@@ -194,7 +151,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.try_again)
 
-        choices = self._GetChoices(mentoring, ".rating")
+        choices = GetChoices(mentoring, ".rating")
         expected_choices = {
             "1 - Not good at all": False,
             "2": False, "3": False, "4": False,
@@ -214,22 +171,6 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self._assert_checkmark(mentoring, result)
         self.do_post(controls, last)
 
-    def expect_question_visible(self, number, mentoring):
-        question_text = self.question_text(number)
-        self.wait_until_text_in(self.question_text(number), mentoring)
-        question_div = None
-        for xblock_div in mentoring.find_elements_by_css_selector('div.xblock-v1'):
-            header_text = xblock_div.find_elements_by_css_selector('h3.question-title')
-            if header_text and question_text in header_text[0].text:
-                question_div = xblock_div
-                self.assertTrue(xblock_div.is_displayed())
-            elif header_text:
-                self.assertFalse(xblock_div.is_displayed())
-            # else this is an HTML block or something else, not a question step
-
-        self.assertIsNotNone(question_div)
-        return question_div
-
     def peek_at_multiple_choice_question(self, number, mentoring, controls, last=False):
         question = self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
@@ -244,7 +185,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
     def multiple_choice_question(self, number, mentoring, controls, choice_names, result, last=False):
         question = self.peek_at_multiple_choice_question(number, mentoring, controls, last=last)
 
-        choices = self._GetChoices(question)
+        choices = GetChoices(question)
         expected_choices = {
             "Its elegance": False,
             "Its beauty": False,
@@ -282,7 +223,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
         self.assert_hidden(controls.review)
 
     def test_assessment(self):
-        mentoring, controls = self.go_to_assessment(1)
+        mentoring, controls = self.go_to_assessment("Assessment 1")
 
         self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT)
         self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
@@ -291,7 +232,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
 
         # see if assessment remembers the current step
         self.go_to_workbench_main_page()
-        mentoring, controls = self.go_to_assessment(1)
+        mentoring, controls = self.go_to_assessment("Assessment 1")
 
         self.multiple_choice_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
 
@@ -324,7 +265,7 @@ class MentoringAssessmentTest(MentoringBaseTest):
         """
         No 'Next Question' button on single question assessment.
         """
-        mentoring, controls = self.go_to_assessment(2)
+        mentoring, controls = self.go_to_assessment("Assessment 2")
         self.single_choice_question(0, mentoring, controls, 'Maybe not', INCORRECT, last=True)
 
         expected_results = {

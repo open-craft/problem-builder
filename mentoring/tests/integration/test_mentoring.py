@@ -1,5 +1,8 @@
+import re
+import mock
+import ddt
 from selenium.common.exceptions import NoSuchElementException
-from .base_test import MentoringBaseTest
+from .base_test import MentoringBaseTest, MentoringAssessmentBaseTest, GetChoices
 
 
 class MentoringTest(MentoringBaseTest):
@@ -7,3 +10,46 @@ class MentoringTest(MentoringBaseTest):
         mentoring = self.go_to_page('No Display Submit')
         with self.assertRaises(NoSuchElementException):
             mentoring.find_element_by_css_selector('.submit input.input-main')
+
+
+def _get_mentoring_theme_settings(theme):
+    return {
+        'package': 'mentoring',
+        'locations': ['public/themes/{}.css'.format(theme)]
+    }
+
+
+@ddt.ddt
+class MentoringThemeTest(MentoringAssessmentBaseTest):
+    def rgb_to_hex(self, rgb):
+        r, g, b = map(int, re.search(r'rgba?\((\d+),\s*(\d+),\s*(\d+)', rgb).groups())
+        return '#%02x%02x%02x' % (r, g, b)
+
+    def assert_status_icon_color(self, color):
+        mentoring, controls = self.go_to_assessment('Theme 1')
+        question = self.expect_question_visible(0, mentoring)
+        choice_name = "Maybe not"
+
+        choices = GetChoices(question)
+        expected_state = {"Yes": False, "Maybe not": False, "I don't understand": False}
+        self.assertEquals(choices.state, expected_state)
+
+        choices.select(choice_name)
+        expected_state[choice_name] = True
+        self.assertEquals(choices.state, expected_state)
+
+        controls.submit.click()
+        self.wait_until_disabled(controls.submit)
+
+        answer_result = mentoring.find_element_by_css_selector(".assessment-checkmark")
+        self.assertEqual(self.rgb_to_hex(answer_result.value_of_css_property("color")), color)
+
+    @ddt.unpack
+    @ddt.data(
+        ('lms', "#c1373f"),
+        ('apros', "#ff0000")
+    )
+    def test_lms_theme_applied(self, theme, expected_color):
+        with mock.patch("mentoring.MentoringBlock.get_theme") as patched_theme:
+            patched_theme.return_value = _get_mentoring_theme_settings(theme)
+            self.assert_status_icon_color(expected_color)

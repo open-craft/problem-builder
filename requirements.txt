@@ -1,4 +1,5 @@
 ddt
+mock
 unicodecsv==0.9.4
 -e git+https://github.com/open-craft/xblock-utils.git@387a3ed97725d167862014e2367548ff54e4c1b7#egg=xblock-utils
 -e .
