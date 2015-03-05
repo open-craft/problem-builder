@@ -43,6 +43,11 @@ import uuid
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
 
 
@@ -94,7 +99,12 @@ class AnswerMixin(object):
         if not data.name:
             add_error(u"A Question ID is required.")
 
+    def _(self, text):
+        """ translate text """
+        return self.runtime.service(self, "i18n").ugettext(text)
 
+
+@XBlock.needs("i18n")
 class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
     """
     A field where the student enters an answer
@@ -103,32 +113,32 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
     to make them searchable and referenceable across xblocks.
     """
     name = String(
-        display_name="Question ID (name)",
-        help="The ID of this block. Should be unique unless you want the answer to be used in multiple places.",
+        display_name=_("Question ID (name)"),
+        help=_("The ID of this block. Should be unique unless you want the answer to be used in multiple places."),
         default="",
         scope=Scope.content
     )
     default_from = String(
-        display_name="Default From",
-        help="If a question ID is specified, get the default value from this answer.",
+        display_name=_("Default From"),
+        help=_("If a question ID is specified, get the default value from this answer."),
         default=None,
         scope=Scope.content
     )
     min_characters = Integer(
-        display_name="Min. Allowed Characters",
-        help="Minimum number of characters allowed for the answer",
+        display_name=_("Min. Allowed Characters"),
+        help=_("Minimum number of characters allowed for the answer"),
         default=0,
         scope=Scope.content
     )
     question = String(
-        display_name="Question",
-        help="Question to ask the student",
+        display_name=_("Question"),
+        help=_("Question to ask the student"),
         scope=Scope.content,
         default=""
     )
     weight = Float(
-        display_name="Weight",
-        help="Defines the maximum total grade of the answer block.",
+        display_name=_("Weight"),
+        help=_("Defines the maximum total grade of the answer block."),
         default=1,
         scope=Scope.settings,
         enforce_type=True
@@ -138,7 +148,9 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
 
     @property
     def studio_display_name(self):
-        return u"Question {}".format(self.step_number) if not self.lonely_step else u"Question"
+        if not self.lonely_step:
+            return self._(u"Question {number}").format(number=self.step_number)
+        return self._(u"Question")
 
     def __getattribute__(self, name):
         """ Provide a read-only display name without adding a display_name field to the class. """
@@ -227,26 +239,27 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         return {'metadata': {}, 'data': {}}
 
 
+@XBlock.needs("i18n")
 class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
     A block that displays an answer previously entered by the student (read-only).
     """
     name = String(
-        display_name="Question ID",
-        help="The ID of the question for which to display the student's answer.",
+        display_name=_("Question ID"),
+        help=_("The ID of the question for which to display the student's answer."),
         scope=Scope.content,
     )
     display_name = String(
-        display_name="Title",
-        help="Title of this answer recap section",
+        display_name=_("Title"),
+        help=_("Title of this answer recap section"),
         scope=Scope.content,
         default="",
     )
     description = String(
-        help="Description of this answer (optional). Can include HTML.",
+        display_name=_("Description"),
+        help=_("Description of this answer (optional). Can include HTML."),
         scope=Scope.content,
         default="",
-        display_name="Description",
     )
     editable_fields = ('name', 'display_name', 'description')
 

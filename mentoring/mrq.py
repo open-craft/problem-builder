@@ -36,24 +36,33 @@ from xblockutils.resources import ResourceLoader
 log = logging.getLogger(__name__)
 
 
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
+
 
 class MRQBlock(QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-response questions
     """
-    student_choices = List(help="Last submissions by the student", default=[], scope=Scope.user_state)
+    student_choices = List(
+        # Last submissions by the student
+        default=[],
+        scope=Scope.user_state
+    )
     required_choices = List(
-        display_name="Required Choices",
-        help=("Specify the value[s] that students must select for this MRQ to be considered correct. "),
+        display_name=_("Required Choices"),
+        help=_("Specify the value[s] that students must select for this MRQ to be considered correct."),
         scope=Scope.content,
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
         default=[],
     )
     ignored_choices = List(
-        display_name="Ignored Choices",
-        help=(
+        display_name=_("Ignored Choices"),
+        help=_(
             "Specify the value[s] that are neither correct nor incorrect. "
             "Any values not listed as required or ignored will be considered wrong."
         ),
@@ -67,10 +76,10 @@ class MRQBlock(QuestionnaireAbstractBlock):
 
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.required_choices:
-            return u"Required"
+            return self._(u"Required")
         elif choice_value in self.ignored_choices:
-            return u"Ignored"
-        return u"Not Acceptable"
+            return self._(u"Ignored")
+        return self._(u"Not Acceptable")
 
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
@@ -144,12 +153,12 @@ class MRQBlock(QuestionnaireAbstractBlock):
         ignored = set(data.ignored_choices)
 
         if len(required) < len(data.required_choices):
-            add_error(u"Duplicate required choices set")
+            add_error(self._(u"Duplicate required choices set"))
         if len(ignored) < len(data.ignored_choices):
-            add_error(u"Duplicate ignored choices set")
+            add_error(self._(u"Duplicate ignored choices set"))
         for val in required.intersection(ignored):
-            add_error(u"A choice is listed as both required and ignored: {}".format(choice_name(val)))
+            add_error(self._(u"A choice is listed as both required and ignored: {}").format(choice_name(val)))
         for val in (required - all_values):
-            add_error(u"A choice value listed as required does not exist: {}".format(choice_name(val)))
+            add_error(self._(u"A choice value listed as required does not exist: {}").format(choice_name(val)))
         for val in (ignored - all_values):
-            add_error(u"A choice value listed as ignored does not exist: {}".format(choice_name(val)))
+            add_error(self._(u"A choice value listed as ignored does not exist: {}").format(choice_name(val)))

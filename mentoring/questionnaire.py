@@ -41,9 +41,15 @@ from .tip import TipBlock
 
 loader = ResourceLoader(__name__)
 
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
 
 
+@XBlock.needs("i18n")
 class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, StepMixin, XBlock):
     """
     An abstract class used for MCQ/MRQ blocks
@@ -54,32 +60,36 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     """
     name = String(
         # This doesn't need to be a field but is kept for backwards compatibility with v1 student data
-        display_name="Question ID (name)",
-        help="The ID of this question (required). Should be unique within this mentoring component.",
+        display_name=_("Question ID (name)"),
+        help=_("The ID of this question (required). Should be unique within this mentoring component."),
         default=UNIQUE_ID,
         scope=Scope.settings,  # Must be scope.settings, or the unique ID will change every time this block is edited
     )
     question = String(
-        display_name="Question",
-        help="Question to ask the student",
+        display_name=_("Question"),
+        help=_("Question to ask the student"),
         scope=Scope.content,
         default=""
     )
     message = String(
-        display_name="Message",
-        help="General feedback provided when submiting",
+        display_name=_("Message"),
+        help=_("General feedback provided when submiting"),
         scope=Scope.content,
         default=""
     )
     weight = Float(
-        display_name="Weight",
-        help="Defines the maximum total grade of this question.",
+        display_name=_("Weight"),
+        help=_("Defines the maximum total grade of this question."),
         default=1,
         scope=Scope.content,
         enforce_type=True
     )
     editable_fields = ('question', 'message', 'weight')
     has_children = True
+
+    def _(self, text):
+        """ translate text """
+        return self.runtime.service(self, "i18n").ugettext(text)
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
@@ -108,7 +118,9 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
     @property
     def studio_display_name(self):
-        return u"Question {}".format(self.step_number) if not self.lonely_step else u"Question"
+        if not self.lonely_step:
+            return self._(u"Question {number}").format(number=self.step_number)
+        return self._(u"Question")
 
     def __getattribute__(self, name):
         """ Provide a read-only display name without adding a display_name field to the class. """
@@ -215,9 +227,9 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
         if not data.name:
-            add_error(u"A unique Question ID is required.")
+            add_error(self._(u"A unique Question ID is required."))
         elif ' ' in data.name:
-            add_error(u"Question ID should not contain spaces.")
+            add_error(self._(u"Question ID should not contain spaces."))
 
     def validate(self):
         """
@@ -232,12 +244,12 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         all_choice_values = self.all_choice_values
         all_choice_values_set = set(all_choice_values)
         if len(all_choice_values) != len(all_choice_values_set):
-            add_error(u"Some choice values are not unique.")
+            add_error(self._(u"Some choice values are not unique."))
         # Validate the tips:
         values_with_tips = set()
         for tip in self.get_tips():
             values = set(tip.values)
-            for val in (values & values_with_tips):
-                add_error(u"Multiple tips for value '{}'".format(val))
+            for dummy in (values & values_with_tips):
+                add_error(self._(u"Multiple tips configured for the same choice."))
             values_with_tips.update(values)
         return validation

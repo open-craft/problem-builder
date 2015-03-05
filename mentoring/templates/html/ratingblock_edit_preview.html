@@ -1,6 +1,7 @@
+{% load i18n %}
 <p>{{ question }}</p>
 
-<h2>Built-in choices:</h2>
+<h2>{% trans "Built-in choices:" %}</h2>
 
 <ul>
 <li>Choice (1): <strong>1 - {{ low }}</strong> ({{accepted_statuses.1}})</li>
@@ -10,4 +11,4 @@
 <li>Choice (5): <strong>5 - {{ high }}</strong> ({{accepted_statuses.5}})</li>
 </ul>
 
-<h2>Additional custom choices and tips:</h2>
+<h2>{% trans "Additional custom choices and tips:" %}</h2>

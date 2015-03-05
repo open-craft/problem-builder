@@ -39,17 +39,26 @@ log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
+
 
 class MCQBlock(QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
     """
-    student_choice = String(help="Last input submitted by the student", default="", scope=Scope.user_state)
+    student_choice = String(
+        # {Last input submitted by the student
+        default="",
+        scope=Scope.user_state,
+    )
 
     correct_choices = List(
-        display_name="Correct Choice[s]",
-        help="Specify the value[s] that students may select for this question to be considered correct.",
+        display_name=_("Correct Choice[s]"),
+        help=_("Specify the value[s] that students may select for this question to be considered correct."),
         scope=Scope.content,
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
@@ -59,12 +68,12 @@ class MCQBlock(QuestionnaireAbstractBlock):
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.correct_choices:
             if len(self.correct_choices) == 1:
-                return u"Correct"
-            return u"Acceptable"
+                return self._(u"Correct")
+            return self._(u"Acceptable")
         else:
             if len(self.correct_choices) == 1:
-                return u"Wrong"
-            return u"Not Acceptable"
+                return self._(u"Wrong")
+            return self._(u"Not Acceptable")
 
     def submit(self, submission):
         log.debug(u'Received MCQ submission: "%s"', submission)
@@ -121,25 +130,39 @@ class MCQBlock(QuestionnaireAbstractBlock):
         correct = set(data.correct_choices)
 
         if not all_values:
-            add_error(u"No choices set yet.")
+            add_error(self._(u"No choices set yet."))
         elif not correct:
-            add_error(u"You must indicate the correct answer[s], or the student will always get this question wrong.")
+            add_error(
+                self._(u"You must indicate the correct answer[s], or the student will always get this question wrong.")
+            )
         if len(correct) < len(data.correct_choices):
-            add_error(u"Duplicate correct choices set")
+            add_error(self._(u"Duplicate correct choices set"))
         for val in (correct - all_values):
-            add_error(u"A choice value listed as correct does not exist: {}".format(choice_name(val)))
+            add_error(
+                self._(u"A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
+            )
 
 
 class RatingBlock(MCQBlock):
     """
     An XBlock used to rate something on a five-point scale, e.g. Likert Scale
     """
-    low = String(help="Label for low ratings", scope=Scope.content, default="Less")
-    high = String(help="Label for high ratings", scope=Scope.content, default="More")
+    low = String(
+        display_name=_("Low"),
+        help=_("Label for low ratings"),
+        scope=Scope.content,
+        default=_("Less"),
+    )
+    high = String(
+        display_name=_("High"),
+        help=_("Label for high ratings"),
+        scope=Scope.content,
+        default=_("More"),
+    )
     FIXED_VALUES = ["1", "2", "3", "4", "5"]
     correct_choices = List(
-        display_name="Accepted Choice[s]",
-        help="Specify the rating value[s] that students may select for this question to be considered correct.",
+        display_name=_("Accepted Choice[s]"),
+        help=_("Specify the rating value[s] that students may select for this question to be considered correct."),
         scope=Scope.content,
         default=FIXED_VALUES,
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,

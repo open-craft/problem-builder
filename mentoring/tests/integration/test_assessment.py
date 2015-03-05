@@ -213,10 +213,25 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_persistent_elements_present(mentoring)
         if expected["num_attempts"] < expected["max_attempts"]:
             self.assertIn("Note: if you retake this assessment, only your final score counts.", mentoring.text)
-        self.assertIn("You answered {correct} questions correctly.".format(**expected), mentoring.text)
-        self.assertIn("You answered {partial} questions partially correct.".format(**expected), mentoring.text)
-        self.assertIn("You answered {incorrect} questions incorrectly.".format(**expected), mentoring.text)
-        self.assertIn("You have used {num_attempts} of {max_attempts} submissions.".format(**expected), mentoring.text)
+        if expected["correct"] == 1:
+            self.assertIn("You answered 1 questions correctly.".format(**expected), mentoring.text)
+        else:
+            self.assertIn("You answered {correct} questions correctly.".format(**expected), mentoring.text)
+        if expected["partial"] == 1:
+            self.assertIn("You answered 1 question partially correctly.", mentoring.text)
+        else:
+            self.assertIn("You answered {partial} questions partially correctly.".format(**expected), mentoring.text)
+        if expected["incorrect"] == 1:
+            self.assertIn("You answered 1 question incorrectly.", mentoring.text)
+        else:
+            self.assertIn("You answered {incorrect} questions incorrectly.".format(**expected), mentoring.text)
+        if expected["max_attempts"] == 1:
+            self.assertIn("You have used {num_attempts} of 1 submission.".format(**expected), mentoring.text)
+        else:
+            self.assertIn(
+                "You have used {num_attempts} of {max_attempts} submissions.".format(**expected),
+                mentoring.text
+            )
 
         self.assert_hidden(controls.submit)
         self.assert_hidden(controls.next_question)

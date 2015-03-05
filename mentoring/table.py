@@ -27,7 +27,6 @@ import errno
 
 
 from xblock.core import XBlock
-from xblock.exceptions import NoSuchViewError
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 
@@ -37,6 +36,11 @@ from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContain
 # Globals ###########################################################
 
 loader = ResourceLoader(__name__)
+
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
 
 # Classes ###########################################################
 
@@ -49,14 +53,14 @@ class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin,
     Supports different types of formatting through the `type` parameter.
     """
     display_name = String(
-        display_name="Display name",
-        help="Title of the table",
-        default="Answers Table",
+        display_name=_("Display name"),
+        help=_("Title of the table"),
+        default=_("Answers Table"),
         scope=Scope.settings
     )
     type = String(
-        display_name="Special Mode",
-        help="Variant of the table that will display a specific background image.",
+        display_name=_("Special Mode"),
+        help=_("Variant of the table that will display a specific background image."),
         scope=Scope.content,
         default='',
         values=[
@@ -122,10 +126,10 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
     """
     A column in a mentoring table. Has a header and can contain HTML and AnswerRecapBlocks.
     """
-    display_name = String(display_name="Display Name", default="Column")
+    display_name = String(display_name=_("Display Name"), default="Column")
     header = String(
-        display_name="Header",
-        help="Header of this column",
+        display_name=_("Header"),
+        help=_("Header of this column"),
         default="",
         scope=Scope.content,
         multiline_editor="html",

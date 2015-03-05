@@ -32,34 +32,44 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
 
 
+@XBlock.needs("i18n")
 class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
     """
     Custom choice of an answer for a MCQ/MRQ
     """
     value = String(
-        display_name="Value",
-        help="Value of the choice when selected. Should be unique.",
+        display_name=_("Value"),
+        help=_("Value of the choice when selected. Should be unique."),
         scope=Scope.content,
         default="",
     )
     content = String(
-        display_name="Choice Text",
-        help="Human-readable version of the choice value",
+        display_name=_("Choice Text"),
+        help=_("Human-readable version of the choice value"),
         scope=Scope.content,
         default="",
     )
     editable_fields = ('content', )
+
+    def _(self, text):
+        """ translate text """
+        return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def studio_display_name(self):
         try:
             status = self.get_parent().describe_choice_correctness(self.value)
         except Exception:
-            status = u"Out of Context"  # Parent block should implement describe_choice_correctness()
-        return u"Choice ({})".format(status)
+            status = self._(u"Out of Context")  # Parent block should implement describe_choice_correctness()
+        return self._(u"Choice ({status})").format(status=status)
 
     def __getattribute__(self, name):
         """ Provide a read-only display name without adding a display_name field to the class. """
@@ -80,9 +90,9 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
 
         if not data.value.strip():
-            add_error(u"No value set. This choice will not work correctly.")
+            add_error(self._(u"No value set. This choice will not work correctly."))
         if not data.content.strip():
-            add_error(u"No choice text set yet.")
+            add_error(self._(u"No choice text set yet."))
 
     def validate(self):
         """
@@ -91,7 +101,7 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
         validation = super(ChoiceBlock, self).validate()
         if self.get_parent().all_choice_values.count(self.value) > 1:
             validation.add(
-                ValidationMessage(ValidationMessage.ERROR, (
+                ValidationMessage(ValidationMessage.ERROR, self._(
                     u"This choice has a non-unique ID and won't work properly. "
                     "This can happen if you duplicate a choice rather than use the Add Choice button."
                 ))

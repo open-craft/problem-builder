@@ -49,6 +49,11 @@ _default_theme_config = {
     'locations': ['public/themes/lms.css']
 }
 
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
 
 Score = namedtuple("Score", ["raw", "percentage", "correct", "incorrect", "partially_correct"])
@@ -68,38 +73,42 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     # Content
     MENTORING_MODES = ('standard', 'assessment')
     mode = String(
-        display_name="Mode",
-        help="Mode of the mentoring. 'standard' or 'assessment'",
+        display_name=_("Mode"),
+        help=_("Mode of the mentoring. 'standard' or 'assessment'"),
         default='standard',
         scope=Scope.content,
         values=MENTORING_MODES
     )
     followed_by = String(
-        help="url_name of the step after the current mentoring block in workflow.",
+        display_name=_("Followed by"),
+        help=_("url_name of the step after the current mentoring block in workflow."),
         default=None,
         scope=Scope.content
     )
     max_attempts = Integer(
-        help="Number of max attempts for this questions",
+        display_name=_("Max. Attempts Allowed"),
+        help=_("Number of max attempts allowed for this questions"),
         default=0,
         scope=Scope.content,
         enforce_type=True
     )
     enforce_dependency = Boolean(
-        help="Should the next step be the current block to complete?",
+        display_name=_("Enforce Dependency"),
+        help=_("Should the next step be the current block to complete?"),
         default=False,
         scope=Scope.content,
         enforce_type=True
     )
     display_submit = Boolean(
-        help="Allow submission of the current block?",
+        display_name=_("Show Submit Button"),
+        help=_("Allow submission of the current block?"),
         default=True,
         scope=Scope.content,
         enforce_type=True
     )
     xml_content = String(
-        help="Not used for version 2. This field is here only to preserve the data needed to upgrade from v1 to v2.",
-        display_name="XML content",
+        display_name=_("XML content"),
+        help=_("Not used for version 2. This field is here only to preserve the data needed to upgrade from v1 to v2."),
         default='',
         scope=Scope.content,
         multiline_editor=True
@@ -107,56 +116,58 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
     # Settings
     weight = Float(
-        help="Defines the maximum total grade of the block.",
+        display_name=_("Weight"),
+        help=_("Defines the maximum total grade of the block."),
         default=1,
         scope=Scope.settings,
         enforce_type=True
     )
     display_name = String(
-        help="Title to display",
-        default="Mentoring Questions",
+        display_name=_("Title (Display name)"),
+        help=_("Title to display"),
+        default=_("Mentoring Questions"),
         scope=Scope.settings
     )
 
     # User state
     attempted = Boolean(
-        help="Has the student attempted this mentoring step?",
+        # Has the student attempted this mentoring step?
         default=False,
         scope=Scope.user_state
     )
     completed = Boolean(
-        help="Has the student completed this mentoring step?",
+        # Has the student completed this mentoring step?
         default=False,
         scope=Scope.user_state
     )
     num_attempts = Integer(
-        help="Number of attempts a user has answered for this questions",
+        # Number of attempts a user has answered for this questions
         default=0,
         scope=Scope.user_state,
         enforce_type=True
     )
     step = Integer(
-        help="Keep track of the student assessment progress.",
+        # Keep track of the student assessment progress.
         default=0,
         scope=Scope.user_state,
         enforce_type=True
     )
     student_results = List(
-        help="Store results of student choices.",
+        # Store results of student choices.
         default=[],
         scope=Scope.user_state
     )
 
     # Global user state
     next_step = String(
-        help="url_name of the next step the student must complete (global to all blocks)",
+        # url_name of the next step the student must complete (global to all blocks)
         default='mentoring_first',
         scope=Scope.preferences
     )
 
     editable_fields = (
-        'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
-        'display_submit', 'weight', 'display_name',
+        'display_name', 'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
+        'display_submit', 'weight',
     )
     icon_class = 'problem'
     has_score = True

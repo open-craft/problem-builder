@@ -29,24 +29,30 @@ from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
 
 
+@XBlock.needs("i18n")
 class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
     """
     A message which can be conditionally displayed at the mentoring block level,
     for example upon completion of the block
     """
     content = String(
-        display_name="Message",
-        help="Message to display upon completion",
+        display_name=_("Message"),
+        help=_("Message to display upon completion"),
         scope=Scope.content,
         default="",
         multiline_editor="html",
         resettable_editor=False,
     )
     type = String(
-        help="Type of message",
+        help=_("Type of message"),
         scope=Scope.content,
         default="completed",
         values=(
@@ -57,6 +63,10 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
     )
     editable_fields = ("content", )
 
+    def _(self, text):
+        """ translate text """
+        return self.runtime.service(self, "i18n").ugettext(text)
+
     def fallback_view(self, view_name, context):
         html = u'<div class="message {msg_type}">{content}</div>'.format(msg_type=self.type, content=self.content)
         return Fragment(html)
@@ -65,13 +75,13 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
     def studio_display_name(self):
         if self.type == 'max_attempts_reached':
             max_attempts = self.get_parent().max_attempts
-            return u"Message when student reaches max. # of attempts ({current_limit})".format(
-                current_limit=u"unlimited" if max_attempts == 0 else max_attempts
+            return self._(u"Message when student reaches max. # of attempts ({limit})").format(
+                limit=self._(u"unlimited") if max_attempts == 0 else max_attempts
             )
         if self.type == 'completed':
-            return u"Message shown when complete"
+            return self._(u"Message shown when complete")
         if self.type == 'incomplete':
-            return u"Message shown when incomplete"
+            return self._(u"Message shown when incomplete")
         return u"INVALID MESSAGE"
 
     def __getattribute__(self, name):

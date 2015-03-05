@@ -33,25 +33,50 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
 # Classes ###########################################################
 
 
+@XBlock.needs("i18n")
 class TipBlock(StudioEditableXBlockMixin, XBlock):
     """
     Each choice can define a tip depending on selection
     """
-    content = String(help="Text of the tip to provide if needed", scope=Scope.content, default="")
+    content = String(
+        display_name=_("Content"),
+        help=_("Text of the tip to show if the student chooses this tip's associated choice[s]"),
+        scope=Scope.content,
+        default=""
+    )
     values = List(
-        display_name="For Choices",
-        help="List of choices for which to display this tip",
+        display_name=_("For Choices"),
+        help=_("List of choices for which to display this tip"),
         scope=Scope.content,
         default=[],
         list_values_provider=lambda self: self.get_parent().human_readable_choices,
         list_style='set',  # Underered, unique items. Affects the UI editor.
     )
-    width = String(help="Width of the tip popup", scope=Scope.content, default='')
-    height = String(help="Height of the tip popup", scope=Scope.content, default='')
+    width = String(
+        display_name=_("Width"),
+        help=_("Width of the tip popup (e.g. '400px')"),
+        scope=Scope.content,
+        default=''
+    )
+    height = String(
+        display_name=_("Height"),
+        help=_("Height of the tip popup (e.g. '200px')"),
+        scope=Scope.content,
+        default=''
+    )
     editable_fields = ('values', 'content', 'width', 'height')
+
+    def _(self, text):
+        """ translate text """
+        return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def studio_display_name(self):
@@ -62,7 +87,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
                 if len(display_name) > 20:
                     display_name = display_name[:20] + u'…'
                 values_list.append(display_name)
-        return u"Tip for {}".format(u", ".join(values_list))
+        return self._(u"Tip for {list_of_choices}").format(list_of_choices=u", ".join(values_list))
 
     def __getattribute__(self, name):
         """ Provide a read-only display name without adding a display_name field to the class. """
@@ -99,8 +124,8 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
         except Exception:
             pass
         else:
-            for val in set(data.values) - valid_values:
-                add_error(u"A choice value listed for this tip does not exist: {}".format(val))
+            for dummy in set(data.values) - valid_values:
+                add_error(self._(u"A choice selected for this tip does not exist."))
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):

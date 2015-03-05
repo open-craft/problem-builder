@@ -1,7 +1,12 @@
+{% load i18n %}
 <div class="mentoring themed-xblock" data-mode="{{ self.mode }}" data-step="{{ self.step }}">
   <div class="missing-dependency warning" data-missing="{{ self.has_missing_dependency }}">
-    You need to complete <a href="{{ missing_dependency_url }}">the previous step</a> before
+    {% with url=missing_dependency_url|safe %}
+    {% blocktrans with link_start="<a href='"|add:url|add:"'>" link_end="</a>" %}
+    You need to complete {{link_start}}the previous step{{link_end}} before
     attempting this step.
+    {% endblocktrans %}
+    {% endwith %}
   </div>
 
   {% if title %}
