@@ -110,6 +110,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         active_child++;
         var child = mentoring.steps[active_child];
         $(child.element).show();
+        $(child.element).find("input, textarea").first().focus();
         mentoring.publish_event({
             event_type: 'xblock.mentoring.assessment.shown',
             exercise_id: child.name
@@ -157,7 +158,9 @@ function MentoringAssessmentView(runtime, element, mentoring) {
             displayNextChild();
         } else {
             nextDOM.removeAttr("disabled");
+            if (nextDOM.is(':visible')) { nextDOM.focus(); }
             reviewDOM.removeAttr("disabled");
+            if (reviewDOM.is(':visible')) { reviewDOM.focus(); }
         }
     }
 
