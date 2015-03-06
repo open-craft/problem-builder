@@ -27,7 +27,7 @@ It supports:
 The screenshot shows an example of a mentoring block containing a
 free-form question, two MCQs and one MRQ.
 
-![Mentoring Exampimg/mentoring-example.png)
+![Mentoring Example](doc/img/mentoring-example.png)
 
 Installation
 ------------
@@ -89,7 +89,7 @@ Score review and the "Try Again" button:
 
 ![Assessment Step 4](doc/img/assessment-4.png)
 
-### Free-form questions
+### Free-form Question
 
 Free-form questions are represented by a "Long Answer" component. 
 
@@ -109,9 +109,9 @@ The read-only answer is rendered as a quote in the LMS:
 
 ![Answer Read-Only](doc/img/answer-3.png)
 
-### Multiple Choice Questions
+### Multiple Choice Questions (MCQ)
 
-Multiple choice questions can be added to a mentoring component and
+Multiple Choice Questions can be added to a mentoring component and
 have the following configurable options:
 
 * Question - The question to ask the student
@@ -158,9 +158,9 @@ instructions apply. You can also still add "Custom Choice" components
 if you want additional choices to be available such as "I don't know".
 
 
-### Self-assessment MRQs
+### Self-assessment Multiple Response Questions (MRQ)
 
-Multiple response questions are set up similarly to MCQs. The answers
+Multiple Response Questions are set up similarly to MCQs. The answers
 are rendered as checkboxes. Unlike MCQs where only a single answer can
 be selected, MRQs allow multiple answers to be selected at the same
 time.
