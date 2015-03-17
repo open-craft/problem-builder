@@ -246,7 +246,8 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         values_with_tips = set()
         for tip in self.get_tips():
             values = set(tip.values)
-            for dummy in (values & values_with_tips):
+            if values & values_with_tips:
                 add_error(self._(u"Multiple tips configured for the same choice."))
+                break
             values_with_tips.update(values)
         return validation

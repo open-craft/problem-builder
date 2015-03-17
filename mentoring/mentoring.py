@@ -36,6 +36,12 @@ from .step import StepParentMixin, StepMixin
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
+try:
+    # Used to detect if we're in the workbench so we can add Font Awesome
+    from workbench.runtime import WorkbenchRuntime
+except ImportError:
+    WorkbenchRuntime = False
+
 # Globals ###########################################################
 
 log = logging.getLogger(__name__)
@@ -224,9 +230,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
-            if isinstance(child, MentoringMessageBlock):
-                pass
-            else:
+            if not isinstance(child, MentoringMessageBlock):
                 try:
                     if self.is_assessment and isinstance(child, StepMixin):
                         child_fragment = child.render('assessment_step_view', context)
@@ -258,12 +262,8 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
-        try:
-            from workbench.runtime import WorkbenchRuntime
-            if isinstance(self.runtime, WorkbenchRuntime):
-                fragment.add_css_url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
-        except ImportError:
-            pass
+        if WorkbenchRuntime and isinstance(self.runtime, WorkbenchRuntime):
+            fragment.add_css_url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
 
         fragment.initialize_js('MentoringBlock')
 
@@ -533,7 +533,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 if msg_type in message_types_present:
                     validation.add(ValidationMessage(
                         ValidationMessage.ERROR,
-                        self._(u"There should only be one '{}' message component.".format(msg_type))
+                        self._(u"There should only be one '{msg_type}' message component.").format(msg_type=msg_type)
                     ))
                 message_types_present.add(msg_type)
         if a_child_has_issues:

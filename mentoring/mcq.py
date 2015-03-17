@@ -65,6 +65,7 @@ class MCQBlock(QuestionnaireAbstractBlock):
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.correct_choices:
             if len(self.correct_choices) == 1:
+                # Translators: This is an adjective, describing a choice as correct
                 return self._(u"Correct")
             return self._(u"Acceptable")
         else:
