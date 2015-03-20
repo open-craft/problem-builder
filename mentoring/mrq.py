@@ -124,7 +124,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'choices': results,
             'message': self.message,
             'weight': self.weight,
-            'score': float(score) / len(results),
+            'score': (float(score) / len(results)) if results else 0,
         }
 
         log.debug(u'MRQ submissions result: %s', result)
