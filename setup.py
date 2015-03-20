@@ -53,6 +53,8 @@ BLOCKS = [
     'pb-message = mentoring:MentoringMessageBlock',
     'pb-tip = mentoring:TipBlock',
     'pb-choice = mentoring:ChoiceBlock',
+
+    'pb-dashboard = mentoring:DashboardBlock',
     # Deprecated. You can temporarily uncomment and run 'python setup.py develop' if you have these blocks
     # installed from testing mentoring v2 and need to get past an error message.
     #'answer = mentoring:AnswerBlock',

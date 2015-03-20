@@ -28,6 +28,7 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
 from .questionnaire import QuestionnaireAbstractBlock
+from .sub_api import sub_api, SubmittingXBlockMixin
 
 
 # Globals ###########################################################
@@ -43,7 +44,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MCQBlock(QuestionnaireAbstractBlock):
+class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
     """
@@ -88,6 +89,11 @@ class MCQBlock(QuestionnaireAbstractBlock):
             })
 
         self.student_choice = submission
+
+        if sub_api:
+            # Also send to the submissions API:
+            sub_api.create_submission(self.student_item_key, submission)
+
         result = {
             'submission': submission,
             'status': 'correct' if correct else 'incorrect',
