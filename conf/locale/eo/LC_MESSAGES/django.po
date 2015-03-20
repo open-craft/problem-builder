@@ -47,8 +47,7 @@ msgstr "Mïn. Àllöwéd Çhäräçtérs Ⱡ'σяє#"
 msgid "Minimum number of characters allowed for the answer"
 msgstr "Mïnïmüm nümßér öf çhäräçtérs ällöwéd för thé änswér Ⱡ'σяєм ιρѕυм ∂#"
 
-#: mentoring/answer.py mentoring/answer.py mentoring/questionnaire.py
-#: mentoring/questionnaire.py
+#: mentoring/answer.py mentoring/questionnaire.py
 msgid "Question"
 msgstr "Qüéstïön #"
 

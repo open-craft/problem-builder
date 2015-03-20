@@ -12,3 +12,10 @@ dummy_locales:
 ignore_dirs:
     - mentoring/v1
     - mentoring/tests
+
+# i18n_tools produces just "django-partial.po" by default, but we need "django.po":
+generate_merge:
+    django.po:
+        - django-partial.po
+    djangojs.po:
+        - djangojs-partial.po
