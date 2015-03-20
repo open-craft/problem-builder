@@ -1,9 +1,9 @@
 <vertical_demo>
-    <mentoring url_name="answer_edit_1" enforce_dependency="false">
+    <problem-builder url_name="answer_edit_1" enforce_dependency="false">
         <html_demo>
             <p>This should be displayed in the answer_edit scenario</p>
         </html_demo>
 
-        <answer name="answer_1" />
-    </mentoring>
+        <pb-answer name="answer_1" />
+    </problem-builder>
 </vertical_demo>

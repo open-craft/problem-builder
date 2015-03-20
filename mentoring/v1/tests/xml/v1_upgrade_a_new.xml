@@ -1,40 +1,40 @@
-<mentoring url_name="some_url_name" weight="1" mode="standard" display_name="Default Title">
+<problem-builder url_name="some_url_name" weight="1" mode="standard" display_name="Default Title">
   <html>
     <p>This paragraph is shared between <strong>all</strong> questions.</p>
   </html>
   <html>
     <p>Please answer the questions below.</p>
   </html>
-  <answer name="goal" question="What is your goal?"/>
-  <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
-    <choice value="yes">Yes</choice>
-    <choice value="maybenot">Maybe not</choice>
-    <choice value="understand">I don't understand</choice>
-    <tip values="yes">Great!</tip>
-    <tip values="maybenot">Ah, damn.</tip>
-    <tip values="understand">
+  <pb-answer name="goal" question="What is your goal?"/>
+  <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
+    <pb-choice value="yes">Yes</pb-choice>
+    <pb-choice value="maybenot">Maybe not</pb-choice>
+    <pb-choice value="understand">I don't understand</pb-choice>
+    <pb-tip values="yes">Great!</pb-tip>
+    <pb-tip values="maybenot">Ah, damn.</pb-tip>
+    <pb-tip values="understand">
       <div id="test-custom-html">Really?</div>
-    </tip>
-  </mcq>
-  <rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How much do you rate this MCQ?" correct_choices="4,5">
-    <choice value="notwant">I don't want to rate it</choice>
-    <tip values="4,5">I love good grades.</tip>
-    <tip values="1,2,3">Will do better next time...</tip>
-    <tip values="notwant">Your loss!</tip>
-  </rating>
-  <mrq name="mrq_1_1" question="What do you like in this MRQ?" message="Thank you for answering!" required_choices="gracefulness,elegance,beauty">
-    <choice value="elegance">Its elegance</choice>
-    <choice value="beauty">Its beauty</choice>
-    <choice value="gracefulness">Its gracefulness</choice>
-    <choice value="bugs">Its bugs</choice>
-    <tip values="gracefulness">This MRQ is indeed very graceful</tip>
-    <tip values="elegance,beauty">This is something everyone has to like about this MRQ</tip>
-    <tip values="bugs">Nah, there isn't any!</tip>
-  </mrq>
-  <mentoring-message type="completed">
+    </pb-tip>
+  </pb-mcq>
+  <pb-rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How much do you rate this MCQ?" correct_choices="4,5">
+    <pb-choice value="notwant">I don't want to rate it</pb-choice>
+    <pb-tip values="4,5">I love good grades.</pb-tip>
+    <pb-tip values="1,2,3">Will do better next time...</pb-tip>
+    <pb-tip values="notwant">Your loss!</pb-tip>
+  </pb-rating>
+  <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" message="Thank you for answering!" required_choices="gracefulness,elegance,beauty">
+    <pb-choice value="elegance">Its elegance</pb-choice>
+    <pb-choice value="beauty">Its beauty</pb-choice>
+    <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+    <pb-choice value="bugs">Its bugs</pb-choice>
+    <pb-tip values="gracefulness">This MRQ is indeed very graceful</pb-tip>
+    <pb-tip values="elegance,beauty">This is something everyone has to like about this MRQ</pb-tip>
+    <pb-tip values="bugs">Nah, there isn't any!</pb-tip>
+  </pb-mrq>
+  <pb-message type="completed">
     <p>Congratulations!</p>
-  </mentoring-message>
-  <mentoring-message type="incomplete">
+  </pb-message>
+  <pb-message type="incomplete">
     <p>Still some work to do...</p>
-  </mentoring-message>
-</mentoring>
+  </pb-message>
+</problem-builder>

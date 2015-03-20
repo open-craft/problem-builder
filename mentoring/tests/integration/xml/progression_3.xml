@@ -1,5 +1,5 @@
 <vertical_demo>
-    <mentoring url_name="progression_3" enforce_dependency="true">
-        <answer name="progression_3_answer" />
-    </mentoring>
+    <problem-builder url_name="progression_3" enforce_dependency="true">
+        <pb-answer name="progression_3_answer" />
+    </problem-builder>
 </vertical_demo>

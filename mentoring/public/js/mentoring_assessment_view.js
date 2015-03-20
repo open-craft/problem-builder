@@ -112,7 +112,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         $(child.element).show();
         $(child.element).find("input, textarea").first().focus();
         mentoring.publish_event({
-            event_type: 'xblock.mentoring.assessment.shown',
+            event_type: 'xblock.problem_builder.assessment.shown',
             exercise_id: child.name
         });
 

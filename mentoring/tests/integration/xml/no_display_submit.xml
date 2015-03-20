@@ -1,5 +1,5 @@
 <vertical_demo>
-    <mentoring url_name="answer_no_display_submit" enforce_dependency="false" display_submit="false">
-        <answer name="answer_blank"/>
-    </mentoring>
+    <problem-builder url_name="answer_no_display_submit" enforce_dependency="false" display_submit="false">
+        <pb-answer name="answer_blank"/>
+    </problem-builder>
 </vertical_demo>

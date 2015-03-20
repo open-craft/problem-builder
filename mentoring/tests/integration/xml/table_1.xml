@@ -1,6 +1,6 @@
 <vertical_demo>
-    <mentoring enforce_dependency="false">
-        <answer name="table_1_answer_1" />
-        <answer name="table_1_answer_2" />
-    </mentoring>
+    <problem-builder enforce_dependency="false">
+        <pb-answer name="table_1_answer_1" />
+        <pb-answer name="table_1_answer_2" />
+    </problem-builder>
 </vertical_demo>

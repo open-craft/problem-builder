@@ -1,26 +1,26 @@
 <vertical_demo>
-    <mentoring url_name="mcq_1" enforce_dependency="false">
-        <mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
-            <choice value="yes">Yes</choice>
-            <choice value="maybenot">Maybe not</choice>
-            <choice value="understand">I don't understand</choice>
+    <problem-builder url_name="mcq_1" enforce_dependency="false">
+        <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
+            <pb-choice value="yes">Yes</pb-choice>
+            <pb-choice value="maybenot">Maybe not</pb-choice>
+            <pb-choice value="understand">I don't understand</pb-choice>
 
-            <tip values="yes">Great!</tip>
-            <tip values="maybenot">Ah, damn.</tip>
-            <tip values="understand"><div id="test-custom-html">Really?</div></tip>
-        </mcq>
+            <pb-tip values="yes">Great!</pb-tip>
+            <pb-tip values="maybenot">Ah, damn.</pb-tip>
+            <pb-tip values="understand"><div id="test-custom-html">Really?</div></pb-tip>
+        </pb-mcq>
 
-        <rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How do you rate this MCQ?" correct_choices="4,5">
-            <choice value="notwant">I don't want to rate it</choice>
+        <pb-rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How do you rate this MCQ?" correct_choices="4,5">
+            <pb-choice value="notwant">I don't want to rate it</pb-choice>
 
-            <tip values="4,5">I love good grades.</tip>
-            <tip values="1,2,3">Will do better next time...</tip>
-            <tip values="notwant">Your loss!</tip>
-        </rating>
+            <pb-tip values="4,5">I love good grades.</pb-tip>
+            <pb-tip values="1,2,3">Will do better next time...</pb-tip>
+            <pb-tip values="notwant">Your loss!</pb-tip>
+        </pb-rating>
 
-        <mentoring-message type="completed">
+        <pb-message type="completed">
             All is good now...
             <p>Congratulations!</p>
-        </mentoring-message>
-    </mentoring>
+        </pb-message>
+    </problem-builder>
 </vertical_demo>

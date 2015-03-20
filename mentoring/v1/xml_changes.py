@@ -43,11 +43,33 @@ class Change(object):
         raise NotImplementedError
 
 
+class RenameMentoringTag(Change):
+    """
+    Replace <mentoring> with <problem-builder>
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag == "mentoring"
+
+    def apply(self):
+        self.node.tag = "problem-builder"
+
+
+class PrefixTags(Change):
+    """ Most old elements now get a pb- prefix """
+    @staticmethod
+    def applies_to(node):
+        return node.tag in ("tip", "choice", "answer", "mcq", "mrq", "rating", "column", "message")
+
+    def apply(self):
+        self.node.tag = "pb-" + self.node.tag
+
+
 class RemoveTitle(Change):
     """ The old <title> element is now an attribute of <mentoring> """
     @staticmethod
     def applies_to(node):
-        return node.tag == "title" and node.getparent().tag == "mentoring"
+        return node.tag == "title" and node.getparent().tag == "problem-builder"
 
     def apply(self):
         title = self.node.text.strip()
@@ -60,10 +82,10 @@ class RemoveTitle(Change):
 
 
 class UnwrapHTML(Change):
-    """ <choice>,<tip>, <header>, and <message> now contain HTML without an explicit <html> wrapper. """
+    """ <pb-choice>,<pb-tip>, <header>, and <pb-message> now contain HTML without an explicit <html> wrapper. """
     @staticmethod
     def applies_to(node):
-        return node.tag == "html" and node.getparent().tag in ("choice", "tip", "message", "header")
+        return node.tag == "html" and node.getparent().tag in ("pb-choice", "pb-tip", "pb-message", "header")
 
     def apply(self):
         p = self.node.getparent()
@@ -76,28 +98,39 @@ class UnwrapHTML(Change):
         p.remove(self.node)
 
 
-class TableColumnHeader(Change):
+class RenameTableTag(Change):
     """
-    Replace:
-    <mentoring-table>
-         <column>
-             <header>Answer 1</header>
-             <answer name="answer_1" />
-         </column>
-    </mentoring-table>
-    with
-    <mentoring-table>
-         <mentoring-column header="Answer 1">
-             <answer-recap name="answer_1" />
-         </mentoring-column>
-    </mentoring-table>
+    Replace <mentoring-table> with <pb-table>
     """
     @staticmethod
     def applies_to(node):
-        return node.tag == "column" and node.getparent().tag == "mentoring-table"
+        return node.tag == "mentoring-table"
 
     def apply(self):
-        self.node.tag = "mentoring-column"
+        self.node.tag = "pb-table"
+
+
+class TableColumnHeader(Change):
+    """
+    Replace:
+    <pb-table>
+         <pb-column>
+             <header>Answer 1</header>
+             <answer name="answer_1" />
+         </pb-column>
+    </pb-table>
+    with
+    <pb-table>
+         <pb-column header="Answer 1">
+             <answer-recap name="answer_1" />
+         </pb-column>
+    </pb-table>
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag == "pb-column" and node.getparent().tag == "pb-table"
+
+    def apply(self):
         header_html = u""
         to_remove = []
         for child in list(self.node):
@@ -107,12 +140,12 @@ class TableColumnHeader(Change):
                 for grandchild in list(child):
                     header_html += etree.tostring(grandchild)
                 to_remove.append(child)
-            elif child.tag == "answer":
-                child.tag = "answer-recap"
+            elif child.tag == "pb-answer":
+                child.tag = "pb-answer-recap"
                 if "read_only" in child.attrib:
                     del child.attrib["read_only"]
             elif child.tag != "html":
-                warnings.warn("Invalid <column> element: Unexpected <{}>".format(child.tag))
+                warnings.warn("Invalid <pb-column> element: Unexpected <{}>".format(child.tag))
                 return
         for child in to_remove:
             self.node.remove(child)
@@ -121,49 +154,36 @@ class TableColumnHeader(Change):
             self.node.attrib["header"] = header_html
 
 
-class PrefixMessageElements(Change):
-    """
-    <message> is renamed to <mentoring-message> since it only works as a direct child of
-    <mentoring> and <message> could collide with other future XBlocks.
-    """
-    @staticmethod
-    def applies_to(node):
-        return node.tag == "message" and node.getparent().tag == "mentoring"
-
-    def apply(self):
-        self.node.tag = "mentoring-message"
-
-
 class QuizzToMCQ(Change):
-    """ <quizz> element was an alias for <mcq>. In v2 we only have <mcq> """
+    """ <quizz> element was an alias for <mcq>. In v2 we only have <pb-mcq> """
     @staticmethod
     def applies_to(node):
         return node.tag == "quizz"
 
     def apply(self):
-        self.node.tag = "mcq"
+        self.node.tag = "pb-mcq"
 
 
 class MCQToRating(Change):
     """ <mcq type="rating"> is now just <rating>, and we never use type="choices" on MCQ/MRQ """
     @staticmethod
     def applies_to(node):
-        return node.tag in ("mcq", "mrq") and "type" in node.attrib
+        return node.tag in ("pb-mcq", "pb-mrq") and "type" in node.attrib
 
     def apply(self):
-        if self.node.tag == "mcq" and self.node.get("type") == "rating":
-            self.node.tag = "rating"
+        if self.node.tag == "pb-mcq" and self.node.get("type") == "rating":
+            self.node.tag = "pb-rating"
         self.node.attrib.pop("type")  # Type attribute is no longer used.
 
 
 class ReadOnlyAnswerToRecap(Change):
-    """ <answer read_only="true"> is now <answer-recap/> """
+    """ <answer read_only="true"> is now <pb-answer-recap/> """
     @staticmethod
     def applies_to(node):
-        return node.tag == "answer" and node.get("read_only") == "true"
+        return node.tag == "pb-answer" and node.get("read_only") == "true"
 
     def apply(self):
-        self.node.tag = "answer-recap"
+        self.node.tag = "pb-answer-recap"
         self.node.attrib
         self.node.attrib.pop("read_only")
         for name in self.node.attrib:
@@ -183,7 +203,7 @@ class QuestionToField(Change):
     """
     @staticmethod
     def applies_to(node):
-        parent_tags = ("answer", "mcq", "mrq", "rating")
+        parent_tags = ("pb-answer", "pb-mcq", "pb-mrq", "pb-rating")
         return node.tag == "question" and node.getparent().tag in parent_tags
 
     def apply(self):
@@ -206,7 +226,11 @@ class QuestionSubmitMessageToField(Change):
     """
     @staticmethod
     def applies_to(node):
-        return node.tag == "message" and node.get("type") == "on-submit" and node.getparent().tag in ("mcq", "mrq")
+        return (
+            node.tag == "pb-message" and
+            node.get("type") == "on-submit" and
+            node.getparent().tag in ("pb-mcq", "pb-mrq")
+        )
 
     def apply(self):
         if list(self.node):
@@ -223,7 +247,7 @@ class TipChanges(Change):
     """
     @staticmethod
     def applies_to(node):
-        return node.tag == "tip" and node.getparent().tag in ("mcq", "mrq", "rating")
+        return node.tag == "pb-tip" and node.getparent().tag in ("pb-mcq", "pb-mrq", "pb-rating")
 
     def apply(self):
         p = self.node.getparent()
@@ -239,7 +263,7 @@ class TipChanges(Change):
             return
         mode = self.node.attrib.keys()[0]
         value = self.node.attrib[mode]
-        if p.tag == "mrq":
+        if p.tag == "pb-mrq":
             if mode == "display":
                 add_to_list("ignored_choices", value)
             elif mode == "require":
@@ -262,7 +286,7 @@ class SharedHeaderToHTML(Change):
     """ <shared-header> element no longer exists. Just use <html> """
     @staticmethod
     def applies_to(node):
-        return node.tag == "shared-header" and node.getparent().tag == "mentoring"
+        return node.tag == "shared-header" and node.getparent().tag == "problem-builder"
 
     def apply(self):
         self.node.tag = "html"
@@ -270,10 +294,12 @@ class SharedHeaderToHTML(Change):
 
 # An *ordered* list of all XML schema changes:
 xml_changes = (
+    RenameMentoringTag,
+    PrefixTags,
     RemoveTitle,
     UnwrapHTML,
+    RenameTableTag,
     TableColumnHeader,
-    PrefixMessageElements,
     QuizzToMCQ,
     MCQToRating,
     ReadOnlyAnswerToRecap,

@@ -46,7 +46,7 @@ function MentoringBlock(runtime, element) {
         if (!clickedInside(question_feedback_selector, question_feedback_selector)) {
             $(question_feedback_selector).not(':hidden').each(function (i, el) {
                 $(el).hide();
-                publish_event({event_type: 'xblock.mentoring.feedback.closed', content: $(el).text()});
+                publish_event({event_type: 'xblock.problem_builder.feedback.closed', content: $(el).text()});
             });
         }
 
@@ -118,5 +118,5 @@ function MentoringBlock(runtime, element) {
         MentoringAssessmentView(runtime, element, mentoring);
     }
 
-    publish_event({event_type:"xblock.mentoring.loaded"});
+    publish_event({event_type:"xblock.problem_builder.loaded"});
 }

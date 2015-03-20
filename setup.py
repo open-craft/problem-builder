@@ -40,26 +40,35 @@ def package_data(pkg, root_list):
 # Main ##############################################################
 
 BLOCKS = [
-    'mentoring = mentoring:MentoringBlock',
+    'problem-builder = mentoring:MentoringBlock',
+    'mentoring = mentoring:MentoringBlock',  # Deprecated alias for problem-builder. Required to import older blocks.
 
-    'mentoring-table = mentoring:MentoringTableBlock',
-    'mentoring-column = mentoring:MentoringTableColumn',
-    'answer = mentoring:AnswerBlock',
-    'answer-recap = mentoring:AnswerRecapBlock',
-    'mcq = mentoring:MCQBlock',
-    'rating = mentoring:RatingBlock',
-    'mrq = mentoring:MRQBlock',
-    'mentoring-message = mentoring:MentoringMessageBlock',
-    'tip = mentoring:TipBlock',
-    'choice = mentoring:ChoiceBlock',
-    # Deprecated:
-    'mentoring-answer = mentoring:AnswerBlock',
-    'mentoring-answer-recap = mentoring:AnswerRecapBlock',
-    'mentoring-mcq = mentoring:MCQBlock',
-    'mentoring-rating = mentoring:RatingBlock',
-    'mentoring-mrq = mentoring:MRQBlock',
-    'mentoring-tip = mentoring:TipBlock',
-    'mentoring-choice = mentoring:ChoiceBlock',
+    'pb-table = mentoring:MentoringTableBlock',
+    'pb-column = mentoring:MentoringTableColumn',
+    'pb-answer = mentoring:AnswerBlock',
+    'pb-answer-recap = mentoring:AnswerRecapBlock',
+    'pb-mcq = mentoring:MCQBlock',
+    'pb-rating = mentoring:RatingBlock',
+    'pb-mrq = mentoring:MRQBlock',
+    'pb-message = mentoring:MentoringMessageBlock',
+    'pb-tip = mentoring:TipBlock',
+    'pb-choice = mentoring:ChoiceBlock',
+    # Deprecated. You can temporarily uncomment and run 'python setup.py develop' if you have these blocks
+    # installed from testing mentoring v2 and need to get past an error message.
+    #'answer = mentoring:AnswerBlock',
+    #'mentoring-answer = mentoring:AnswerBlock',
+    #'answer-recap = mentoring:AnswerRecapBlock',
+    #'mentoring-answer-recap = mentoring:AnswerRecapBlock',
+    #'mcq = mentoring:MCQBlock',
+    #'mentoring-mcq = mentoring:MCQBlock',
+    #'rating = mentoring:RatingBlock',
+    #'mentoring-rating = mentoring:RatingBlock',
+    #'mrq = mentoring:MRQBlock',
+    #'mentoring-mrq = mentoring:MRQBlock',
+    #'tip = mentoring:TipBlock',
+    #'mentoring-tip = mentoring:TipBlock',
+    #'choice = mentoring:ChoiceBlock',
+    #'mentoring-choice = mentoring:ChoiceBlock',
 ]
 
 setup(

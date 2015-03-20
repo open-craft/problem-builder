@@ -1,23 +1,23 @@
-<mentoring display_name="Default Title" weight="1" mode="standard">
+<problem-builder display_name="Default Title" weight="1" mode="standard">
     <html_demo>
         <p>Please answer the questions below.</p>
     </html_demo>
 
-    <mrq name="mrq_1_1" question="What do you like in this MRQ?" message="Thank you for answering!" required_choices="gracefulness,elegance,beauty">
-        <choice value="elegance">Its elegance</choice>
-        <choice value="beauty">Its beauty</choice>
-        <choice value="gracefulness">Its gracefulness</choice>
-        <choice value="bugs">Its bugs</choice>
+    <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" message="Thank you for answering!" required_choices="gracefulness,elegance,beauty">
+        <pb-choice value="elegance">Its elegance</pb-choice>
+        <pb-choice value="beauty">Its beauty</pb-choice>
+        <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+        <pb-choice value="bugs">Its bugs</pb-choice>
 
-        <tip values="gracefulness">This MRQ is indeed very graceful</tip>
-        <tip values="elegance,beauty">This is something everyone has to like about this MRQ</tip>
-        <tip values="bugs">Nah, there aren't any!</tip>
-    </mrq>
+        <pb-tip values="gracefulness">This MRQ is indeed very graceful</pb-tip>
+        <pb-tip values="elegance,beauty">This is something everyone has to like about this MRQ</pb-tip>
+        <pb-tip values="bugs">Nah, there aren't any!</pb-tip>
+    </pb-mrq>
 
-    <mentoring-message type="completed">
+    <pb-message type="completed">
         <p>Congratulations!</p>
-    </mentoring-message>
-    <mentoring-message type="incomplete">
+    </pb-message>
+    <pb-message type="incomplete">
         <p>Still some work to do...</p>
-    </mentoring-message>
-</mentoring>
+    </pb-message>
+</problem-builder>

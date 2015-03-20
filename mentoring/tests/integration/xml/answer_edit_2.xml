@@ -1,6 +1,6 @@
 <vertical_demo>
-    <mentoring url_name="answer_edit_2" enforce_dependency="false">
-        <answer-recap name="answer_1" />
-        <answer name="answer_1" />
-    </mentoring>
+    <problem-builder url_name="answer_edit_2" enforce_dependency="false">
+        <pb-answer-recap name="answer_1" />
+        <pb-answer name="answer_1" />
+    </problem-builder>
 </vertical_demo>

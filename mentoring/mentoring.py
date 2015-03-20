@@ -395,7 +395,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         raw_score = self.score.raw
 
-        self.runtime.publish(self, 'xblock.mentoring.submitted', {
+        self.runtime.publish(self, 'xblock.problem_builder.submitted', {
             'num_attempts': self.num_attempts,
             'submitted_answer': submissions,
             'grade': raw_score,
@@ -460,7 +460,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
 
-        self.runtime.publish(self, 'xblock.mentoring.assessment.submitted', event_data)
+        self.runtime.publish(self, 'xblock.problem_builder.assessment.submitted', event_data)
 
         return {
             'completed': completed,

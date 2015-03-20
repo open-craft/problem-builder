@@ -1,13 +1,13 @@
-<mentoring display_submit="false" enforce_dependency="false">
-  <mentoring-table type="table_test" url_name="table_2">
-    <mentoring-column header="Header Test 1">
-        <answer-recap name="table_1_answer_1" />
-    </mentoring-column>
+<problem-builder display_submit="false" enforce_dependency="false">
+  <pb-table type="table_test" url_name="table_2">
+    <pb-column header="Header Test 1">
+        <pb-answer-recap name="table_1_answer_1" />
+    </pb-column>
 
-    <mentoring-column header="Header &lt;strong&gt;Test 2&lt;/strong&gt;">
-        <answer-recap name="table_1_answer_2" />
+    <pb-column header="Header &lt;strong&gt;Test 2&lt;/strong&gt;">
+        <pb-answer-recap name="table_1_answer_2" />
         <html><p>Inline HTML</p></html>
-        <answer-recap name="table_1_answer_2" />
-    </mentoring-column>
-  </mentoring-table>
-</mentoring>
+        <pb-answer-recap name="table_1_answer_2" />
+    </pb-column>
+  </pb-table>
+</problem-builder>
