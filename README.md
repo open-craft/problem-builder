@@ -288,6 +288,23 @@ If you want to run only the integration or the unit tests, append the directory 
 $ ./run_tests.py mentoring/tests/unit
 ```
 
+Extracting Translatable Strings
+-------------------------------
+
+To extract/update strings for translation, you will need i18n_tools:
+
+```bash
+pip install git+https://github.com/edx/i18n-tools.git#egg=i18n_tools
+```
+
+To extract strings, use `i18n_tool extract`. To build a dummy translation for
+testing, use:
+
+```bash
+i18n_tool dummy && i18n_tool generate
+```
+
+
 Adding custom scenarios to the workbench
 ----------------------------------------
 
