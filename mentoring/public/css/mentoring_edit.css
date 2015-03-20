@@ -1,20 +1,25 @@
 /* Display of url_name below content */
+.xblock[data-block-type=problem-builder] .url-name-footer,
 .xblock[data-block-type=mentoring] .url-name-footer {
   font-style: italic;
 }
 
+.xblock[data-block-type=problem-builder] .url-name-footer .url-name,
 .xblock[data-block-type=mentoring] .url-name-footer .url-name {
   margin: 0 10px;
   font-family: monospace;
 }
 
 /* Custom appearance for our "Add" buttons */
+.xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
   width: 200px;
   height: 30px;
   line-height: 30px;
 }
 
+.xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover {
   background-color: #ccc;
