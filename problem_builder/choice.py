@@ -44,7 +44,7 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
     """
     value = String(
         display_name=_("Value"),
-        help=_("Value of the choice when selected. Should be unique."),
+        help=_("Value of the choice when selected. Should be unique. Generally you do not need to edit this."),
         scope=Scope.content,
         default="",
     )
@@ -54,7 +54,7 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
         scope=Scope.content,
         default="",
     )
-    editable_fields = ('content', )
+    editable_fields = ('content', 'value')
 
     def _(self, text):
         """ translate text """

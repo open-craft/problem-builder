@@ -81,7 +81,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         scope=Scope.content,
         enforce_type=True
     )
-    editable_fields = ('question', 'message', 'weight')
+    editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
     has_children = True
 
     def _(self, text):
@@ -113,12 +113,6 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         return block
 
-    @property
-    def display_name_with_default(self):
-        if not self.lonely_step:
-            return self._(u"Question {number}").format(number=self.step_number)
-        return self._(u"Question")
-
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
 
@@ -127,6 +121,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         context = context or {}
         context['self'] = self
         context['custom_choices'] = self.custom_choices
+        context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
         fragment = Fragment(loader.render_template(template_path, context))
         # If we use local_resource_url(self, ...) the runtime may insert many identical copies

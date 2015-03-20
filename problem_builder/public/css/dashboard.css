@@ -1,0 +1,32 @@
+.pb-dashboard table {
+    max-width: 800px;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+.pb-dashboard table thead th {
+    padding-top: 0.6em;
+    font-weight: bold;
+}
+
+.pb-dashboard table td, .pb-dashboard table tbody th {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding: 0.2em;
+    font-weight: normal;
+}
+
+.pb-dashboard table .desc {
+    min-width: 350px;
+}
+
+.pb-dashboard table td.value {
+    min-width: 4em;
+    text-align: right;
+    padding-right: 5px;
+    border-right: 0.6em solid transparent;
+}
+
+.pb-dashboard table .avg-row td.desc {
+    font-style: italic;
+}
