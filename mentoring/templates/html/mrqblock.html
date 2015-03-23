@@ -13,7 +13,9 @@
                {% if choice.value in self.student_choices %} checked{% endif %} />
         <span class="choice-text">{{ choice.content|safe }}</span>
       </label>
-      <div class="choice-tips"></div>
+      <div class="choice-tips-container">
+        <div class="choice-tips"></div>
+      </div>
     </div>
     {% endfor %}
     <div class="feedback"></div>

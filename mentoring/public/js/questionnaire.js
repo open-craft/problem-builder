@@ -3,7 +3,9 @@
 function MessageView(element, mentoring) {
     return {
         messageDOM: $('.feedback', element),
+        allChoicesDOM: $('.choice', element),
         allPopupsDOM: $('.choice-tips, .feedback', element),
+        allPopupContainersDOM: $('.choice-tips-container', element),
         allResultsDOM: $('.choice-result', element),
         clearPopupEvents: function() {
             this.allPopupsDOM.hide();
@@ -28,6 +30,11 @@ function MessageView(element, mentoring) {
                 popupDOM.css('height', '');
             }
 
+            var container = popupDOM.parent('.choice-tips-container');
+            if (container.length) {
+                this.allPopupContainersDOM.addClass('with-tips').removeClass('active');
+                container.addClass('active');
+            }
             popupDOM.show();
 
             mentoring.publish_event({
@@ -53,6 +60,8 @@ function MessageView(element, mentoring) {
             }
         },
         clearResult: function() {
+            this.allPopupContainersDOM.removeClass('with-tips active');
+            this.allChoicesDOM.removeClass('correct incorrect');
             this.allPopupsDOM.html('').hide();
             this.allResultsDOM.removeClass(
                 'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
@@ -85,6 +94,7 @@ function MCQBlock(runtime, element) {
             if (this.mode === 'assessment')
                 return;
 
+
             mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
@@ -99,14 +109,17 @@ function MCQBlock(runtime, element) {
                 var choiceTipsCloseDOM;
 
                 if (result.status === "correct" && choiceInputDOM.val() === result.submission) {
+                    choiceDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                 }
                 else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {
+                    choiceDOM.addClass('incorrect');
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
 
                 if (result.tips && choiceInputDOM.val() === result.submission) {
                     mentoring.setContent(choiceTipsDOM, result.tips);
+                    messageView.showMessage(choiceTipsDOM);
                 }
 
                 choiceTipsCloseDOM = $('.close', choiceTipsDOM);
@@ -120,9 +133,6 @@ function MCQBlock(runtime, element) {
             if (_.isNull(result.submission)) {
                 messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
                                         '<div class="close icon-remove-sign fa-times-circle"></div>');
-            }
-            else if (result.tips) {
-                messageView.showMessage(result.tips);
             }
         },
 
@@ -189,8 +199,10 @@ function MRQBlock(runtime, element) {
                 if (!hide_results &&
                     (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0)) {
                     if (choice.completed) {
+                        choiceDOM.addClass('correct');
                         choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                     } else if (!choice.completed) {
+                        choiceDOM.addClass('incorrect');
                         choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                     }
 

@@ -1,5 +1,19 @@
+.themed-xblock.mentoring .questionnaire .choice-result {
+    display: table-cell;
+}
+
+.themed-xblock.mentoring .choice-result::before {
+    content: "";
+    display: block;
+    width: 36px;
+}
+
 .themed-xblock.mentoring .checkmark-incorrect {
     color: #c1373f;
+}
+
+.themed-xblock.mentoring .checkmark-correct::before {
+    content: "\f00c";
 }
 
 .themed-xblock.mentoring .checkmark-incorrect::before {
@@ -15,4 +29,78 @@
 div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
     display: block;
     margin-bottom: 1.41575em;
+}
+
+.themed-xblock.mentoring .choices-list {
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+}
+
+.themed-xblock.mentoring .choice-label {
+    display: table-cell;
+    vertical-align: middle;
+    width: 100%;
+    padding-bottom: 10px;
+    padding-top: 2px;
+}
+
+.themed-xblock.mentoring .choice-label span.low {
+    line-height: inherit;
+}
+
+.themed-xblock.mentoring .choice-result,
+.themed-xblock.mentoring .choice-label,
+.themed-xblock.mentoring .choice-tips-container {
+    vertical-align: top;
+}
+
+.themed-xblock.mentoring .choice-tips {
+    position: relative;
+}
+
+.themed-xblock.mentoring .questionnaire .choice {
+    display: table-row;
+}
+
+.themed-xblock.mentoring .questionnaire .feedback {
+    min-height: 100%;
+    border-left: 2px solid #ddd;
+}
+
+.themed-xblock.mentoring .questionnaire .choice-tips,
+.themed-xblock.mentoring .questionnaire .feedback {
+    color: #3c3c3c;
+    background: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    opacity: 1;
+    padding: 0 20px;
+}
+
+.themed-xblock.mentoring .questionnaire .choice-tips-container {
+    display: table-cell;
+}
+
+
+.themed-xblock.mentoring .questionnaire .choice-tips p,
+.themed-xblock.mentoring .questionnaire .feedback p {
+    color: #3c3c3c;
+}
+
+.themed-xblock.mentoring .questionnaire .choice-tips .close,
+.themed-xblock.mentoring .questionnaire .feedback .close {
+    display: none;
+}
+
+.themed-xblock.mentoring .choice .choice-tips-container.with-tips {
+    border-left: 2px solid #ddd;
+}
+
+.themed-xblock.mentoring .choice.correct .choice-tips-container.active {
+    border-color: #629b2b;
+}
+
+.themed-xblock.mentoring .choice.incorrect .choice-tips-container.active {
+    border-color: #c1373f;
 }
