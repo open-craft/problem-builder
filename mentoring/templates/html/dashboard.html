@@ -1,0 +1,20 @@
+<div class="pb-dashboard">
+  <h1>{{display_name}}</h1>
+  <table>
+    {% for block in blocks %}
+      <thead>
+        <th colspan=2>{{ block.display_name }}</th>
+      </thead>
+      <tbody>
+        {% for mcq in block.mcqs %}
+          <tr>
+            <td>{{ mcq.display_name }}</td>
+            <td {% if mcq.color %}style="background-color: {{mcq.color}};"{% endif %}>
+              <span>{% if mcq.value %}{{ mcq.value }}{% endif %}</span>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    {% endfor %}
+  </table>
+</div>

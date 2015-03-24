@@ -1,0 +1,26 @@
+.pb-dashboard table {
+    max-width: 800px;
+    border-collapse: collapse;
+}
+
+.pb-dashboard table td {
+    border: 1px solid black;
+    padding: 0.2em;
+}
+
+.pb-dashboard table td:last-child {
+    min-width: 3em;
+    text-align: right;
+}
+
+.pb-dashboard table td:last-child span {
+    position: relative;
+    background: transparent;
+    color: black;
+    /* Background color could be anything, so add a white outline to preserve readability */
+    text-shadow:
+       -1px -1px 1px rgba(255,255,255,0.7),  
+        1px -1px 1px rgba(255,255,255,0.7),
+        -1px 1px 1px rgba(255,255,255,0.7),
+         1px 1px 1px rgba(255,255,255,0.7);
+}
