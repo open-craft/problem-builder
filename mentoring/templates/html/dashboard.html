@@ -1,3 +1,4 @@
+{% load i18n %}
 <div class="pb-dashboard">
   <h1>{{display_name}}</h1>
   <table>
@@ -14,6 +15,12 @@
             </td>
           </tr>
         {% endfor %}
+        {% if block.has_average %}
+         <tr class="avg-row">
+            <td>{% trans "Average" %}</td>
+            <td>{{ block.average|floatformat }}</td>
+          </tr>
+        {% endif %}
       </tbody>
     {% endfor %}
   </table>

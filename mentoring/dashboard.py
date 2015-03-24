@@ -120,6 +120,11 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                         "value": value,
                         "color": self.color_codes.get(value),
                     })
+            # If the values are numeric, display an average:
+            numeric_values = [float(mcq['value']) for mcq in block['mcqs'] if mcq['value'] and mcq['value'].isnumeric()]
+            if numeric_values:
+                block['average'] = sum(numeric_values) / len(numeric_values)
+                block['has_average'] = True
             blocks.append(block)
 
         return loader.render_template('templates/html/dashboard.html', {

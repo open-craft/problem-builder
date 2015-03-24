@@ -3,6 +3,11 @@
     border-collapse: collapse;
 }
 
+.pb-dashboard table th {
+    padding-top: 0.6em;
+    font-weight: bold;
+}
+
 .pb-dashboard table td {
     border: 1px solid black;
     padding: 0.2em;
@@ -23,4 +28,9 @@
         1px -1px 1px rgba(255,255,255,0.7),
         -1px 1px 1px rgba(255,255,255,0.7),
          1px 1px 1px rgba(255,255,255,0.7);
+}
+
+.pb-dashboard table .avg-row td {
+    background-color: #ddd;
+    text-align: right;
 }
