@@ -17,11 +17,19 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
+"""
+Dashboard: Summarize the results of self-assessments done by a student with Problem Builder MCQ
+blocks.
 
+The author of this block specifies a list of Problem Builder blocks containing MCQs. This block
+will then display a table summarizing the values that the student chose for each of those MCQs.
+"""
 # Imports ###########################################################
 
+import json
 import logging
 
+from .dashboard_visual import DashboardVisualData
 from .mcq import MCQBlock
 from .sub_api import sub_api
 from xblock.core import XBlock
@@ -40,8 +48,8 @@ log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 
-# Make '_' a no-op so we can scrape strings
 def _(text):
+    """ A no-op to mark strings that we need to translate """
     return text
 
 # Classes ###########################################################
@@ -64,17 +72,26 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             "This should be an ordered list of the url_names of each mentoring block whose multiple choice question "
             "values are to be shown on this dashboard. The list should be in JSON format. Example: {example_here}"
         ).format(example_here='["2754b8afc03a439693b9887b6f1d9e36", "215028f7df3d4c68b14fb5fea4da7053"]'),
-        scope=Scope.content,
+        scope=Scope.settings,
         default=""
     )
     color_codes = Dict(
         display_name=_("Color Coding"),
         help=_(
             "You can optionally set a color for each expected value. Example: {example_here}"
-        ).format(example_here='{ "1": "red", "2": "yellow", 3: "green", 4: "lightskyblue" }')
+        ).format(example_here='{ "1": "red", "2": "yellow", 3: "green", 4: "lightskyblue" }'),
+        scope=Scope.content,
+    )
+    visual_rules = String(
+        display_name=_("Visual Representation"),
+        default="",
+        help=_("Optional: Enter the JSON configuration of the visual representation desired (Advanced)."),
+        scope=Scope.content,
+        multiline_editor=True,
+        resettable_editor=False,
     )
 
-    editable_fields = ('display_name', 'mentoring_ids', 'color_codes')
+    editable_fields = ('display_name', 'mentoring_ids', 'color_codes', 'visual_rules')
 
     def get_mentoring_blocks(self):
         """
@@ -127,18 +144,46 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 block['has_average'] = True
             blocks.append(block)
 
+        visual_repr = None
+        if self.visual_rules:
+            try:
+                rules_parsed = json.loads(self.visual_rules)
+            except ValueError:
+                pass  # JSON errors should be shown as part of validation
+            else:
+                visual_repr = DashboardVisualData(blocks, rules_parsed)
+
         return loader.render_template('templates/html/dashboard.html', {
             'blocks': blocks,
             'display_name': self.display_name,
+            'visual_repr': visual_repr,
         })
 
-    def fallback_view(self, view_name, context=None):
-        context = context or {}
-        context['self'] = self
-
+    def student_view(self, context=None):  # pylint: disable=unused-argument
+        """
+        Standard view of this XBlock.
+        """
         if not self.mentoring_ids:
             return Fragment(u"<h1>{}</h1><p>{}</p>".format(self.display_name, _("Not configured.")))
 
         fragment = Fragment(self.generate_content())
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/dashboard.css'))
         return fragment
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data.
+        """
+        super(DashboardBlock, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        if data.visual_rules:
+            try:
+                rules = json.loads(data.visual_rules)
+            except ValueError as e:
+                add_error(_(u"Visual rules contains an error: {error}").format(error=e))
+            else:
+                if not isinstance(rules, dict):
+                    add_error(_(u"Visual rules should be a JSON dictionary/object: {...}"))

@@ -1,6 +1,29 @@
 {% load i18n %}
 <div class="pb-dashboard">
   <h1>{{display_name}}</h1>
+
+  {% if visual_repr %}
+  <div class="pb-dashboard-visual">
+    <svg width="{{visual_repr.width}}" height="{{visual_repr.height}}">
+      <!-- Filter definitions -->
+      {% for layer in visual_repr.layers %}
+        {% if layer.has_filter %}
+          <filter id="{{layer.id}}">
+            <feColorMatrix in="SourceGraphic" type="hueRotate" values="{% if layer.hueRotate %}{{layer.hueRotate}}{% else %}0{% endif %}" result="hued" />
+            <feColorMatrix in="hued" type="saturate" values="{% if 'saturate' in layer %}{{layer.saturate}}{% else %}1{% endif %}" result="sat" />
+            <feGaussianBlur stdDeviation="{% if layer.blur %}{{layer.blur}}{% else %}0{% endif %}" in="sat" />
+          </filter>
+        {% endif %}
+      {% endfor %}
+      <!-- Layer images -->
+      {% for layer in visual_repr.layers %}
+        <image xlink:href="{{layer.url}}" x="0" y="0" height="100%" width="100%" {% if layer.has_filter %}style="filter: url(#{{layer.id}});"{% endif %} />
+      {% endfor %}
+    </svg>
+  </div>
+  {% endif %}
+
+
   <table>
     {% for block in blocks %}
       <thead>
