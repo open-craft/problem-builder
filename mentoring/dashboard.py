@@ -32,6 +32,7 @@ import logging
 from .dashboard_visual import DashboardVisualData
 from .mcq import MCQBlock
 from .sub_api import sub_api
+from webob import Response
 from xblock.core import XBlock
 from xblock.exceptions import XBlockNotFoundError
 from xblock.fields import Scope, Dict, List, String
@@ -92,6 +93,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     )
 
     editable_fields = ('display_name', 'mentoring_ids', 'color_codes', 'visual_rules')
+    css_path = 'public/css/dashboard.css'
 
     def get_mentoring_blocks(self):
         """
@@ -118,7 +120,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             item_type=usage_key.block_type,
         )
 
-    def generate_content(self):
+    def generate_content(self, include_report_link=True):
         """
         Create the HTML for this block, by getting the data and inserting it into a template.
         """
@@ -164,6 +166,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             'blocks': blocks,
             'display_name': self.display_name,
             'visual_repr': visual_repr,
+            'report_url': self.runtime.handler_url(self, "download_report") if include_report_link else None,
         })
 
     def student_view(self, context=None):  # pylint: disable=unused-argument
@@ -174,8 +177,24 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             return Fragment(u"<h1>{}</h1><p>{}</p>".format(self.display_name, _("Not configured.")))
 
         fragment = Fragment(self.generate_content())
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/dashboard.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
         return fragment
+
+    @XBlock.handler
+    def download_report(self, request=None, suffix=None):  # pylint: disable=unused-argument
+        if not self.mentoring_ids:
+            return Response("Not generating report - it would be empty.", status=400)
+        report_html = loader.render_template('templates/html/dashboard_report.html', {
+            'title': self.display_name,
+            'body': self.generate_content(include_report_link=False),
+            'css': loader.load_unicode(self.css_path),
+        })
+        return Response(
+            report_html,
+            content_type='text/html',
+            charset='utf8',
+            content_disposition='attachment; filename=report.html',
+        )
 
     def validate_field_data(self, validation, data):
         """

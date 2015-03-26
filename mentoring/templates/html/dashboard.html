@@ -47,4 +47,9 @@
       </tbody>
     {% endfor %}
   </table>
+
+  {% if report_url %}
+    <br>
+    <p><a href="{{ report_url }}">{% trans "Download report" %}</a></p>
+  {% endif %}
 </div>
