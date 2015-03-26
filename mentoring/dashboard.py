@@ -106,6 +106,18 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             except XBlockNotFoundError:
                 yield None
 
+    def _get_submission_key(self, usage_key):
+        """
+        Given the usage_key of an MCQ block, get the dict key needed to look it up with the
+        submissions API.
+        """
+        return dict(
+            student_id=self.runtime.anonymous_student_id,
+            course_id=unicode(usage_key.course_key),
+            item_id=unicode(usage_key),
+            item_type=usage_key.block_type,
+        )
+
     def generate_content(self):
         """
         Create the HTML for this block, by getting the data and inserting it into a template.
@@ -122,15 +134,10 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 if child_isinstance(mentoring_block, child_id, MCQBlock):
                     # Get the student's submitted answer to this MCQ from the submissions API:
                     mcq_block = self.runtime.get_block(child_id)
-                    mcq_submission_key = dict(
-                        student_id=self.runtime.anonymous_student_id,
-                        course_id=unicode(child_id.course_key),
-                        item_id=unicode(child_id),
-                        item_type=child_id.block_type,
-                    )
+                    mcq_submission_key = self._get_submission_key(child_id)
                     try:
                         value = sub_api.get_submissions(mcq_submission_key, limit=1)[0]["answer"]
-                    except IndexError:  # (sub_api.SubmissionNotFoundError, IndexError)
+                    except IndexError:
                         value = None
                     block['mcqs'].append({
                         "display_name": mcq_block.question,
