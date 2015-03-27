@@ -345,7 +345,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         submit_results = []
         completed = True
-        for child_id in self.children:
+        for child_id in self.steps:
             child = self.runtime.get_block(child_id)
             if child.name and child.name in submissions:
                 submission = submissions[child.name]

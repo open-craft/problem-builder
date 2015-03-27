@@ -38,8 +38,8 @@ function MentoringStandardView(runtime, element, mentoring) {
         var children = mentoring.children;
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (child && child.name !== undefined) {
-                data[child.name] = callIfExists(child, 'submit');
+            if (child && child.name !== undefined && typeof(child.submit) !== "undefined") {
+                data[child.name] = child.submit();
             }
         }
         var handlerUrl = runtime.handlerUrl(element, 'submit');
