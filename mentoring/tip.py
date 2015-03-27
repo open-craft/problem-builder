@@ -76,7 +76,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
         return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
-    def studio_display_name(self):
+    def display_name_with_default(self):
         values_list = []
         for entry in self.get_parent().human_readable_choices:
             if entry["value"] in self.values:
@@ -85,12 +85,6 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
                     display_name = display_name[:20] + u'…'
                 values_list.append(display_name)
         return self._(u"Tip for {list_of_choices}").format(list_of_choices=u", ".join(values_list))
-
-    def __getattribute__(self, name):
-        """ Provide a read-only display name without adding a display_name field to the class. """
-        if name == "display_name":
-            return self.studio_display_name
-        return super(TipBlock, self).__getattribute__(name)
 
     def fallback_view(self, view_name, context):
         html = ResourceLoader(__name__).render_template("templates/html/tip.html", {

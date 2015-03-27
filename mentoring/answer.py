@@ -144,16 +144,10 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
     editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from')
 
     @property
-    def studio_display_name(self):
+    def display_name_with_default(self):
         if not self.lonely_step:
             return self._(u"Question {number}").format(number=self.step_number)
         return self._(u"Question")
-
-    def __getattribute__(self, name):
-        """ Provide a read-only display name without adding a display_name field to the class. """
-        if name == "display_name":
-            return self.studio_display_name
-        return super(AnswerBlock, self).__getattribute__(name)
 
     @lazy
     def student_input(self):

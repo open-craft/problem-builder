@@ -1,6 +1,6 @@
 <fieldset class="rating questionnaire">
   <legend class="question">
-    {% if not hide_header %}<h3 class="question-title">{{ self.display_name }}</h3>{% endif %}
+    {% if not hide_header %}<h3 class="question-title">{{ self.display_name_with_default }}</h3>{% endif %}
     <p>{{ self.question }}</p>
   </legend>
   <div class="choices-list">

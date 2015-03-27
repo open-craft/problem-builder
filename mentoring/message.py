@@ -69,7 +69,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
         return Fragment(html)
 
     @property
-    def studio_display_name(self):
+    def display_name_with_default(self):
         if self.type == 'max_attempts_reached':
             max_attempts = self.get_parent().max_attempts
             return self._(u"Message when student reaches max. # of attempts ({limit})").format(
@@ -80,12 +80,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
         if self.type == 'incomplete':
             return self._(u"Message shown when incomplete")
         return u"INVALID MESSAGE"
-
-    def __getattribute__(self, name):
-        """ Provide a read-only display name without adding a display_name field to the class. """
-        if name == "display_name":
-            return self.studio_display_name
-        return super(MentoringMessageBlock, self).__getattribute__(name)
 
     @classmethod
     def get_template(cls, template_id):
