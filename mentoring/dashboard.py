@@ -74,7 +74,6 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             "values are to be shown on this dashboard. The list should be in JSON format. Example: {example_here}"
         ).format(example_here='["2754b8afc03a439693b9887b6f1d9e36", "215028f7df3d4c68b14fb5fea4da7053"]'),
         scope=Scope.settings,
-        default=""
     )
     color_codes = Dict(
         display_name=_("Color Coding"),
@@ -105,8 +104,14 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('problem-builder', url_name)
             try:
                 yield self.runtime.get_block(mentoring_id)
-            except XBlockNotFoundError:
-                yield None
+            # Catch all here b/c edX runtime throws other exceptions we can't import in other contexts like workbench:
+            except (XBlockNotFoundError, Exception):
+                # Maybe it's using the deprecated block type "mentoring":
+                mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('mentoring', url_name)
+                try:
+                    yield self.runtime.get_block(mentoring_id)
+                except (XBlockNotFoundError, Exception):
+                    yield None
 
     def _get_submission_key(self, usage_key):
         """
