@@ -16,11 +16,6 @@
 .pb-dashboard table td:last-child {
     min-width: 3em;
     text-align: right;
-}
-
-.pb-dashboard table td:last-child span {
-    position: relative;
-    background: transparent;
     color: black;
     /* Background color could be anything, so add a white outline to preserve readability */
     text-shadow:

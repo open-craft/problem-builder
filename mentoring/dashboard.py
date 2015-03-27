@@ -26,16 +26,19 @@ will then display a table summarizing the values that the student chose for each
 """
 # Imports ###########################################################
 
+import ast
 import json
 import logging
+import operator as op
 
 from .dashboard_visual import DashboardVisualData
 from .mcq import MCQBlock
 from .sub_api import sub_api
+from lazy import lazy
 from webob import Response
 from xblock.core import XBlock
 from xblock.exceptions import XBlockNotFoundError
-from xblock.fields import Scope, Dict, List, String
+from xblock.fields import Scope, List, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
@@ -54,6 +57,96 @@ def _(text):
     return text
 
 # Classes ###########################################################
+
+
+class ColorRule(object):
+    """
+    A rule used to conditionally set colors
+
+    >>> rule1 = ColorRule("3 < x <= 5", color_str="#ff0000")
+    >>> rule1.matches(2)
+    False
+    >>> rule1.matches(4)
+    True
+    """
+    def __init__(self, rule_str, color_str):
+        """
+        Instantiate a ColorRule with the given rule expression string and color value.
+        """
+        try:
+            self._rule_parsed = ast.parse(rule_str, mode='eval').body
+            # Once it's been parsed, also try evaluating it with a test value:
+            self._safe_eval_expression(self._rule_parsed, x=0)
+        except (TypeError, SyntaxError) as e:
+            raise ValueError("Invalid Expression: {}".format(e))
+        except ZeroDivisionError:
+            pass  # This may depend on the value of 'x' which we set to zero but don't know yet.
+        self.color_str = color_str
+
+    def matches(self, x):
+        """ Does this rule apply for the value x? """
+        try:
+            return bool(self._safe_eval_expression(self._rule_parsed, x))
+        except ZeroDivisionError:
+            return False
+
+    @staticmethod
+    def _safe_eval_expression(expr, x=0):
+        """
+        Safely evaluate a mathematical or boolean expression involving the value x
+
+        >>> _safe_eval_expression('2*x', x=3)
+        6
+        >>> _safe_eval_expression('x >= 0 and x < 2', x=3)
+        False
+
+        We use python syntax for the expressions, so the parsing and evaluation is mostly done
+        using Python's built-in asbstract syntax trees and operator implementations.
+
+        The expression can only contain: numbers, mathematical operators, boolean operators,
+        comparisons, and a placeholder variable called "x"
+        """
+        # supported operators:
+        operators = {
+            # Allow +, -, *, /, %, negative:
+            ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul, ast.Div: op.truediv, ast.Mod: op.mod, ast.USub: op.neg,
+            # Allow comparison:
+            ast.Eq: op.eq, ast.NotEq: op.ne, ast.Lt: op.lt, ast.LtE: op.le, ast.Gt: op.gt, ast.GtE: op.ge,
+        }
+
+        def eval_(node):
+            """ Recursive evaluation of syntax tree node 'node' """
+            if isinstance(node, ast.Num):  # <number>
+                return node.n
+            elif isinstance(node, ast.BinOp):  # <left> <operator> <right>
+                return operators[type(node.op)](eval_(node.left), eval_(node.right))
+            elif isinstance(node, ast.UnaryOp):  # <operator> <operand> e.g., -1
+                return operators[type(node.op)](eval_(node.operand))
+            elif isinstance(node, ast.Name) and node.id == "x":
+                return x
+            elif isinstance(node, ast.BoolOp):  # Boolean operator: either "and" or "or" with two or more values
+                if type(node.op) == ast.And:
+                    return all(eval_(val) for val in node.values)
+                else:  # Or:
+                    for val in node.values:
+                        result = eval_(val)
+                        if result:
+                            return result
+                    return result  # or returns the final value even if it's falsy
+            elif isinstance(node, ast.Compare):  # A comparison expression, e.g. "3 > 2" or "5 < x < 10"
+                left = eval_(node.left)
+                for comparison_op, right_expr in zip(node.ops, node.comparators):
+                    right = eval_(right_expr)
+                    if not operators[type(comparison_op)](left, right):
+                        return False
+                    left = right
+                return True
+            else:
+                raise TypeError(node)
+
+        if not isinstance(expr, ast.AST):
+            expr = ast.parse(expr, mode='eval').body
+        return eval_(expr)
 
 
 @XBlock.needs("i18n")
@@ -75,12 +168,17 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         ).format(example_here='["2754b8afc03a439693b9887b6f1d9e36", "215028f7df3d4c68b14fb5fea4da7053"]'),
         scope=Scope.settings,
     )
-    color_codes = Dict(
-        display_name=_("Color Coding"),
+    color_rules = String(
+        display_name=_("Color Coding Rules"),
         help=_(
-            "You can optionally set a color for each expected value. Example: {example_here}"
-        ).format(example_here='{ "1": "red", "2": "yellow", 3: "green", 4: "lightskyblue" }'),
+            "Optional rules to assign colors to possible answer values and average values. "
+            "One rule per line. First matching rule will be used. "
+            "Examples: {examples_here}"
+        ).format(examples_here='"1: red", "0 <= x < 5: blue", "green"'),
         scope=Scope.content,
+        default="",
+        multiline_editor=True,
+        resettable_editor=False,
     )
     visual_rules = String(
         display_name=_("Visual Representation"),
@@ -91,14 +189,14 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         resettable_editor=False,
     )
 
-    editable_fields = ('display_name', 'mentoring_ids', 'color_codes', 'visual_rules')
+    editable_fields = ('display_name', 'mentoring_ids', 'color_rules', 'visual_rules')
     css_path = 'public/css/dashboard.css'
 
     def get_mentoring_blocks(self):
         """
         Generator returning the specified mentoring blocks, in order.
 
-        returns a list. Will insert None for every invalid mentoring block ID.
+        Returns a list. Will insert None for every invalid mentoring block ID.
         """
         for url_name in self.mentoring_ids:
             mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('problem-builder', url_name)
@@ -113,6 +211,41 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 except (XBlockNotFoundError, Exception):
                     yield None
 
+    def parse_color_rules_str(self, color_rules_str, ignore_errors=True):
+        """
+        Parse the color rules. Returns a list of ColorRule objects.
+
+        Color rules are like: "0 < x < 4: red" or "blue" (for a catch-all rule)
+        """
+        rules = []
+        for lineno, line in enumerate(color_rules_str.splitlines()):
+            line = line.strip()
+            if line:
+                try:
+                    if ":" in line:
+                        condition, value = line.split(':')
+                        value = value.strip()
+                        if condition.isnumeric():  # A condition just listed as an exact value
+                            condition = "x == " + condition
+                    else:
+                        condition = "1"  # Always true
+                        value = line
+                    rules.append(ColorRule(condition, value))
+                except ValueError:
+                    if ignore_errors:
+                        continue
+                    raise ValueError(
+                        _("Invalid color rule on line {line_number}").format(line_number=lineno + 1)
+                    )
+        return rules
+
+    @lazy
+    def color_rules_parsed(self):
+        """
+        Caching property to get parsed color rules. Returns a list of ColorRule objects.
+        """
+        return self.parse_color_rules_str(self.color_rules) if self.color_rules else []
+
     def _get_submission_key(self, usage_key):
         """
         Given the usage_key of an MCQ block, get the dict key needed to look it up with the
@@ -124,6 +257,18 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             item_id=unicode(usage_key),
             item_type=usage_key.block_type,
         )
+
+    def color_for_value(self, value):
+        """ Given a string value, get the color rule that matches, if any """
+        if isinstance(value, basestring):
+            if value.isnumeric():
+                value = float(value)
+            else:
+                return None
+        for rule in self.color_rules_parsed:
+            if rule.matches(value):
+                return rule.color_str
+        return None
 
     def generate_content(self, include_report_link=True):
         """
@@ -149,13 +294,15 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                     block['mcqs'].append({
                         "display_name": mcq_block.question,
                         "value": value,
-                        "color": self.color_codes.get(value),
+                        "color": self.color_for_value(value),
                     })
             # If the values are numeric, display an average:
             numeric_values = [float(mcq['value']) for mcq in block['mcqs'] if mcq['value'] and mcq['value'].isnumeric()]
             if numeric_values:
-                block['average'] = sum(numeric_values) / len(numeric_values)
+                average_value = sum(numeric_values) / len(numeric_values)
+                block['average'] = average_value
                 block['has_average'] = True
+                block['average_color'] = self.color_for_value(average_value)
             blocks.append(block)
 
         visual_repr = None
@@ -165,7 +312,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             except ValueError:
                 pass  # JSON errors should be shown as part of validation
             else:
-                visual_repr = DashboardVisualData(blocks, rules_parsed)
+                visual_repr = DashboardVisualData(blocks, rules_parsed, self.color_for_value)
 
         return loader.render_template('templates/html/dashboard.html', {
             'blocks': blocks,
@@ -209,6 +356,12 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        if data.color_rules:
+            try:
+                self.parse_color_rules_str(data.color_rules, ignore_errors=False)
+            except ValueError as e:
+                add_error(unicode(e))
 
         if data.visual_rules:
             try:

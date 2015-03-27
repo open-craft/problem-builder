@@ -7,17 +7,23 @@
     <svg width="{{visual_repr.width}}" height="{{visual_repr.height}}">
       <!-- Filter definitions -->
       {% for layer in visual_repr.layers %}
-        {% if layer.has_filter %}
+        {% if layer.color %}
           <filter id="{{layer.id}}">
-            <feColorMatrix in="SourceGraphic" type="hueRotate" values="{% if layer.hueRotate %}{{layer.hueRotate}}{% else %}0{% endif %}" result="hued" />
-            <feColorMatrix in="hued" type="saturate" values="{% if 'saturate' in layer %}{{layer.saturate}}{% else %}1{% endif %}" result="sat" />
-            <feGaussianBlur stdDeviation="{% if layer.blur %}{{layer.blur}}{% else %}0{% endif %}" in="sat" />
+            <feFlood flood-color="{{layer.color}}" result="flood" />
+            <feBlend in="flood" in2="SourceGraphic" mode="multiply" />
           </filter>
+          <mask id="{{layer.id}}-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+            <image xlink:href="{{layer.url}}" x="0" y="0" height="100%" width="100%" />
+          </mask>
         {% endif %}
       {% endfor %}
       <!-- Layer images -->
       {% for layer in visual_repr.layers %}
-        <image xlink:href="{{layer.url}}" x="0" y="0" height="100%" width="100%" {% if layer.has_filter %}style="filter: url(#{{layer.id}});"{% endif %} />
+        {% if layer.color %}
+          <rect x="0" y="0" height="100%" width="100%" fill="{{layer.color}}" mask="url(#{{layer.id}}-mask)" />
+        {% else %}
+          <image xlink:href="{{layer.url}}" x="0" y="0" height="100%" width="100%" />
+        {% endif %}
       {% endfor %}
     </svg>
   </div>
@@ -34,14 +40,14 @@
           <tr>
             <td>{{ mcq.display_name }}</td>
             <td {% if mcq.color %}style="background-color: {{mcq.color}};"{% endif %}>
-              <span>{% if mcq.value %}{{ mcq.value }}{% endif %}</span>
+              {% if mcq.value %}{{ mcq.value }}{% endif %}
             </td>
           </tr>
         {% endfor %}
         {% if block.has_average %}
          <tr class="avg-row">
             <td>{% trans "Average" %}</td>
-            <td>{{ block.average|floatformat }}</td>
+            <td {% if block.average_color %}style="background-color: {{block.average_color}};"{% endif %}>{{ block.average|floatformat }}</td>
           </tr>
         {% endif %}
       </tbody>

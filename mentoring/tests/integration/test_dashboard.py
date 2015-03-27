@@ -118,7 +118,7 @@ class TestDashboardBlock(SeleniumXBlockTest):
         """)
 
         # Apply a whole bunch of patches that are needed in lieu of the LMS/CMS runtime and edx-submissions:
-        def get_mentoring_blocks(dashboard_block):
+        def get_mentoring_blocks(dashboard_block, mentoring_ids, ignore_errors=True):
             return [dashboard_block.runtime.get_block(key) for key in dashboard_block.get_parent().children[:-1]]
         mock_submisisons_api = MockSubmissionsAPI()
         patches = (
