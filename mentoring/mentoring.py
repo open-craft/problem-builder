@@ -341,7 +341,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         self.attempted = True
 
         if self.is_assessment:
-            return self.handleAssessmentSubmit(submissions, suffix)
+            return self.handle_assessment_submit(submissions, suffix)
 
         submit_results = []
         completed = True
@@ -410,8 +410,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             'num_attempts': self.num_attempts
         }
 
-    def handleAssessmentSubmit(self, submissions, suffix):
-
+    def handle_assessment_submit(self, submissions, suffix):
         completed = False
         current_child = None
         children = [self.runtime.get_block(child_id) for child_id in self.children]

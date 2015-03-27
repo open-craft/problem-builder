@@ -83,7 +83,7 @@ class MCQBlock(QuestionnaireAbstractBlock):
                 tips_html.append(tip.render('mentoring_view').content)
 
         if tips_html:
-            formatted_tips = ResourceLoader(__name__).render_template('templates/html/tip_choice_group.html', {
+            formatted_tips = loader.render_template('templates/html/tip_choice_group.html', {
                 'tips_html': tips_html,
             })
 

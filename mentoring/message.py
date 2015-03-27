@@ -64,9 +64,14 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
         """ translate text """
         return self.runtime.service(self, "i18n").ugettext(text)
 
-    def fallback_view(self, view_name, context):
+    def mentoring_view(self, context=None):
+        """ Render this message for use by a mentoring block. """
         html = u'<div class="message {msg_type}">{content}</div>'.format(msg_type=self.type, content=self.content)
         return Fragment(html)
+
+    def student_view(self, context=None):
+        """ Normal view of this XBlock, identical to mentoring_view """
+        return self.mentoring_view(context)
 
     @property
     def display_name_with_default(self):

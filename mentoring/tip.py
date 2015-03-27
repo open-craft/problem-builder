@@ -30,6 +30,8 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+loader = ResourceLoader(__name__)
+
 
 # Make '_' a no-op so we can scrape strings
 def _(text):
@@ -86,13 +88,18 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
                 values_list.append(display_name)
         return self._(u"Tip for {list_of_choices}").format(list_of_choices=u", ".join(values_list))
 
-    def fallback_view(self, view_name, context):
-        html = ResourceLoader(__name__).render_template("templates/html/tip.html", {
+    def mentoring_view(self, context=None):
+        """ Render this XBlock within a mentoring block. """
+        html = loader.render_template("templates/html/tip.html", {
             'content': self.content,
             'width': self.width,
             'height': self.height,
         })
         return Fragment(html)
+
+    def student_view(self, context=None):
+        """ Normal view of this XBlock, identical to mentoring_view """
+        return self.mentoring_view(context)
 
     def clean_studio_edits(self, data):
         """

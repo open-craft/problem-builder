@@ -134,7 +134,8 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
     editable_fields = ("header", )
     has_children = True
 
-    def fallback_view(self, view_name, context):
+    def mentoring_view(self, context=None):
+        """ Render this XBlock within a mentoring block. """
         context = context or {}
         fragment = Fragment()
         for child_id in self.children:
@@ -144,13 +145,17 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
                 # with HTML we don't want. So just grab its HTML directly.
                 child_frag = Fragment(child.data)
             else:
-                child_frag = child.render(view_name, context)
+                child_frag = child.render('mentoring_view', context)
             fragment.add_content(child_frag.content)
             fragment.add_frag_resources(child_frag)
         return fragment
 
     def author_preview_view(self, context):
-        return self.fallback_view('mentoring_view', context)
+        return self.mentoring_view(context)
+
+    def student_view(self, context=None):
+        """ Normal view of this XBlock, identical to mentoring_view """
+        return self.mentoring_view(context)
 
     def author_edit_view(self, context):
         """

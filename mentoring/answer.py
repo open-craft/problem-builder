@@ -168,7 +168,8 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
 
         return student_input
 
-    def fallback_view(self, view_name, context=None):
+    def mentoring_view(self, context=None):
+        """ Render this XBlock within a mentoring block. """
         context = context or {}
         context['self'] = self
         html = loader.render_template('templates/html/answer_editable.html', context)
@@ -179,7 +180,15 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         fragment.initialize_js('AnswerBlock')
         return fragment
 
+    def student_view(self, context=None):
+        """ Normal view of this XBlock, identical to mentoring_view """
+        return self.mentoring_view(context)
+
     def submit(self, submission):
+        """
+        The parent block is handling a student submission, including a new answer for this
+        block. Update accordingly.
+        """
         self.student_input = submission[0]['value'].strip()
         self.save()
         log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
@@ -260,7 +269,8 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
             return self.get_model_object().student_input
         return ''
 
-    def fallback_view(self, view_name, context=None):
+    def mentoring_view(self, context=None):
+        """ Render this XBlock within a mentoring block. """
         context = context or {}
         context['title'] = self.display_name
         context['description'] = self.description
@@ -270,3 +280,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
         return fragment
+
+    def student_view(self, context=None):
+        """ Normal view of this XBlock, identical to mentoring_view """
+        return self.mentoring_view(context)
