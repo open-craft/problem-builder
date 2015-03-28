@@ -32,9 +32,8 @@
     background: none repeat scroll 0 0 #66A5B5;
     font-family: arial;
     font-size: 14px;
-    overflow-y: auto;
     opacity: 0.9;
-    padding: 10px;
+    padding: 22px 10px;
     width: 300px;
 }
 
@@ -48,6 +47,7 @@
 .mentoring .questionnaire .feedback .tip-choice-group,
 .mentoring .questionnaire .feedback .message-content {
     position: relative;
+    overflow-y: auto;
 }
 
 .mentoring .questionnaire .choice-tips .close,
