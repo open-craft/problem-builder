@@ -35,6 +35,8 @@
     opacity: 0.9;
     padding: 22px 10px;
     width: 300px;
+    min-height: 40px;
+    z-index: 10000;
 }
 
 .mentoring .questionnaire .choice-tips .title {
