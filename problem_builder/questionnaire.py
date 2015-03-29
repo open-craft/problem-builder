@@ -113,6 +113,15 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         return block
 
+    @property
+    def html_id(self):
+        """
+        A short, simple ID string used to uniquely identify this question.
+
+        This is only used by templates for matching <input> and <label> elements.
+        """
+        return unicode(id(self))  # Unique as long as all choices are loaded at once
+
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
 

@@ -4,32 +4,37 @@
     <p>{{ self.question }}</p>
   </legend>
   <div class="choices-list">
-    {% for value in '12345' %}
+    {% for i in '12345' %}
       <div class="choice">
         <div class="choice-result fa icon-2x"></div>
-        <label class="choice-label">
-          <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ value }}"
-                 {% if self.student_choice == value %}checked{% endif %} />
-          {{ value }}
-          {% if forloop.first %}
-            <span class="low">- {{ self.low }}</span>
-          {% endif %}
-          {% if forloop.last %}
-            <span class="low">- {{ self.high }}</span>
-          {% endif %}
+        <div class="choice-selector">
+          <input id="choice-{{ self.html_id }}-{{i}}" type="radio"
+            name="{{ self.name }}" value="{{i}}"
+            {% if self.student_choice == i %} checked{%else%} data-student-choice='{{self.student_choice}}'{% endif %}
+            />
+        </div>
+        <label class="choice-label" for="choice-{{ self.html_id }}-{{i}}">
+          {{i}}
+          {% if i == '1' %} - {{ self.low }}{% endif %}
+          {% if i == '5' %} - {{ self.high }}{% endif %}
         </label>
         <div class="choice-tips-container">
           <div class="choice-tips"></div>
         </div>
       </div>
     {% endfor %}
+
     {% for choice in custom_choices %}
     <div class="choice">
       <div class="choice-result fa icon-2x"></div>
-      <label class="choice-label">
-        <input class="choice-selector" type="radio" name="{{ self.name }}" value="{{ choice.value }}"
-               {% if self.student_choice == '{{ choice.value }}' %} checked{% endif %} />
-          <span class="choice-text">{{ choice.content|safe }}</span>
+      <div class="choice-selector">
+        <input id="choice-{{ self.html_id }}-custom{{ forloop.counter }}" type="radio"
+          name="{{ self.name }}" value="{{ choice.value }}"
+          {% if self.student_choice == choice.value %} checked{%else%} data-student-choice='{{self.student_choice}}'{% endif %}
+        />
+      </div>
+      <label class="choice-label" for="choice-{{ self.html_id }}-custom{{ forloop.counter }}">
+          {{ choice.content|safe }}
       </label>
       <div class="choice-tips-container">
         <div class="choice-tips"></div>
