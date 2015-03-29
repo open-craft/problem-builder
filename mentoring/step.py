@@ -19,7 +19,13 @@
 #
 
 from lazy import lazy
+from xblock.fields import String, Boolean, Scope
 from xblockutils.helpers import child_isinstance
+
+
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
 
 
 def _normalize_id(key):
@@ -49,9 +55,25 @@ class StepParentMixin(object):
 
 class StepMixin(object):
     """
-    An XBlock mixin for a child block that is a "Step"
+    An XBlock mixin for a child block that is a "Step".
+
+    A step is a question that the user can answer (as opposed to a read-only child).
     """
     has_author_view = True
+
+    # Fields:
+    display_name = String(
+        display_name=_("Question title"),
+        help=_('Leave blank to use the default ("Question 1", "Question 2", etc.)'),
+        default="",  # Blank will use 'Question x' - see display_name_with_default
+        scope=Scope.content
+    )
+    show_title = Boolean(
+        display_name=_("Show title"),
+        help=_("Display the title?"),
+        default=True,
+        scope=Scope.content
+    )
 
     @lazy
     def step_number(self):
@@ -62,6 +84,15 @@ class StepMixin(object):
         if _normalize_id(self.scope_ids.usage_id) not in self.get_parent().steps:
             raise ValueError("Step's parent should contain Step", self, self.get_parent().steps)
         return len(self.get_parent().steps) == 1
+
+    @property
+    def display_name_with_default(self):
+        """ Get the title/display_name of this question. """
+        if self.display_name:
+            return self.display_name
+        if not self.lonely_step:
+            return self._(u"Question {number}").format(number=self.step_number)
+        return self._(u"Question")
 
     def author_view(self, context):
         context = context or {}
