@@ -141,13 +141,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         enforce_type=True
     )
 
-    editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from')
-
-    @property
-    def display_name_with_default(self):
-        if not self.lonely_step:
-            return self._(u"Question {number}").format(number=self.step_number)
-        return self._(u"Question")
+    editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from', 'display_name', 'show_title')
 
     @lazy
     def student_input(self):
@@ -172,6 +166,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """ Render this XBlock within a mentoring block. """
         context = context or {}
         context['self'] = self
+        context['hide_header'] = context.get('hide_header', False) or not self.show_title
         html = loader.render_template('templates/html/answer_editable.html', context)
 
         fragment = Fragment(html)

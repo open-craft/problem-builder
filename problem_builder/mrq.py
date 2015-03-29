@@ -69,7 +69,10 @@ class MRQBlock(QuestionnaireAbstractBlock):
         default=[],
     )
     hide_results = Boolean(display_name="Hide results", scope=Scope.content, default=False)
-    editable_fields = ('question', 'required_choices', 'ignored_choices', 'message', 'weight', 'hide_results', )
+    editable_fields = (
+        'question', 'required_choices', 'ignored_choices', 'message', 'display_name',
+        'show_title', 'weight', 'hide_results',
+    )
 
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.required_choices:
