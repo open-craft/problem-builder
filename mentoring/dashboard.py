@@ -37,7 +37,6 @@ from .sub_api import sub_api
 from lazy import lazy
 from webob import Response
 from xblock.core import XBlock
-from xblock.exceptions import XBlockNotFoundError
 from xblock.fields import Scope, List, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
@@ -149,6 +148,11 @@ class ColorRule(object):
         return eval_(expr)
 
 
+class InvalidUrlName(ValueError):
+    """ Exception raised by DashboardBlock.get_mentoring_blocks() if a url_name is invalid """
+    pass
+
+
 @XBlock.needs("i18n")
 class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     """
@@ -192,24 +196,27 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     editable_fields = ('display_name', 'mentoring_ids', 'color_rules', 'visual_rules')
     css_path = 'public/css/dashboard.css'
 
-    def get_mentoring_blocks(self):
+    def get_mentoring_blocks(self, mentoring_ids, ignore_errors=True):
         """
         Generator returning the specified mentoring blocks, in order.
 
-        Returns a list. Will insert None for every invalid mentoring block ID.
+        Returns a list. Will insert None for every invalid mentoring block ID, or if
+        ignore_errors is False, will raise InvalidUrlName.
         """
-        for url_name in self.mentoring_ids:
-            mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('problem-builder', url_name)
+        for url_name in mentoring_ids:
             try:
+                mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('problem-builder', url_name)
                 yield self.runtime.get_block(mentoring_id)
-            # Catch all here b/c edX runtime throws other exceptions we can't import in other contexts like workbench:
-            except (XBlockNotFoundError, Exception):
+            except Exception:  # Catch-all b/c we could get XBlockNotFoundError, ItemNotFoundError, InvalidKeyError, ...
                 # Maybe it's using the deprecated block type "mentoring":
-                mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('mentoring', url_name)
                 try:
+                    mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('mentoring', url_name)
                     yield self.runtime.get_block(mentoring_id)
-                except (XBlockNotFoundError, Exception):
-                    yield None
+                except Exception:
+                    if ignore_errors:
+                        yield None
+                    else:
+                        raise InvalidUrlName(url_name)
 
     def parse_color_rules_str(self, color_rules_str, ignore_errors=True):
         """
@@ -275,7 +282,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         Create the HTML for this block, by getting the data and inserting it into a template.
         """
         blocks = []
-        for mentoring_block in self.get_mentoring_blocks():
+        for mentoring_block in self.get_mentoring_blocks(self.mentoring_ids):
             if mentoring_block is None:
                 continue
             block = {
@@ -356,6 +363,11 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        try:
+            list(self.get_mentoring_blocks(data.mentoring_ids, ignore_errors=False))
+        except InvalidUrlName as e:
+            add_error(_(u'Invalid block url_name given: "{bad_url_name}"').format(bad_url_name=unicode(e)))
 
         if data.color_rules:
             try:
