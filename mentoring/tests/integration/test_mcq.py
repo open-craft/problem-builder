@@ -21,6 +21,9 @@
 # Imports ###########################################################
 
 import ddt
+from mock import patch, Mock
+
+from mentoring import MentoringBlock
 from .base_test import MentoringBaseTest
 
 
@@ -76,11 +79,11 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(mcq1_choices[0].text, 'Yes')
         self.assertEqual(mcq1_choices[1].text, 'Maybe not')
         self.assertEqual(mcq1_choices[2].text, "I don't understand")
-        self.assertEqual(mcq2_choices[0].text, '1')
+        self.assertEqual(mcq2_choices[0].text, '1 - Not good at all')
         self.assertEqual(mcq2_choices[1].text, '2')
         self.assertEqual(mcq2_choices[2].text, '3')
         self.assertEqual(mcq2_choices[3].text, '4')
-        self.assertEqual(mcq2_choices[4].text, '5')
+        self.assertEqual(mcq2_choices[4].text, '5 - Extremely good')
         self.assertEqual(mcq2_choices[5].text, "I don't want to rate it")
 
         mcq1_choices_input = self._get_inputs(mcq1_choices)
@@ -112,8 +115,13 @@ class MCQBlockTest(MentoringBaseTest):
         submit.click()
         self.wait_until_disabled(submit)
 
-        self.assertEqual(mcq1.find_element_by_css_selector(".feedback").text, 'Great!')
-        self.assertEqual(mcq2.find_element_by_css_selector(".feedback").text, 'Will do better next time...')
+        mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
+        mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
+
+        self.assertEqual(mcq1_tips.text, 'Great!')
+        self.assertTrue(mcq1_tips.is_displayed())
+        self.assertEqual(mcq2_tips.text, 'Will do better next time...')
+        self.assertTrue(mcq2_tips.is_displayed())
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.is_displayed())
 
@@ -125,10 +133,31 @@ class MCQBlockTest(MentoringBaseTest):
         submit.click()
         self.wait_until_disabled(submit)
 
-        self.assertEqual(mcq1.find_element_by_css_selector(".feedback").text, 'Great!')
-        self.assertEqual(mcq2.find_element_by_css_selector(".feedback").text, 'I love good grades.')
+        mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
+        mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
+
+        self.assertEqual(mcq1_tips.text, 'Great!')
+        self.assertTrue(mcq1_tips.is_displayed())
+        self.assertEqual(mcq2_tips.text, 'I love good grades.')
+        self.assertTrue(mcq2_tips.is_displayed())
         self.assertIn('All is good now...\nCongratulations!', messages.text)
         self.assertTrue(messages.is_displayed())
+
+        # The choice tip containers should have the with-tips class.
+        mcq1_tip_containers = mcq1.find_elements_by_css_selector('.choice-tips-container.with-tips')
+        mcq2_tip_containers = mcq2.find_elements_by_css_selector('.choice-tips-container.with-tips')
+        self.assertEqual(len(mcq1_tip_containers), 3)
+        self.assertEqual(len(mcq2_tip_containers), 6)
+
+        # Clicking outside the tips should hide the tips and clear the with-tips class.
+        mcq1.find_element_by_css_selector('.mentoring .question-title').click()
+        mcq2.find_element_by_css_selector('.mentoring .question-title').click()
+        mcq1_tip_containers = mcq1.find_elements_by_css_selector('.choice-tips-container.with-tips')
+        mcq2_tip_containers = mcq2.find_elements_by_css_selector('.choice-tips-container.with-tips')
+        self.assertEqual(len(mcq1_tip_containers), 0)
+        self.assertEqual(len(mcq2_tip_containers), 0)
+        self.assertFalse(mcq1_tips.is_displayed())
+        self.assertFalse(mcq2_tips.is_displayed())
 
     def test_mcq_with_comments(self):
         mentoring = self.go_to_page('Mcq With Comments 1')
@@ -231,3 +260,12 @@ class MCQBlockTest(MentoringBaseTest):
         self.wait_until_disabled(submit)
 
         self.assertIn('Congratulations!', messages.text)
+
+
+@patch.object(MentoringBlock, 'get_theme', Mock(return_value={'package': 'mentoring',
+                                                              'locations': ['public/themes/lms.css']}))
+class MCQBlockAprosThemeTest(MCQBlockTest):
+    """
+    Test MRQ/MCQ questions without the LMS theme which is on by default.
+    """
+    pass

@@ -52,6 +52,7 @@ function MentoringBlock(runtime, element) {
 
         if (!clickedInside(item_feedback_selector, item_feedback_parent_selector)) {
             $(item_feedback_selector).not(':hidden').hide();
+            $('.choice-tips-container').removeClass('with-tips');
         }
     });
 
