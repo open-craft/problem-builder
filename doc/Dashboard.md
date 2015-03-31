@@ -68,8 +68,8 @@ must be in JSON format. The supported entries are:
 * **`"images"`**: A list of image URLs, one per PB block, in the same order as
   the 'blocks' list (the list of `url_name`s described above). If the images you
   wish to use are on your computer, first upload them to the course's "Files and
-  Uploads" page. You can then find the URL for each image listed on that page.
-  Note that each URL must start with "http://" or "https://".
+  Uploads" page. You can then find the URL for each image listed on that page
+  (use the "Studio" URL, not the "Web" URL).
     * All images listed here will be layered on top of each other, and can be
     colorized, faded, etc. based on the average value of the student's choices
     for the corresponding group of MCQs.
