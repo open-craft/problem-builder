@@ -301,10 +301,13 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                     block['mcqs'].append({
                         "display_name": mcq_block.question,
                         "value": value,
-                        "color": self.color_for_value(value),
+                        "color": self.color_for_value(value) if value is not None else None,
                     })
             # If the values are numeric, display an average:
-            numeric_values = [float(mcq['value']) for mcq in block['mcqs'] if mcq['value'] and mcq['value'].isnumeric()]
+            numeric_values = [
+                float(mcq['value']) for mcq in block['mcqs']
+                if mcq['value'] is not None and mcq['value'].isnumeric()
+            ]
             if numeric_values:
                 average_value = sum(numeric_values) / len(numeric_values)
                 block['average'] = average_value
