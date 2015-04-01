@@ -1,10 +1,10 @@
-Mentoring XBlock
-----------------
+Problem Builder XBlock
+----------------------
 
-[![Build Status](https://travis-ci.org/open-craft/xblock-mentoring.svg?branch=master)](https://travis-ci.org/open-craft/xblock-mentoring)
+[![Build Status](https://travis-ci.org/open-craft/xblock-problem-builder.svg?branch=master)](https://travis-ci.org/open-craft/xblock-problem-builder)
 
-This XBlock allows to automate the workflow of real-life mentoring,
-within an edX course.
+This XBlock allows creation of questions of various types and simulating the
+workflow of real-life mentoring, within an edX course.
 
 It supports:
 
@@ -24,10 +24,10 @@ It supports:
 * **Tables**, which allow to present answers from the student to
   free-form answers in a concise way. Supports custom headers.
 
-The screenshot shows an example of a mentoring block containing a
+The screenshot shows an example of a problem builder block containing a
 free-form question, two MCQs and one MRQ.
 
-![Mentoring Example](doc/img/mentoring-example.png)
+![Problem Builder Example](doc/img/mentoring-example.png)
 
 Installation
 ------------
@@ -43,23 +43,23 @@ $ pip install -r requirements.txt
 Enabling in Studio
 ------------------
 
-You can enable the Mentoring XBlock in studio through the advanced
+You can enable the Problem Builder XBlock in studio through the advanced
 settings.
 
 1. From the main page of a specific course, navigate to `Settings ->
    Advanced Settings` from the top menu.
-2. Check for the `advanced_modules` policy key, and add `"mentoring"`
+2. Check for the `advanced_modules` policy key, and add `"problem-builder"`
    to the policy value list.
 3. Click the "Save changes" button.
 
 Usage
 -----
 
-When you add the `Mentoring` component to a course in the studio, the
+When you add the `Problem Builder` component to a course in the studio, the
 built-in editing tools guide you through the process of configuring the
 block and adding individual questions.
 
-### Mentoring modes
+### Problem Builder modes
 
 There are 2 mentoring modes available:
 
@@ -71,7 +71,7 @@ There are 2 mentoring modes available:
   students don't get tips or feedback, but only know if their answer was
   correct. Assessment mode comes with a default `max_attempts` of `2`.
 
-Below are some LMS screenshots of a mentoring block in assessment mode.
+Below are some LMS screenshots of a problem builder block in assessment mode.
 
 Question before submitting an answer:
 
@@ -101,7 +101,7 @@ Screenshot after answering the question:
 
 ![Answer Complete](doc/img/answer-2.png)
 
-You can add "Long Answer Recap" components to mentoring blocks later on
+You can add "Long Answer Recap" components to problem builder blocks later on
 in the course to provide a read-only view of any answer that the student
 entered earlier.
 
@@ -111,14 +111,14 @@ The read-only answer is rendered as a quote in the LMS:
 
 ### Multiple Choice Questions (MCQ)
 
-Multiple Choice Questions can be added to a mentoring component and
+Multiple Choice Questions can be added to a problem builder component and
 have the following configurable options:
 
 * Question - The question to ask the student
 * Message - A feedback message to display to the student after they
   have made their choice.
 * Weight - The weight is used when computing total grade/score of
-  the mentoring block. The larger the weight, the more influence this
+  the problem builder block. The larger the weight, the more influence this
   question will have on the grade. Value of zero means this question
   has no influence on the grade (float, defaults to `1`).
 * Correct Choice - Specify which choice[s] is considered correct. If
@@ -175,7 +175,7 @@ MRQ questions have these configurable settings:
 * Message - A feedback message to display to the student after they
   have made their choice.
 * Weight - The weight is used when computing total grade/score of
-  the mentoring block. The larger the weight, the more influence this
+  the problem builder block. The larger the weight, the more influence this
   question will have on the grade. Value of zero means this question
   has no influence on the grade (float, defaults to `1`).
 * Hide Result - If set to True, the feedback icons next to each
@@ -202,7 +202,7 @@ After successfully completing the questions:
 
 ### Tables
 
-The mentoring table allows you to present answers to multiple
+The problem builder table allows you to present answers to multiple
 free-form questions in a concise way. Once you create an "Answer
 Recap Table" inside a Mentoring component in Studio, you will be
 able to add columns to the table. Each column has an optional
@@ -212,7 +212,7 @@ well as HTML components.
 
 Screenshot:
 
-![Mentoring Table](doc/img/mentoring-table.png)
+![Table Screenshot](doc/img/mentoring-table.png)
 
 ### Maximum Attempts
 
@@ -236,19 +236,20 @@ be valid CSS (e.g. `50px`).
 Workbench installation and settings
 -----------------------------------
 
-Install to the workbench's virtualenv by running the following command form the mentoring repo root:
+Install to the workbench's virtualenv by running the following command from the
+problem builder repo root:
 
 ```bash
 pip install -r requirements.txt
 ```
 
 In the main XBlock repository, create the following configuration file
-in `workbench/settings_mentoring.py` in the XBlock repository:
+in `workbench/settings_pb.py` in the XBlock repository:
 
 ```python
 from settings import *
 
-INSTALLED_APPS += ('mentoring',)
+INSTALLED_APPS += ('problem_builder',)
 DATABASES['default']['NAME'] = 'workbench.sqlite'
 ```
 
@@ -257,14 +258,14 @@ before starting the workbench. Run this from the XBlock repository
 root:
 
 ```bash
-$ ./manage.py syncdb --settings=workbench.settings_mentoring
+$ ./manage.py syncdb --settings=workbench.settings_pb
 ```
 
 Running the workbench
 ---------------------
 
 ```bash
-$ ./manage.py runserver 8000 --settings=workbench.settings_mentoring
+$ ./manage.py runserver 8000 --settings=workbench.settings_pb
 ```
 
 Access it at [http://localhost:8000/](http://localhost:8000).
@@ -273,9 +274,9 @@ Running tests
 -------------
 
 First, make sure the [XBlock SDK (Workbench)](https://github.com/edx/xblock-sdk)
-is installed in the same virtual environment as xblock-mentoring.
+is installed in the same virtual environment as xblock-problem-builder.
 
-From the xblock-mentoring repository root, run the tests with the
+From the xblock-problem-builder repository root, run the tests with the
 following command:
 
 ```bash
@@ -285,7 +286,7 @@ $ ./run_tests.py
 If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
 
 ```bash
-$ ./run_tests.py mentoring/tests/unit
+$ ./run_tests.py problem_builder/tests/unit
 ```
 
 Extracting Translatable Strings
@@ -308,13 +309,13 @@ i18n_tool dummy && i18n_tool generate
 Adding custom scenarios to the workbench
 ----------------------------------------
 
-Within the xblock-mentoring repository, create the `templates/xml` and
+Within the xblock-problem-builder repository, create the `templates/xml` and
 add XML scenarios to it - all files with the `*.xml` extension will be
 automatically loaded by the workbench:
 
 ```bash
 $ mkdir templates/xml
-$ cat > templates/xml/my_mentoring_scenario.xml
+$ cat > templates/xml/my_pb_scenario.xml
 ```
 
 Restart the workbench to take the new scenarios into account.
@@ -322,16 +323,16 @@ Restart the workbench to take the new scenarios into account.
 Upgrading from Version 1
 ------------------------
 
-To upgrade a course from the earlier version of this XBlock, run the following
-command on a system with edx-platform and xblock-mentoring installed:
+To upgrade a course from xblock-mentoring ("v1") to xblock-problem-builder
+("v2"), run the following command on a system with edx-platform,
+xblock-mentoring, and xblock-problem-builder installed:
 
 ```bash
-$ SERVICE_VARIANT=cms DJANGO_SETTINGS_MODULE="cms.envs.devstack" python -m mentoring.v1.upgrade "Org/Course/Run"
+$ SERVICE_VARIANT=cms DJANGO_SETTINGS_MODULE="cms.envs.devstack" python -m problem_builder.v1.upgrade "Org/Course/Run"
 ```
 Where "Org/Course/Run" is replaced with the ID of the course to upgrade.
 
 License
 -------
 
-The Mentoring XBlock is available under the GNU Affero General
-Public License (AGPLv3).
+This XBlock is available under the GNU Affero General Public License (AGPLv3).

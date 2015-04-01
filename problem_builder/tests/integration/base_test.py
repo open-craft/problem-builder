@@ -24,7 +24,7 @@ from xblockutils.base_test import SeleniumBaseTest
 # Studio adds a url_name property to each XBlock but Workbench doesn't.
 # Since we rely on it, we need to mock url_name support so it can be set via XML and
 # accessed like a normal field.
-from mentoring import MentoringBlock
+from problem_builder import MentoringBlock
 MentoringBlock.url_name = String()
 
 

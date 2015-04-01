@@ -23,7 +23,7 @@
 import ddt
 from mock import patch, Mock
 
-from mentoring import MentoringBlock
+from problem_builder import MentoringBlock
 from .base_test import MentoringBaseTest
 
 
@@ -262,7 +262,7 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertIn('Congratulations!', messages.text)
 
 
-@patch.object(MentoringBlock, 'get_theme', Mock(return_value={'package': 'mentoring',
+@patch.object(MentoringBlock, 'get_theme', Mock(return_value={'package': 'problem_builder',
                                                               'locations': ['public/themes/lms.css']}))
 class MCQBlockAprosThemeTest(MCQBlockTest):
     """

@@ -2,8 +2,8 @@ import unittest
 import ddt
 from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
-from mentoring import MentoringBlock
-from mentoring.mentoring import _default_theme_config
+from problem_builder import MentoringBlock
+from problem_builder.mentoring import _default_theme_config
 
 
 class TestMentoringBlock(unittest.TestCase):
@@ -78,13 +78,13 @@ class TestMentoringBlockTheming(unittest.TestCase):
         package_name = 'some_package'
         theme_config = {MentoringBlock.theme_key: {'package': package_name, 'locations': ['lms.css']}}
         self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with patch("mentoring.mentoring.ResourceLoader") as patched_resource_loader:
+        with patch("problem_builder.mentoring.ResourceLoader") as patched_resource_loader:
             self.block.include_theme_files(fragment)
             patched_resource_loader.assert_called_with(package_name)
 
     @ddt.data(
-        ('mentoring', ['public/themes/lms.css']),
-        ('mentoring', ['public/themes/lms.css', 'public/themes/lms.part2.css']),
+        ('problem_builder', ['public/themes/lms.css']),
+        ('problem_builder', ['public/themes/lms.css', 'public/themes/lms.part2.css']),
         ('my_app.my_rules', ['typography.css', 'icons.css']),
     )
     @ddt.unpack
@@ -92,7 +92,7 @@ class TestMentoringBlockTheming(unittest.TestCase):
         fragment = MagicMock()
         theme_config = {MentoringBlock.theme_key: {'package': package_name, 'locations': locations}}
         self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with patch("mentoring.mentoring.ResourceLoader.load_unicode") as patched_load_unicode:
+        with patch("problem_builder.mentoring.ResourceLoader.load_unicode") as patched_load_unicode:
             self.block.include_theme_files(fragment)
             for location in locations:
                 patched_load_unicode.assert_any_call(location)

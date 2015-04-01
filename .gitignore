@@ -1,7 +1,7 @@
 *~
 *.pyc
 /.coverage
-/xblock_mentoring.egg-info
+/xblock_problem_builder.egg-info
 /workbench.*
 /dist
 /templates
