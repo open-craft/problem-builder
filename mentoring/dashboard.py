@@ -154,6 +154,7 @@ class InvalidUrlName(ValueError):
 
 
 @XBlock.needs("i18n")
+@XBlock.wants("user")
 class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     """
     A block to summarize self-assessment results.
@@ -277,6 +278,25 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 return rule.color_str
         return None
 
+    def _get_user_full_name(self):
+        """
+        Get the full name of the current user, for the downloadable report.
+        """
+        user_service = self.runtime.service(self, 'user')
+        if user_service:
+            return user_service.get_current_user().full_name
+        return ""
+
+    def _get_course_name(self):
+        """
+        Get the name of the current course, for the downloadable report.
+        """
+        try:
+            course_root_key = self.scope_ids.usage_id.course_key.make_usage_key('course', 'course')
+            return self.runtime.get_block(course_root_key).display_name
+        except Exception:  # AttributeErrror, XBLockNotFoundError, ItemNotFoundError, ...
+            return ""
+
     def generate_content(self, include_report_link=True):
         """
         Create the HTML for this block, by getting the data and inserting it into a template.
@@ -350,6 +370,8 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             'title': self.display_name,
             'body': self.generate_content(include_report_link=False),
             'css': loader.load_unicode(self.css_path),
+            'student_name': self._get_user_full_name(),
+            'course_name': self._get_course_name(),
         })
         return Response(
             report_html,
