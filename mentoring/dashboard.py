@@ -299,7 +299,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                     except IndexError:
                         value = None
                     block['mcqs'].append({
-                        "display_name": mcq_block.question,
+                        "display_name": mcq_block.display_name_with_default,
                         "value": value,
                         "color": self.color_for_value(value) if value is not None else None,
                     })
