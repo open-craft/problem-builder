@@ -20,6 +20,7 @@
 
 # Imports ###########################################################
 
+from django.utils.safestring import mark_safe
 from lxml import etree
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float, List, UNIQUE_ID
@@ -160,7 +161,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
     @property
     def human_readable_choices(self):
-        return [{"display_name": c.content, "value": c.value} for c in self.custom_choices]
+        return [{"display_name": mark_safe(c.content), "value": c.value} for c in self.custom_choices]
 
     @staticmethod
     def choice_values_provider(question):
