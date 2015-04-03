@@ -16,7 +16,7 @@ This contains a typical problem taken from a live course (content changed)
             <choice value="yes">Yes</choice>
             <choice value="maybenot">Maybe not</choice>
             <choice value="understand">I don't understand</choice>
-            <tip display="yes">Great. Your frog should be happy for you.</tip>
+            <tip width="350" height="100" display="yes">Great. Your frog should be happy for you.</tip>
             <tip display="maybenot">In the end, all the feedback you have gotten from others should not lead you to choose a frog that does not also feel happy and important to you.</tip>
             <tip display="understand">
               <html>

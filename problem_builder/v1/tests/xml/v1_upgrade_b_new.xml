@@ -8,7 +8,7 @@
     <pb-choice value="yes">Yes</pb-choice>
     <pb-choice value="maybenot">Maybe not</pb-choice>
     <pb-choice value="understand">I don't understand</pb-choice>
-    <pb-tip values="yes">Great. Your frog should be happy for you.</pb-tip>
+    <pb-tip width="350" height="100" values="yes">Great. Your frog should be happy for you.</pb-tip>
     <pb-tip values="maybenot">In the end, all the feedback you have gotten from others should not lead you to choose a frog that does not also feel happy and important to you.</pb-tip>
     <pb-tip values="understand">
       <p>If a frog is <span class="italic">happy for you</span>, that means it is a frog that you genuinely feel in your own heart to be something that you want to improve. What is in your heart?</p>
