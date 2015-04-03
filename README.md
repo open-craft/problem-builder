@@ -1,7 +1,7 @@
 Problem Builder XBlock
 ----------------------
 
-[![Build Status](https://travis-ci.org/open-craft/xblock-problem-builder.svg?branch=master)](https://travis-ci.org/open-craft/xblock-problem-builder)
+[![Build Status](https://travis-ci.org/open-craft/problem-builder.svg?branch=master)](https://travis-ci.org/open-craft/problem-builder)
 
 This XBlock allows creation of questions of various types and simulating the
 workflow of real-life mentoring, within an edX course.
