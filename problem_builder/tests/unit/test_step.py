@@ -1,6 +1,6 @@
 import unittest
 
-from mentoring.step import StepMixin, StepParentMixin
+from problem_builder.step import StepMixin, StepParentMixin
 from mock import Mock
 
 

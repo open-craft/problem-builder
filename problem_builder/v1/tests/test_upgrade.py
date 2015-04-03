@@ -18,11 +18,12 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Test that we can upgrade from mentoring v1 to mentoring v2.
+Test that we can upgrade from mentoring v1 to problem builder (v2).
 """
 import ddt
 from lxml import etree
-from mentoring.v1.xml_changes import convert_xml_v1_to_v2
+from problem_builder import MentoringBlock
+from problem_builder.v1.xml_changes import convert_xml_v1_to_v2
 import os.path
 from StringIO import StringIO
 import unittest
@@ -53,6 +54,7 @@ class TestUpgrade(unittest.TestCase):
         "v1_upgrade_c",
     )
     @XBlock.register_temp_plugin(HtmlBlock, "html")
+    @XBlock.register_temp_plugin(MentoringBlock, "mentoring")
     def test_xml_upgrade(self, file_name):
         """
         Convert a v1 mentoring block to v2 and then compare the resulting block to a

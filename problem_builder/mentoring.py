@@ -48,7 +48,7 @@ log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 _default_theme_config = {
-    'package': 'mentoring',
+    'package': 'problem_builder',
     'locations': ['public/themes/lms.css']
 }
 
