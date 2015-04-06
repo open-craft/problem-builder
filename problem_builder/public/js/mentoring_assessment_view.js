@@ -1,6 +1,6 @@
 function MentoringAssessmentView(runtime, element, mentoring) {
     var gradeTemplate = _.template($('#xblock-grade-template').html());
-    var submitDOM, nextDOM, reviewDOM, tryAgainDOM;
+    var submitDOM, nextDOM, reviewDOM, tryAgainDOM, messagesDOM;
     var submitXHR;
     var checkmark;
     var active_child;
@@ -21,6 +21,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         $('.grade').html('');
         $('.attempts').html('');
+        messagesDOM.empty().hide();
     }
 
     function renderGrade() {
@@ -42,6 +43,10 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         }
 
         mentoring.renderAttempts();
+        if (data.assessment_message && data.num_attempts < data.max_attempts) {
+            mentoring.setContent(messagesDOM, data.assessment_message);
+            messagesDOM.show();
+        }
     }
 
     function handleTryAgain(result) {
@@ -74,6 +79,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         reviewDOM = $(element).find('.submit .input-review');
         tryAgainDOM = $(element).find('.submit .input-try-again');
         checkmark = $('.assessment-checkmark', element);
+        messagesDOM = $('.assessment-messages', element);
 
         submitDOM.show();
         submitDOM.bind('click', submit);
@@ -149,6 +155,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         $('.grade', element).data('partially_correct_answer', result.partially_correct_answer);
         $('.grade', element).data('max_attempts', result.max_attempts);
         $('.grade', element).data('num_attempts', result.num_attempts);
+        $('.grade', element).data('assessment_message', result.assessment_message);
         $('.attempts', element).data('max_attempts', result.max_attempts);
         $('.attempts', element).data('num_attempts', result.num_attempts);
 

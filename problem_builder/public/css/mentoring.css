@@ -2,14 +2,16 @@
     margin: 1em 0em;
 }
 
-.mentoring .messages {
+.mentoring .messages,
+.mentoring .assessment-messages {
     display: none;
     margin-top: 10px;
     border-top: 2px solid #eaeaea;
     padding: 12px 0px 20px;
 }
 
-.mentoring .messages .title1 {
+.mentoring .messages .title1,
+.mentoring .assessment-messages .title1 {
     color: #333333;
     text-transform: uppercase;
     font-weight: bold;

@@ -256,6 +256,17 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_hidden(controls.next_question)
         self.assert_hidden(controls.review)
 
+    def assert_messages_text(self, mentoring, text):
+        messages = mentoring.find_element_by_css_selector('.assessment-messages')
+        self.assertEqual(messages.text, text)
+        self.assertTrue(messages.is_displayed())
+
+    def assert_messages_empty(self, mentoring):
+        messages = mentoring.find_element_by_css_selector('.assessment-messages')
+        self.assertEqual(messages.text, '')
+        self.assertFalse(messages.find_elements_by_xpath('./*'))
+        self.assertFalse(messages.is_displayed())
+
     def test_assessment(self):
         mentoring, controls = self.go_to_assessment("Assessment 1")
 
@@ -276,6 +287,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         }
         self.peek_at_review(mentoring, controls, expected_results)
 
+        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
 
@@ -294,6 +306,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         }
         self.peek_at_review(mentoring, controls, expected_results)
         self.assert_disabled(controls.try_again)
+        self.assert_messages_empty(mentoring)
 
     def test_single_question_assessment(self):
         """
@@ -308,6 +321,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         }
 
         self.peek_at_review(mentoring, controls, expected_results)
+        self.assert_messages_empty(mentoring)
 
         controls.try_again.click()
         # this is a wait and assertion all together - it waits until expected text is in mentoring block
