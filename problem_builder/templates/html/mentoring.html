@@ -25,8 +25,11 @@
          data-incorrect_answer="{{ self.score.3 }}"
          data-partially_correct_answer="{{ self.score.4 }}"
          data-max_attempts="{{ self.max_attempts }}"
-         data-num_attempts="{{ self.num_attempts }}">
+         data-num_attempts="{{ self.num_attempts }}"
+         data-assessment_message="{{ self.assessment_message }}">
     </div>
+
+    <div class="assessment-messages"></div>
 
     <div class="submit">
       {% if self.mode == 'assessment' %}
