@@ -184,7 +184,6 @@ class ReadOnlyAnswerToRecap(Change):
 
     def apply(self):
         self.node.tag = "pb-answer-recap"
-        self.node.attrib
         self.node.attrib.pop("read_only")
         for name in self.node.attrib:
             if name != "name":

@@ -54,7 +54,7 @@ def upgrade_block(block):
         warnings.simplefilter("always")
         convert_xml_v1_to_v2(root)
         for warning in warnings_caught:
-            print("    ➔ {}".format(str(warning.message)))
+            print(u"    ➔ {}".format(str(warning.message)))
 
     # We need some special-case handling to deal with HTML being an XModule and not a pure XBlock:
     try:
@@ -76,7 +76,7 @@ def upgrade_block(block):
     root.attrib["xml_content"] = xml_content_str
 
     # Was block already published?
-    parent = block.get_parent()
+    parent = block.runtime.get_block(block.parent)  # Don't use get_parent() as it may be an outdated cached version
     parent_was_published = not store.has_changes(parent)
 
     old_usage_id = block.location
@@ -87,10 +87,12 @@ def upgrade_block(block):
         parent_children = parent.children
         index = parent_children.index(old_usage_id)
 
+        url_name = unicode(old_usage_id.block_id)
         if "url_name" in root.attrib:
-            url_name = root.attrib.pop("url_name")
-            if unicode(old_usage_id.block_id) != url_name:
-                print(" ➔ This block has two conflicting url_name values!! Using the XML value : {}".format(url_name))
+            url_name_xml = root.attrib.pop("url_name")
+            if url_name != url_name_xml:
+                print(u"    ➔ Two conflicting url_name values! Using the 'real' one : {}".format(url_name))
+                print(u"    ➔ References to the old url_name ({}) need to be updated manually.".format(url_name_xml))
         block = store.create_item(
             user_id=None,
             course_key=old_usage_id.course_key,
@@ -101,14 +103,14 @@ def upgrade_block(block):
         parent_children[index] = block.location
         parent.save()
         store.update_item(parent, user_id=None)
-        print(" ➔ problem-builder created: {}".format(url_name))
+        print(u"    ➔ problem-builder created: {}".format(url_name))
 
         # Now we've changed the block's block_type but in doing so we've disrupted the student data.
         # Migrate it now:
         student_data = StudentModule.objects.filter(module_state_key=old_usage_id)
         num_entries = student_data.count()
         if num_entries > 0:
-            print(" ➔ Migrating {} student records to new block".format(num_entries))
+            print(u"    ➔ Migrating {} student records to new block".format(num_entries))
             student_data.update(module_state_key=block.location)
 
     # Replace block with the new version and the new children:
@@ -126,9 +128,9 @@ if __name__ == '__main__':
     from opaque_keys.edx.keys import CourseKey
     from xmodule.modulestore.django import modulestore
 
-    print("┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
-    print("┃ Mentoring Upgrade Script ┃")
-    print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
+    print(u"┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+    print(u"┃ Mentoring Upgrade Script ┃")
+    print(u"┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
     try:
         course_id = CourseKey.from_string(sys.argv[1])
@@ -139,8 +141,8 @@ if __name__ == '__main__':
     course = store.get_course(course_id)
     if course is None:
         sys.exit(u"Course '{}' not found.".format(unicode(course_id)))
-    print(" ➔ Found course: {}".format(course.display_name))
-    print(" ➔ Searching for mentoring blocks")
+    print(u" ➔ Found course: {}".format(course.display_name))
+    print(u" ➔ Searching for mentoring blocks")
     blocks_found = []
 
     def find_mentoring_blocks(block):
@@ -157,39 +159,40 @@ if __name__ == '__main__':
     find_mentoring_blocks(course)
 
     total = len(blocks_found)
-    print(" ➔ Found {} mentoring blocks".format(total))
+    print(u" ➔ Found {} mentoring blocks".format(total))
 
-    print(" ➔ Doing a quick sanity check of the url_names")
+    print(u" ➔ Doing a quick sanity check of the url_names")
     url_names = set()
     stop = False
     for block_id in blocks_found:
+        url_name = block_id.block_id
         block = course.runtime.get_block(block_id)
-        if block.url_name in url_names:
-            print(u" ➔ Mentoring block {} conflicts with another block using the same url_name".format(block.url_name))
+        if url_name in url_names:
+            print(u" ➔ Mentoring block {} appears in the course in multiple places!".format(url_name))
             print(u'   (display_name: "{}", parent {}: "{}")'.format(
                 block.display_name, block.parent, block.get_parent().display_name
             ))
+            print(u'   To fix, you must delete the extra occurences.')
             stop = True
             continue
-        if block.url_name != unicode(block_id.block_id):
-            print(u" ➔ Mentoring block {} has two different url_names assigned. Real url_name is {}".format(
-                unicode(block_id.block_id)
-            ))
-            print(u'   (display_name: "{}", parent: "{}")'.format(block.display_name, block.get_parent().display_name))
-            print(u"   (to fix, edit the XML and set the url_name to the real value given above).")
-            stop = True
-        url_names.add(block.url_name)
+        if block.url_name and block.url_name != unicode(block_id.block_id):
+            print(u" ➔ Warning: Mentoring block {} has a different url_name set in the XML.".format(url_name))
+            print(u"   If other blocks reference this block using the XML url_name '{}',".format(block.url_name))
+            print(u"   those blocks will need to be updated.")
+            if "--force" not in sys.argv:
+                print(u"   In order to force this upgrade to continue, add --force to the end of the command.")
+                stop = True
+        url_names.add(url_name)
 
     if stop:
-        print(" ➔ Exiting due to errors preventing the upgrade.")
-        sys.exit(1)
+        sys.exit(u" ➔ Exiting due to errors preventing the upgrade.")
 
     with store.bulk_operations(course.location.course_key):
         count = 1
         for block_id in blocks_found:
             block = course.runtime.get_block(block_id)
-            print(" ➔ Upgrading block {} of {} - \"{}\"".format(count, total, block.url_name))
+            print(u" ➔ Upgrading block {} of {} - \"{}\"".format(count, total, block.url_name))
             count += 1
             upgrade_block(block)
 
-    print(" ➔ Complete.")
+    print(u" ➔ Complete.")
