@@ -4,31 +4,31 @@
     <p>Now, let's make sure your frog meets the criteria for a strong column 1. Here is your frog:</p>
   </html>
   <pb-answer-recap name="improvement-frog"/>
-  <pb-mcq name="frog-happy" question="Is this frog happy for you?" correct_choices="yes,maybenot,understand">
+  <pb-mcq name="frog-happy" question="Is this frog happy for you?" correct_choices='["yes","maybenot","understand"]'>
     <pb-choice value="yes">Yes</pb-choice>
     <pb-choice value="maybenot">Maybe not</pb-choice>
     <pb-choice value="understand">I don't understand</pb-choice>
-    <pb-tip values="yes">Great. Your frog should be happy for you.</pb-tip>
-    <pb-tip values="maybenot">In the end, all the feedback you have gotten from others should not lead you to choose a frog that does not also feel happy and important to you.</pb-tip>
-    <pb-tip values="understand">
+    <pb-tip values='["yes"]'>Great. Your frog should be happy for you.</pb-tip>
+    <pb-tip values='["maybenot"]'>In the end, all the feedback you have gotten from others should not lead you to choose a frog that does not also feel happy and important to you.</pb-tip>
+    <pb-tip values='["understand"]'>
       <p>If a frog is <span class="italic">happy for you</span>, that means it is a frog that you genuinely feel in your own heart to be something that you want to improve. What is in your heart?</p>
     </pb-tip>
   </pb-mcq>
-  <pb-mcq name="frog-implicate" question="Does this frog implicate you?" correct_choices="yes,maybenot,understand">
+  <pb-mcq name="frog-implicate" question="Does this frog implicate you?" correct_choices='["yes","maybenot","understand"]'>
     <pb-choice value="yes">Yes</pb-choice>
     <pb-choice value="maybenot">Maybe not</pb-choice>
     <pb-choice value="understand">I don't understand</pb-choice>
-    <pb-tip values="yes">Great. Your frog should implicate you.</pb-tip>
-    <pb-tip values="maybenot">
+    <pb-tip values='["yes"]'>Great. Your frog should implicate you.</pb-tip>
+    <pb-tip values='["maybenot"]'>
       <p>Since the Trial of Uruk-Shan focuses on your own growth and change, it is important to be clear about the ways <span class="bold">you</span> are hoping to change and improve.</p>
     </pb-tip>
-    <pb-tip values="understand">Your frog implicates you if it is clear that you must get better at something. Your frog should focus on something you can control.</pb-tip>
+    <pb-tip values='["understand"]'>Your frog implicates you if it is clear that you must get better at something. Your frog should focus on something you can control.</pb-tip>
   </pb-mcq>
-  <pb-rating name="frog-important" low="Not at all important to me" high="Very important to me" question="How important is it to you?" correct_choices="4,5,1,2,3,understand">
+  <pb-rating name="frog-important" low="Not at all important to me" high="Very important to me" question="How important is it to you?" correct_choices='["4","5","1","2","3","understand"]'>
     <pb-choice value="understand">I don't understand</pb-choice>
-    <pb-tip values="4,5">Great!</pb-tip>
-    <pb-tip values="1,2,3">The Trial of Uruk-Shan helps you uncover some of the core beliefs and assumptions you have held that are preventing you from making change.</pb-tip>
-    <pb-tip values="understand">A frog is important if it is one that could make a big difference in helping you reach your frogs in your work life or your personal life (or both).</pb-tip>
+    <pb-tip values='["4","5"]'>Great!</pb-tip>
+    <pb-tip values='["1","2","3"]'>The Trial of Uruk-Shan helps you uncover some of the core beliefs and assumptions you have held that are preventing you from making change.</pb-tip>
+    <pb-tip values='["understand"]'>A frog is important if it is one that could make a big difference in helping you reach your frogs in your work life or your personal life (or both).</pb-tip>
   </pb-rating>
   <pb-message type="completed">
             Great! You have indicated that you have chosen a frog that is happy for you, implicates you, has room for improvement, and is important to you. You are now ready to move onto the next step.
