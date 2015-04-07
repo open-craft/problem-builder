@@ -132,7 +132,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
         """
         block = runtime.construct_xblock_from_class(cls, keys)
 
-        block.values = [unicode(val).strip() for val in node.get('values', '').split(',')]
+        block.values = cls.values.from_string(node.get('values', '[]'))
         block.width = node.get('width', '')
         block.height = node.get('height', '')
 
