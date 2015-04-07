@@ -1,0 +1,1 @@
+-e git+https://github.com/edx/XBlock.git@496d3cb9aca1d9e0a18b0f5e73c7bede824e465f#egg=XBlock
