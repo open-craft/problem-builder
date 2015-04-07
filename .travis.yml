@@ -16,6 +16,3 @@ script:
     - python run_tests.py --with-coverage --cover-package=problem_builder
 notifications:
   email: false
-branches:
-    only:
-        - master
