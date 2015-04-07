@@ -559,7 +559,9 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        fragment = super(MentoringBlock, self).author_edit_view(context)
+        fragment = Fragment(u'<div class="mentoring">')  # This DIV is needed for CSS to apply to the previews
+        self.render_children(context, fragment, can_reorder=True, can_add=False)
+        fragment.add_content(u'</div>')
         fragment.add_content(loader.render_template('templates/html/mentoring_add_buttons.html', {}))
         fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name

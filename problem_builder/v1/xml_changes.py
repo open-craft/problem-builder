@@ -184,7 +184,6 @@ class ReadOnlyAnswerToRecap(Change):
 
     def apply(self):
         self.node.tag = "pb-answer-recap"
-        self.node.attrib
         self.node.attrib.pop("read_only")
         for name in self.node.attrib:
             if name != "name":
@@ -258,28 +257,29 @@ class TipChanges(Change):
             else:
                 p.attrib[list_name] = value
 
-        if len(self.node.attrib) > 1:
-            warnings.warn("Invalid <tip> element found.")
-            return
-        mode = self.node.attrib.keys()[0]
-        value = self.node.attrib[mode]
         if p.tag == "pb-mrq":
-            if mode == "display":
+            if self.node.attrib.get("display"):
+                value = self.node.attrib.pop("display")
                 add_to_list("ignored_choices", value)
-            elif mode == "require":
+            elif self.node.attrib.get("require"):
+                value = self.node.attrib.pop("require")
                 add_to_list("required_choices", value)
-            elif mode != "reject":
-                warnings.warn("Invalid <tip> element: has {}={}".format(mode, value))
+            elif self.node.attrib.get("reject"):
+                value = self.node.attrib.pop("reject")
+            else:
+                warnings.warn("Invalid <tip> element found.")
                 return
         else:
             # This is an MCQ or Rating question:
-            if mode == "display":
+            if self.node.attrib.get("display"):
+                value = self.node.attrib.pop("display")
                 add_to_list("correct_choices", value)
-            elif mode != "reject":
-                warnings.warn("Invalid <tip> element: has {}={}".format(mode, value))
+            elif self.node.attrib.get("reject"):
+                value = self.node.attrib.pop("reject")
+            else:
+                warnings.warn("Invalid <tip> element found.")
                 return
         self.node.attrib["values"] = value
-        self.node.attrib.pop(mode)
 
 
 class SharedHeaderToHTML(Change):

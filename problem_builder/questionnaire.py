@@ -20,6 +20,8 @@
 
 # Imports ###########################################################
 
+from django.utils.safestring import mark_safe
+import logging
 from lxml import etree
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float, List, UNIQUE_ID
@@ -81,7 +83,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         scope=Scope.content,
         enforce_type=True
     )
-    editable_fields = ('question', 'message', 'weight')
+    editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
     has_children = True
 
     def _(self, text):
@@ -98,6 +100,9 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         # Load XBlock properties from the XML attributes:
         for name, value in node.items():
+            if name not in block.fields:
+                logging.warn("XBlock %s does not contain field %s", type(block), name)
+                continue
             field = block.fields[name]
             if isinstance(field, List) and not value.startswith('['):
                 # This list attribute is just a string of comma separated strings:
@@ -114,10 +119,13 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         return block
 
     @property
-    def display_name_with_default(self):
-        if not self.lonely_step:
-            return self._(u"Question {number}").format(number=self.step_number)
-        return self._(u"Question")
+    def html_id(self):
+        """
+        A short, simple ID string used to uniquely identify this question.
+
+        This is only used by templates for matching <input> and <label> elements.
+        """
+        return unicode(id(self))  # Unique as long as all choices are loaded at once
 
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
@@ -127,6 +135,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         context = context or {}
         context['self'] = self
         context['custom_choices'] = self.custom_choices
+        context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
         fragment = Fragment(loader.render_template(template_path, context))
         # If we use local_resource_url(self, ...) the runtime may insert many identical copies
@@ -156,7 +165,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
     @property
     def human_readable_choices(self):
-        return [{"display_name": c.content, "value": c.value} for c in self.custom_choices]
+        return [{"display_name": mark_safe(c.content), "value": c.value} for c in self.custom_choices]
 
     @staticmethod
     def choice_values_provider(question):

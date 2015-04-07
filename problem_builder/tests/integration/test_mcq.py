@@ -45,6 +45,9 @@ class MCQBlockTest(MentoringBaseTest):
         """
         mcq_legend.click()
 
+    def _get_choice_label_text(self, choice):
+        return choice.find_element_by_css_selector('label').text
+
     def _get_inputs(self, choices):
         return [choice.find_element_by_css_selector('input') for choice in choices]
 
@@ -71,20 +74,17 @@ class MCQBlockTest(MentoringBaseTest):
         self.assertEqual(mcq1_legend.text, 'Question 1\nDo you like this MCQ?')
         self.assertEqual(mcq2_legend.text, 'Question 2\nHow do you rate this MCQ?')
 
-        mcq1_choices = mcq1.find_elements_by_css_selector('.choices .choice label')
-        mcq2_choices = mcq2.find_elements_by_css_selector('.rating .choice label')
+        mcq1_choices = mcq1.find_elements_by_css_selector('.choices .choice')
+        mcq2_choices = mcq2.find_elements_by_css_selector('.rating .choice')
 
-        self.assertEqual(len(mcq1_choices), 3)
-        self.assertEqual(len(mcq2_choices), 6)
-        self.assertEqual(mcq1_choices[0].text, 'Yes')
-        self.assertEqual(mcq1_choices[1].text, 'Maybe not')
-        self.assertEqual(mcq1_choices[2].text, "I don't understand")
-        self.assertEqual(mcq2_choices[0].text, '1 - Not good at all')
-        self.assertEqual(mcq2_choices[1].text, '2')
-        self.assertEqual(mcq2_choices[2].text, '3')
-        self.assertEqual(mcq2_choices[3].text, '4')
-        self.assertEqual(mcq2_choices[4].text, '5 - Extremely good')
-        self.assertEqual(mcq2_choices[5].text, "I don't want to rate it")
+        self.assertListEqual(
+            [self._get_choice_label_text(choice) for choice in mcq1_choices],
+            ["Yes", "Maybe not", "I don't understand"]
+        )
+        self.assertListEqual(
+            [self._get_choice_label_text(choice) for choice in mcq2_choices],
+            ['1 - Not good at all', '2', '3', '4', '5 - Extremely good', "I don't want to rate it"]
+        )
 
         mcq1_choices_input = self._get_inputs(mcq1_choices)
         mcq2_choices_input = self._get_inputs(mcq2_choices)
@@ -172,13 +172,13 @@ class MCQBlockTest(MentoringBaseTest):
         mcq_legend = mcq.find_element_by_css_selector('legend')
         self.assertEqual(mcq_legend.text, 'Question\nWhat do you like in this MRQ?')
 
-        mcq_choices = mcq.find_elements_by_css_selector('.choices .choice label')
+        mcq_choices = mcq.find_elements_by_css_selector('.choices .choice')
 
         self.assertEqual(len(mcq_choices), 4)
-        self.assertEqual(mcq_choices[0].text, 'Its elegance')
-        self.assertEqual(mcq_choices[1].text, 'Its beauty')
-        self.assertEqual(mcq_choices[2].text, "Its gracefulness")
-        self.assertEqual(mcq_choices[3].text, "Its bugs")
+        self.assertListEqual(
+            [self._get_choice_label_text(choice) for choice in mcq_choices],
+            ['Its elegance', 'Its beauty', "Its gracefulness", "Its bugs"]
+        )
 
         mcq_choices_input = self._get_inputs(mcq_choices)
         self.assertEqual(mcq_choices_input[0].get_attribute('value'), 'elegance')
@@ -200,7 +200,7 @@ class MCQBlockTest(MentoringBaseTest):
 
         for index, expected_feedback in enumerate(item_feedbacks):
             choice_wrapper = choices_list.find_elements_by_css_selector(".choice")[index]
-            choice_wrapper.find_element_by_css_selector(".choice-selector").click()  # clicking on actual radio button
+            choice_wrapper.find_element_by_css_selector(".choice-selector input").click()  # click actual radio button
             submit.click()
             self.wait_until_disabled(submit)
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
@@ -220,8 +220,8 @@ class MCQBlockTest(MentoringBaseTest):
         result = []
         # this could be a list comprehension, but a bit complicated one - hence explicit loop
         for choice_wrapper in questionnaire.find_elements_by_css_selector(".choice"):
-            choice_label = choice_wrapper.find_element_by_css_selector("label .choice-text")
-            result.append(choice_label.get_attribute('innerHTML'))
+            choice_label = choice_wrapper.find_element_by_css_selector("label")
+            result.append(choice_label.get_attribute('innerHTML').strip())
 
         return result
 
@@ -249,7 +249,7 @@ class MCQBlockTest(MentoringBaseTest):
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
         self.assertFalse(submit.is_enabled())
 
-        inputs = choices_list.find_elements_by_css_selector('input.choice-selector')
+        inputs = choices_list.find_elements_by_css_selector('.choice-selector input')
         self._selenium_bug_workaround_scroll_to(choices_list)
         inputs[0].click()
         inputs[1].click()
@@ -260,6 +260,41 @@ class MCQBlockTest(MentoringBaseTest):
         self.wait_until_disabled(submit)
 
         self.assertIn('Congratulations!', messages.text)
+
+    def _get_inner_height(self, elem):
+        return elem.size['height'] - \
+            int(elem.value_of_css_property("padding-top").replace(u'px', u'')) - \
+            int(elem.value_of_css_property("padding-bottom").replace(u'px', u''))
+
+    @ddt.unpack
+    @ddt.data(
+        ('yes', 40),
+        ('maybenot', 60),
+        ('understand', 600)
+    )
+    def test_tip_height(self, choice_value, expected_height):
+        mentoring = self.go_to_page("Mcq With Fixed Height Tips")
+        choices_list = mentoring.find_element_by_css_selector(".choices-list")
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+
+        choice_input_css_selector = ".choice input[value={}]".format(choice_value)
+        choice_input = choices_list.find_element_by_css_selector(choice_input_css_selector)
+        choice_wrapper = choice_input.find_element_by_xpath("./ancestor::div[@class='choice']")
+
+        choice_input.click()
+        self.wait_until_clickable(submit)
+        submit.click()
+        self.wait_until_disabled(submit)
+
+        item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
+        self.assertTrue(item_feedback_popup.is_displayed())
+        feedback_height = self._get_inner_height(item_feedback_popup)
+        self.assertEqual(feedback_height, expected_height)
+
+        choice_wrapper.find_element_by_css_selector(".choice-result").click()
+        item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
+        item_feedback_height = self._get_inner_height(item_feedback_popup)
+        self.assertEqual(item_feedback_height, expected_height)
 
 
 @patch.object(MentoringBlock, 'get_theme', Mock(return_value={'package': 'problem_builder',
