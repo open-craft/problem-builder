@@ -5,3 +5,4 @@
 /workbench.*
 /dist
 /templates
+*.iml
