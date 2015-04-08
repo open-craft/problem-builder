@@ -57,8 +57,7 @@ class TestUpgrade(unittest.TestCase):
     @XBlock.register_temp_plugin(MentoringBlock, "mentoring")
     def test_xml_upgrade(self, file_name):
         """
-        Convert a v1 mentoring block to v2 and then compare the resulting block to a
-        pre-converted one.
+        Convert a v1 mentoring block to v2 and then compare the resulting block to a pre-converted one.
         """
         with open("{}/{}_old.xml".format(xml_path, file_name)) as xmlfile:
             temp_node = etree.parse(xmlfile).getroot()

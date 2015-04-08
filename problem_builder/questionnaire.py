@@ -90,34 +90,6 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         """ translate text """
         return self.runtime.service(self, "i18n").ugettext(text)
 
-    @classmethod
-    def parse_xml(cls, node, runtime, keys, id_generator):
-        """
-        Custom XML parser that can handle list type fields properly,
-        as well as the old way of defining 'question' and 'message' field values via tags.
-        """
-        block = runtime.construct_xblock_from_class(cls, keys)
-
-        # Load XBlock properties from the XML attributes:
-        for name, value in node.items():
-            if name not in block.fields:
-                logging.warn("XBlock %s does not contain field %s", type(block), name)
-                continue
-            field = block.fields[name]
-            if isinstance(field, List) and not value.startswith('['):
-                # This list attribute is just a string of comma separated strings:
-                setattr(block, name, [unicode(val).strip() for val in value.split(',')])
-            elif isinstance(field, String):
-                setattr(block, name, value)
-            else:
-                setattr(block, name, field.from_json(value))
-
-        for xml_child in node:
-            if xml_child.tag is not etree.Comment:
-                block.runtime.add_node_as_child(block, xml_child, id_generator)
-
-        return block
-
     @property
     def html_id(self):
         """
