@@ -4,6 +4,9 @@ python:
 before_install:
     - "export DISPLAY=:99"
     - "sh -e /etc/init.d/xvfb start"
+cache:
+  directories:
+    - $HOME/.cache/pip
 install:
     - "pip install -e git://github.com/edx/xblock-sdk.git#egg=xblock-sdk"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements.txt"
