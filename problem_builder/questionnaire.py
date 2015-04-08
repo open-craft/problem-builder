@@ -21,6 +21,7 @@
 # Imports ###########################################################
 
 from django.utils.safestring import mark_safe
+import logging
 from lxml import etree
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float, List, UNIQUE_ID
@@ -99,6 +100,9 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         # Load XBlock properties from the XML attributes:
         for name, value in node.items():
+            if name not in block.fields:
+                logging.warn("XBlock %s does not contain field %s", type(block), name)
+                continue
             field = block.fields[name]
             if isinstance(field, List) and not value.startswith('['):
                 # This list attribute is just a string of comma separated strings:
