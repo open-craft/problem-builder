@@ -1,0 +1,4 @@
+.mentoring .questionnaire .choice-tips,
+.mentoring .questionnaire .feedback {
+    box-sizing: content-box;  /* Avoid a global reset to border-box found on Apros */
+}
