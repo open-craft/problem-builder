@@ -1,0 +1,67 @@
+{% load i18n %}
+<div class="pb-dashboard">
+  <div class="dashboard-report">
+    <h2>{{display_name}}</h2>
+
+    {% if visual_repr %}
+    <div class="pb-dashboard-visual">
+      <svg width="{{visual_repr.width}}" height="{{visual_repr.height}}" role="img" aria-labelledby="pb-dashboard-vr-title-{{visual_repr.unique_id}} pb-dashboard-vr-desc-{{visual_repr.unique_id}}">
+        <title id="pb-dashboard-vr-title-{{visual_repr.unique_id}}">{{visual_repr.title}}</title>
+        <desc id="pb-dashboard-vr-desc-{{visual_repr.unique_id}}">{{visual_repr.desc}}</desc>
+        <!-- Filter definitions -->
+        {% for layer in visual_repr.layers %}
+          {% if layer.color %}
+            <filter id="{{layer.id}}">
+              <feFlood flood-color="{{layer.color}}" result="flood" />
+              <feBlend in="flood" in2="SourceGraphic" mode="multiply" />
+            </filter>
+            <mask id="{{layer.id}}-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%">
+              <image xlink:href="{{layer.url}}" x="0" y="0" height="100%" width="100%" />
+            </mask>
+          {% endif %}
+        {% endfor %}
+        <!-- Layer images -->
+        {% for layer in visual_repr.layers %}
+          {% if layer.color %}
+            <rect x="0" y="0" height="100%" width="100%" fill="{{layer.color}}" mask="url(#{{layer.id}}-mask)" />
+          {% else %}
+            <image xlink:href="{{layer.url}}" x="0" y="0" height="100%" width="100%" />
+          {% endif %}
+        {% endfor %}
+      </svg>
+    </div>
+    {% endif %}
+
+
+    {% for block in blocks %}
+      <table>
+        <thead>
+          <th colspan=2>{{ block.display_name }}</th>
+        </thead>
+        <tbody>
+          {% for mcq in block.mcqs %}
+            <tr>
+              <th class="desc">{{ mcq.display_name }}</th>
+              <td class="value" {% if mcq.color %}style="border-right-color: {{mcq.color}};"{% endif %}>
+                {% if mcq.value %}{{ mcq.value }}{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          {% if block.has_average %}
+           <tr class="avg-row">
+              <th class="desc">{% trans "Average" %}</th>
+              <td class="value" {% if block.average_color %}style="border-right-color: {{block.average_color}};"{% endif %}>
+                {{ block.average|floatformat }}
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    {% endfor %}
+  </div>
+
+  {% if blocks %}
+    <br>
+    <p><a class="report-download-link" href="#report_download" download="report.html">{% trans "Download report" %}</a></p>
+  {% endif %}
+</div>
