@@ -1,5 +1,6 @@
 function MentoringAssessmentView(runtime, element, mentoring) {
     var gradeTemplate = _.template($('#xblock-grade-template').html());
+    var reviewQuestionsTemplate = _.template($('#xblock-review-questions-template').html());
     var submitDOM, nextDOM, reviewDOM, tryAgainDOM, messagesDOM;
     var submitXHR;
     var checkmark;
@@ -24,9 +25,24 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         messagesDOM.empty().hide();
     }
 
+    function no_more_attempts() {
+        var attempts_data = $('.attempts', element).data();
+        return attempts_data.num_attempts >= attempts_data.max_attempts;
+    }
+
     function renderGrade() {
         notify('navigation', {state: 'unlock'})
         var data = $('.grade', element).data();
+        _.extend(data, {
+            'enable_extended': (no_more_attempts() && data.extended_feedback),
+            'runDetails': function(label) {
+                if (! this.enable_extended) {
+                    return '.'
+                }
+                var self = this;
+                return reviewQuestionsTemplate({'questions': self[label], 'label': label})
+            }
+        });
         cleanAll();
         $('.grade', element).html(gradeTemplate(data));
         reviewDOM.hide();
