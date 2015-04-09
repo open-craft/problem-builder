@@ -21,6 +21,7 @@
 Each class in this file represents a change made to the XML schema between v1 and v2.
 """
 from lxml import etree
+import json
 import warnings
 
 
@@ -292,6 +293,22 @@ class SharedHeaderToHTML(Change):
         self.node.tag = "html"
 
 
+class CommaSeparatedListToJson(Change):
+    APPLY_TO_ATTRIBUTES = ("values", "correct_choices", "required_choices", "ignored_choices")
+
+    def _convert_value(self, raw_value):
+        return json.dumps([unicode(val).strip() for val in raw_value.split(',')])
+
+    @staticmethod
+    def applies_to(node):
+        return node.tag in ("pb-tip", "pb-mrq", "pb-mcq", "pb-rating")
+
+    def apply(self):
+        for attribute in self.APPLY_TO_ATTRIBUTES:
+            if attribute in self.node.attrib:
+                self.node.attrib[attribute] = self._convert_value(self.node.attrib[attribute])
+
+
 # An *ordered* list of all XML schema changes:
 xml_changes = (
     RenameMentoringTag,
@@ -307,6 +324,7 @@ xml_changes = (
     QuestionSubmitMessageToField,
     TipChanges,
     SharedHeaderToHTML,
+    CommaSeparatedListToJson,
 )
 
 

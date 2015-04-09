@@ -4,13 +4,13 @@
         <p>Please answer the questions below.</p>
     </html_demo>
 
-    <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices="yes">
+    <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
         <pb-choice value="yes">Yes</pb-choice>
         <pb-choice value="maybenot">Maybe not</pb-choice>
         <pb-choice value="understand">I don't understand</pb-choice>
 
-        <pb-tip values="yes">Great!</pb-tip>
-        <pb-tip values="maybenot">Ah, damn.</pb-tip>
-        <pb-tip values="understand"><div id="test-custom-html">Really?</div></pb-tip>
+        <pb-tip values='["yes"]'>Great!</pb-tip>
+        <pb-tip values='["maybenot"]'>Ah, damn.</pb-tip>
+        <pb-tip values='["understand"]'><div id="test-custom-html">Really?</div></pb-tip>
     </pb-mcq>
 </problem-builder>
