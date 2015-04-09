@@ -194,7 +194,7 @@ class MCQBlockTest(MentoringBaseTest):
             "This is something everyone has to like about this MRQ",
             "This is something everyone has to like about beauty",
             "This MRQ is indeed very graceful",
-            "Nah, there isn\\'t any!"
+            "Nah, there aren\\'t any!"
         ]
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
