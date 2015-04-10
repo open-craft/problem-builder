@@ -104,7 +104,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         template_path = 'templates/html/{}.html'.format(name.lower())
 
-        context = context or {}
+        context = context.copy() if context else {}
         context['self'] = self
         context['custom_choices'] = self.custom_choices
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
