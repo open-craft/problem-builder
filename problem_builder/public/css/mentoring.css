@@ -42,12 +42,13 @@
     font-style: italic;
 }
 
-.mentoring h4 {
-    margin-bottom: 20px;
+.mentoring fieldset {
+    margin-top: 10px;
 }
 
-.mentoring h4 {
-    margin-top: 25px;
+.mentoring h3 {
+    margin-top: 0px;
+    margin-bottom: 7px;
 }
 
 .mentoring .submit {
@@ -62,6 +63,10 @@
 .mentoring legend {
     white-space: normal;
     display: table; /* Enable line-wrapping in IE8 */
+}
+
+.mentoring .choices legend.question p:last-child { /* Selector must be more specific than 'div.course-wrapper section.course-content p' */
+    margin-bottom: 0;
 }
 
 .mentoring .attempts {
