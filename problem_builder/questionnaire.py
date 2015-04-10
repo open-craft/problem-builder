@@ -20,14 +20,22 @@
 
 # Imports ###########################################################
 
+import logging
 from lxml import etree
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float, List, UNIQUE_ID
 from xblock.fragment import Fragment
+from xblock.mixins import XmlSerializationMixin
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
+try:
+    from xmodule.xml_module import XmlParserMixin
+except ImportError:
+    class XmlParserMixin(object):
+        """ This mixin is only needed in edx-platform """
+        pass
 
 from .choice import ChoiceBlock
 from .mentoring import MentoringBlock
@@ -37,6 +45,7 @@ from .tip import TipBlock
 # Globals ###########################################################
 
 loader = ResourceLoader(__name__)
+log = logging.getLogger(__name__)
 
 
 # Make '_' a no-op so we can scrape strings
@@ -47,7 +56,9 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, StepMixin, XBlock):
+class QuestionnaireAbstractBlock(
+    StudioEditableXBlockMixin, StudioContainerXBlockMixin, StepMixin, XmlParserMixin, XBlock
+):
     """
     An abstract class used for MCQ/MRQ blocks
 
@@ -206,3 +217,26 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
                 break
             values_with_tips.update(values)
         return validation
+
+    @classmethod
+    def definition_from_xml(cls, xml_object, system):
+        """
+        Method required by XmlParserMixin in order to fix broken importing in edx-platform
+        """
+        children = []
+        for child in xml_object:
+            try:
+                child_block = system.process_xml(etree.tostring(child, encoding='unicode'))  # pylint: disable=no-member
+                children.append(child_block.scope_ids.usage_id)
+            except Exception as exc:  # pylint: disable=broad-except
+                log.exception("Unable to load child when parsing Questionnaire subclass. Continuing...")
+                if system.error_tracker is not None:
+                    system.error_tracker(u"ERROR: {0}".format(exc))
+                continue
+        return {}, children
+
+    def add_xml_to_node(self, node):
+        """
+        Bypass XmlParserMixin and use standard XBlock serialization for export.
+        """
+        return XmlSerializationMixin.add_xml_to_node(self, node)
