@@ -33,10 +33,9 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         tryAgainDOM.show();
 
         var attempts_data = $('.attempts', element).data();
-        if (attempts_data.num_attempts >= attempts_data.max_attempts) {
+        if (attempts_data.max_attempts > 0 && attempts_data.num_attempts >= attempts_data.max_attempts) {
             tryAgainDOM.attr("disabled", "disabled");
-        }
-        else {
+        } else {
             tryAgainDOM.removeAttr("disabled");
         }
 
