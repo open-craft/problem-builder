@@ -335,6 +335,21 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         return {'result': 'ok'}
 
+    def get_message(self, completed):
+        if self.max_attempts_reached:
+            return self.get_message_html('max_attempts_reached')
+        elif completed:
+            return self.get_message_html('completed')
+        else:
+            return self.get_message_html('incomplete')
+
+    @property
+    def assessment_message(self):
+        if not self.max_attempts_reached:
+            return self.get_message_html('on-assessment-review')
+        else:
+            return None
+
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.info(u'Received submissions: {}'.format(submissions))
@@ -354,12 +369,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 child.save()
                 completed = completed and (child_result['status'] == 'correct')
 
-        if self.max_attempts_reached:
-            message = self.get_message_html('max_attempts_reached')
-        elif completed:
-            message = self.get_message_html('completed')
-        else:
-            message = self.get_message_html('incomplete')
+        message = self.get_message(completed)
 
         # Once it has been completed once, keep completion even if user changes values
         if self.completed:
@@ -416,6 +426,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         children = [self.runtime.get_block(child_id) for child_id in self.children]
         children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
         steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
+        assessment_message = None
 
         for child in children:
             if child.name and child.name in submissions:
@@ -451,6 +462,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                     'score_type': 'proficiency',
                 })
                 event_data['final_grade'] = score.raw
+                assessment_message = self.assessment_message
 
             self.num_attempts += 1
             self.completed = True
@@ -471,6 +483,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             'correct_answer': score.correct,
             'incorrect_answer': score.incorrect,
             'partially_correct_answer': score.partially_correct,
+            'assessment_message': assessment_message,
         }
 
     @XBlock.json_handler
