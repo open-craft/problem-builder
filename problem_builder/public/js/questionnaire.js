@@ -97,23 +97,24 @@ function MCQBlock(runtime, element) {
             }
         },
 
-        handleSubmit: function(result) {
-            if (this.mode === 'assessment')
-                return;
+        handleReview: function(result){
+            $('.choice input[value="' + result.submission + '"]', element).prop('checked', true);
+            $('.choice input', element).prop('disabled', true);
+        },
 
+        handleSubmit: function(result) {
 
             mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
             messageView.clearResult();
 
-            var choiceInputs = $('.choice input', element);
+            var choiceInputs = $('.choice-selector input', element);
             $.each(choiceInputs, function(index, choiceInput) {
                 var choiceInputDOM = $(choiceInput);
                 var choiceDOM = choiceInputDOM.closest('.choice');
                 var choiceResultDOM = $('.choice-result', choiceDOM);
                 var choiceTipsDOM = $('.choice-tips', choiceDOM);
-                var choiceTipsCloseDOM;
 
                 if (result.status === "correct" && choiceInputDOM.val() === result.submission) {
                     choiceDOM.addClass('correct');
@@ -129,7 +130,6 @@ function MCQBlock(runtime, element) {
                     messageView.showMessage(choiceTipsDOM);
                 }
 
-                choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                 choiceResultDOM.off('click').on('click', function() {
                     if (choiceTipsDOM.html() !== '') {
                         messageView.showMessage(choiceTipsDOM);
@@ -178,9 +178,14 @@ function MRQBlock(runtime, element) {
             return checkedValues;
         },
 
+        handleReview: function(result) {
+            $.each(result.submissions, function (index, value) {
+                $('input[type="checkbox"][value="' + value + '"]').prop('checked', true)
+            });
+            $('input', element).prop('disabled', true);
+        },
+
         handleSubmit: function(result, options) {
-            if (this.mode === 'assessment')
-                return;
 
             mentoring = this.mentoring;
 
@@ -193,14 +198,13 @@ function MRQBlock(runtime, element) {
 
             var questionnaireDOM = $('fieldset.questionnaire', element);
             var data = questionnaireDOM.data();
-            var hide_results = (data.hide_results === 'True') ? true : false;
+            var hide_results = (data.hide_results === 'True');
 
             $.each(result.choices, function(index, choice) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element);
                 var choiceDOM = choiceInputDOM.closest('.choice');
                 var choiceResultDOM = $('.choice-result', choiceDOM);
                 var choiceTipsDOM = $('.choice-tips', choiceDOM);
-                var choiceTipsCloseDOM;
 
                 /* show hint if checked or max_attempts is disabled */
                 if (!hide_results &&
@@ -215,7 +219,6 @@ function MRQBlock(runtime, element) {
 
                     mentoring.setContent(choiceTipsDOM, choice.tips);
 
-                    choiceTipsCloseDOM = $('.close', choiceTipsDOM);
                     choiceResultDOM.off('click').on('click', function() {
                         messageView.showMessage(choiceTipsDOM);
                     });

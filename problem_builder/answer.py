@@ -179,7 +179,8 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """ Normal view of this XBlock, identical to mentoring_view """
         return self.mentoring_view(context)
 
-    def get_results(self):
+    def get_results(self, previous_response=None):
+        # Previous result is actually stored in database table-- ignore.
         return {
             'student_input': self.student_input,
             'status': self.status,

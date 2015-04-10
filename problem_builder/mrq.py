@@ -81,9 +81,25 @@ class MRQBlock(QuestionnaireAbstractBlock):
             return self._(u"Ignored")
         return self._(u"Not Acceptable")
 
+    def get_results(self, previous_result):
+        """
+        Get the results a student has already submitted.
+        """
+        result = self.calculate_results(previous_result['submissions'])
+        result['completed'] = True
+        return result
+
+    def submit(self, submissions):
+        log.debug(u'Received MRQ submissions: "%s"', submissions)
+
+        result = self.calculate_results(submissions)
+        self.student_choices = submissions
+
+        log.debug(u'MRQ submissions result: %s', result)
+        return result
+
     def calculate_results(self, submissions):
         score = 0
-
         results = []
         for choice in self.custom_choices:
             choice_completed = True
@@ -125,18 +141,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'weight': self.weight,
             'score': (float(score) / len(results)) if results else 0,
         }
-
-    def get_results(self):
-        return self.calculate_results(self.student_choices)
-
-    def submit(self, submissions):
-        log.debug(u'Received MRQ submissions: "%s"', submissions)
-
-        result = self.calculate_results(submissions)
-        self.student_choices = submissions
-
-        log.debug(u'MRQ submissions result: %s', result)
-        return result
 
     def validate_field_data(self, validation, data):
         """

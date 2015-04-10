@@ -21,6 +21,7 @@
 # Imports ###########################################################
 
 import logging
+import json
 
 from collections import namedtuple
 
@@ -432,7 +433,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 # of the whole mentoring block being completed. This is because in standard mode, all children
                 # must be correct to complete the block. In assessment mode with extended feedback, completion
                 # happens when you're out of attempts, no matter how you did.
-                completed = choices[child.name]['status'] == 'correct'
+                completed = choices[child.name]['status']
                 break
 
         # The 'completed' message should always be shown in this case, since no more attempts are available.
@@ -510,7 +511,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         })
 
         return {
-            'submitResults': submit_results,
+            'results': submit_results,
             'completed': self.completed,
             'attempted': self.attempted,
             'message': message,
@@ -526,6 +527,8 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
         assessment_message = None
 
+        print children
+        print submissions
         for child in children:
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
@@ -565,6 +568,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             self.num_attempts += 1
             self.completed = True
 
+        print current_child
         event_data['exercise_id'] = current_child.name
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions
@@ -581,6 +585,10 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             'correct_answer': len(score.correct),
             'incorrect_answer': len(score.incorrect),
             'partially_correct_answer': len(score.partially_correct),
+            'correct': self.correct_json(stringify=False),
+            'incorrect': self.incorrect_json(stringify=False),
+            'partial': self.partial_json(stringify=False),
+            'extended_feedback': self.show_extended_feedback() or '',
             'assessment_message': assessment_message,
         }
 

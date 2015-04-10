@@ -136,3 +136,28 @@
 .mentoring input[type="radio"] {
     margin: 0;
 }
+
+.mentoring .review-list {
+    list-style: none;
+    padding-left: 0 !important;
+    margin-left: 0;
+}
+.mentoring .review-list li {
+    display: inline;
+}
+
+.mentoring .review-list li a{
+    font-weight: bold;
+}
+
+.mentoring .results-section {
+    float: left;
+}
+.mentoring .clear {
+    display: block;
+    clear: both;
+}
+
+.mentoring .review-link {
+    float: right;
+}

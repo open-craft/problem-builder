@@ -26,7 +26,11 @@
          data-partially_correct_answer="{{ self.score.4|length }}"
          data-max_attempts="{{ self.max_attempts }}"
          data-num_attempts="{{ self.num_attempts }}"
-         data-assessment_message="{{ self.assessment_message }}">
+         data-extended_feedback="{%if self.extended_feedback %}True{% endif %}"
+         data-assessment_message="{{ self.assessment_message }}"
+         data-correct="{{ self.correct_json }}"
+         data-incorrect="{{ self.incorrect_json }}"
+         data-partial="{{ self.partial_json }}">
     </div>
 
     <div class="assessment-messages"></div>
@@ -49,4 +53,5 @@
     {% endif %}
     <div class="messages"></div>
   </div>
+  <div class="review-link"><a href="#">Review final grade</a></div>
 </div>
