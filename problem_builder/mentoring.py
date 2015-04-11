@@ -527,8 +527,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
         assessment_message = None
 
-        print children
-        print submissions
         for child in children:
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
@@ -568,7 +566,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             self.num_attempts += 1
             self.completed = True
 
-        print current_child
         event_data['exercise_id'] = current_child.name
         event_data['num_attempts'] = self.num_attempts
         event_data['submitted_answer'] = submissions

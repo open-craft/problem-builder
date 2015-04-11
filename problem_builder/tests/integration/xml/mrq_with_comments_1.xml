@@ -1,5 +1,5 @@
 <vertical_demo>
-    <problem-builder url_name="mcq_with_comments" display_name="MRQ With Resizable popups" weight="1" enforce_dependency="false">
+    <problem-builder url_name="mrq_with_comments" display_name="MRQ With Resizable popups" weight="1" enforce_dependency="false">
         <pb-mrq name="mrq_1_1_7" question="What do you like in this MRQ?" required_choices='["elegance","gracefulness","beauty"]'>
             <pb-choice value="elegance">Its elegance</pb-choice>
             <pb-choice value="beauty">Its beauty</pb-choice>

@@ -276,7 +276,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
             num_attempts: response.num_attempts
         };
         var result = response.results[1];
-        var child = mentoring.children[active_child];
+        var child = mentoring.steps[active_child];
         callIfExists(child, 'handleSubmit', result, options);
         callIfExists(child, 'handleReview', result, options);
     }
