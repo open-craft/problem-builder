@@ -175,6 +175,7 @@ class TestDashboardBlock(SeleniumXBlockTest):
                 choices = mcq.find_elements_by_css_selector('.choices .choice label')
                 choices[idx].click()
             submit = pb.find_element_by_css_selector('.submit input.input-main')
+            self.assertTrue(submit.is_enabled())
             submit.click()
             self.wait_until_disabled(submit)
 
