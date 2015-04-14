@@ -2,14 +2,16 @@
     margin: 1em 0em;
 }
 
-.mentoring .messages {
+.mentoring .messages,
+.mentoring .assessment-messages {
     display: none;
     margin-top: 10px;
     border-top: 2px solid #eaeaea;
     padding: 12px 0px 20px;
 }
 
-.mentoring .messages .title1 {
+.mentoring .messages .title1,
+.mentoring .assessment-messages .title1 {
     color: #333333;
     text-transform: uppercase;
     font-weight: bold;
@@ -133,4 +135,29 @@
 .mentoring input[type="checkbox"],
 .mentoring input[type="radio"] {
     margin: 0;
+}
+
+.mentoring .review-list {
+    list-style: none;
+    padding-left: 0 !important;
+    margin-left: 0;
+}
+.mentoring .review-list li {
+    display: inline;
+}
+
+.mentoring .review-list li a{
+    font-weight: bold;
+}
+
+.mentoring .results-section {
+    float: left;
+}
+.mentoring .clear {
+    display: block;
+    clear: both;
+}
+
+.mentoring .review-link {
+    float: right;
 }

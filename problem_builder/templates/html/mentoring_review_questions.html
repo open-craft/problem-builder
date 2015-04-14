@@ -1,0 +1,8 @@
+<script type="text/template" id="xblock-review-questions-template">
+<% var q, last_question; %>
+<ul class="review-list <%= label %>-list">
+    <% for (var question in questions) {{ q = questions[question]; last_question = question == questions.length - 1; %>
+    <li><a href="#" class="question-link" data-step="<%= q.number %>"><%= _.template(gettext("Question {number}"), {number: q.number}, {interpolate: /\{(.+?)\}/g}) %></a></li>
+    <% }} %>
+</ul>
+</script>

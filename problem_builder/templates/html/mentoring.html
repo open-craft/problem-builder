@@ -21,12 +21,19 @@
     {% if self.display_submit %}
 
     <div class="grade" data-score="{{ self.score.1 }}"
-         data-correct_answer="{{ self.score.2 }}"
-         data-incorrect_answer="{{ self.score.3 }}"
-         data-partially_correct_answer="{{ self.score.4 }}"
+         data-correct_answer="{{ self.score.2|length }}"
+         data-incorrect_answer="{{ self.score.3|length }}"
+         data-partially_correct_answer="{{ self.score.4|length }}"
          data-max_attempts="{{ self.max_attempts }}"
-         data-num_attempts="{{ self.num_attempts }}">
+         data-num_attempts="{{ self.num_attempts }}"
+         data-extended_feedback="{%if self.extended_feedback %}True{% endif %}"
+         data-assessment_message="{{ self.assessment_message }}"
+         data-correct="{{ self.correct_json }}"
+         data-incorrect="{{ self.incorrect_json }}"
+         data-partial="{{ self.partial_json }}">
     </div>
+
+    <div class="assessment-messages"></div>
 
     <div class="submit">
       {% if self.mode == 'assessment' %}
@@ -46,4 +53,5 @@
     {% endif %}
     <div class="messages"></div>
   </div>
+  <div class="review-link"><a href="#">Review final grade</a></div>
 </div>

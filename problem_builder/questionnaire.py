@@ -21,10 +21,10 @@
 # Imports ###########################################################
 
 from django.utils.safestring import mark_safe
-import logging
-from lxml import etree
+from lazy import lazy
+import uuid
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Float, List, UNIQUE_ID
+from xblock.fields import Scope, String, Float, UNIQUE_ID
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
@@ -90,14 +90,14 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         """ translate text """
         return self.runtime.service(self, "i18n").ugettext(text)
 
-    @property
+    @lazy
     def html_id(self):
         """
         A short, simple ID string used to uniquely identify this question.
 
         This is only used by templates for matching <input> and <label> elements.
         """
-        return unicode(id(self))  # Unique as long as all choices are loaded at once
+        return uuid.uuid4().hex[:20]
 
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__

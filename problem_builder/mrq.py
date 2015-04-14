@@ -81,11 +81,25 @@ class MRQBlock(QuestionnaireAbstractBlock):
             return self._(u"Ignored")
         return self._(u"Not Acceptable")
 
+    def get_results(self, previous_result):
+        """
+        Get the results a student has already submitted.
+        """
+        result = self.calculate_results(previous_result['submissions'])
+        result['completed'] = True
+        return result
+
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 
-        score = 0
+        result = self.calculate_results(submissions)
+        self.student_choices = submissions
 
+        log.debug(u'MRQ submissions result: %s', result)
+        return result
+
+    def calculate_results(self, submissions):
+        score = 0
         results = []
         for choice in self.custom_choices:
             choice_completed = True
@@ -106,22 +120,20 @@ class MRQBlock(QuestionnaireAbstractBlock):
             choice_result = {
                 'value': choice.value,
                 'selected': choice_selected,
-            }
+                }
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
                 loader = ResourceLoader(__name__)
                 choice_result['completed'] = choice_completed
                 choice_result['tips'] = loader.render_template('templates/html/tip_choice_group.html', {
                     'tips_html': choice_tips_html,
-                })
+                    })
 
             results.append(choice_result)
 
-        self.student_choices = submissions
-
         status = 'incorrect' if score <= 0 else 'correct' if score >= len(results) else 'partial'
 
-        result = {
+        return {
             'submissions': submissions,
             'status': status,
             'choices': results,
@@ -129,9 +141,6 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'weight': self.weight,
             'score': (float(score) / len(results)) if results else 0,
         }
-
-        log.debug(u'MRQ submissions result: %s', result)
-        return result
 
     def validate_field_data(self, validation, data):
         """

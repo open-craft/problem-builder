@@ -179,6 +179,15 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """ Normal view of this XBlock, identical to mentoring_view """
         return self.mentoring_view(context)
 
+    def get_results(self, previous_response=None):
+        # Previous result is actually stored in database table-- ignore.
+        return {
+            'student_input': self.student_input,
+            'status': self.status,
+            'weight': self.weight,
+            'score': 1 if self.status == 'correct' else 0,
+        }
+
     def submit(self, submission):
         """
         The parent block is handling a student submission, including a new answer for this
@@ -187,12 +196,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         self.student_input = submission[0]['value'].strip()
         self.save()
         log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
-        return {
-            'student_input': self.student_input,
-            'status': self.status,
-            'weight': self.weight,
-            'score': 1 if self.status == 'correct' else 0,
-        }
+        return self.get_results()
 
     @property
     def status(self):

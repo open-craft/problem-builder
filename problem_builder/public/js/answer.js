@@ -17,14 +17,21 @@ function AnswerBlock(runtime, element) {
             return $(':input', element).serializeArray();
         },
 
+        handleReview: function(result) {
+            $('textarea', element).prop('disabled', true);
+        },
+
         handleSubmit: function(result) {
-            if (this.mode === 'assessment')
-                return;
 
             var checkmark = $('.answer-checkmark', element);
             $(element).find('.message').text((result || {}).error || '');
 
             this.clearResult();
+
+            if (this.mode === 'assessment') {
+                // Display of checkmark would be redundant.
+                return
+            }
 
             if (result.status === "correct") {
                 checkmark.addClass('checkmark-correct icon-ok fa-check');

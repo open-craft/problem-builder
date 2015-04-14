@@ -17,11 +17,13 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
+from ddt import ddt, unpack, data
 from .base_test import MentoringAssessmentBaseTest, GetChoices
 
 CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
 
 
+@ddt
 class MentoringAssessmentTest(MentoringAssessmentBaseTest):
     def _selenium_bug_workaround_scroll_to(self, mentoring, question):
         """Workaround for selenium bug:
@@ -190,19 +192,29 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self._assert_checkmark(mentoring, result)
         self.do_post(controls, last)
 
-    def peek_at_multiple_choice_question(self, number, mentoring, controls, last=False):
+    def peek_at_multiple_response_question(
+            self, number, mentoring, controls, last=False, extended_feedback=False, alternative_review=False
+    ):
         question = self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring, question)
         self.assertIn("What do you like in this MRQ?", mentoring.text)
 
-        self.assert_disabled(controls.submit)
-        self.ending_controls(controls, last)
+        if extended_feedback:
+            self.assert_disabled(controls.submit)
+            if alternative_review:
+                self.assert_clickable(controls.review_link)
+                self.assert_hidden(controls.try_again)
+            else:
+                self.assert_clickable(controls.review)
+        else:
+            self.assert_disabled(controls.submit)
+            self.ending_controls(controls, last)
 
         return question
 
-    def multiple_choice_question(self, number, mentoring, controls, choice_names, result, last=False):
-        question = self.peek_at_multiple_choice_question(number, mentoring, controls, last=last)
+    def multiple_response_question(self, number, mentoring, controls, choice_names, result, last=False):
+        question = self.peek_at_multiple_response_question(number, mentoring, controls, last=last)
 
         choices = GetChoices(question)
         expected_choices = {
@@ -227,11 +239,17 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self._assert_checkmark(mentoring, result)
         controls.review.click()
 
-    def peek_at_review(self, mentoring, controls, expected):
+    def peek_at_review(self, mentoring, controls, expected, extended_feedback=False):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), mentoring)
         self.assert_persistent_elements_present(mentoring)
         if expected["num_attempts"] < expected["max_attempts"]:
             self.assertIn("Note: if you retake this assessment, only your final score counts.", mentoring.text)
+            self.assertFalse(mentoring.find_elements_by_css_selector('.review-list'))
+        elif extended_feedback:
+            for q_type in ['correct', 'incorrect', 'partial']:
+                self.assertEqual(len(mentoring.find_elements_by_css_selector('.%s-list li' % q_type)), expected[q_type])
+        else:
+            self.assertFalse(mentoring.find_elements_by_css_selector('.review-list'))
         if expected["correct"] == 1:
             self.assertIn("You answered 1 questions correctly.".format(**expected), mentoring.text)
         else:
@@ -255,27 +273,70 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_hidden(controls.submit)
         self.assert_hidden(controls.next_question)
         self.assert_hidden(controls.review)
+        self.assert_hidden(controls.review_link)
 
-    def test_assessment(self):
-        mentoring, controls = self.go_to_assessment("Assessment 1")
+    def assert_messages_text(self, mentoring, text):
+        messages = mentoring.find_element_by_css_selector('.assessment-messages')
+        self.assertEqual(messages.text, text)
+        self.assertTrue(messages.is_displayed())
+
+    def assert_messages_empty(self, mentoring):
+        messages = mentoring.find_element_by_css_selector('.assessment-messages')
+        self.assertEqual(messages.text, '')
+        self.assertFalse(messages.find_elements_by_xpath('./*'))
+        self.assertFalse(messages.is_displayed())
+
+    def extended_feedback_checks(self, mentoring, controls, expected_results):
+        # Multiple choice is third correctly answered question
+        self.assert_hidden(controls.review_link)
+        mentoring.find_elements_by_css_selector('.correct-list li a')[2].click()
+        self.peek_at_multiple_response_question(4, mentoring, controls, extended_feedback=True, alternative_review=True)
+        # Four correct items, plus the overall correct indicator.
+        correct_marks = mentoring.find_elements_by_css_selector('.checkmark-correct')
+        incorrect_marks = mentoring.find_elements_by_css_selector('.checkmark-incorrect')
+        self.assertEqual(len(correct_marks), 5)
+        self.assertEqual(len(incorrect_marks), 0)
+        item_feedbacks = [
+            "This is something everyone has to like about this MRQ",
+            "This is something everyone has to like about this MRQ",
+            "This MRQ is indeed very graceful",
+            "Nah, there aren't any!"
+        ]
+        self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1"]', do_submit=False)
+        self.assert_hidden(controls.review)
+        self.assert_disabled(controls.submit)
+        controls.review_link.click()
+        self.peek_at_review(mentoring, controls, expected_results, extended_feedback=True)
+        # Rating question, right before MRQ.
+        mentoring.find_elements_by_css_selector('.incorrect-list li a')[0].click()
+        # Should be possible to visit the MRQ from there.
+        self.wait_until_clickable(controls.next_question)
+        controls.next_question.click()
+        self.peek_at_multiple_response_question(4, mentoring, controls, extended_feedback=True, alternative_review=True)
+
+    @data((1, False), ('Extended Feedback', True))
+    @unpack
+    def test_assessment(self, assessment, extended_feedback):
+        mentoring, controls = self.go_to_assessment("Assessment %s" % assessment)
 
         self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT)
         self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
         self.rating_question(3, mentoring, controls, "5 - Extremely good", CORRECT)
-        self.peek_at_multiple_choice_question(4, mentoring, controls, last=True)
+        self.peek_at_multiple_response_question(4, mentoring, controls, last=True)
 
         # see if assessment remembers the current step
         self.go_to_workbench_main_page()
-        mentoring, controls = self.go_to_assessment("Assessment 1")
+        mentoring, controls = self.go_to_assessment("Assessment %s" % assessment)
 
-        self.multiple_choice_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
+        self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
 
         expected_results = {
             "correct": 2, "partial": 1, "incorrect": 1, "percentage": 63,
             "num_attempts": 1, "max_attempts": 2
         }
-        self.peek_at_review(mentoring, controls, expected_results)
+        self.peek_at_review(mentoring, controls, expected_results, extended_feedback=extended_feedback)
 
+        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
 
@@ -286,14 +347,17 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.rating_question(3, mentoring, controls, "1 - Not good at all", INCORRECT)
 
         user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
-        self.multiple_choice_question(4, mentoring, controls, user_selection, CORRECT, last=True)
+        self.multiple_response_question(4, mentoring, controls, user_selection, CORRECT, last=True)
 
         expected_results = {
             "correct": 3, "partial": 0, "incorrect": 1, "percentage": 75,
             "num_attempts": 2, "max_attempts": 2
         }
-        self.peek_at_review(mentoring, controls, expected_results)
+        self.peek_at_review(mentoring, controls, expected_results, extended_feedback=extended_feedback)
         self.assert_disabled(controls.try_again)
+        self.assert_messages_empty(mentoring)
+        if extended_feedback:
+            self.extended_feedback_checks(mentoring, controls, expected_results)
 
     def test_single_question_assessment(self):
         """
@@ -308,6 +372,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         }
 
         self.peek_at_review(mentoring, controls, expected_results)
+        self.assert_messages_empty(mentoring)
 
         controls.try_again.click()
         # this is a wait and assertion all together - it waits until expected text is in mentoring block

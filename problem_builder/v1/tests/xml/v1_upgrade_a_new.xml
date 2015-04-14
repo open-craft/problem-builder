@@ -29,7 +29,7 @@
     <pb-choice value="bugs">Its bugs</pb-choice>
     <pb-tip values='["gracefulness"]'>This MRQ is indeed very graceful</pb-tip>
     <pb-tip values='["elegance","beauty"]'>This is something everyone has to like about this MRQ</pb-tip>
-    <pb-tip values='["bugs"]'>Nah, there isn't any!</pb-tip>
+    <pb-tip values='["bugs"]'>Nah, there aren't any!</pb-tip>
   </pb-mrq>
   <pb-message type="completed">
     <p>Congratulations!</p>

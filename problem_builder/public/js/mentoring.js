@@ -60,7 +60,7 @@ function MentoringBlock(runtime, element) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
             return obj[fn].apply(obj, Array.prototype.slice.call(arguments, 2));
         } else {
-            return undefined;
+            return null;
         }
     }
 

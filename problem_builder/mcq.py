@@ -74,14 +74,14 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
                 return self._(u"Wrong")
             return self._(u"Not Acceptable")
 
-    def submit(self, submission):
-        log.debug(u'Received MCQ submission: "%s"', submission)
-
+    def calculate_results(self, submission):
         correct = submission in self.correct_choices
         tips_html = []
         for tip in self.get_tips():
             if submission in tip.values:
                 tips_html.append(tip.render('mentoring_view').content)
+
+        formatted_tips = None
 
         if tips_html:
             formatted_tips = loader.render_template('templates/html/tip_choice_group.html', {
@@ -94,13 +94,21 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
             # Also send to the submissions API:
             sub_api.create_submission(self.student_item_key, submission)
 
-        result = {
+        return {
             'submission': submission,
             'status': 'correct' if correct else 'incorrect',
-            'tips': formatted_tips if tips_html else None,
+            'tips': formatted_tips,
             'weight': self.weight,
             'score': 1 if correct else 0,
         }
+
+    def get_results(self, previous_result):
+        return self.calculate_results(previous_result['submission'])
+
+    def submit(self, submission):
+        log.debug(u'Received MCQ submission: "%s"', submission)
+        result = self.calculate_results(submission)
+        self.student_choice = submission
         log.debug(u'MCQ submission result: %s', result)
         return result
 

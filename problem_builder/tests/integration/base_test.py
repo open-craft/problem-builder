@@ -32,6 +32,30 @@ class MentoringBaseTest(SeleniumBaseTest):
     module_name = __name__
     default_css_selector = 'div.mentoring'
 
+    def popup_check(self, mentoring, item_feedbacks, prefix='', do_submit=True):
+
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+
+        for index, expected_feedback in enumerate(item_feedbacks):
+            choice_wrapper = mentoring.find_elements_by_css_selector(prefix + " .choice")[index]
+            if do_submit:
+                # clicking on actual radio button
+                choice_wrapper.find_element_by_css_selector(".choice-selector input").click()
+                submit.click()
+            self.wait_until_disabled(submit)
+            item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
+            choice_wrapper.click()
+            item_feedback_icon.click()  # clicking on item feedback icon
+            item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
+            self.assertTrue(item_feedback_popup.is_displayed())
+            self.assertEqual(item_feedback_popup.text, expected_feedback)
+
+            item_feedback_popup.click()
+            self.assertTrue(item_feedback_popup.is_displayed())
+
+            mentoring.click()
+            self.assertFalse(item_feedback_popup.is_displayed())
+
 
 class MentoringAssessmentBaseTest(MentoringBaseTest):
     @staticmethod
@@ -54,6 +78,7 @@ class MentoringAssessmentBaseTest(MentoringBaseTest):
         controls.next_question = mentoring.find_element_by_css_selector("input.input-next")
         controls.review = mentoring.find_element_by_css_selector("input.input-review")
         controls.try_again = mentoring.find_element_by_css_selector("input.input-try-again")
+        controls.review_link = mentoring.find_element_by_css_selector(".review-link a")
 
         return mentoring, controls
 
