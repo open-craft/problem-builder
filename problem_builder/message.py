@@ -56,7 +56,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
             {"display_name": "Completed", "value": "completed"},
             {"display_name": "Incompleted", "value": "incomplete"},
             {"display_name": "Reached max. # of attemps", "value": "max_attempts_reached"},
-            {"display_name": "Review with attempts left", "value": "on_assessment_review"}
+            {"display_name": "Review with attempts left", "value": "on-assessment-review"}
         ),
     )
     editable_fields = ("content", )

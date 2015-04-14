@@ -180,7 +180,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
     editable_fields = (
         'display_name', 'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
-        'display_submit', 'weight',
+        'display_submit', 'weight', 'extended_feedback'
     )
     icon_class = 'problem'
     has_score = True
