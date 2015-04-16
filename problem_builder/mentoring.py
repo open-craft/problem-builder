@@ -505,15 +505,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 html += child.render('mentoring_view', {}).content  # TODO: frament_text_rewriting ?
         return html
 
-    def clean_studio_edits(self, data):
-        """
-        Given POST data dictionary 'data', clean the data before validating it.
-        e.g. fix capitalization, remove trailing spaces, etc.
-        """
-        if data.get('mode') == 'assessment' and 'max_attempts' not in data:
-            # assessment has a default of 2 max_attempts
-            data['max_attempts'] = 2
-
     def validate(self):
         """
         Validates the state of this XBlock except for individual field values.

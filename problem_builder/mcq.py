@@ -133,9 +133,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
         all_values = set(self.all_choice_values)
         correct = set(data.correct_choices)
 
-        if not all_values:
-            add_error(self._(u"No choices set yet."))
-        elif not correct:
+        if all_values and not correct:
             add_error(
                 self._(u"You must indicate the correct answer[s], or the student will always get this question wrong.")
             )
