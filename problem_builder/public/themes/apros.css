@@ -1,0 +1,9 @@
+.mentoring .questionnaire .choice-tips,
+.mentoring .questionnaire .feedback {
+    box-sizing: content-box;  /* Avoid a global reset to border-box found on Apros */
+}
+
+.themed-xblock.mentoring .choices-list .choice-selector {
+    padding: 4px 3px 0 3px;
+    font-size: 16px;
+}
