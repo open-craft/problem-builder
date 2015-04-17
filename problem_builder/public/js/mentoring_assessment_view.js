@@ -196,7 +196,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         if (fire_event) {
             mentoring.publish_event({
                 event_type: 'xblock.problem_builder.assessment.shown',
-                exercise_id: child.name
+                exercise_id: child.name.toString()
             });
         }
     }
@@ -291,7 +291,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         var data = {};
         var child = mentoring.steps[active_child];
         if (child && child.name !== undefined) {
-            data[child.name] = callIfExists(child, handler_name);
+            data[child.name.toString()] = callIfExists(child, handler_name);
         }
         var handlerUrl = runtime.handlerUrl(element, handler_name);
         if (submitXHR) {
