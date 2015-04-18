@@ -73,7 +73,7 @@ class RemoveTitle(Change):
         return node.tag == "title" and node.getparent().tag == "problem-builder"
 
     def apply(self):
-        title = self.node.text.strip()
+        title = self.node.text.strip() if self.node.text else u''
         p = self.node.getparent()
         old_display_name = p.get("display_name")
         if old_display_name and old_display_name != title:
