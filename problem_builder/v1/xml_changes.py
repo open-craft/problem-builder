@@ -77,7 +77,9 @@ class RemoveTitle(Change):
         p = self.node.getparent()
         old_display_name = p.get("display_name")
         if old_display_name and old_display_name != title:
-            warnings.warn('Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title))
+            warnings.warn(
+                u'Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title)
+            )
         p.attrib["display_name"] = title
         p.remove(self.node)
 
