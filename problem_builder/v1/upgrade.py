@@ -76,7 +76,7 @@ def upgrade_block(block):
     root.attrib["xml_content"] = xml_content_str
 
     # Was block already published?
-    parent = block.runtime.get_block(block.parent)  # Don't use get_parent() as it may be an outdated cached version
+    parent = store.get_item(block.parent)  # Don't use get_parent()/get_block() as it may be an outdated cached version
     parent_was_published = not store.has_changes(parent)
 
     old_usage_id = block.location
