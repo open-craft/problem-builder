@@ -36,7 +36,7 @@ from .mcq import MCQBlock
 from .sub_api import sub_api
 from lazy import lazy
 from xblock.core import XBlock
-from xblock.fields import Scope, List, String
+from xblock.fields import Scope, List, String, Boolean, Dict
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
@@ -172,6 +172,20 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         ).format(example_here='["2754b8afc03a439693b9887b6f1d9e36", "215028f7df3d4c68b14fb5fea4da7053"]'),
         scope=Scope.settings,
     )
+    exclude_questions = Dict(
+        display_name=_("Questions to be hidden"),
+        help=_(
+            "Optional rules to exclude specific questions both from displaying in dashboard and from the calculated "
+            "average. Rules must start with the url_name of a mentoring block, followed by list of question numbers "
+            "to exclude. Rule set must be in JSON format. Question numbers are one-based (the first question being "
+            "number 1). Must be in JSON format. Examples: {examples_here}"
+        ).format(
+            examples_here='{"2754b8afc03a439693b9887b6f1d9e36":[1,2], "215028f7df3d4c68b14fb5fea4da7053":[1,5]}'
+        ),
+        scope=Scope.content,
+        multiline_editor=True,
+        resettable_editor=False,
+    )
     color_rules = String(
         display_name=_("Color Coding Rules"),
         help=_(
@@ -207,8 +221,23 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         ),
         scope=Scope.content,
     )
+    average_label = String(
+        display_name=_("Label for average value"),
+        default=_("Average"),
+        help=_("Label to be shown for calculated average"),
+        scope=Scope.content,
+    )
+    show_numbers = Boolean(
+        display_name=_("Display values"),
+        default=True,
+        help=_("Toggles if numeric values are displayed"),
+        scope=Scope.content
+    )
 
-    editable_fields = ('display_name', 'mentoring_ids', 'color_rules', 'visual_rules', 'visual_title', 'visual_desc')
+    editable_fields = (
+        'display_name', 'mentoring_ids', 'exclude_questions', 'average_label', 'show_numbers',
+        'color_rules', 'visual_rules', 'visual_title', 'visual_desc'
+    )
     css_path = 'public/css/dashboard.css'
     js_path = 'public/js/dashboard.js'
 
@@ -321,6 +350,12 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             except Exception:
                 return ""
 
+    def _get_problem_questions(self, mentoring_block):
+        """ Generator returning only children of specified block that are MCQs """
+        for child_id in mentoring_block.children:
+            if child_isinstance(mentoring_block, child_id, MCQBlock):
+                yield child_id
+
     def student_view(self, context=None):  # pylint: disable=unused-argument
         """
         Standard view of this XBlock.
@@ -336,20 +371,35 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 'display_name': mentoring_block.display_name,
                 'mcqs': []
             }
-            for child_id in mentoring_block.children:
-                if child_isinstance(mentoring_block, child_id, MCQBlock):
-                    # Get the student's submitted answer to this MCQ from the submissions API:
-                    mcq_block = self.runtime.get_block(child_id)
-                    mcq_submission_key = self._get_submission_key(child_id)
-                    try:
-                        value = sub_api.get_submissions(mcq_submission_key, limit=1)[0]["answer"]
-                    except IndexError:
-                        value = None
-                    block['mcqs'].append({
-                        "display_name": mcq_block.display_name_with_default,
-                        "value": value,
-                        "color": self.color_for_value(value) if value is not None else None,
-                    })
+            try:
+                hide_questions = self.exclude_questions.get(mentoring_block.url_name, [])
+            except Exception:  # pylint: disable=broad-except-clause
+                log.exception("Cannot parse exclude_questions setting - probably malformed: %s", self.exclude_questions)
+                hide_questions = []
+
+            for question_number, child_id in enumerate(self._get_problem_questions(mentoring_block), 1):
+                try:
+                    if question_number in hide_questions:
+                        continue
+                except TypeError:
+                    log.exception(
+                        "Cannot check question number - expected list of ints got: %s",
+                        hide_questions
+                    )
+
+                # Get the student's submitted answer to this MCQ from the submissions API:
+                mcq_block = self.runtime.get_block(child_id)
+                mcq_submission_key = self._get_submission_key(child_id)
+                try:
+                    value = sub_api.get_submissions(mcq_submission_key, limit=1)[0]["answer"]
+                except IndexError:
+                    value = None
+
+                block['mcqs'].append({
+                    "display_name": mcq_block.display_name_with_default,
+                    "value": value,
+                    "color": self.color_for_value(value) if value is not None else None,
+                })
             # If the values are numeric, display an average:
             numeric_values = [
                 float(mcq['value']) for mcq in block['mcqs']
@@ -384,6 +434,8 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             'blocks': blocks,
             'display_name': self.display_name,
             'visual_repr': visual_repr,
+            'average_label': self.average_label,
+            'show_numbers': self.show_numbers,
         })
 
         fragment = Fragment(html)
@@ -405,6 +457,14 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             list(self.get_mentoring_blocks(data.mentoring_ids, ignore_errors=False))
         except InvalidUrlName as e:
             add_error(_(u'Invalid block url_name given: "{bad_url_name}"').format(bad_url_name=unicode(e)))
+
+        if data.exclude_questions:
+            for key, value in data.exclude_questions.iteritems():
+                if not isinstance(value, list):
+                    add_error(
+                        _(u"Exclude questions is malformed: value for key {key} is {value}, expected list of integers")
+                        .format(key=key, value=value)
+                    )
 
         if data.color_rules:
             try:
