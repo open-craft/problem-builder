@@ -131,7 +131,8 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         display_name=_("Question"),
         help=_("Question to ask the student"),
         scope=Scope.content,
-        default=""
+        default="",
+        multiline_editor=True,
     )
     weight = Float(
         display_name=_("Weight"),

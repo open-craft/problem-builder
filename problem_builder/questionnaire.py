@@ -68,7 +68,8 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         display_name=_("Question"),
         help=_("Question to ask the student"),
         scope=Scope.content,
-        default=""
+        default="",
+        multiline_editor=True,
     )
     message = String(
         display_name=_("Message"),
