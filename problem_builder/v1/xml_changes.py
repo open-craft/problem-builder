@@ -283,6 +283,9 @@ class TipChanges(Change):
                 warnings.warn("Invalid <tip> element found.")
                 return
         self.node.attrib["values"] = value
+        if (self.node.text is None or self.node.text.strip() == "") and not list(self.node):
+            # This tip is blank.
+            p.remove(self.node)
 
 
 class AlternatingHTMLToQuestions(Change):

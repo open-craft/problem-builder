@@ -26,7 +26,6 @@
   </pb-mcq>
   <pb-rating name="frog-important" low="Not at all important to me" high="Very important to me" question="How important is it to you?" correct_choices='["4","5","1","2","3","understand"]'>
     <pb-choice value="understand">I don't understand</pb-choice>
-    <pb-tip values='["4","5"]'>Great!</pb-tip>
     <pb-tip values='["1","2","3"]'>The Trial of Uruk-Shan helps you uncover some of the core beliefs and assumptions you have held that are preventing you from making change.</pb-tip>
     <pb-tip values='["understand"]'>A frog is important if it is one that could make a big difference in helping you reach your frogs in your work life or your personal life (or both).</pb-tip>
   </pb-rating>
