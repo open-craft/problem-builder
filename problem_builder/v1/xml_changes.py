@@ -66,8 +66,20 @@ class PrefixTags(Change):
         self.node.tag = "pb-" + self.node.tag
 
 
+class HideTitle(Change):
+    """
+    If no <title> element is present, set hide_title="true"
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag == "problem-builder" and node.find("title") is None
+
+    def apply(self):
+        self.node.attrib["show_title"] = "false"
+
+
 class RemoveTitle(Change):
-    """ The old <title> element is now an attribute of <mentoring> """
+    """ The old <title> element is now an attribute of <problem-builder> """
     @staticmethod
     def applies_to(node):
         return node.tag == "title" and node.getparent().tag == "problem-builder"
@@ -368,6 +380,7 @@ class CommaSeparatedListToJson(Change):
 xml_changes = (
     RenameMentoringTag,
     PrefixTags,
+    HideTitle,
     RemoveTitle,
     UnwrapHTML,
     RenameTableTag,

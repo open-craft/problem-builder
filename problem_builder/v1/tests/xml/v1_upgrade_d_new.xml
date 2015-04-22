@@ -1,4 +1,4 @@
-<problem-builder url_name="some_url_name" weight="1" mode="assessment" max_attempts="2">
+<problem-builder url_name="some_url_name" weight="1" mode="assessment" max_attempts="2" show_title="false">
   <pb-mcq name="M1" question="&lt;span&gt;&lt;i&gt;Review the following information. Then select the best answer and click &lt;b&gt;Submit.&lt;/b&gt; Click &lt;strong&gt;Next Question&lt;/strong&gt; to proceed.&lt;/i&gt;&lt;/span&gt;&lt;br&gt;&lt;br&gt;If all elephants eat porridge, and some porridge is blue, do all elephants eat blue porridge?">
     <pb-choice value="y">Yes</pb-choice>
     <pb-choice value="n">No</pb-choice>
