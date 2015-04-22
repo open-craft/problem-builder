@@ -18,11 +18,9 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import ddt
 from .base_test import MentoringBaseTest
 
 
-@ddt.ddt
 class MultipleBlockTest(MentoringBaseTest):
     """
     Test that multiple Problem Builder blocks can happily co-exist on a page.
