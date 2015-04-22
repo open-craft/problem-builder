@@ -282,7 +282,7 @@ class TipChanges(Change):
             elif self.node.attrib.get("reject"):
                 value = self.node.attrib.pop("reject")
             else:
-                warnings.warn("Invalid <tip> element found.")
+                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
                 return
         else:
             # This is an MCQ or Rating question:
@@ -291,8 +291,12 @@ class TipChanges(Change):
                 add_to_list("correct_choices", value)
             elif self.node.attrib.get("reject"):
                 value = self.node.attrib.pop("reject")
+            elif self.node.attrib.get("require"):
+                value = self.node.attrib.pop("require")
+                add_to_list("correct_choices", value)
+                warnings.warn(u"<tip> element in an MCQ/Rating used 'require' rather than 'display'")
             else:
-                warnings.warn("Invalid <tip> element found.")
+                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
                 return
         self.node.attrib["values"] = value
         if (self.node.text is None or self.node.text.strip() == "") and not list(self.node):
