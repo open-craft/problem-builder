@@ -9,9 +9,9 @@
     {% endwith %}
   </div>
 
-  {% if title %}
+  {% if show_title and title %}
   <div class="title">
-    {% if title %} <h2>{{ title }}</h2> {% endif %}
+    <h2>{{ title }}</h2>
   </div>
   {% endif %}
 

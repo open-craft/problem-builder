@@ -22,11 +22,38 @@ Test that the various title/display_name options for Answer and MCQ/MRQ/Ratings 
 """
 
 # Imports ###########################################################
+import ddt
 from mock import patch
 from xblockutils.base_test import SeleniumXBlockTest
 
 
 # Classes ###########################################################
+
+
+@ddt.ddt
+class TitleTest(SeleniumXBlockTest):
+    """
+    Test the various display_name/show_title options for Problem Builder
+    """
+
+    @ddt.data(
+        ('<problem-builder show_title="false"><pb-answer name="a"/></problem-builder>', None),
+        ('<problem-builder><pb-answer name="a"/></problem-builder>', "Mentoring Questions"),
+        ('<problem-builder mode="assessment"><pb-answer name="a"/></problem-builder>', "Mentoring Questions"),
+        ('<problem-builder display_name="A Question"><pb-answer name="a"/></problem-builder>', "A Question"),
+        ('<problem-builder display_name="A Question" show_title="false"><pb-answer name="a"/></problem-builder>', None),
+    )
+    @ddt.unpack
+    def test_title(self, xml, expected_title):
+        self.set_scenario_xml(xml)
+        pb_element = self.go_to_view()
+        if expected_title is not None:
+            h2 = pb_element.find_element_by_css_selector('h2')
+            self.assertEqual(h2.text, expected_title)
+        else:
+            # No <h2> element should be present:
+            all_h2s = pb_element.find_elements_by_css_selector('h2')
+            self.assertEqual(len(all_h2s), 0)
 
 
 class StepTitlesTest(SeleniumXBlockTest):

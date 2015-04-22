@@ -83,11 +83,13 @@ function MentoringStandardView(runtime, element, mentoring) {
         };
 
         mentoring.initChildren(options);
-
-        mentoring.renderAttempts();
         mentoring.renderDependency();
 
-        validateXBlock();
+        var submitPossible = submitDOM.length > 0;
+        if (submitPossible) {
+            mentoring.renderAttempts();
+            validateXBlock();
+        } // else display_submit is false and this is read-only
     }
 
     // validate all children

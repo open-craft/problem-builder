@@ -121,6 +121,12 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         scope=Scope.content,
         multiline_editor=True
     )
+    show_title = Boolean(
+        display_name=_("Show title"),
+        help=_("Display the title?"),
+        default=True,
+        scope=Scope.content
+    )
 
     # Settings
     weight = Float(
@@ -281,6 +287,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.add_content(loader.render_template('templates/html/mentoring.html', {
             'self': self,
             'title': self.display_name,
+            'show_title': self.show_title,
             'child_content': child_content,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))

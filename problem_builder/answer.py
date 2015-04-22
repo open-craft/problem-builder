@@ -131,7 +131,8 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         display_name=_("Question"),
         help=_("Question to ask the student"),
         scope=Scope.content,
-        default=""
+        default="",
+        multiline_editor=True,
     )
     weight = Float(
         display_name=_("Weight"),
@@ -164,7 +165,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
-        context = context or {}
+        context = context.copy() if context else {}
         context['self'] = self
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
         html = loader.render_template('templates/html/answer_editable.html', context)
@@ -270,7 +271,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
-        context = context or {}
+        context = context.copy() if context else {}
         context['title'] = self.display_name
         context['description'] = self.description
         context['student_input'] = self.student_input

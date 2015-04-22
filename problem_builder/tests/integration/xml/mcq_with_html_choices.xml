@@ -1,6 +1,6 @@
 <vertical_demo>
     <problem-builder url_name="mcq_with_comments" display_name="MCQ With Resizable popups" weight="1" enforce_dependency="false">
-        <pb-mcq name="mrq_1_1_7" question="What do you like in this MCQ?" correct_choices='["gracefulness","elegance","beauty"]'>
+        <pb-mcq name="mrq_1_1_7" question="What do &lt;strong&gt;you&lt;/strong&gt; like in this MCQ?" correct_choices='["gracefulness","elegance","beauty"]'>
             <pb-choice value="elegance"><strong>Its elegance</strong></pb-choice>
             <pb-choice value="beauty"><em>Its beauty</em></pb-choice>
             <pb-choice value="gracefulness"><strong>Its gracefulness</strong></pb-choice>

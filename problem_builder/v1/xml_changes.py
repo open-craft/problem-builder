@@ -66,18 +66,32 @@ class PrefixTags(Change):
         self.node.tag = "pb-" + self.node.tag
 
 
+class HideTitle(Change):
+    """
+    If no <title> element is present, set hide_title="true"
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag == "problem-builder" and node.find("title") is None
+
+    def apply(self):
+        self.node.attrib["show_title"] = "false"
+
+
 class RemoveTitle(Change):
-    """ The old <title> element is now an attribute of <mentoring> """
+    """ The old <title> element is now an attribute of <problem-builder> """
     @staticmethod
     def applies_to(node):
         return node.tag == "title" and node.getparent().tag == "problem-builder"
 
     def apply(self):
-        title = self.node.text.strip()
+        title = self.node.text.strip() if self.node.text else u''
         p = self.node.getparent()
         old_display_name = p.get("display_name")
         if old_display_name and old_display_name != title:
-            warnings.warn('Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title))
+            warnings.warn(
+                u'Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title)
+            )
         p.attrib["display_name"] = title
         p.remove(self.node)
 
@@ -268,7 +282,7 @@ class TipChanges(Change):
             elif self.node.attrib.get("reject"):
                 value = self.node.attrib.pop("reject")
             else:
-                warnings.warn("Invalid <tip> element found.")
+                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
                 return
         else:
             # This is an MCQ or Rating question:
@@ -277,10 +291,67 @@ class TipChanges(Change):
                 add_to_list("correct_choices", value)
             elif self.node.attrib.get("reject"):
                 value = self.node.attrib.pop("reject")
+            elif self.node.attrib.get("require"):
+                value = self.node.attrib.pop("require")
+                add_to_list("correct_choices", value)
+                warnings.warn(u"<tip> element in an MCQ/Rating used 'require' rather than 'display'")
             else:
-                warnings.warn("Invalid <tip> element found.")
+                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
                 return
         self.node.attrib["values"] = value
+        if (self.node.text is None or self.node.text.strip() == "") and not list(self.node):
+            # This tip is blank.
+            p.remove(self.node)
+
+
+class AlternatingHTMLToQuestions(Change):
+    """
+    In mentoring v1, an assessment could have XML like this:
+        <mentoring mode="assessment"...>
+            <html>Question 1 introduction text</html>
+            <mcq name="Q1" type="choices"><question>Question 1</question>...</mcq>
+            <html>Question 2 introduction text</html>
+            <mcq name="Q2" type="choices"><question>Question 2</question>...</mcq>
+            ...
+        </mentoring>
+    Notice that nearest-sibling HTML and MCQ tags are meant to be displayed together.
+    This migration changes that to:
+        <mentoring mode="assessment"...>
+            <mcq name="Q1" question="Question 1 introduction text. Question 1">...</mcq>
+            <mcq name="Q2" question="Question 2 introduction text. Question 2">...</mcq>
+            ...
+        </mentoring>
+
+    QuestionToField (<question> tag converted to attribute) must already be applied, and
+    SharedHeaderToHTML must not yet be applied.
+    """
+    @staticmethod
+    def applies_to(node):
+        return (
+            node.tag == "html" and
+            node.getparent().attrib.get("mode") == "assessment" and
+            node.getnext() is not None and
+            node.getnext().tag in ("pb-answer", "pb-mcq", "pb-mrq", "pb-rating")
+        )
+
+    def apply(self):
+        html_content = u""
+        for child in list(self.node):
+            if child.tag == "p":
+                # This HTML will ultimately be rendered inside a <p> so it can't be a <p> as well:
+                child.tag = "span"
+                tail = child.tail if child.tail else u""
+                child.tail = u""
+                html_content += etree.tostring(child) + u"<br><br>" + tail
+            else:
+                html_content += etree.tostring(child)
+
+        q = self.node.getnext()
+        existing_question = q.attrib.get('question', '')
+        q.attrib["question"] = u"{}{}".format(html_content, existing_question)
+
+        p = self.node.getparent()
+        p.remove(self.node)
 
 
 class SharedHeaderToHTML(Change):
@@ -313,6 +384,7 @@ class CommaSeparatedListToJson(Change):
 xml_changes = (
     RenameMentoringTag,
     PrefixTags,
+    HideTitle,
     RemoveTitle,
     UnwrapHTML,
     RenameTableTag,
@@ -323,6 +395,7 @@ xml_changes = (
     QuestionToField,
     QuestionSubmitMessageToField,
     TipChanges,
+    AlternatingHTMLToQuestions,
     SharedHeaderToHTML,
     CommaSeparatedListToJson,
 )

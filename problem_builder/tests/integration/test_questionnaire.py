@@ -212,6 +212,13 @@ class QuestionnaireBlockTest(MentoringBaseTest):
     )
     def test_questionnaire_html_choices(self, page):
         mentoring = self.go_to_page(page)
+
+        question = mentoring.find_element_by_css_selector('legend p')
+        self.assertIn(
+            'What do <strong>you</strong> like in this ',
+            question.get_attribute('innerHTML').strip()
+        )
+
         choices_list = mentoring.find_element_by_css_selector(".choices-list")
         messages = mentoring.find_element_by_css_selector('.messages')
 
