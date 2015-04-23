@@ -40,6 +40,7 @@
     padding: 22px 10px 10px 10px;
     width: 300px;
     min-height: 40px;
+    max-height: 180px;
     z-index: 10000;
 }
 
@@ -54,6 +55,8 @@
 .mentoring .questionnaire .feedback .message-content {
     position: relative;
     overflow-y: auto;
+    line-height: normal;
+    max-height: 180px;
 }
 
 .mentoring .questionnaire .choice-tips .close,
