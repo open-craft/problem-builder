@@ -29,10 +29,11 @@ class Answer(models.Model):
     """
     Django model used to store AnswerBlock data that need to be shared
     and queried accross XBlock instances (workaround).
+
+    TODO: Deprecate this and move to edx-submissions
     """
 
     class Meta:
-        db_table = 'mentoring_answer'
         unique_together = (('student_id', 'course_id', 'name'),)
 
     name = models.CharField(max_length=50, db_index=True)
