@@ -1,0 +1,22 @@
+<h3>Data Export</h3>
+
+<script>
+
+</script>
+
+<p><button class="new-data-export">Start a new export</button></p>
+
+{% if last_export_result %}
+	<h3>Export</h3>
+	{% if last_export_result.error %}
+		<p>Export failed! Reason: {{ last_export_result.error }}.</p>
+	{% else %}
+		<p>Date: {{ last_export_result.report_date }}</p>
+		<p>Took {{ last_export_result.generation_time_s }} seconds to generate.</p>
+		<p>Example of block traversal and data access: {{ last_export_result.example }}</p>
+	{% endif %}
+
+	<p><button class="delete-data-export">Delete export</button></p>
+{% elif export_pending %}
+	<p>Report is currently being generated...</p>
+{% endif %}
