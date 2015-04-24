@@ -56,7 +56,7 @@
           {% endfor %}
           {% if block.has_average %}
            <tr class="avg-row">
-              <th class="desc">{{ average_label }}</th>
+              <th class="desc">{{ block.average_label }}</th>
               <td class="value"
                   {% if block.average_color %} style="border-right-color: {{block.average_color}};"{% endif %}
                   {% if not show_numbers %}

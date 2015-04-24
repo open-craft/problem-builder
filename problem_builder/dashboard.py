@@ -221,10 +221,14 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         ),
         scope=Scope.content,
     )
-    average_label = String(
+    average_labels = Dict(
         display_name=_("Label for average value"),
-        default=_("Average"),
-        help=_("Label to be shown for calculated average"),
+        help=_(
+            "This settings allows overriding label for the calculated average per mentoring block. Must be in JSON "
+            "format. Examples: {examples_here}."
+        ).format(
+            examples_here='{"2754b8afc03a439693b9887b6f1d9e36": "Avg.", "215028f7df3d4c68b14fb5fea4da7053": "Mean"}'
+        ),
         scope=Scope.content,
     )
     show_numbers = Boolean(
@@ -235,7 +239,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     )
 
     editable_fields = (
-        'display_name', 'mentoring_ids', 'exclude_questions', 'average_label', 'show_numbers',
+        'display_name', 'mentoring_ids', 'exclude_questions', 'average_labels', 'show_numbers',
         'color_rules', 'visual_rules', 'visual_title', 'visual_desc'
     )
     css_path = 'public/css/dashboard.css'
@@ -408,6 +412,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             if numeric_values:
                 average_value = sum(numeric_values) / len(numeric_values)
                 block['average'] = average_value
+                block['average_label'] = self.average_labels.get(mentoring_block.url_name, _("Average"))
                 block['has_average'] = True
                 block['average_color'] = self.color_for_value(average_value)
             blocks.append(block)
@@ -434,7 +439,6 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             'blocks': blocks,
             'display_name': self.display_name,
             'visual_repr': visual_repr,
-            'average_label': self.average_label,
             'show_numbers': self.show_numbers,
         })
 
@@ -462,8 +466,31 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             for key, value in data.exclude_questions.iteritems():
                 if not isinstance(value, list):
                     add_error(
-                        _(u"Exclude questions is malformed: value for key {key} is {value}, expected list of integers")
+                        _(u"'Questions to be hidden' is malformed: value for key {key} is {value}, "
+                          u"expected list of integers")
                         .format(key=key, value=value)
+                    )
+
+                if key not in data.mentoring_ids:
+                    add_error(
+                        _(u"'Questions to be hidden' is malformed: mentoring url_name {url_name} "
+                          u"is not added to Dashboard")
+                        .format(url_name=key)
+                    )
+
+        if data.average_labels:
+            for key, value in data.average_labels.iteritems():
+                if not isinstance(value, basestring):
+                    add_error(
+                        _(u"'Label for average value' is malformed: value for key {key} is {value}, expected string")
+                        .format(key=key, value=value)
+                    )
+
+                if key not in data.mentoring_ids:
+                    add_error(
+                        _(u"'Label for average value' is malformed: mentoring url_name {url_name} "
+                          u"is not added to Dashboard")
+                        .format(url_name=key)
                     )
 
         if data.color_rules:
