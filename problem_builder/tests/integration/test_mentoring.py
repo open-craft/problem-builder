@@ -45,7 +45,7 @@ class MentoringThemeTest(MentoringAssessmentBaseTest):
         return '#%02x%02x%02x' % (r, g, b)
 
     def assert_status_icon_color(self, color):
-        mentoring, controls = self.go_to_assessment('Theme 1')
+        mentoring, controls = self.load_assessment_scenario('assessment_single.xml', {"max_attempts": 2})
         question = self.expect_question_visible(0, mentoring)
         choice_name = "Maybe not"
 
