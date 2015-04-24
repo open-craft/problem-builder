@@ -6,9 +6,9 @@ before_install:
     - "sh -e /etc/init.d/xvfb start"
 install:
     - "pip install -e git://github.com/edx/xblock-sdk.git#egg=xblock-sdk"
+    - "pip install -r requirements.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/test-requirements.txt"
-    - "pip install -r requirements.txt"
     - "pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-2.0.tar.gz"
     - "pip install -r test_requirements.txt"
 script:
