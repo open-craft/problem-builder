@@ -58,11 +58,13 @@ class TestDashboardBlock(SeleniumXBlockTest):
     """
     SIMPLE_DASHBOARD = """<pb-dashboard mentoring_ids='["dummy-value"]'/>"""
     ALTERNATIVE_DASHBOARD = dedent("""
-    <pb-dashboard mentoring_ids='["dummy-value"]' average_label="Avg." show_numbers="false"/>
+    <pb-dashboard mentoring_ids='["dummy-value"]' show_numbers="false"
+        average_labels='{"Step 1": "Avg.", "Step 2":"Mean", "Step 3":"Second Quartile"}'
+    />
     """)
     HIDE_QUESTIONS_DASHBOARD = dedent("""
     <pb-dashboard mentoring_ids='["dummy-value"]'
-      exclude_questions='{"Step 1": [2, 3], "Step 2":[3], "Step 3":[2]}'
+        exclude_questions='{"Step 1": [2, 3], "Step 2":[3], "Step 3":[2]}'
     />
     """)
     MALFORMED_HIDE_QUESTIONS_DASHBOARD = dedent("""
@@ -185,7 +187,9 @@ class TestDashboardBlock(SeleniumXBlockTest):
         steps = dashboard.find_elements_by_css_selector('tbody')
         self.assertEqual(len(steps), 3)
 
-        for step in steps:
+        average_labels = ["Avg.", "Mean", "Second Quartile"]
+
+        for step_num, step in enumerate(steps):
             mcq_rows = step.find_elements_by_css_selector('tr:not(.avg-row)')
             self.assertTrue(2 <= len(mcq_rows) <= 3)
             for mcq in mcq_rows:
@@ -194,7 +198,7 @@ class TestDashboardBlock(SeleniumXBlockTest):
             # Check the average:
             avg_row = step.find_element_by_css_selector('tr.avg-row')
             left_col = avg_row.find_element_by_css_selector('.desc')
-            self.assertEqual(left_col.text, "Avg.")
+            self.assertEqual(left_col.text, average_labels[step_num])
             right_col = avg_row.find_element_by_css_selector('.value')
             self.assertEqual(right_col.text, "")
 
