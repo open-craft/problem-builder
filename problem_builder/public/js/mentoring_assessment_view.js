@@ -27,7 +27,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
     function no_more_attempts() {
         var attempts_data = $('.attempts', element).data();
-        return attempts_data.num_attempts >= attempts_data.max_attempts;
+        return (attempts_data.max_attempts > 0) && (attempts_data.num_attempts >= attempts_data.max_attempts);
     }
 
     function renderGrade() {
@@ -63,7 +63,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         }
 
         mentoring.renderAttempts();
-        if (data.assessment_message && data.num_attempts < data.max_attempts) {
+        if (data.assessment_message && (data.max_attempts === 0 || data.num_attempts < data.max_attempts)) {
             mentoring.setContent(messagesDOM, data.assessment_message);
             messagesDOM.show();
         }

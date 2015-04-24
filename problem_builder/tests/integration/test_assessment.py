@@ -242,7 +242,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
     def peek_at_review(self, mentoring, controls, expected, extended_feedback=False):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), mentoring)
         self.assert_persistent_elements_present(mentoring)
-        if expected["num_attempts"] < expected["max_attempts"]:
+        if expected["max_attempts"] > 0 and expected["num_attempts"] < expected["max_attempts"]:
             self.assertIn("Note: if you retake this assessment, only your final score counts.", mentoring.text)
             self.assertFalse(mentoring.find_elements_by_css_selector('.review-list'))
         elif extended_feedback:
@@ -264,6 +264,8 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
             self.assertIn("You answered {incorrect} questions incorrectly.".format(**expected), mentoring.text)
         if expected["max_attempts"] == 1:
             self.assertIn("You have used {num_attempts} of 1 submission.".format(**expected), mentoring.text)
+        elif expected["max_attempts"] == 0:
+            self.assertNotIn("You have used", mentoring.text)
         else:
             self.assertIn(
                 "You have used {num_attempts} of {max_attempts} submissions.".format(**expected),
@@ -314,9 +316,13 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         controls.next_question.click()
         self.peek_at_multiple_response_question(4, mentoring, controls, extended_feedback=True, alternative_review=True)
 
-    @data((1, False), ('Extended Feedback', True))
+    @data(
+        (1, False, 4),
+        (3, False, 0),
+        ('Extended Feedback', True, 2)
+    )
     @unpack
-    def test_assessment(self, assessment, extended_feedback):
+    def test_assessment(self, assessment, extended_feedback, max_attempts):
         mentoring, controls = self.go_to_assessment("Assessment %s" % assessment)
 
         self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT)
@@ -332,7 +338,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
 
         expected_results = {
             "correct": 2, "partial": 1, "incorrect": 1, "percentage": 63,
-            "num_attempts": 1, "max_attempts": 2
+            "num_attempts": 1, "max_attempts": max_attempts
         }
         self.peek_at_review(mentoring, controls, expected_results, extended_feedback=extended_feedback)
 
@@ -351,11 +357,17 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
 
         expected_results = {
             "correct": 3, "partial": 0, "incorrect": 1, "percentage": 75,
-            "num_attempts": 2, "max_attempts": 2
+            "num_attempts": 2, "max_attempts": max_attempts
         }
         self.peek_at_review(mentoring, controls, expected_results, extended_feedback=extended_feedback)
-        self.assert_disabled(controls.try_again)
-        self.assert_messages_empty(mentoring)
+        if max_attempts == 2:
+            self.assert_disabled(controls.try_again)
+        else:
+            self.assert_clickable(controls.try_again)
+        if 1 <= max_attempts <= 2:
+            self.assert_messages_empty(mentoring)  # The on-assessment-review message should not be shown if no attempts remain
+        else:
+            self.assert_messages_text(mentoring, "Assessment additional feedback message text")
         if extended_feedback:
             self.extended_feedback_checks(mentoring, controls, expected_results)
 

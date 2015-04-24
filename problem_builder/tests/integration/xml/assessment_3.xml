@@ -1,4 +1,4 @@
-<problem-builder url_name="mentoring-assessment-1" display_name="A Simple Assessment" weight="1" mode="assessment" max_attempts="4">
+<problem-builder url_name="mentoring-assessment-1" display_name="A Simple Assessment" weight="1" mode="assessment" max_attempts="0">
     <html_demo>
         <p>This paragraph is shared between <strong>all</strong> questions.</p>
 
