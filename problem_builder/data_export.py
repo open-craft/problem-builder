@@ -23,7 +23,6 @@ Data Export: An XBlock for instructors to export student answers from a course.
 All processing is done offline.
 """
 import json
-from .tasks import export_data as export_data_task
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Dict
 from xblock.fragment import Fragment
@@ -71,6 +70,7 @@ class DataExportBlock(XBlock):
         """
         If we're waiting for an export, see if it has finished, and if so, get the result.
         """
+        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
         if self.active_export_task_id:
             async_result = export_data_task.AsyncResult(self.active_export_task_id)
             if async_result.ready():
@@ -96,11 +96,23 @@ class DataExportBlock(XBlock):
         html = loader.render_template('templates/html/data_export.html', {
             'export_pending': bool(self.active_export_task_id),
             'last_export_result': self.last_export_result,
+            'download_url': self.download_url_for_last_report,
         })
         fragment = Fragment(html)
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
         fragment.initialize_js('DataExportBlock')
         return fragment
+
+    @property
+    def download_url_for_last_report(self):
+        """ Get the URL for the last report, if any """
+        # Unfortunately this is a bit inefficient due to the ReportStore API
+        if not self.last_export_result or self.last_export_result["error"] is not None:
+            return None
+        from instructor_task.models import ReportStore
+        report_store = ReportStore.from_config()
+        course_key = self.scope_ids.usage_id.course_key
+        return dict(report_store.links_for(course_key)).get(self.last_export_result["report_filename"], None)
 
     @XBlock.json_handler
     def delete_export(self, request, suffix=''):
@@ -114,6 +126,7 @@ class DataExportBlock(XBlock):
     @XBlock.json_handler
     def start_export(self, request, suffix=''):
         """ Start a new asynchronous export """
+        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
         # TODO: Verify instructor permissions
         self._delete_export()
         async_result = export_data_task.delay(unicode(self.scope_ids.usage_id), self.get_user_id())
