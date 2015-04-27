@@ -19,7 +19,8 @@
 #
 
 from xblock.fields import String
-from xblockutils.base_test import SeleniumBaseTest
+from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
+from xblockutils.resources import ResourceLoader
 
 # Studio adds a url_name property to each XBlock but Workbench doesn't.
 # Since we rely on it, we need to mock url_name support so it can be set via XML and
@@ -27,11 +28,13 @@ from xblockutils.base_test import SeleniumBaseTest
 from problem_builder import MentoringBlock
 MentoringBlock.url_name = String()
 
+loader = ResourceLoader(__name__)
 
-class MentoringBaseTest(SeleniumBaseTest):
-    module_name = __name__
-    default_css_selector = 'div.mentoring'
 
+class PopupCheckMixin(object):
+    """
+    Code used by MentoringBaseTest and MentoringAssessmentBaseTest
+    """
     def popup_check(self, mentoring, item_feedbacks, prefix='', do_submit=True):
 
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
@@ -57,7 +60,18 @@ class MentoringBaseTest(SeleniumBaseTest):
             self.assertFalse(item_feedback_popup.is_displayed())
 
 
-class MentoringAssessmentBaseTest(MentoringBaseTest):
+class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
+    module_name = __name__
+    default_css_selector = 'div.mentoring'
+
+
+class MentoringAssessmentBaseTest(SeleniumXBlockTest, PopupCheckMixin):
+    """
+    Base class for tests of assessment mode
+    """
+    module_name = __name__
+    default_css_selector = 'div.mentoring'
+
     @staticmethod
     def question_text(number):
         if number:
@@ -65,9 +79,16 @@ class MentoringAssessmentBaseTest(MentoringBaseTest):
         else:
             return "Question"
 
-    def go_to_assessment(self, page):
+    def load_assessment_scenario(self, xml_file, params=None):
+        """ Loads an assessment scenario from an XML template """
+        params = params or {}
+        scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
+        self.set_scenario_xml(scenario)
+        return self.go_to_assessment()
+
+    def go_to_assessment(self):
         """ Navigates to assessment page """
-        mentoring = self.go_to_page(page)
+        mentoring = self.go_to_view("student_view")
 
         class Namespace(object):
             pass
