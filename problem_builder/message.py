@@ -67,7 +67,10 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
 
     def mentoring_view(self, context=None):
         """ Render this message for use by a mentoring block. """
-        html = u'<div class="message {msg_type}">{content}</div>'.format(msg_type=self.type, content=self.content)
+        html = u'<div class="submission-message {msg_type}">{content}</div>'.format(
+            msg_type=self.type,
+            content=self.content
+        )
         return Fragment(html)
 
     def student_view(self, context=None):
