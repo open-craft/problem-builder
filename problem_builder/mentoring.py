@@ -376,15 +376,24 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         return {'result': 'ok'}
 
     def get_message(self, completed):
-        if self.max_attempts_reached:
-            return self.get_message_html('max_attempts_reached')
-        elif completed:
+        """
+        Get the message to display to a student following a submission in normal mode.
+        """
+        if completed:
+            # Student has achieved a perfect score
             return self.get_message_html('completed')
+        elif self.max_attempts_reached:
+            # Student has not achieved a perfect score and cannot try again
+            return self.get_message_html('max_attempts_reached')
         else:
+            # Student did not achieve a perfect score but can try again:
             return self.get_message_html('incomplete')
 
     @property
     def assessment_message(self):
+        """
+        Get the message to display to a student following a submission in assessment mode.
+        """
         if not self.max_attempts_reached:
             return self.get_message_html('on-assessment-review')
         else:
@@ -475,8 +484,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 child.save()
                 completed = completed and (child_result['status'] == 'correct')
 
-        message = self.get_message(completed)
-
         # Once it has been completed once, keep completion even if user changes values
         if self.completed:
             completed = True
@@ -509,6 +516,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         self.completed = completed is True
 
+        message = self.get_message(completed)
         raw_score = self.score.raw
 
         self.runtime.publish(self, 'xblock.problem_builder.submitted', {
