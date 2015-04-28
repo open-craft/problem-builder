@@ -32,6 +32,24 @@ function MentoringStandardView(runtime, element, mentoring) {
         submitDOM.attr('disabled', 'disabled');
     }
 
+    function handleSubmitError(jqXHR, textStatus, errorThrown) {
+        if (textStatus == "error") {
+            var errMsg = errorThrown;
+            // Check if there's a more specific JSON error message:
+            if (jqXHR.responseText) {
+                // Is there a more specific error message we can show?
+                try {
+                    errMsg = JSON.parse(jqXHR.responseText).error;
+                } catch (error) { errMsg = jqXHR.responseText.substr(0, 300); }
+            }
+
+            mentoring.setContent(messagesDOM, errMsg);
+            messagesDOM.show();
+
+            submitDOM.attr('disabled', 'disabled');
+        }
+    }
+
     function calculate_results(handler_name) {
         var data = {};
         var children = mentoring.children;
@@ -45,7 +63,7 @@ function MentoringStandardView(runtime, element, mentoring) {
         if (submitXHR) {
             submitXHR.abort();
         }
-        submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
+        submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults).error(handleSubmitError);
     }
 
     function submit() {

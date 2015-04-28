@@ -26,7 +26,7 @@ import json
 from collections import namedtuple
 
 from xblock.core import XBlock
-from xblock.exceptions import NoSuchViewError
+from xblock.exceptions import NoSuchViewError, JsonHandlerError
 from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
@@ -468,6 +468,14 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.info(u'Received submissions: {}'.format(submissions))
+        # server-side check that the user is allowed to submit:
+        if self.max_attempts_reached:
+            raise JsonHandlerError(403, "Maximum number of attempts already reached.")
+        elif self.has_missing_dependency:
+            raise JsonHandlerError(
+                403,
+                "You need to complete all previous steps before being able to complete the current one."
+            )
 
         # This has now been attempted:
         self.attempted = True
@@ -476,6 +484,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             return self.handle_assessment_submit(submissions, suffix)
 
         submit_results = []
+        previously_completed = self.completed
         completed = True
         for child_id in self.steps:
             child = self.runtime.get_block(child_id)
@@ -486,37 +495,30 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 child.save()
                 completed = completed and (child_result['status'] == 'correct')
 
-        # Once it has been completed once, keep completion even if user changes values
-        if self.completed:
-            completed = True
-
-        # server-side check to not set completion if the max_attempts is reached
-        if self.max_attempts_reached:
-            completed = False
-
-        if self.has_missing_dependency:
-            completed = False
-            message = 'You need to complete all previous steps before being able to complete the current one.'
-        elif completed and self.next_step == self.url_name:
+        if completed and self.next_step == self.url_name:
             self.next_step = self.followed_by
 
-        # Once it was completed, lock score
-        if not self.completed:
-            # save user score and results
+        # Update the score and attempts, unless the user had already achieved a perfect score ("completed"):
+        if not previously_completed:
+            # Update the results
             while self.student_results:
                 self.student_results.pop()
             for result in submit_results:
                 self.student_results.append(result)
 
+            # Save the user's latest score
             self.runtime.publish(self, 'grade', {
                 'value': self.score.raw,
                 'max_value': 1,
             })
 
-        if not self.completed and self.max_attempts > 0:
-            self.num_attempts += 1
+            # Mark this as having used an attempt:
+            if self.max_attempts > 0:
+                self.num_attempts += 1
 
-        self.completed = completed is True
+        # Save the completion status.
+        # Once it has been completed once, keep completion even if user changes values
+        self.completed = bool(completed) or previously_completed
 
         message = self.get_message(completed)
         raw_score = self.score.raw
@@ -570,14 +572,13 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         if current_child == steps[-1]:
             log.info(u'Last assessment step submitted: {}'.format(submissions))
-            if not self.max_attempts_reached:
-                self.runtime.publish(self, 'grade', {
-                    'value': score.raw,
-                    'max_value': 1,
-                    'score_type': 'proficiency',
-                })
-                event_data['final_grade'] = score.raw
-                assessment_message = self.assessment_message
+            self.runtime.publish(self, 'grade', {
+                'value': score.raw,
+                'max_value': 1,
+                'score_type': 'proficiency',
+            })
+            event_data['final_grade'] = score.raw
+            assessment_message = self.assessment_message
 
             self.num_attempts += 1
             self.completed = True
