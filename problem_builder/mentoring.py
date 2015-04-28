@@ -148,6 +148,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         # Has the student attempted this mentoring step?
         default=False,
         scope=Scope.user_state
+        # TODO: Does anything use this 'attempted' field? May want to delete it.
     )
     completed = Boolean(
         # Has the student completed this mentoring step?
@@ -458,7 +459,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         return {
             'results': results,
             'completed': completed,
-            'attempted': self.attempted,
             'message': message,
             'step': step,
             'max_attempts': self.max_attempts,
@@ -468,6 +468,8 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.info(u'Received submissions: {}'.format(submissions))
+
+        # This has now been attempted:
         self.attempted = True
 
         if self.is_assessment:
@@ -528,10 +530,9 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         return {
             'results': submit_results,
             'completed': self.completed,
-            'attempted': self.attempted,
             'message': message,
             'max_attempts': self.max_attempts,
-            'num_attempts': self.num_attempts
+            'num_attempts': self.num_attempts,
         }
 
     def handle_assessment_submit(self, submissions, suffix):
@@ -589,7 +590,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         return {
             'completed': completed,
-            'attempted': self.attempted,
             'max_attempts': self.max_attempts,
             'num_attempts': self.num_attempts,
             'step': self.step,

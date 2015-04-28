@@ -48,10 +48,6 @@ function MentoringStandardView(runtime, element, mentoring) {
         submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults);
     }
 
-    function get_results() {
-        calculate_results('get_results');
-    }
-
     function submit() {
         calculate_results('submit');
     }
