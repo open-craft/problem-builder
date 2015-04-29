@@ -18,7 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 from mock import Mock, patch
-from xblockutils.base_test import SeleniumXBlockTest
+from .base_test import MentoringBaseTemplateTest
 
 
 class MockSubmissionsAPI(object):
@@ -50,77 +50,20 @@ class MockSubmissionsAPI(object):
         return []
 
 
-class TestDashboardBlock(SeleniumXBlockTest):
+class TestDashboardBlock(MentoringBaseTemplateTest):
     """
     Test the Student View of a dashboard XBlock linked to some problem builder blocks
     """
     def setUp(self):
         super(TestDashboardBlock, self).setUp()
         # Set up our scenario:
-        self.set_scenario_xml("""
-            <vertical_demo>
-                <problem-builder display_name="Step 1">
-                    <pb-mcq display_name="1.1 First MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="1">Option 1</pb-choice>
-                        <pb-choice value="2">Option 2</pb-choice>
-                        <pb-choice value="3">Option 3</pb-choice>
-                        <pb-choice value="4">Option 4</pb-choice>
-                    </pb-mcq>
-                    <pb-mcq display_name="1.2 Second MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="1">Option 1</pb-choice>
-                        <pb-choice value="2">Option 2</pb-choice>
-                        <pb-choice value="3">Option 3</pb-choice>
-                        <pb-choice value="4">Option 4</pb-choice>
-                    </pb-mcq>
-                    <pb-mcq display_name="1.3 Third MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="1">Option 1</pb-choice>
-                        <pb-choice value="2">Option 2</pb-choice>
-                        <pb-choice value="3">Option 3</pb-choice>
-                        <pb-choice value="4">Option 4</pb-choice>
-                    </pb-mcq>
-                    <html_demo> This message here should be ignored. </html_demo>
-                </problem-builder>
-                <problem-builder display_name="Step 2">
-                    <pb-mcq display_name="2.1 First MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="4">Option 4</pb-choice>
-                        <pb-choice value="5">Option 5</pb-choice>
-                        <pb-choice value="6">Option 6</pb-choice>
-                    </pb-mcq>
-                    <pb-mcq display_name="2.2 Second MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="1">Option 1</pb-choice>
-                        <pb-choice value="2">Option 2</pb-choice>
-                        <pb-choice value="3">Option 3</pb-choice>
-                        <pb-choice value="4">Option 4</pb-choice>
-                    </pb-mcq>
-                    <pb-mcq display_name="2.3 Third MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="1">Option 1</pb-choice>
-                        <pb-choice value="2">Option 2</pb-choice>
-                        <pb-choice value="3">Option 3</pb-choice>
-                        <pb-choice value="4">Option 4</pb-choice>
-                    </pb-mcq>
-                </problem-builder>
-                <problem-builder display_name="Step 3">
-                    <pb-mcq display_name="3.1 First MCQ" question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="1">Option 1</pb-choice>
-                        <pb-choice value="2">Option 2</pb-choice>
-                        <pb-choice value="3">Option 3</pb-choice>
-                        <pb-choice value="4">Option 4</pb-choice>
-                    </pb-mcq>
-                    <pb-mcq display_name="3.2 MCQ with non-numeric values"
-                      question="Which option?" correct_choices='["1","2","3","4"]'>
-                        <pb-choice value="A">Option A</pb-choice>
-                        <pb-choice value="B">Option B</pb-choice>
-                        <pb-choice value="C">Option C</pb-choice>
-                    </pb-mcq>
-                </problem-builder>
-                <pb-dashboard mentoring_ids='["dummy-value"]'>
-                </pb-dashboard>
-            </vertical_demo>
-        """)
+        self.load_scenario('dashboard.xml')
 
         # Apply a whole bunch of patches that are needed in lieu of the LMS/CMS runtime and edx-submissions:
+
         def get_mentoring_blocks(dashboard_block, mentoring_ids, ignore_errors=True):
             return [dashboard_block.runtime.get_block(key) for key in dashboard_block.get_parent().children[:-1]]
+
         mock_submisisons_api = MockSubmissionsAPI()
         patches = (
             (
@@ -174,10 +117,7 @@ class TestDashboardBlock(SeleniumXBlockTest):
             for idx, mcq in enumerate(mcqs):
                 choices = mcq.find_elements_by_css_selector('.choices .choice label')
                 choices[idx].click()
-            submit = pb.find_element_by_css_selector('.submit input.input-main')
-            self.assertTrue(submit.is_enabled())
-            submit.click()
-            self.wait_until_disabled(submit)
+            self.click_submit(pb)
 
         # Reload the page:
         self.go_to_view("student_view")

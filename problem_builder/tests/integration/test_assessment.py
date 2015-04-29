@@ -394,7 +394,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.peek_at_review(mentoring, controls, expected_results)
         self.assert_messages_empty(mentoring)
 
+        self.wait_until_clickable(controls.try_again)
         controls.try_again.click()
-        # this is a wait and assertion all together - it waits until expected text is in mentoring block
-        # and it fails with PrmoiseFailed exception if it's not
-        self.wait_until_text_in(self.question_text(0), mentoring)
+        self.wait_until_hidden(controls.try_again)
+        self.assertIn(self.question_text(0), mentoring.text)

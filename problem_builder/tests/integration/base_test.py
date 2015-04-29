@@ -82,7 +82,8 @@ class MentoringBaseTemplateTest(SeleniumXBlockTest, PopupCheckMixin):
     def click_submit(self, mentoring):
         """ Click the submit button and wait for the response """
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
-        self.assertTrue(submit.is_displayed() and submit.is_enabled())
+        self.assertTrue(submit.is_displayed())
+        self.assertTrue(submit.is_enabled())
         submit.click()
         self.wait_until_disabled(submit)
 
