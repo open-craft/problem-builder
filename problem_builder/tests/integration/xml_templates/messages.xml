@@ -1,0 +1,19 @@
+<problem-builder url_name="messages-test" display_name="A Simple Problem Set" max_attempts="{{max_attempts}}">
+    <html_demo>
+        <p>This is a test of messages</p>
+    </html_demo>
+
+    <pb-mcq name="mcq_1_1" question="What is 1+0x1?" correct_choices='["one", "two"]'>
+        <pb-choice value="one">One</pb-choice>
+        <pb-choice value="two">Two</pb-choice>
+        <pb-choice value="huh">I don't understand</pb-choice>
+
+        <pb-tip values='["one"]'>Yep, if you interpret 'x' as multiplication, this equals one.</pb-tip>
+        <pb-tip values='["two"]'>You must be a programmer. If you interpret '0x' as a hexadecimal prefix, this equals two.</pb-tip>
+    </pb-mcq>
+
+    <pb-message type="completed">Great job! (completed message)</pb-message>
+    <pb-message type="incomplete">Not quite! You can try again, though. (incomplete message)</pb-message>
+    <pb-message type="max_attempts_reached">Sorry, you have used up all of your allowed submissions. (max_attempts_reached message)</pb-message>
+    <pb-message type="on-assessment-review">You may try this assessment again, and only the latest score will be used. (on-assessment-review message)</pb-message>
+</problem-builder>

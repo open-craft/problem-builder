@@ -26,3 +26,11 @@
   border-color: #888;
   cursor: default;
 }
+
+.xblock[data-block-type=problem-builder] .submission-message-help p {
+	border-top: 1px solid #ddd;
+	font-size: 0.85em;
+	font-style: italic;
+	margin-top: 1em;
+	padding-top: 0.3em;
+}

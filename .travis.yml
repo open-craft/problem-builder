@@ -17,3 +17,5 @@ script:
     - python run_tests.py --with-coverage --cover-package=problem_builder
 notifications:
   email: false
+addons:
+  firefox: "36.0"

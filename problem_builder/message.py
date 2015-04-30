@@ -40,6 +40,52 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
     A message which can be conditionally displayed at the mentoring block level,
     for example upon completion of the block
     """
+    MESSAGE_TYPES = {
+        "completed": {
+            "display_name": _(u"Completed"),
+            "long_display_name": _(u"Message shown when complete"),
+            "default": _(u"Great job!"),
+            "description": _(
+                u"In standard mode, this message will be shown when the student achieves a "
+                "perfect score. "
+                "This message is ignored in assessment mode."
+            ),
+        },
+        "incomplete": {
+            "display_name": _(u"Incomplete"),
+            "long_display_name": _(u"Message shown when incomplete"),
+            "default": _(u"Not quite! You can try again, though."),
+            "description": _(
+                u"In standard mode, this message will be shown when the student gets at least "
+                "one question wrong, but is allowed to try again. "
+                "This message is ignored in assessment mode."
+            ),
+        },
+        "max_attempts_reached": {
+            "display_name": _(u"Reached max. # of attempts"),
+            "long_display_name": _(u"Message shown when student reaches max. # of attempts"),
+            "default": _(u"Sorry, you have used up all of your allowed submissions."),
+            "description": _(
+                u"In standard mode, this message will be shown when the student has used up "
+                "all of their allowed attempts without achieving a perfect score. "
+                "This message is ignored in assessment mode."
+            ),
+        },
+        "on-assessment-review": {
+            "display_name": _(u"Review with attempts left"),
+            "long_display_name": _(u"Message shown during review when attempts remain"),
+            "default": _(
+                u"You may try this assessment again, and only the latest score will be used."
+            ),
+            "description": _(
+                u"In assessment mode, this message will be shown when the student is reviewing "
+                "their answers to the assessment, if the student is allowed to try again. "
+                "This message is ignored in standard mode and is not shown if the student has "
+                "used up all of their allowed attempts."
+            ),
+        },
+    }
+
     content = String(
         display_name=_("Message"),
         help=_("Message to display upon completion"),
@@ -53,10 +99,10 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
         scope=Scope.content,
         default="completed",
         values=(
-            {"display_name": "Completed", "value": "completed"},
-            {"display_name": "Incompleted", "value": "incomplete"},
-            {"display_name": "Reached max. # of attemps", "value": "max_attempts_reached"},
-            {"display_name": "Review with attempts left", "value": "on-assessment-review"}
+            {"value": "completed", "display_name": MESSAGE_TYPES["completed"]["display_name"]},
+            {"value": "incomplete", "display_name": MESSAGE_TYPES["incomplete"]["display_name"]},
+            {"value": "max_attempts_reached", "display_name": MESSAGE_TYPES["max_attempts_reached"]["display_name"]},
+            {"value": "on-assessment-review", "display_name": MESSAGE_TYPES["on-assessment-review"]["display_name"]},
         ),
     )
     editable_fields = ("content", )
@@ -67,34 +113,44 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
 
     def mentoring_view(self, context=None):
         """ Render this message for use by a mentoring block. """
-        html = u'<div class="message {msg_type}">{content}</div>'.format(msg_type=self.type, content=self.content)
+        html = u'<div class="submission-message {msg_type}">{content}</div>'.format(
+            msg_type=self.type,
+            content=self.content
+        )
         return Fragment(html)
 
     def student_view(self, context=None):
         """ Normal view of this XBlock, identical to mentoring_view """
         return self.mentoring_view(context)
 
+    def author_view(self, context=None):
+        fragment = self.mentoring_view(context)
+        fragment.content += u'<div class="submission-message-help"><p>{}</p></div>'.format(self.help_text)
+        return fragment
+
     @property
     def display_name_with_default(self):
-        if self.type == 'max_attempts_reached':
-            max_attempts = self.get_parent().max_attempts
-            return self._(u"Message when student reaches max. # of attempts ({limit})").format(
-                limit=self._(u"unlimited") if max_attempts == 0 else max_attempts
-            )
-        if self.type == 'completed':
-            return self._(u"Message shown when complete")
-        if self.type == 'incomplete':
-            return self._(u"Message shown when incomplete")
-        if self.type == 'on-assessment-review':
-            return self._(u"Message shown during review when attempts remain")
-        return u"INVALID MESSAGE"
+        try:
+            return self._(self.MESSAGE_TYPES[self.type]["long_display_name"])
+        except KeyError:
+            return u"INVALID MESSAGE"
+
+    @property
+    def help_text(self):
+        try:
+            return self._(self.MESSAGE_TYPES[self.type]["description"])
+        except KeyError:
+            return u"This message is not a valid message type!"
 
     @classmethod
     def get_template(cls, template_id):
         """
         Used to interact with Studio's create_xblock method to instantiate pre-defined templates.
         """
-        return {'data': {'type': template_id, 'content': "Message goes here."}}
+        return {'data': {
+            'type': template_id,
+            'content': cls.MESSAGE_TYPES[template_id]["default"],
+        }}
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
