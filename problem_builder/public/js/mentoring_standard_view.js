@@ -75,8 +75,6 @@ function MentoringStandardView(runtime, element, mentoring) {
         submitDOM = $(element).find('.submit .input-main');
         submitDOM.bind('click', submit);
         submitDOM.show();
-        // Not used in standard mode.
-        $(element).find('.review-link').hide();
 
         var options = {
             onChange: onChange
