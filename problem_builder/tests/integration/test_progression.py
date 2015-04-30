@@ -68,6 +68,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         answer = mentoring.find_element_by_css_selector('textarea')
         answer.send_keys('This is the answer')
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertTrue(submit.is_displayed() and submit.is_enabled())
         submit.click()
         self.wait_until_disabled(submit)
 
@@ -90,6 +91,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         answer = mentoring.find_element_by_css_selector('textarea')
         answer.send_keys('This is the answer')
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertTrue(submit.is_displayed() and submit.is_enabled())
         submit.click()
         self.wait_until_disabled(submit)
         self.assert_warning_is_hidden(mentoring)
@@ -106,7 +108,11 @@ class MentoringProgressionTest(MentoringBaseTest):
 
         # Complete step 2 - no more warnings anywhere
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
-        submit.click()  # Already filled the textarea in previous step
+        answer = mentoring.find_element_by_css_selector('textarea')
+        self.assertEqual(answer.text, "")  # Earlier attempt to submit did not save
+        answer.send_keys('This is the answer')
+        self.assertTrue(submit.is_displayed() and submit.is_enabled())
+        submit.click()
         self.wait_until_disabled(submit)
 
         messages = mentoring.find_element_by_css_selector('.messages')

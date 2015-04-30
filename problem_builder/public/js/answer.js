@@ -24,7 +24,6 @@ function AnswerBlock(runtime, element) {
         handleSubmit: function(result) {
 
             var checkmark = $('.answer-checkmark', element);
-            $(element).find('.message').text((result || {}).error || '');
 
             this.clearResult();
 

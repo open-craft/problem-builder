@@ -65,13 +65,33 @@ class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
     default_css_selector = 'div.mentoring'
 
 
-class MentoringAssessmentBaseTest(SeleniumXBlockTest, PopupCheckMixin):
+class MentoringBaseTemplateTest(SeleniumXBlockTest, PopupCheckMixin):
     """
-    Base class for tests of assessment mode
+    Base class for mentoring tests that use templated XML.
+    All new tests should inherit from this rather than MentoringBaseTest
     """
     module_name = __name__
     default_css_selector = 'div.mentoring'
 
+    def load_scenario(self, xml_file, params=None):
+        params = params or {}
+        scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
+        self.set_scenario_xml(scenario)
+        return self.go_to_view("student_view")
+
+    def click_submit(self, mentoring):
+        """ Click the submit button and wait for the response """
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+        self.assertTrue(submit.is_displayed())
+        self.assertTrue(submit.is_enabled())
+        submit.click()
+        self.wait_until_disabled(submit)
+
+
+class MentoringAssessmentBaseTest(MentoringBaseTemplateTest):
+    """
+    Base class for tests of assessment mode
+    """
     @staticmethod
     def question_text(number):
         if number:
