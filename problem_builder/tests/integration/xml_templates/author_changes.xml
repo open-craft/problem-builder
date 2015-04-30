@@ -1,0 +1,17 @@
+<vertical_demo>
+    <problem-builder>
+
+        <pb-mcq name="q1" type="choices" correct_choices='["yes"]' question="So, do you like this Q1?">
+            <pb-choice value="yes">Yes</pb-choice>
+            <pb-choice value="no">No</pb-choice>
+        </pb-mcq>
+
+        <pb-mrq name="q2" required_choices='["elegance"]' question="What do you like in this Q2?">
+            <pb-choice value="elegance">Its elegance</pb-choice>
+            <pb-choice value="bugs">Its bugs</pb-choice>
+        </pb-mrq>
+
+        <pb-answer name="q3" question="What do you like about Q3?"/>
+
+    </problem-builder>
+</vertical_demo>

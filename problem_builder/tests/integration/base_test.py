@@ -60,24 +60,22 @@ class PopupCheckMixin(object):
             self.assertFalse(item_feedback_popup.is_displayed())
 
 
-class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
-    module_name = __name__
+class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
+    """
+    The new base class for integration tests.
+    Scenarios can be loaded and edited on the fly.
+    """
     default_css_selector = 'div.mentoring'
 
-
-class MentoringBaseTemplateTest(SeleniumXBlockTest, PopupCheckMixin):
-    """
-    Base class for mentoring tests that use templated XML.
-    All new tests should inherit from this rather than MentoringBaseTest
-    """
-    module_name = __name__
-    default_css_selector = 'div.mentoring'
-
-    def load_scenario(self, xml_file, params=None):
+    def load_scenario(self, xml_file, params=None, load_immediately=True):
+        """
+        Given the name of an XML file in the xml_templates folder, load it into the workbench.
+        """
         params = params or {}
         scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
         self.set_scenario_xml(scenario)
-        return self.go_to_view("student_view")
+        if load_immediately:
+            return self.go_to_view("student_view")
 
     def click_submit(self, mentoring):
         """ Click the submit button and wait for the response """
@@ -88,7 +86,12 @@ class MentoringBaseTemplateTest(SeleniumXBlockTest, PopupCheckMixin):
         self.wait_until_disabled(submit)
 
 
-class MentoringAssessmentBaseTest(MentoringBaseTemplateTest):
+class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
+    module_name = __name__
+    default_css_selector = 'div.mentoring'
+
+
+class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
     """
     Base class for tests of assessment mode
     """
