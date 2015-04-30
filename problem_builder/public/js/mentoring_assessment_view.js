@@ -102,7 +102,6 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         checkmark = $('.assessment-checkmark', element);
         messagesDOM = $('.assessment-messages', element);
 
-        reviewLinkDOM.hide();
         submitDOM.show();
         submitDOM.bind('click', submit);
         nextDOM.bind('click', displayNextChild);
