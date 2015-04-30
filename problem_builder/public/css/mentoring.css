@@ -5,9 +5,6 @@
 .mentoring .messages,
 .mentoring .assessment-messages {
     display: none;
-    margin-top: 10px;
-    border-top: 2px solid #eaeaea;
-    padding: 12px 0px 20px;
 }
 
 .mentoring .messages .title1,
@@ -74,7 +71,7 @@
     display: inline-block;
     vertical-align: middle;
     font-size: 13px;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .mentoring .attempts > span {
@@ -121,6 +118,10 @@
     margin-right: 10px;
 }
 
+.mentoring .grade .grade-result {
+    margin: 20px;
+}
+
 .mentoring .grade .checkmark-incorrect {
     margin-left: 10px;
     margin-right: 20px;
@@ -158,6 +159,11 @@
 .mentoring .results-section {
     float: left;
 }
+
+.mentoring .results-section p {
+    margin: 4px;
+}
+
 .mentoring .clear {
     display: block;
     clear: both;
