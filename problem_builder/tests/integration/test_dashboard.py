@@ -18,7 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 from mock import Mock, patch
-from .base_test import MentoringBaseTemplateTest
+from .base_test import ProblemBuilderBaseTest
 
 
 class MockSubmissionsAPI(object):
@@ -50,7 +50,7 @@ class MockSubmissionsAPI(object):
         return []
 
 
-class TestDashboardBlock(MentoringBaseTemplateTest):
+class TestDashboardBlock(ProblemBuilderBaseTest):
     """
     Test the Student View of a dashboard XBlock linked to some problem builder blocks
     """
