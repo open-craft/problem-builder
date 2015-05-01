@@ -281,6 +281,11 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         # Migrate stored data if necessary
         self.migrate_fields()
 
+        # Validate self.step:
+        num_steps = len(self.steps)
+        if self.step > num_steps:
+            self.step = num_steps
+
         fragment = Fragment()
         child_content = u""
 
