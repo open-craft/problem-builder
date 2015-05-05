@@ -22,7 +22,8 @@ function MentoringBlock(runtime, element) {
         hideAllSteps: hideAllSteps,
         step: step,
         steps: steps,
-        publish_event: publish_event
+        publish_event: publish_event,
+        data: data
     };
 
     function publish_event(data) {

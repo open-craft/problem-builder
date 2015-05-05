@@ -131,6 +131,12 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         default=_("Mentoring Questions"),
         scope=Scope.settings
     )
+    feedback_label = String(
+        display_name=_("Feedback Messages Title"),
+        help=_("Title for feedback messages"),
+        default=_("Feedback"),
+        scope=Scope.content
+    )
 
     # User state
     attempted = Boolean(
@@ -170,7 +176,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
     editable_fields = (
         'display_name', 'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
-        'display_submit', 'weight',
+        'display_submit', 'feedback_label', 'weight',
     )
     icon_class = 'problem'
     has_score = True
