@@ -132,8 +132,8 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         scope=Scope.settings
     )
     feedback_label = String(
-        display_name=_("Feedback Messages Title"),
-        help=_("Title for feedback messages"),
+        display_name=_("Feedback Header"),
+        help=_("Header for feedback messages"),
         default=_("Feedback"),
         scope=Scope.content
     )
