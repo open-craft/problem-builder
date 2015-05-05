@@ -30,6 +30,7 @@ import ast
 import json
 import logging
 import operator as op
+from django.template.defaultfilters import floatformat
 
 from .dashboard_visual import DashboardVisualData
 from .mcq import MCQBlock
@@ -414,7 +415,9 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 average_value = sum(numeric_values) / len(numeric_values)
                 block['average'] = average_value
                 # average block is shown only if average value exists, so accessible text for no data is not required
-                block['accessible_average'] = _("Score: {average_value:.2f}").format(average_value=average_value)
+                block['accessible_average'] = _("Score: {average_value}").format(
+                    average_value=floatformat(average_value)
+                )
                 block['average_label'] = self.average_labels.get(mentoring_block.url_name, _("Average"))
                 block['has_average'] = True
                 block['average_color'] = self.color_for_value(average_value)
