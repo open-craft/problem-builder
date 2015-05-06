@@ -66,6 +66,10 @@ function MentoringStandardView(runtime, element, mentoring) {
         submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults).error(handleSubmitError);
     }
 
+    function get_results(){
+        calculate_results('get_results');
+    }
+
     function submit() {
         calculate_results('submit');
     }
@@ -96,6 +100,8 @@ function MentoringStandardView(runtime, element, mentoring) {
 
         mentoring.initChildren(options);
         mentoring.renderDependency();
+
+        get_results();
 
         var submitPossible = submitDOM.length > 0;
         if (submitPossible) {
