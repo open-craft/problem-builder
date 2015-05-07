@@ -28,8 +28,6 @@ function MentoringStandardView(runtime, element, mentoring) {
             messagesDOM.prepend('<div class="title1">' + gettext('Feedback') + '</div>');
             messagesDOM.show();
         }
-
-        submitDOM.attr('disabled', 'disabled');
     }
 
     function handleSubmitError(jqXHR, textStatus, errorThrown) {
@@ -45,12 +43,10 @@ function MentoringStandardView(runtime, element, mentoring) {
 
             mentoring.setContent(messagesDOM, errMsg);
             messagesDOM.show();
-
-            submitDOM.attr('disabled', 'disabled');
         }
     }
 
-    function calculate_results(handler_name) {
+    function calculate_results(handler_name, disable_submit) {
         var data = {};
         var children = mentoring.children;
         for (var i = 0; i < children.length; i++) {
@@ -64,14 +60,19 @@ function MentoringStandardView(runtime, element, mentoring) {
             submitXHR.abort();
         }
         submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults).error(handleSubmitError);
+
+        if (disable_submit) {
+            var disable_submit_callback = function(){ submitDOM.attr('disabled', 'disabled'); };
+            submitXHR.success(disable_submit_callback).error(disable_submit_callback);
+        }
     }
 
     function get_results(){
-        calculate_results('get_results');
+        calculate_results('get_results', false);
     }
 
     function submit() {
-        calculate_results('submit');
+        calculate_results('submit', true);
     }
 
     function clearResults() {

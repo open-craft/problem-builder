@@ -24,7 +24,7 @@ import ddt
 from mock import patch, Mock
 
 from problem_builder import MentoringBlock
-from .base_test import MentoringBaseTest
+from .base_test import MentoringBaseTest, ProblemBuilderBaseTest
 
 
 # Classes ###########################################################
@@ -292,3 +292,35 @@ class QuestionnaireBlockAprosThemeTest(QuestionnaireBlockTest):
     Test MRQ/MCQ questions without the LMS theme which is on by default.
     """
     pass
+
+
+@ddt.ddt
+class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
+    def _get_choice_feedback_popup(self, mentoring, choice_index):
+        choices = mentoring.find_elements_by_css_selector(".choices-list .choice")
+        target_choice = choices[choice_index]
+
+        return target_choice.find_element_by_css_selector(".choice-tips")
+
+    def _get_messages_element(self, mentoring):
+        return mentoring.find_element_by_css_selector('.messages')
+
+    @ddt.data(("One", 0), ("Two", 1))
+    @ddt.unpack
+    def test_persists_feedback_on_page_reload(self, choice_value, choice_index):
+        mentoring = self.load_scenario("messages.xml", {"max_attempts": 1})
+
+        self.click_choice(mentoring, choice_value)
+        self.click_submit(mentoring)
+
+        feedback_popup = self._get_choice_feedback_popup(mentoring, choice_index)
+        messages = self._get_messages_element(mentoring)
+        self.assertTrue(feedback_popup.is_displayed())
+        self.assertTrue(messages.is_displayed())
+
+        # now, reload the page
+        mentoring = self.go_to_view("student_view")
+        feedback_popup = self._get_choice_feedback_popup(mentoring, choice_index)
+        messages = self._get_messages_element(mentoring)
+        self.assertTrue(feedback_popup.is_displayed())
+        self.assertTrue(messages.is_displayed())
