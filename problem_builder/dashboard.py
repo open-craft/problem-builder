@@ -30,6 +30,7 @@ import ast
 import json
 import logging
 import operator as op
+from django.template.defaultfilters import floatformat
 
 from .dashboard_visual import DashboardVisualData
 from .mcq import MCQBlock
@@ -402,6 +403,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
                 block['mcqs'].append({
                     "display_name": mcq_block.display_name_with_default,
                     "value": value,
+                    "accessible_value": _("Score: {score}").format(score=value) if value else _("No value yet"),
                     "color": self.color_for_value(value) if value is not None else None,
                 })
             # If the values are numeric, display an average:
@@ -412,6 +414,10 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             if numeric_values:
                 average_value = sum(numeric_values) / len(numeric_values)
                 block['average'] = average_value
+                # average block is shown only if average value exists, so accessible text for no data is not required
+                block['accessible_average'] = _("Score: {score}").format(
+                    score=floatformat(average_value)
+                )
                 block['average_label'] = self.average_labels.get(mentoring_block.url_name, _("Average"))
                 block['has_average'] = True
                 block['average_color'] = self.color_for_value(average_value)

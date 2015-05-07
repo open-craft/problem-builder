@@ -1,12 +1,20 @@
 .pb-dashboard table {
     max-width: 800px;
+    width: 700px;
+    table-layout: auto;
     border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
     margin-bottom: 15px;
 }
 
 .pb-dashboard table thead th {
     padding-top: 0.6em;
     font-weight: bold;
+}
+
+.pb-dashboard .avg-row .desc {
+    font-weight: 600;
 }
 
 .pb-dashboard table td, .pb-dashboard table tbody th {
@@ -24,7 +32,7 @@
     min-width: 4em;
     text-align: right;
     padding-right: 5px;
-    border-right: 0.6em solid transparent;
+    border-right: 2em solid transparent;
 }
 
 .pb-dashboard table .avg-row td.desc {

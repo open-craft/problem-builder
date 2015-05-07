@@ -10,6 +10,8 @@ because the workbench SDK's settings file is not inside any python module.
 import os
 import sys
 
+import logging
+
 if __name__ == "__main__":
     # Use the workbench settings file:
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "workbench.settings")
@@ -18,6 +20,8 @@ if __name__ == "__main__":
 
     from django.conf import settings
     settings.INSTALLED_APPS += ("problem_builder", )
+
+    logging.disable(logging.CRITICAL)
 
     from django.core.management import execute_from_command_line
     args = sys.argv[1:]
