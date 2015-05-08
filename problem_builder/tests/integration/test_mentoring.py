@@ -159,7 +159,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
     def test_feedbacks_and_messages_is_not_shown_on_first_load(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
-        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        _, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
 
         for i in range(3):

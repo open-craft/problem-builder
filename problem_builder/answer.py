@@ -189,6 +189,9 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
             'score': 1 if self.status == 'correct' else 0,
         }
 
+    def get_last_result(self):
+        return self.get_results(None)
+
     def submit(self, submission):
         """
         The parent block is handling a student submission, including a new answer for this

@@ -105,6 +105,9 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
     def get_results(self, previous_result):
         return self.calculate_results(previous_result['submission'])
 
+    def get_last_result(self):
+        return self.get_results({'submission': self.student_choice}) if self.student_choice else {}
+
     def submit(self, submission):
         log.debug(u'Received MCQ submission: "%s"', submission)
         result = self.calculate_results(submission)

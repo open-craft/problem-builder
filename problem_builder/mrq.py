@@ -89,6 +89,9 @@ class MRQBlock(QuestionnaireAbstractBlock):
         result['completed'] = True
         return result
 
+    def get_last_result(self):
+        return self.get_results({'submissions': self.student_choices}) if self.student_choices else {}
+
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
 

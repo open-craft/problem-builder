@@ -470,19 +470,15 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Gets previous submissions results as if submit was called with exactly the same values as last time.
         """
         results = []
-        completed, show_message = True, False
-        choices = dict(self.student_results)
+        completed = True
+        show_message = bool(self.student_results)
 
         # In standard mode, all children is visible simultaneously, so need collecting responses from all of them
         for child_id in self.steps:
             child = self.runtime.get_block(child_id)
-            if child.name and child.name in choices:
-                show_message = True
-                child_result = child.get_results(choices[child.name])
-                results.append([child.name, child_result])
-                completed = completed and (child_result['status'] == 'correct')
-            else:
-                completed = False
+            child_result = child.get_last_result()
+            results.append([child.name, child_result])
+            completed = completed and (child_result.get('status', None) == 'correct')
 
         return results, completed, show_message
 

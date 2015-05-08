@@ -87,13 +87,6 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
 
     def click_choice(self, container, choice_text):
         """ Click on the choice label with the specified text """
-        for label in container.find_elements_by_css_selector('.choices .choice label'):
-            if choice_text in label.text:
-                label.click()
-                break
-
-    def click_choice(self, container, choice_text):
-        """ Click on the choice label with the specified text """
         for label in container.find_elements_by_css_selector('.choice label'):
             if choice_text in label.text:
                 label.click()
