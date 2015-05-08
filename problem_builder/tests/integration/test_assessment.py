@@ -302,7 +302,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
             "This is something everyone has to like about this MRQ",
             "This is something everyone has to like about this MRQ",
             "This MRQ is indeed very graceful",
-            "Nah, there aren't any!"
+            "Nah, there isn't any!"
         ]
         self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1"]', do_submit=False)
         self.assert_hidden(controls.review)

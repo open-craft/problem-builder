@@ -30,3 +30,7 @@
 .pb-dashboard table .avg-row td.desc {
     font-style: italic;
 }
+
+.pb-dashboard-visual {
+    text-align: center;
+}
