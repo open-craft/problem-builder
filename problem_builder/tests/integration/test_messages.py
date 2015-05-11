@@ -50,13 +50,6 @@ class MessagesTest(ProblemBuilderBaseTest):
             message_text = message_text[8:].lstrip()
             self.assertEqual(MESSAGES[msg_type], message_text)
 
-    def click_choice(self, container, choice_text):
-        """ Click on the choice label with the specified text """
-        for label in container.find_elements_by_css_selector('.choices .choice label'):
-            if choice_text in label.text:
-                label.click()
-                break
-
     @ddt.data(
         ("One", COMPLETED),
         ("Two", COMPLETED),

@@ -81,13 +81,19 @@ class MRQBlock(QuestionnaireAbstractBlock):
             return self._(u"Ignored")
         return self._(u"Not Acceptable")
 
-    def get_results(self, previous_result):
+    def get_results(self, previous_result, only_selected=False):
         """
         Get the results a student has already submitted.
         """
-        result = self.calculate_results(previous_result['submissions'])
+        result = self.calculate_results(previous_result['submissions'], only_selected)
         result['completed'] = True
         return result
+
+    def get_last_result(self):
+        if self.student_choices:
+            return self.get_results({'submissions': self.student_choices}, only_selected=True)
+        else:
+            return {}
 
     def submit(self, submissions):
         log.debug(u'Received MRQ submissions: "%s"', submissions)
@@ -98,13 +104,17 @@ class MRQBlock(QuestionnaireAbstractBlock):
         log.debug(u'MRQ submissions result: %s', result)
         return result
 
-    def calculate_results(self, submissions):
+    def calculate_results(self, submissions, only_selected=False):
         score = 0
         results = []
+
         for choice in self.custom_choices:
             choice_completed = True
             choice_tips_html = []
             choice_selected = choice.value in submissions
+            if not choice_selected and only_selected:
+                continue
+
             if choice.value in self.required_choices:
                 if not choice_selected:
                     choice_completed = False

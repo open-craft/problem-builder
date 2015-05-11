@@ -435,6 +435,57 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         Gets detailed results in the case of extended feedback.
 
+        Right now there are two ways to get results-- through the template upon loading up
+        the mentoring block, or after submission of an AJAX request like in
+        submit or get_results here.
+        """
+        if self.mode == 'standard':
+            results, completed, show_message = self._get_standard_results()
+            mentoring_completed = completed
+        else:
+            if not self.show_extended_feedback():
+                return {
+                    'results': [],
+                    'error': 'Extended feedback results cannot be obtained.'
+                }
+
+            results, completed, show_message = self._get_assessment_results(queries)
+            mentoring_completed = True
+
+        result = {
+            'results': results,
+            'completed': completed,
+            'step': self.step,
+            'max_attempts': self.max_attempts,
+            'num_attempts': self.num_attempts,
+        }
+
+        if show_message:
+            result['message'] = self.get_message(mentoring_completed)
+
+        return result
+
+    def _get_standard_results(self):
+        """
+        Gets previous submissions results as if submit was called with exactly the same values as last time.
+        """
+        results = []
+        completed = True
+        show_message = bool(self.student_results)
+
+        # In standard mode, all children is visible simultaneously, so need collecting responses from all of them
+        for child_id in self.steps:
+            child = self.runtime.get_block(child_id)
+            child_result = child.get_last_result()
+            results.append([child.name, child_result])
+            completed = completed and (child_result.get('status', None) == 'correct')
+
+        return results, completed, show_message
+
+    def _get_assessment_results(self, queries):
+        """
+        Gets detailed results in the case of extended feedback.
+
         It may be a good idea to eventually have this function get results
         in the general case instead of loading them in the template in the future,
         and only using it for extended feedback situations.
@@ -444,14 +495,8 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         submit or get_results here.
         """
         results = []
-        if not self.show_extended_feedback():
-            return {
-                'results': [],
-                'error': 'Extended feedback results cannot be obtained.'
-            }
         completed = True
         choices = dict(self.student_results)
-        step = self.step
         # Only one child should ever be of concern with this method.
         for child_id in self.steps:
             child = self.runtime.get_block(child_id)
@@ -464,17 +509,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 completed = choices[child.name]['status']
                 break
 
-        # The 'completed' message should always be shown in this case, since no more attempts are available.
-        message = self.get_message(True)
-
-        return {
-            'results': results,
-            'completed': completed,
-            'message': message,
-            'step': step,
-            'max_attempts': self.max_attempts,
-            'num_attempts': self.num_attempts,
-        }
+        return results, completed, True
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
