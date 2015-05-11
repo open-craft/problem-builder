@@ -93,20 +93,16 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
         return answer, mcq, mrq, rating
 
-    def _assert_feedback_hidden(self, questionnaire, choice_index):
-        choice = self._get_choice(questionnaire, choice_index)
-        choice_result = choice.find_element_by_css_selector('.choice-result')
-        feedback_popup = choice.find_element_by_css_selector(".choice-tips")
+    def _assert_checkmark(self, checkmark, shown=True, checkmark_class=None):
+        choice_result_classes = checkmark.get_attribute('class').split()
+        if shown:
+            self.assertTrue(checkmark.is_displayed())
+            self.assertIn(checkmark_class, choice_result_classes)
+        else:
+            self.assertFalse(checkmark.is_displayed())
 
-        choice_result_classes = choice_result.get_attribute('class').split()
-
-        self.assertTrue(choice_result.is_displayed())
-        self.assertFalse(feedback_popup.is_displayed())
-        self.assertNotIn('checkmark-correct', choice_result_classes)
-        self.assertNotIn('checkmark-incorrect', choice_result_classes)
-
-    def _assert_feedback_visible(self, questionnaire, choice_index, expected_text,
-                                 click_choice_result=False, success=True):
+    def _assert_feedback_showed(self, questionnaire, choice_index, expected_text,
+                                click_choice_result=False, success=True):
         """
         Asserts that feedback for given element contains particular text
         If `click_choice_result` is True - clicks on `choice-result` icon before checking feedback visibility:
@@ -118,11 +114,21 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             choice_result.click()
 
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
-        self.assertTrue(choice_result.is_displayed())
+        checkmark_class = 'checkmark-correct' if success else 'checkmark-incorrect'
+        self._assert_checkmark(choice_result, shown=True, checkmark_class=checkmark_class)
         self.assertTrue(feedback_popup.is_displayed())
         self.assertEqual(feedback_popup.text, expected_text)
+
+    def _assert_feedback_hidden(self, questionnaire, choice_index):
+        choice = self._get_choice(questionnaire, choice_index)
+        choice_result = choice.find_element_by_css_selector('.choice-result')
+        feedback_popup = choice.find_element_by_css_selector(".choice-tips")
         choice_result_classes = choice_result.get_attribute('class').split()
-        self.assertIn('checkmark-correct' if success else 'checkmark-incorrect', choice_result_classes)
+
+        self.assertTrue(choice_result.is_displayed())
+        self.assertFalse(feedback_popup.is_displayed())
+        self.assertNotIn('checkmark-correct', choice_result_classes)
+        self.assertNotIn('checkmark-incorrect', choice_result_classes)
 
     def _standard_filling(self, answer, mcq, mrq, rating):
         answer.send_keys('This is the answer')
@@ -140,28 +146,34 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             if checkbox.is_selected():
                 checkbox.click()
 
-    def _standard_checks(self, answer, mcq, mrq, rating, messages):
+    def _standard_checks(self, answer, mcq, mrq, rating, messages, only_selected=False):
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
-        self._assert_feedback_visible(mcq, 0, "Great!")
-        self._assert_feedback_visible(
+        self._assert_feedback_showed(mcq, 0, "Great!")
+        self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
         )
-        self._assert_feedback_visible(
-            mrq, 1, "This is something everyone has to like about beauty",
-            click_choice_result=True, success=False
-        )
-        self._assert_feedback_visible(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
-        self._assert_feedback_visible(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
-        self._assert_feedback_visible(rating, 3, "I love good grades.", click_choice_result=True)
+        if not only_selected:
+            self._assert_feedback_showed(
+                mrq, 1, "This is something everyone has to like about beauty",
+                click_choice_result=True, success=False
+            )
+        else:
+            self._assert_feedback_hidden(mrq, 1)
+        self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
+        self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
+        self._assert_feedback_showed(rating, 3, "I love good grades.", click_choice_result=True)
         self.assertTrue(messages.is_displayed())
         self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
 
     def test_feedbacks_and_messages_is_not_shown_on_first_load(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
-        _, mcq, mrq, rating = self._get_controls(mentoring)
+        answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
 
+        answer_checkmark = answer.find_element_by_xpath("parent::*").find_element_by_css_selector(".answer-checkmark")
+
+        self._assert_checkmark(answer_checkmark, shown=False)
         for i in range(3):
             self._assert_feedback_hidden(mcq, i)
         for i in range(4):
@@ -183,7 +195,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         mentoring = self.go_to_view("student_view")
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
-        self._standard_checks(answer, mcq, mrq, rating, messages)
+        self._standard_checks(answer, mcq, mrq, rating, messages, only_selected=True)
 
     def test_given_perfect_score_in_past_loads_current_result(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
@@ -201,18 +213,18 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
         # precondition - verifying 100% score achieved
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
-        self._assert_feedback_visible(mcq, 0, "Great!")
-        self._assert_feedback_visible(
+        self._assert_feedback_showed(mcq, 0, "Great!")
+        self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
         )
-        self._assert_feedback_visible(
+        self._assert_feedback_showed(
             mrq, 1, "This is something everyone has to like about beauty",
             click_choice_result=True
         )
-        self._assert_feedback_visible(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
-        self._assert_feedback_visible(mrq, 3, "Nah, there aren't any!", click_choice_result=True)
-        self._assert_feedback_visible(rating, 3, "I love good grades.", click_choice_result=True)
+        self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
+        self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True)
+        self._assert_feedback_showed(rating, 3, "I love good grades.", click_choice_result=True)
         self.assertTrue(messages.is_displayed())
         self.assertEqual(messages.text, "FEEDBACK\nAll Good")
 
@@ -225,4 +237,4 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         mentoring = self.go_to_view("student_view")
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
-        self._standard_checks(answer, mcq, mrq, rating, messages)
+        self._standard_checks(answer, mcq, mrq, rating, messages, only_selected=True)

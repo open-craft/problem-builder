@@ -31,12 +31,13 @@ function AnswerBlock(runtime, element) {
                 // Display of checkmark would be redundant.
                 return
             }
-
-            if (result.status === "correct") {
-                checkmark.addClass('checkmark-correct icon-ok fa-check');
-            }
-            else {
-                checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+            if (result.status) {
+                if (result.status === "correct") {
+                    checkmark.addClass('checkmark-correct icon-ok fa-check');
+                }
+                else {
+                    checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                }
             }
         },
 

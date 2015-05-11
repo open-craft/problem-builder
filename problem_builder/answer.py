@@ -190,7 +190,7 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         }
 
     def get_last_result(self):
-        return self.get_results(None)
+        return self.get_results(None) if self.student_input else {}
 
     def submit(self, submission):
         """
