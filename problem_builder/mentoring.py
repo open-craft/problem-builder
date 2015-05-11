@@ -36,6 +36,7 @@ from .step import StepParentMixin, StepMixin
 
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
+from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
 
 try:
     # Used to detect if we're in the workbench so we can add Font Awesome
@@ -47,11 +48,6 @@ except ImportError:
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
-
-_default_theme_config = {
-    'package': 'problem_builder',
-    'locations': ['public/themes/lms.css']
-}
 
 
 # Make '_' a no-op so we can scrape strings
@@ -69,7 +65,10 @@ PARTIAL = 'partial'
 
 @XBlock.needs("i18n")
 @XBlock.wants('settings')
-class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioContainerXBlockMixin):
+class MentoringBlock(
+    XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioContainerXBlockMixin,
+    XBlockWithSettingsMixin, ThemableXBlockMixin
+):
     """
     An XBlock providing mentoring capabilities
 
@@ -195,6 +194,10 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
     block_settings_key = 'mentoring'
     theme_key = 'theme'
+    default_theme_config = {
+        'package': 'problem_builder',
+        'locations': ['public/themes/lms.css']
+    }
 
     def _(self, text):
         """ translate text """
@@ -204,19 +207,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     def is_assessment(self):
         """ Checks if mentoring XBlock is in assessment mode """
         return self.mode == 'assessment'
-
-    def get_theme(self):
-        """
-        Gets theme settings from settings service. Falls back to default (LMS) theme
-        if settings service is not available, xblock theme settings are not set or does
-        contain mentoring theme settings.
-        """
-        settings_service = self.runtime.service(self, "settings")
-        if settings_service:
-            xblock_settings = settings_service.get_settings_bucket(self)
-            if xblock_settings and self.theme_key in xblock_settings:
-                return xblock_settings[self.theme_key]
-        return _default_theme_config
 
     def get_question_number(self, question_id):
         """
@@ -264,12 +254,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         partially_correct = self.answer_mapper(PARTIAL)
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
-
-    def include_theme_files(self, fragment):
-        theme = self.get_theme()
-        theme_package, theme_files = theme['package'], theme['locations']
-        for theme_file in theme_files:
-            fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
 
     def student_view(self, context):
         # Migrate stored data if necessary

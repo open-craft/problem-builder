@@ -3,7 +3,6 @@ import ddt
 from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
 from problem_builder import MentoringBlock
-from problem_builder.mentoring import _default_theme_config
 
 
 class TestMentoringBlock(unittest.TestCase):
@@ -42,27 +41,27 @@ class TestMentoringBlockTheming(unittest.TestCase):
 
     def test_theme_uses_default_theme_if_settings_service_is_not_available(self):
         self.runtime_mock.service = Mock(return_value=None)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
+        self.assertEqual(self.block.get_theme(), MentoringBlock.default_theme_config)
 
     def test_theme_uses_default_theme_if_no_theme_is_set(self):
         self.service_mock.get_settings_bucket = Mock(return_value=None)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
+        self.assertEqual(self.block.get_theme(), MentoringBlock.default_theme_config)
+        self.service_mock.get_settings_bucket.assert_called_once_with(self.block, default={})
 
     @ddt.data(123, object())
     def test_theme_raises_if_theme_object_is_not_iterable(self, theme_config):
         self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
         with self.assertRaises(TypeError):
             self.block.get_theme()
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
+        self.service_mock.get_settings_bucket.assert_called_once_with(self.block, default={})
 
     @ddt.data(
         {}, {'mass': 123}, {'spin': {}}, {'parity': "1"}
     )
     def test_theme_uses_default_theme_if_no_mentoring_theme_is_set_up(self, theme_config):
         self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
+        self.assertEqual(self.block.get_theme(), MentoringBlock.default_theme_config)
+        self.service_mock.get_settings_bucket.assert_called_once_with(self.block, default={})
 
     @ddt.data(
         {MentoringBlock.theme_key: 123},
@@ -78,7 +77,7 @@ class TestMentoringBlockTheming(unittest.TestCase):
         package_name = 'some_package'
         theme_config = {MentoringBlock.theme_key: {'package': package_name, 'locations': ['lms.css']}}
         self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with patch("problem_builder.mentoring.ResourceLoader") as patched_resource_loader:
+        with patch("xblockutils.settings.ResourceLoader") as patched_resource_loader:
             self.block.include_theme_files(fragment)
             patched_resource_loader.assert_called_with(package_name)
 
