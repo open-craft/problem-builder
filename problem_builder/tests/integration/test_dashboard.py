@@ -17,10 +17,8 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-from textwrap import dedent
 from mock import Mock, patch
 from .base_test import ProblemBuilderBaseTest
-from xblockutils.resources import ResourceLoader
 
 
 class MockSubmissionsAPI(object):
@@ -56,25 +54,11 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
     """
     Test the Student View of a dashboard XBlock linked to some problem builder blocks
     """
-    SIMPLE_DASHBOARD = """<pb-dashboard mentoring_ids='["dummy-value"]'/>"""
-    ALTERNATIVE_DASHBOARD = dedent("""
-    <pb-dashboard mentoring_ids='["dummy-value"]' show_numbers="false"
-        average_labels='{"Step 1": "Avg.", "Step 2":"Mean", "Step 3":"Second Quartile"}'
-    />
-    """)
-    HIDE_QUESTIONS_DASHBOARD = dedent("""
-    <pb-dashboard mentoring_ids='["dummy-value"]'
-        exclude_questions='{"Step 1": [2, 3], "Step 2":[3], "Step 3":[2]}'
-    />
-    """)
-    MALFORMED_HIDE_QUESTIONS_DASHBOARD = dedent("""
-    <pb-dashboard mentoring_ids='["dummy-value"]'
-      exclude_questions='{"Step 1": "1234", "Step 2":[3], "Step 3":[2]}'
-    />
-    """)
-
     def setUp(self):
         super(TestDashboardBlock, self).setUp()
+        # Set up our scenario:
+        self.load_scenario('dashboard.xml')
+
         # Apply a whole bunch of patches that are needed in lieu of the LMS/CMS runtime and edx-submissions:
 
         def get_mentoring_blocks(dashboard_block, mentoring_ids, ignore_errors=True):
@@ -94,21 +78,13 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
             ),
             ("problem_builder.dashboard.DashboardBlock.get_mentoring_blocks", get_mentoring_blocks),
             ("problem_builder.dashboard.sub_api", mock_submisisons_api),
-            ("problem_builder.mcq.sub_api", mock_submisisons_api),
-            (
-                "problem_builder.mentoring.MentoringBlock.url_name",
-                property(lambda block: block.display_name)
-            )
+            ("problem_builder.mcq.sub_api", mock_submisisons_api)
         )
         for p in patches:
             patcher = patch(*p)
             patcher.start()
             self.addCleanup(patcher.stop)
-
-    def _install_fixture(self, dashboard_xml):
-        loader = ResourceLoader(self.__module__)
-        scenario = loader.render_template("xml_templates/dashboard.xml", {'dashboard': dashboard_xml})
-        self.set_scenario_xml(scenario)
+        # All the patches are installed; now we can proceed with using the XBlocks for tests:
         self.go_to_view("student_view")
         self.vertical = self.load_root_xblock()
 
@@ -117,7 +93,6 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         Test that when the student has not submitted any question answers, we still see
         the dashboard, and its lists all the MCQ questions in the way we expect.
         """
-        self._install_fixture(self.SIMPLE_DASHBOARD)
         dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
         step_headers = dashboard.find_elements_by_css_selector('thead')
         self.assertEqual(len(step_headers), 3)
@@ -132,7 +107,10 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
                 value = mcq.find_element_by_css_selector('td:last-child')
                 self.assertEqual(value.text, '')
 
-    def _set_mentoring_values(self):
+    def test_dashboard(self):
+        """
+        Submit an answer to each MCQ, then check that the dashboard reflects those answers.
+        """
         pbs = self.browser.find_elements_by_css_selector('.mentoring')
         for pb in pbs:
             mcqs = pb.find_elements_by_css_selector('fieldset.choices')
@@ -140,13 +118,6 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
                 choices = mcq.find_elements_by_css_selector('.choices .choice label')
                 choices[idx].click()
             self.click_submit(pb)
-
-    def test_dashboard(self):
-        """
-        Submit an answer to each MCQ, then check that the dashboard reflects those answers.
-        """
-        self._install_fixture(self.SIMPLE_DASHBOARD)
-        self._set_mentoring_values()
 
         # Reload the page:
         self.go_to_view("student_view")
@@ -160,96 +131,6 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
             for mcq in mcq_rows:
                 value = mcq.find_element_by_css_selector('td.value')
                 self.assertIn(value.text, ('1', '2', '3', '4', 'B'))
-            # Check the average:
-            avg_row = step.find_element_by_css_selector('tr.avg-row')
-            left_col = avg_row.find_element_by_css_selector('.desc')
-            self.assertEqual(left_col.text, "Average")
-            right_col = avg_row.find_element_by_css_selector('.value')
-            expected_average = {0: "2", 1: "3", 2: "1"}[step_num]
-            self.assertEqual(right_col.text, expected_average)
-
-    def test_dashboard_alternative(self):
-        """
-        Submit an answer to each MCQ, then check that the dashboard reflects those answers with alternative
-        configuration:
-
-        * Average label is "Avg." instead of default "Average"
-        * Numerical values are not shown
-        """
-        self._install_fixture(self.ALTERNATIVE_DASHBOARD)
-        self._set_mentoring_values()
-
-        # Reload the page:
-        self.go_to_view("student_view")
-        dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
-        steps = dashboard.find_elements_by_css_selector('tbody')
-        self.assertEqual(len(steps), 3)
-
-        average_labels = ["Avg.", "Mean", "Second Quartile"]
-
-        for step_num, step in enumerate(steps):
-            mcq_rows = step.find_elements_by_css_selector('tr:not(.avg-row)')
-            self.assertTrue(2 <= len(mcq_rows) <= 3)
-            for mcq in mcq_rows:
-                value = mcq.find_element_by_css_selector('td.value')
-                self.assertEqual(value.text, '')
-            # Check the average:
-            avg_row = step.find_element_by_css_selector('tr.avg-row')
-            left_col = avg_row.find_element_by_css_selector('.desc')
-            self.assertEqual(left_col.text, average_labels[step_num])
-            right_col = avg_row.find_element_by_css_selector('.value')
-            self.assertEqual(right_col.text, "")
-
-    def test_dashboard_exclude_questions(self):
-        """
-        Submit an answer to each MCQ, then check that the dashboard ignores questions it is configured to ignore
-        """
-        self._install_fixture(self.HIDE_QUESTIONS_DASHBOARD)
-        self._set_mentoring_values()
-
-        # Reload the page:
-        self.go_to_view("student_view")
-        dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
-        steps = dashboard.find_elements_by_css_selector('tbody')
-        self.assertEqual(len(steps), 3)
-
-        lengths = [1, 2, 1]
-
-        for step_num, step in enumerate(steps):
-            mcq_rows = step.find_elements_by_css_selector('tr:not(.avg-row)')
-            self.assertEqual(len(mcq_rows), lengths[step_num])
-            for mcq in mcq_rows:
-                value = mcq.find_element_by_css_selector('td.value')
-                self.assertIn(value.text, ('1', '2', '3', '4'))
-            # Check the average:
-            avg_row = step.find_element_by_css_selector('tr.avg-row')
-            left_col = avg_row.find_element_by_css_selector('.desc')
-            self.assertEqual(left_col.text, "Average")
-            right_col = avg_row.find_element_by_css_selector('.value')
-            expected_average = {0: "1", 1: "3", 2: "1"}[step_num]
-            self.assertEqual(right_col.text, expected_average)
-
-    def test_dashboard_malformed_exclude_questions(self):
-        """
-        Submit an answer to each MCQ, then check that the dashboard ignores questions it is configured to ignore
-        """
-        self._install_fixture(self.MALFORMED_HIDE_QUESTIONS_DASHBOARD)
-        self._set_mentoring_values()
-
-        # Reload the page:
-        self.go_to_view("student_view")
-        dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
-        steps = dashboard.find_elements_by_css_selector('tbody')
-        self.assertEqual(len(steps), 3)
-
-        lengths = [3, 2, 1]
-
-        for step_num, step in enumerate(steps):
-            mcq_rows = step.find_elements_by_css_selector('tr:not(.avg-row)')
-            self.assertEqual(len(mcq_rows), lengths[step_num])
-            for mcq in mcq_rows:
-                value = mcq.find_element_by_css_selector('td.value')
-                self.assertIn(value.text, ('1', '2', '3', '4'))
             # Check the average:
             avg_row = step.find_element_by_css_selector('tr.avg-row')
             left_col = avg_row.find_element_by_css_selector('.desc')

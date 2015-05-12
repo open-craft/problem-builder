@@ -42,30 +42,16 @@
           {% for mcq in block.mcqs %}
             <tr>
               <th class="desc">{{ mcq.display_name }}</th>
-              <td class="value"
-                  {% if mcq.color %} style="border-right-color: {{mcq.color}};"{% endif %}
-                  {% if not show_numbers %}
-                    {% if mcq.value %} aria-label="Score: {{mcq.value}}" {% else %} aria-label="{% trans 'No value yet' %}" {%endif%}
-                  {% endif %}
-              >
-                {% if mcq.value and show_numbers %}
-                  {{ mcq.value }}
-                {% endif %}
+              <td class="value" {% if mcq.color %}style="border-right-color: {{mcq.color}};"{% endif %}>
+                {% if mcq.value %}{{ mcq.value }}{% endif %}
               </td>
             </tr>
           {% endfor %}
           {% if block.has_average %}
            <tr class="avg-row">
-              <th class="desc">{{ block.average_label }}</th>
-              <td class="value"
-                  {% if block.average_color %} style="border-right-color: {{block.average_color}};"{% endif %}
-                  {% if not show_numbers %}
-                    {% if block.average %} aria-label="Score: {{block.average|floatformat}}" {% else %} aria-label="{% trans 'No value yet' %}" {%endif%}
-                  {% endif %}
-              >
-                {% if show_numbers %}
-                  {{ block.average|floatformat }}
-                {% endif %}
+              <th class="desc">{% trans "Average" %}</th>
+              <td class="value" {% if block.average_color %}style="border-right-color: {{block.average_color}};"{% endif %}>
+                {{ block.average|floatformat }}
               </td>
             </tr>
           {% endif %}

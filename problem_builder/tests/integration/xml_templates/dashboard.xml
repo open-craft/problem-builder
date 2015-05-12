@@ -53,5 +53,6 @@
             <pb-choice value="C">Option C</pb-choice>
         </pb-mcq>
     </problem-builder>
-    {{ dashboard|safe }}
+    <pb-dashboard mentoring_ids='["dummy-value"]'>
+    </pb-dashboard>
 </vertical_demo>
