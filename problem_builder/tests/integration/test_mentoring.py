@@ -170,6 +170,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         mentoring = self.load_scenario("feedback_persistence.xml")
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
         answer_checkmark = answer.find_element_by_xpath("parent::*").find_element_by_css_selector(".answer-checkmark")
 
@@ -181,6 +182,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         for i in range(5):
             self._assert_feedback_hidden(rating, i)
         self.assertFalse(messages.is_displayed())
+        self.assertFalse(submit.is_enabled())
 
     def test_persists_feedback_on_page_reload(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
@@ -195,7 +197,15 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         mentoring = self.go_to_view("student_view")
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
+        submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+
         self._standard_checks(answer, mcq, mrq, rating, messages, only_selected=True)
+        # after reloading submit is disabled...
+        self.assertFalse(submit.is_enabled())
+
+        # ...until some changes are done
+        self.click_choice(mrq, "Its elegance")
+        self.assertTrue(submit.is_enabled())
 
     def test_given_perfect_score_in_past_loads_current_result(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
