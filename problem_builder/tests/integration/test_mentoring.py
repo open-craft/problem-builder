@@ -146,20 +146,17 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             if checkbox.is_selected():
                 checkbox.click()
 
-    def _standard_checks(self, answer, mcq, mrq, rating, messages, only_selected=False):
+    def _standard_checks(self, answer, mcq, mrq, rating, messages):
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
         self._assert_feedback_showed(mcq, 0, "Great!")
         self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
         )
-        if not only_selected:
-            self._assert_feedback_showed(
-                mrq, 1, "This is something everyone has to like about beauty",
-                click_choice_result=True, success=False
-            )
-        else:
-            self._assert_feedback_hidden(mrq, 1)
+        self._assert_feedback_showed(
+            mrq, 1, "This is something everyone has to like about beauty",
+            click_choice_result=True, success=False
+        )
         self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
         self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
         self._assert_feedback_showed(rating, 3, "I love good grades.", click_choice_result=True)
@@ -199,7 +196,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         messages = self._get_messages_element(mentoring)
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
-        self._standard_checks(answer, mcq, mrq, rating, messages, only_selected=True)
+        self._standard_checks(answer, mcq, mrq, rating, messages)
         # after reloading submit is disabled...
         self.assertFalse(submit.is_enabled())
 
@@ -247,4 +244,42 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         mentoring = self.go_to_view("student_view")
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
-        self._standard_checks(answer, mcq, mrq, rating, messages, only_selected=True)
+        self._standard_checks(answer, mcq, mrq, rating, messages)
+
+    def test_partial_mrq_is_not_completed(self):
+        mentoring = self.load_scenario("feedback_persistence.xml")
+        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        messages = self._get_messages_element(mentoring)
+
+        answer.send_keys('This is the answer')
+        self.click_choice(mcq, "Yes")
+        # 1st, 3rd and 4th options, first three are correct, i.e. two mistakes: 2nd and 4th
+        self.click_choice(mrq, "Its elegance")
+        self.click_choice(mrq, "Its gracefulness")
+        self.click_choice(rating, "4")
+        self.click_submit(mentoring)
+
+        def assert_state(answer, mcq, mrq, rating, messages):
+            self.assertEqual(answer.get_attribute('value'), 'This is the answer')
+            self._assert_feedback_showed(mcq, 0, "Great!")
+            self._assert_feedback_showed(
+                mrq, 0, "This is something everyone has to like about this MRQ",
+                click_choice_result=True
+            )
+            self._assert_feedback_showed(
+                mrq, 1, "This is something everyone has to like about beauty",
+                click_choice_result=True, success=False
+            )
+            self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
+            self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True)
+            self._assert_feedback_showed(rating, 3, "I love good grades.", click_choice_result=True)
+            self.assertTrue(messages.is_displayed())
+            self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
+
+        assert_state(answer, mcq, mrq, rating, messages)
+
+        # now, reload the page and make sure the same result is shown
+        mentoring = self.go_to_view("student_view")
+        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        messages = self._get_messages_element(mentoring)
+        assert_state(answer, mcq, mrq, rating, messages)
