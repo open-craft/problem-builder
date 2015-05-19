@@ -238,10 +238,24 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         help=_("Toggles if numeric values are displayed"),
         scope=Scope.content
     )
+    header_html = String(
+        display_name=_("Header HTML"),
+        default="",
+        help=_("Additional HTML to include after the heading."),
+        multiline_editor=True,
+        scope=Scope.content,
+    )
+    footer_html = String(
+        display_name=_("Footer HTML"),
+        default="",
+        help=_("Additional HTML to include after the bottom of the page."),
+        multiline_editor=True,
+        scope=Scope.content,
+    )
 
     editable_fields = (
         'display_name', 'mentoring_ids', 'exclude_questions', 'average_labels', 'show_numbers',
-        'color_rules', 'visual_rules', 'visual_title', 'visual_desc'
+        'color_rules', 'visual_rules', 'visual_title', 'visual_desc', 'header_html', 'footer_html',
     )
     css_path = 'public/css/dashboard.css'
     js_path = 'public/js/dashboard.js'
@@ -446,6 +460,8 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             'display_name': self.display_name,
             'visual_repr': visual_repr,
             'show_numbers': self.show_numbers,
+            'header_html': self.header_html,
+            'footer_html': self.footer_html,
         })
 
         fragment = Fragment(html)
