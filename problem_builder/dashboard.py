@@ -241,7 +241,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     header_html = String(
         display_name=_("Header HTML"),
         default="",
-        help=_("Additional HTML to include after the heading."),
+        help=_("Custom text to include at the beginning of the report."),
         multiline_editor="html",
         resettable_editor=False,
         scope=Scope.content,
@@ -249,7 +249,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
     footer_html = String(
         display_name=_("Footer HTML"),
         default="",
-        help=_("Additional HTML to include after the bottom of the page."),
+        help=_("Custom text to include at the end of the report."),
         multiline_editor="html",
         resettable_editor=False,
         scope=Scope.content,
