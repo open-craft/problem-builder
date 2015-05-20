@@ -242,14 +242,16 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         display_name=_("Header HTML"),
         default="",
         help=_("Additional HTML to include after the heading."),
-        multiline_editor=True,
+        multiline_editor="html",
+        resettable_editor=False,
         scope=Scope.content,
     )
     footer_html = String(
         display_name=_("Footer HTML"),
         default="",
         help=_("Additional HTML to include after the bottom of the page."),
-        multiline_editor=True,
+        multiline_editor="html",
+        resettable_editor=False,
         scope=Scope.content,
     )
 
