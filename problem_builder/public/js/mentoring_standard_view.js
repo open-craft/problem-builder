@@ -4,7 +4,7 @@ function MentoringStandardView(runtime, element, mentoring) {
 
     var callIfExists = mentoring.callIfExists;
 
-    function handleSubmitResults(response) {
+    function handleSubmitResults(response, disable_submit) {
         messagesDOM.empty().hide();
 
         $.each(response.results || [], function(index, result_spec) {
@@ -28,9 +28,16 @@ function MentoringStandardView(runtime, element, mentoring) {
             messagesDOM.prepend('<div class="title1">' + mentoring.data.feedback_label + '</div>');
             messagesDOM.show();
         }
+
+        // this method is called on successful submission and on page load
+        // results will be empty only for initial load if no submissions was made
+        // in such case we must allow submission to support submitting empty read-only long answer recaps
+        if (disable_submit || response.results.length > 0) {
+            submitDOM.attr('disabled', 'disabled');
+        }
     }
 
-    function handleSubmitError(jqXHR, textStatus, errorThrown) {
+    function handleSubmitError(jqXHR, textStatus, errorThrown, disable_submit) {
         if (textStatus == "error") {
             var errMsg = errorThrown;
             // Check if there's a more specific JSON error message:
@@ -43,6 +50,10 @@ function MentoringStandardView(runtime, element, mentoring) {
 
             mentoring.setContent(messagesDOM, errMsg);
             messagesDOM.show();
+        }
+
+        if (disable_submit) {
+            submitDOM.attr('disabled', 'disabled');
         }
     }
 
@@ -59,12 +70,9 @@ function MentoringStandardView(runtime, element, mentoring) {
         if (submitXHR) {
             submitXHR.abort();
         }
-        submitXHR = $.post(handlerUrl, JSON.stringify(data)).success(handleSubmitResults).error(handleSubmitError);
-
-        if (disable_submit) {
-            var disable_submit_callback = function(){ submitDOM.attr('disabled', 'disabled'); };
-            submitXHR.success(disable_submit_callback).error(disable_submit_callback);
-        }
+        submitXHR = $.post(handlerUrl, JSON.stringify(data))
+            .success(function(response) { handleSubmitResults(response, disable_submit); })
+            .error(function(jqXHR, textStatus, errorThrown) { handleSubmitError(jqXHR, textStatus, errorThrown, disable_submit); });
     }
 
     function get_results(){
