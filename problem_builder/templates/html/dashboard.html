@@ -3,6 +3,12 @@
   <div class="dashboard-report">
     <h2>{{display_name}}</h2>
 
+    {% if header_html %}
+    <div class="report-header">
+      {{ header_html|safe }}
+    </div>
+    {% endif %}
+
     {% if visual_repr %}
     <div class="pb-dashboard-visual">
       <svg width="{{visual_repr.width}}" height="{{visual_repr.height}}" role="img" aria-labelledby="pb-dashboard-vr-title-{{visual_repr.unique_id}} pb-dashboard-vr-desc-{{visual_repr.unique_id}}">
@@ -64,6 +70,11 @@
         </tbody>
       </table>
     {% endfor %}
+    {% if footer_html %}
+    <div class="report-footer">
+      {{ footer_html|safe }}
+    </div>
+    {% endif %}
   </div>
 
   {% if blocks %}
