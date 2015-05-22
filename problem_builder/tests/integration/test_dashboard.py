@@ -61,6 +61,8 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
     ALTERNATIVE_DASHBOARD = dedent("""
     <pb-dashboard mentoring_ids='["dummy-value"]' show_numbers="false"
         average_labels='{"Step 1": "Avg.", "Step 2":"Mean", "Step 3":"Second Quartile"}'
+        header_html='&lt;p id="header-paragraph"&gt;Header&lt;/p&gt;'
+        footer_html='&lt;p id="footer-paragraph"&gt;Footer&lt;/p&gt;'
     />
     """)
     HIDE_QUESTIONS_DASHBOARD = dedent("""
@@ -166,6 +168,10 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         # Reload the page:
         self.go_to_view("student_view")
         dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
+        headers = dashboard.find_elements_by_class_name('report-header')
+        self.assertEqual(len(headers), 0)
+        footers = dashboard.find_elements_by_class_name('report-footer')
+        self.assertEqual(len(footers), 0)
         steps = dashboard.find_elements_by_css_selector('tbody')
         self.assertEqual(len(steps), 3)
         expected_values = ('1', '2', '3', '4', 'B')
@@ -193,6 +199,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
 
         * Average label is "Avg." instead of default "Average"
         * Numerical values are not shown
+        * Include HTML header and footer snippets
         """
         self._install_fixture(self.ALTERNATIVE_DASHBOARD)
         self._set_mentoring_values()
@@ -200,6 +207,10 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         # Reload the page:
         self.go_to_view("student_view")
         dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
+        header_p = dashboard.find_element_by_id('header-paragraph')
+        self.assertEquals(header_p.text, 'Header')
+        footer_p = dashboard.find_element_by_id('footer-paragraph')
+        self.assertEquals(footer_p.text, 'Footer')
         steps = dashboard.find_elements_by_css_selector('tbody')
         self.assertEqual(len(steps), 3)
 
