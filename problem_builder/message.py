@@ -159,7 +159,8 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
         """
         block = runtime.construct_xblock_from_class(cls, keys)
         block.content = unicode(node.text or u"")
-        block.type = node.attrib['type']
+        if 'type' in node.attrib:  # 'type' is optional - default is 'completed'
+            block.type = node.attrib['type']
         for child in node:
             block.content += etree.tostring(child, encoding='unicode')
 

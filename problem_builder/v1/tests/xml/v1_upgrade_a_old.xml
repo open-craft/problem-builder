@@ -56,7 +56,7 @@ Changes from the original:
                     <message type="on-submit">Thank you for answering!</message>
                 </mrq>
 
-                <message type="completed">
+                <message>
                     <html><p>Congratulations!</p></html>
                 </message>
                 <message type="incomplete">
