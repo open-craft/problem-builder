@@ -1,5 +1,5 @@
 <vertical_demo>
-    <problem-builder>
+    <problem-builder mode="{{mode}}">
 
         <pb-mcq name="q1" type="choices" correct_choices='["yes"]' question="So, do you like this Q1?">
             <pb-choice value="yes">Yes</pb-choice>

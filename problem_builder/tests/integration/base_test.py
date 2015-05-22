@@ -149,6 +149,19 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         self.assertIsNotNone(question_div)
         return question_div
 
+    def answer_mcq(self, number, name, value, mentoring, controls, is_last=False):
+        self.expect_question_visible(number, mentoring)
+
+        mentoring.find_element_by_css_selector('input[name={}][value={}]'.format(name, value)).click()
+        controls.submit.click()
+        if is_last:
+            self.wait_until_clickable(controls.review)
+            controls.review.click()
+            self.wait_until_hidden(controls.review)
+        else:
+            self.wait_until_clickable(controls.next_question)
+            controls.next_question.click()
+
 
 class GetChoices(object):
     """ Helper class for interacting with MCQ options """
