@@ -54,6 +54,7 @@ BLOCKS = [
     'pb-choice = problem_builder:ChoiceBlock',
 
     'pb-dashboard = problem_builder:DashboardBlock',
+    'pb-beeper = problem_builder:BeeperBlock'
     # Deprecated. You can temporarily uncomment and run 'python setup.py develop' if you have these blocks
     # installed from testing mentoring v2 and need to get past an error message.
     #'mentoring = problem_builder:MentoringBlock',  # Deprecated alias for problem-builder

@@ -7,3 +7,4 @@ from .mrq import MRQBlock
 from .message import MentoringMessageBlock
 from .table import MentoringTableBlock, MentoringTableColumn
 from .tip import TipBlock
+from .beeper import BeeperBlock
