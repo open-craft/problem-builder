@@ -23,13 +23,22 @@ function DataExportBlock(runtime, element) {
         }
         if (statusChanged) updateView();
     }
+    function showSpinner() {
+        $startButton.prop('disabled', true);
+        $cancelButton.prop('disabled', true);
+        $downloadButton.prop('disabled', true);
+        $deleteButton.prop('disabled', true);
+        $('.data-export-status', element).empty().append(
+            $('<i>').addClass('icon fa fa-spinner fa-spin')
+        );
+    }
     function updateView() {
         var $statusArea = $('.data-export-status', element);
         $statusArea.empty();
-        $startButton.toggle(!status.export_pending);
-        $cancelButton.toggle(status.export_pending);
-        $downloadButton.toggle(Boolean(status.download_url));
-        $deleteButton.toggle(Boolean(status.last_export_result));
+        $startButton.toggle(!status.export_pending).prop('disabled', false);
+        $cancelButton.toggle(status.export_pending).prop('disabled', false);
+        $downloadButton.toggle(Boolean(status.download_url)).prop('disabled', false);
+        $deleteButton.toggle(Boolean(status.last_export_result)).prop('disabled', false);
         if (status.last_export_result) {
             if (status.last_export_result.error) {
                 $statusArea.append($('<p>').text(
@@ -65,6 +74,7 @@ function DataExportBlock(runtime, element) {
                 success: updateStatus,
                 dataType: 'json',
             });
+            showSpinner();
         });
     }
     addHandler($startButton, 'start_export');
@@ -73,5 +83,6 @@ function DataExportBlock(runtime, element) {
     $downloadButton.on('click', function() {
         window.location.href = status.download_url;
     });
+    showSpinner();
     getStatus();
 }
