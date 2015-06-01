@@ -60,11 +60,11 @@ class DataExportBlock(XBlock):
         """ Studio View """
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
-        return Fragment(u"<p>Data Export Block</p><p>This block only works from the LMS.</p>")
+        return Fragment(u'<p>Data Export Block</p><p>This block only works from the LMS.</p>')
 
     def studio_view(self, context=None):
         """ 'Edit' form view in Studio """
-        return Fragment(u"<p>This block has no configuration options.</p>")
+        return Fragment(u'<p>This block has no configuration options.</p>')
 
     def check_pending_export(self):
         """
@@ -78,27 +78,22 @@ class DataExportBlock(XBlock):
 
     def _save_result(self, task_result):
         """ Given an AsyncResult or EagerResult, save it. """
-        self.active_export_task_id = ""
+        self.active_export_task_id = ''
         if task_result.successful():
             if isinstance(task_result.result, dict) and not task_result.result.get('error'):
                 self.last_export_result = task_result.result
             else:
-                self.last_export_result = {"error": u"Unexpected result: {}".format(repr(task_result.result))}
+                self.last_export_result = {'error': u'Unexpected result: {}'.format(repr(task_result.result))}
         else:
-            self.last_export_result = {"error": unicode(task_result.result)}
+            self.last_export_result = {'error': unicode(task_result.result)}
 
     def student_view(self, context=None):
         """ Normal View """
-        # TODO: Verify instructor permissions
-        # Check if any pending export has finished:
-        self.check_pending_export()
-        # Render our HTML:
-        html = loader.render_template('templates/html/data_export.html', {
-            'export_pending': bool(self.active_export_task_id),
-            'last_export_result': self.last_export_result,
-            'download_url': self.download_url_for_last_report,
-        })
+        if not self.user_is_staff():
+            return Fragment(u'<p>This interface can only be used by course staff.</p>')
+        html = loader.render_template('templates/html/data_export.html')
         fragment = Fragment(html)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
         fragment.initialize_js('DataExportBlock')
         return fragment
@@ -107,27 +102,40 @@ class DataExportBlock(XBlock):
     def download_url_for_last_report(self):
         """ Get the URL for the last report, if any """
         # Unfortunately this is a bit inefficient due to the ReportStore API
-        if not self.last_export_result or self.last_export_result["error"] is not None:
+        if not self.last_export_result or self.last_export_result['error'] is not None:
             return None
         from instructor_task.models import ReportStore
-        report_store = ReportStore.from_config()
+        report_store = ReportStore.from_config(config_name='GRADES_DOWNLOAD')
         course_key = self.scope_ids.usage_id.course_key
-        return dict(report_store.links_for(course_key)).get(self.last_export_result["report_filename"], None)
+        return dict(report_store.links_for(course_key)).get(self.last_export_result['report_filename'])
+
+    def _get_status(self):
+        self.check_pending_export()
+        return {
+            'export_pending': bool(self.active_export_task_id),
+            'last_export_result': self.last_export_result,
+            'download_url': self.download_url_for_last_report,
+        }
+
+    @XBlock.json_handler
+    def get_status(self, request, suffix=''):
+        return self._get_status()
 
     @XBlock.json_handler
     def delete_export(self, request, suffix=''):
         self._delete_export()
-        return {"result": "ok"}
+        return self._get_status()
 
     def _delete_export(self):
         self.last_export_result = None
-        self.active_export_task_id = ""
+        self.active_export_task_id = ''
 
     @XBlock.json_handler
     def start_export(self, request, suffix=''):
         """ Start a new asynchronous export """
+        if not self.user_is_staff():
+            return {'error': 'permission denied'}
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
-        # TODO: Verify instructor permissions
         self._delete_export()
         async_result = export_data_task.delay(unicode(self.scope_ids.usage_id), self.get_user_id())
         if async_result.ready():
@@ -141,16 +149,29 @@ class DataExportBlock(XBlock):
         else:
             # The task is running asynchronously. Store the result ID so we can query its progress:
             self.active_export_task_id = async_result.id
-        return {"result": "started"}
+        return self._get_status()
+        return {'result': 'started'}
 
-    def get_user_id(self):
-        """
-        Get the ID of the current user.
-        """
+    @XBlock.json_handler
+    def cancel_export(self, request, suffix=''):
+        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
+        if self.active_export_task_id:
+            async_result = export_data_task.AsyncResult(self.active_export_task_id)
+            async_result.revoke()
+            self._delete_export()
+
+    def _get_user_attr(self, attr):
+        """Get an attribute of the current user."""
         user_service = self.runtime.service(self, 'user')
         if user_service:
             # May be None when creating bok choy test fixtures
-            user_id = user_service.get_current_user().opt_attrs.get('edx-platform.user_id', None)
-        else:
-            user_id = None
-        return user_id
+            return user_service.get_current_user().opt_attrs.get(attr)
+        return None
+
+    def user_is_staff(self):
+        """Return a Boolean value indicating whether the current user is a member of staff."""
+        return self._get_user_attr('edx-platform.user_is_staff')
+
+    def get_user_id(self):
+        """Get the edx-platform user_id of the current user."""
+        return self._get_user_attr('edx-platform.user_id')

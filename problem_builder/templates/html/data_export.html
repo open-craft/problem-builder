@@ -1,22 +1,12 @@
 <h3>Data Export</h3>
 
-<script>
+<p>You can export all student answers to multiple-choice questions to a CSV file here.</p>
 
-</script>
+<div class="data-export-status"></div>
 
-<p><button class="new-data-export">Start a new export</button></p>
-
-{% if last_export_result %}
-	<h3>Export</h3>
-	{% if last_export_result.error %}
-		<p>Export failed! Reason: {{ last_export_result.error }}.</p>
-	{% else %}
-		<p>Date: {{ last_export_result.report_date }}</p>
-		<p>Took {{ last_export_result.generation_time_s }} seconds to generate.</p>
-		<p>Download: <a href="{{download_url}}">{{ last_export_result.report_filename }}</a></p>
-	{% endif %}
-
-	<p><button class="delete-data-export">Delete export</button></p>
-{% elif export_pending %}
-	<p>Report is currently being generated...</p>
-{% endif %}
+<div class="data-export-actions">
+  <button class="data-export-download">Download result</button>
+  <button class="data-export-start">Start a new export</button>
+  <button class="data-export-cancel">Cancel current export</button>
+  <button class="data-export-delete">Delete result</button>
+</div>

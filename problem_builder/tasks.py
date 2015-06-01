@@ -60,9 +60,10 @@ def export_data(source_block_id_str, user_id):
         block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
         block_type = block.scope_ids.block_type
         for submission in sub_api.get_all_submissions(course_key_str, block_id, block_type):
-            if submission.student_id not in student_submissions:
-                student_submissions[submission.student_id] = [submission.student_id] + [""] * len(blocks_to_include)
-            student_submissions[submission.student_id][idx] = submission.answer
+            student_id = submission['student_id']
+            if student_id not in student_submissions:
+                student_submissions[student_id] = [student_id] + [""] * len(blocks_to_include)
+            student_submissions[student_id][idx] = submission['answer']
 
     # Now change from a dict to an array ordered by student ID as we generate the remaining rows:
     for student_id in sorted(student_submissions.iterkeys()):
@@ -71,7 +72,7 @@ def export_data(source_block_id_str, user_id):
 
     # Generate the CSV:
     filename = u"pb-data-export-{}.csv".format(report_date.strftime("%Y-%m-%d-%H%M%S"))
-    report_store = ReportStore.from_config()
+    report_store = ReportStore.from_config(config_name='GRADES_DOWNLOAD')
     report_store.store_rows(course_key, filename, rows)
 
     generation_time_s = (datetime.datetime.now() - report_date).total_seconds()
