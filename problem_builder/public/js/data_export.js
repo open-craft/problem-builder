@@ -1,17 +1,17 @@
 function DataExportBlock(runtime, element) {
-    "use strict";
-    var $startButton = $(".data-export-start", element);
-    var $cancelButton = $(".data-export-cancel", element);
-    var $downloadButton = $(".data-export-download", element);
-    var $deleteButton = $(".data-export-delete", element);
+    'use strict';
+    var $startButton = $('.data-export-start', element);
+    var $cancelButton = $('.data-export-cancel', element);
+    var $downloadButton = $('.data-export-download', element);
+    var $deleteButton = $('.data-export-delete', element);
     var status;
     function getStatus() {
         $.ajax({
-            type: "POST",
+            type: 'POST',
             url: runtime.handlerUrl(element, 'get_status'),
-            data: "{}",
+            data: '{}',
             success: updateStatus,
-            dataType: "json",
+            dataType: 'json',
         });
     }
     function updateStatus(newStatus) {
@@ -24,7 +24,7 @@ function DataExportBlock(runtime, element) {
         if (statusChanged) updateView();
     }
     function updateView() {
-        var $statusArea = $(".data-export-status", element);
+        var $statusArea = $('.data-export-status', element);
         $statusArea.empty();
         $startButton.toggle(!status.export_pending);
         $cancelButton.toggle(status.export_pending);
@@ -57,20 +57,20 @@ function DataExportBlock(runtime, element) {
         }
     }
     function addHandler($button, handlerName) {
-        $button.on("click", function() {
+        $button.on('click', function() {
             $.ajax({
-                type: "POST",
+                type: 'POST',
                 url: runtime.handlerUrl(element, handlerName),
-                data: "{}",
+                data: '{}',
                 success: updateStatus,
-                dataType: "json",
+                dataType: 'json',
             });
         });
     }
     addHandler($startButton, 'start_export');
     addHandler($cancelButton, 'cancel_export');
     addHandler($deleteButton, 'delete_export');
-    $downloadButton.on("click", function() {
+    $downloadButton.on('click', function() {
         window.location.href = status.download_url;
     });
     getStatus();
