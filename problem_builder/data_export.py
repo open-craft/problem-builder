@@ -106,7 +106,7 @@ class DataExportBlock(XBlock):
             return None
         from instructor_task.models import ReportStore
         report_store = ReportStore.from_config(config_name='GRADES_DOWNLOAD')
-        course_key = self.scope_ids.usage_id.course_key
+        course_key = getattr(self.scope_ids.usage_id, 'course_key', None)
         return dict(report_store.links_for(course_key)).get(self.last_export_result['report_filename'])
 
     def _get_status(self):
