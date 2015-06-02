@@ -33,7 +33,7 @@ function DataExportBlock(runtime, element) {
         );
     }
     function updateView() {
-        var $statusArea = $('.data-export-status', element);
+        var $statusArea = $('.data-export-status', element), startTime;
         $statusArea.empty();
         $startButton.toggle(!status.export_pending).prop('disabled', false);
         $cancelButton.toggle(status.export_pending).prop('disabled', false);
@@ -45,12 +45,14 @@ function DataExportBlock(runtime, element) {
                     'Data export failed. Reason: ' + status.last_export_result.error
                 ));
             } else {
+                startTime = new Date(status.last_export_result.start_timestamp * 1000);
                 $statusArea.append($('<p>').text(
-                    'Date completed: ' + status.last_export_result.report_date
+                    'A report is available for download.'
                 ));
                 $statusArea.append($('<p>').text(
-                    'The report took ' + status.last_export_result.generation_time_s +
-                    ' seconds to generate.'
+                    'It was created at ' + startTime.toUTCString() +
+                    ' and took ' + status.last_export_result.generation_time_s.toFixed(1) +
+                    ' seconds to finish.'
                 ));
             }
         } else {

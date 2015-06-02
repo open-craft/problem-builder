@@ -1,9 +1,10 @@
 """
 This file contains celery tasks for contentstore views
 """
+import time
+
 from celery.task import task
 from celery.utils.log import get_task_logger
-import datetime
 from instructor_task.models import ReportStore
 from opaque_keys.edx.keys import UsageKey
 from xmodule.modulestore.django import modulestore
@@ -19,7 +20,7 @@ def export_data(source_block_id_str, user_id):
     """
     Reruns a course in a new celery task.
     """
-    report_date = datetime.datetime.now()
+    start_timestamp = time.time()
 
     logger.debug("Beginning data export")
 
@@ -71,16 +72,16 @@ def export_data(source_block_id_str, user_id):
         del student_submissions[student_id]
 
     # Generate the CSV:
-    filename = u"pb-data-export-{}.csv".format(report_date.strftime("%Y-%m-%d-%H%M%S"))
+    filename = u"pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))
     report_store = ReportStore.from_config(config_name='GRADES_DOWNLOAD')
     report_store.store_rows(course_key, filename, rows)
 
-    generation_time_s = (datetime.datetime.now() - report_date).total_seconds()
+    generation_time_s = time.time() - start_timestamp
     logger.debug("Done data export - took {} seconds".format(generation_time_s))
 
     return {
         "error": None,
         "report_filename": filename,
-        "report_date": report_date.isoformat(),
+        "start_timestamp": start_timestamp,
         "generation_time_s": generation_time_s,
     }
