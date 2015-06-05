@@ -1,5 +1,5 @@
 """
-This file contains celery tasks for contentstore views
+Celery task for CSV student answer export.
 """
 import time
 
@@ -18,7 +18,7 @@ logger = get_task_logger(__name__)
 @task()
 def export_data(source_block_id_str, user_id):
     """
-    Reruns a course in a new celery task.
+    Exports student answers to all MCQ questions to a CSV file.
     """
     start_timestamp = time.time()
 

@@ -50,7 +50,7 @@ function DataExportBlock(runtime, element) {
                     'A report is available for download.'
                 ));
                 $statusArea.append($('<p>').text(
-                    'It was created at ' + startTime.toUTCString() +
+                    'It was created at ' + startTime.toString() +
                     ' and took ' + status.last_export_result.generation_time_s.toFixed(1) +
                     ' seconds to finish.'
                 ));

@@ -24,7 +24,7 @@ class MockTasksModule(object):
                 error=None,
                 report_filename='/file/report.csv',
                 start_timestamp=time.time(),
-                generation_time_s = 23.4,
+                generation_time_s=23.4,
             )
         else:
             async_result.result = 'error'
