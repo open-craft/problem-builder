@@ -21,6 +21,7 @@ import re
 import mock
 import ddt
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 from .base_test import MentoringBaseTest, MentoringAssessmentBaseTest, GetChoices, ProblemBuilderBaseTest
 
 
@@ -44,9 +45,9 @@ class MentoringThemeTest(MentoringAssessmentBaseTest):
         r, g, b = map(int, re.search(r'rgba?\((\d+),\s*(\d+),\s*(\d+)', rgb).groups())
         return '#%02x%02x%02x' % (r, g, b)
 
-    def assert_status_icon_color(self, color):
+    def assert_status_icon_color(self, color, question_text):
         mentoring, controls = self.load_assessment_scenario('assessment_single.xml', {"max_attempts": 2})
-        question = self.expect_question_visible(0, mentoring)
+        question = self.expect_question_visible(0, mentoring, question_text=question_text)
         choice_name = "Maybe not"
 
         choices = GetChoices(question)
@@ -65,13 +66,13 @@ class MentoringThemeTest(MentoringAssessmentBaseTest):
 
     @ddt.unpack
     @ddt.data(
-        ('lms', "#c1373f"),
-        ('apros', "#ff0000")
+        ('lms', "#c1373f", "Question"),
+        ('apros', "#ff0000", "QUESTION")
     )
-    def test_lms_theme_applied(self, theme, expected_color):
+    def test_lms_theme_applied(self, theme, expected_color, question_text):
         with mock.patch("problem_builder.MentoringBlock.get_theme") as patched_theme:
             patched_theme.return_value = _get_mentoring_theme_settings(theme)
-            self.assert_status_icon_color(expected_color)
+            self.assert_status_icon_color(expected_color, question_text)
 
 
 @ddt.ddt
@@ -163,6 +164,19 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.assertTrue(messages.is_displayed())
         self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
 
+    def reload_student_view(self):
+        # Load another page (the home page), then go back to the page we want. This is the only reliable way to reload.
+        self.browser.get(self.live_server_url + '/')
+        wait = WebDriverWait(self.browser, self.timeout)
+
+        def did_load_homepage(driver):
+            title = driver.find_element_by_css_selector('h1.title')
+            return title and title.text == "XBlock scenarios"
+        wait.until(did_load_homepage, u"Workbench home page should have loaded")
+        mentoring = self.go_to_view("student_view")
+        self.wait_until_visible(self._get_messages_element(mentoring))
+        return mentoring
+
     def test_feedbacks_and_messages_is_not_shown_on_first_load(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
         answer, mcq, mrq, rating = self._get_controls(mentoring)
@@ -191,7 +205,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._standard_checks(answer, mcq, mrq, rating, messages)
 
         # now, reload the page and do the same checks again
-        mentoring = self.go_to_view("student_view")
+        mentoring = self.reload_student_view()
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
@@ -241,7 +255,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._standard_checks(answer, mcq, mrq, rating, messages)
 
         # now, reload the page and make sure LATEST submission is loaded and feedback is shown
-        mentoring = self.go_to_view("student_view")
+        mentoring = self.reload_student_view()
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
         self._standard_checks(answer, mcq, mrq, rating, messages)
@@ -279,7 +293,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         assert_state(answer, mcq, mrq, rating, messages)
 
         # now, reload the page and make sure the same result is shown
-        mentoring = self.go_to_view("student_view")
+        mentoring = self.reload_student_view()
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
         assert_state(answer, mcq, mrq, rating, messages)
