@@ -133,9 +133,10 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
 
         return mentoring, controls
 
-    def expect_question_visible(self, number, mentoring):
-        question_text = self.question_text(number)
-        self.wait_until_text_in(self.question_text(number), mentoring)
+    def expect_question_visible(self, number, mentoring, question_text=None):
+        if not question_text:
+            question_text = self.question_text(number)
+        self.wait_until_text_in(question_text, mentoring)
         question_div = None
         for xblock_div in mentoring.find_elements_by_css_selector('div.xblock-v1'):
             header_text = xblock_div.find_elements_by_css_selector('h3.question-title')

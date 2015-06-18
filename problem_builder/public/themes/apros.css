@@ -7,3 +7,12 @@
     padding: 4px 3px 0 3px;
     font-size: 16px;
 }
+
+.mentoring .title h2 {
+	/* Same as h2.main in Apros */
+	color: #66a5b5;
+}
+
+.mentoring h3 {
+    text-transform: uppercase;
+}
