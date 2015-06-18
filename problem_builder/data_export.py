@@ -27,17 +27,29 @@ from xblock.core import XBlock
 from xblock.fields import Scope, String, Dict
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
+from problem_builder.sub_api import SubmittingXBlockMixin
 
 loader = ResourceLoader(__name__)
 
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
 
+
+@XBlock.needs("i18n")
 @XBlock.wants('user')
-class DataExportBlock(XBlock):
+class DataExportBlock(SubmittingXBlockMixin, XBlock):
     """
     DataExportBlock: An XBlock for instructors to export student answers from a course.
 
     All processing is done offline.
     """
+    display_name = String(
+        display_name=_("Title (Display name)"),
+        help=_("Title to display"),
+        default=_("Data Export"),
+        scope=Scope.settings
+    )
     active_export_task_id = String(
         # The UUID of the celery AsyncResult for the most recent export,
         # IF we are sill waiting for it to finish
@@ -61,10 +73,6 @@ class DataExportBlock(XBlock):
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
         return Fragment(u'<p>Data Export Block</p><p>This block only works from the LMS.</p>')
-
-    def studio_view(self, context=None):
-        """ 'Edit' form view in Studio """
-        return Fragment(u'<p>This block has no configuration options.</p>')
 
     def check_pending_export(self):
         """
@@ -95,6 +103,7 @@ class DataExportBlock(XBlock):
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.initialize_js('DataExportBlock')
         return fragment
 
@@ -137,7 +146,9 @@ class DataExportBlock(XBlock):
             return {'error': 'permission denied'}
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
         self._delete_export()
-        async_result = export_data_task.delay(unicode(self.scope_ids.usage_id), self.get_user_id())
+        async_result = export_data_task.delay(
+            unicode(self.scope_ids.usage_id),
+        )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.
             # Store the result now, because we won't be able to retrieve it later :-/
@@ -150,7 +161,6 @@ class DataExportBlock(XBlock):
             # The task is running asynchronously. Store the result ID so we can query its progress:
             self.active_export_task_id = async_result.id
         return self._get_status()
-        return {'result': 'started'}
 
     @XBlock.json_handler
     def cancel_export(self, request, suffix=''):
@@ -171,7 +181,3 @@ class DataExportBlock(XBlock):
     def user_is_staff(self):
         """Return a Boolean value indicating whether the current user is a member of staff."""
         return self._get_user_attr('edx-platform.user_is_staff')
-
-    def get_user_id(self):
-        """Get the edx-platform user_id of the current user."""
-        return self._get_user_attr('edx-platform.user_id')

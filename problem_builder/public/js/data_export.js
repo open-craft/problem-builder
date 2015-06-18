@@ -1,5 +1,10 @@
 function DataExportBlock(runtime, element) {
     'use strict';
+    // Set up gettext in case it isn't available in the client runtime:
+    if (typeof gettext == "undefined") {
+        window.gettext = function gettext_stub(string) { return string; };
+        window.ngettext = function ngettext_stub(strA, strB, n) { return n == 1 ? strA : strB; };
+    }
     var $startButton = $('.data-export-start', element);
     var $cancelButton = $('.data-export-cancel', element);
     var $downloadButton = $('.data-export-download', element);
@@ -11,7 +16,7 @@ function DataExportBlock(runtime, element) {
             url: runtime.handlerUrl(element, 'get_status'),
             data: '{}',
             success: updateStatus,
-            dataType: 'json',
+            dataType: 'json'
         });
     }
     function updateStatus(newStatus) {
@@ -42,27 +47,38 @@ function DataExportBlock(runtime, element) {
         if (status.last_export_result) {
             if (status.last_export_result.error) {
                 $statusArea.append($('<p>').text(
-                    'Data export failed. Reason: ' + status.last_export_result.error
+                    _.template(
+                        gettext('Data export failed. Reason: <%= error %>'),
+                        {'error': status.last_export_result.error}
+                    )
                 ));
             } else {
                 startTime = new Date(status.last_export_result.start_timestamp * 1000);
                 $statusArea.append($('<p>').text(
-                    'A report is available for download.'
+                    gettext('A report is available for download.')
                 ));
                 $statusArea.append($('<p>').text(
-                    'It was created at ' + startTime.toString() +
-                    ' and took ' + status.last_export_result.generation_time_s.toFixed(1) +
-                    ' seconds to finish.'
+                    _.template(
+                        ngettext(
+                            'It was created at <%= creation_time %> and took <%= seconds %> second to finish.',
+                            'It was created at <%= creation_time %> and took <%= seconds %> seconds to finish.',
+                            status.last_export_result.generation_time_s.toFixed(1)
+                        ),
+                        {
+                            'creation_time': startTime.toString(),
+                            'seconds': status.last_export_result.generation_time_s.toFixed(1)
+                        }
+                    )
                 ));
             }
         } else {
             if (status.export_pending) {
                 $statusArea.append($('<p>').text(
-                    'The report is currently being generated…'
+                    gettext('The report is currently being generated…')
                 ));
             } else {
                 $statusArea.append($('<p>').text(
-                    'No report data available.'
+                    gettext('No report data available.')
                 ));
             }
         }
@@ -74,7 +90,7 @@ function DataExportBlock(runtime, element) {
                 url: runtime.handlerUrl(element, handlerName),
                 data: '{}',
                 success: updateStatus,
-                dataType: 'json',
+                dataType: 'json'
             });
             showSpinner();
         });
