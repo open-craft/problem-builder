@@ -24,6 +24,7 @@ All processing is done offline.
 """
 import json
 from xblock.core import XBlock
+from xblock.exceptions import JsonHandlerError
 from xblock.fields import Scope, String, Dict
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
@@ -99,7 +100,12 @@ class DataExportBlock(SubmittingXBlockMixin, XBlock):
         """ Normal View """
         if not self.user_is_staff():
             return Fragment(u'<p>This interface can only be used by course staff.</p>')
-        html = loader.render_template('templates/html/data_export.html')
+        block_choices = {
+            _('Multiple Choice Question'): 'MCQBlock',
+            _('Rating Question'): 'RatingBlock',
+            _('Long Answer'): 'AnswerBlock',
+        }
+        html = loader.render_template('templates/html/data_export.html', {'block_choices': block_choices})
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
@@ -126,12 +132,21 @@ class DataExportBlock(SubmittingXBlockMixin, XBlock):
             'download_url': self.download_url_for_last_report,
         }
 
+    def raise_error(self, code, message):
+        """
+        Raises an error and marks the block with a simulated failed task dict.
+        """
+        self.last_export_result = {
+            'error': message,
+        }
+        raise JsonHandlerError(code, message)
+
     @XBlock.json_handler
-    def get_status(self, request, suffix=''):
+    def get_status(self, data, suffix=''):
         return self._get_status()
 
     @XBlock.json_handler
-    def delete_export(self, request, suffix=''):
+    def delete_export(self, data, suffix=''):
         self._delete_export()
         return self._get_status()
 
@@ -140,14 +155,32 @@ class DataExportBlock(SubmittingXBlockMixin, XBlock):
         self.active_export_task_id = ''
 
     @XBlock.json_handler
-    def start_export(self, request, suffix=''):
+    def start_export(self, data, suffix=''):
         """ Start a new asynchronous export """
+        block_types = data.get('block_types', None)
+        username = data.get('username', None)
+        root_block_id = data.get('root_block_id', None)
+        if not root_block_id:
+            root_block_id = unicode(self.scope_ids.usage_id)
+            get_root = True
+        else:
+            self.runtime.course_id.make_usage_key(root_block_id)
+            get_root = False
+        print root_block_id
+        user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
             return {'error': 'permission denied'}
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
         self._delete_export()
+        if not username:
+            user_id = None
+        else:
+            user_id = user_service.get_anonymous_user_id(username, unicode(self.runtime.course_id))
+            if user_id is None:
+                self.raise_error(404, _("Could not find the specified username."))
+
         async_result = export_data_task.delay(
-            unicode(self.scope_ids.usage_id),
+            root_block_id, block_types, user_id, get_root=get_root,
         )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.

@@ -6,6 +6,7 @@ import time
 from celery.task import task
 from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
+from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import UsageKey
 from xmodule.modulestore.django import modulestore
 
@@ -17,7 +18,7 @@ logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(source_block_id_str, user_id=None):
+def export_data(source_block_id_str, block_types, user_id, get_root=True):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
@@ -25,22 +26,33 @@ def export_data(source_block_id_str, user_id=None):
 
     logger.debug("Beginning data export")
 
-    block_key = UsageKey.from_string(source_block_id_str)
-    src_block = modulestore().get_item(block_key)
-    course_key = src_block.scope_ids.usage_id.course_key.replace(branch=None, version_guid=None)
+    try:
+        block_key = UsageKey.from_string(source_block_id_str)
+        src_block = modulestore().get_item(block_key)
+        course_key = src_block.scope_ids.usage_id.course_key.replace(branch=None, version_guid=None)
+    except InvalidKeyError:
+        raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
 
-    # Get the root block:
     root = src_block
-    while root.parent:
-        root = root.get_parent()
+    if get_root:
+        # Get the root block for the course.
+        while root.parent:
+            root = root.get_parent()
+
+    type_map = {cls.__name__: cls for cls in [MCQBlock, RatingBlock, AnswerBlock]}
+
+    if not block_types:
+        block_types = tuple(type_map.values())
+    else:
+        block_types = tuple([type_map[class_name] for class_name in block_types])
 
     # Build an ordered list of blocks to include in the export - each block is a column in the CSV file
     blocks_to_include = []
 
     def scan_for_blocks(block):
         """ Recursively scan the course tree for blocks of interest """
-        if isinstance(block, (MCQBlock, RatingBlock, AnswerBlock)):
+        if isinstance(block, block_types):
             blocks_to_include.append(block)
         elif block.has_children:
             for child_id in block.children:
@@ -61,7 +73,7 @@ def export_data(source_block_id_str, user_id=None):
         # Get all of the most recent student submissions for this block:
         block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
         block_type = block.scope_ids.block_type
-        if user_id is None:
+        if not user_id:
             submissions = sub_api.get_all_submissions(course_key_str, block_id, block_type)
         else:
             student_dict = {
