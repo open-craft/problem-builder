@@ -1,0 +1,6 @@
+.data-export-actions button {
+    display: none;
+}
+.data-export-status {
+    height: 8em;
+}
