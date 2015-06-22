@@ -13,9 +13,6 @@
 
 <div class="export-options">
   <div>
-    <label><input type="checkbox" name="filter_blocks" />{% trans "Filter by block type" %}</label>
-  </div>
-  <div>
     <label>
       {% trans "Select which blocks to filter by (selecting none will grab all types):" %}
       <select multiple name="block_types">
@@ -27,7 +24,7 @@
   </div>
   <div>
     <label>
-      {% trans "Input the Usage ID of a chapter, section, or unit if you wish to only get results under it. Otherwise, it will grab all results for the course." %}
+      {% trans "Input the ID of a chapter, section, or unit if you wish to only get results under it. Otherwise, it will grab all results for the course." %}
       <input type="text" name="root_block_id" />
     </label>
   </div>

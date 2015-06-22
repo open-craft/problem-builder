@@ -25,7 +25,6 @@ def export_data(source_block_id_str, block_types, user_id, get_root=True):
     start_timestamp = time.time()
 
     logger.debug("Beginning data export")
-
     try:
         block_key = UsageKey.from_string(source_block_id_str)
         src_block = modulestore().get_item(block_key)

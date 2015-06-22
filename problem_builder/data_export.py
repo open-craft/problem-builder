@@ -32,6 +32,7 @@ from problem_builder.sub_api import SubmittingXBlockMixin
 
 loader = ResourceLoader(__name__)
 
+
 # Make '_' a no-op so we can scrape strings
 def _(text):
     return text
@@ -164,9 +165,10 @@ class DataExportBlock(SubmittingXBlockMixin, XBlock):
             root_block_id = unicode(self.scope_ids.usage_id)
             get_root = True
         else:
-            self.runtime.course_id.make_usage_key(root_block_id)
+            from xmodule.modulestore.django import modulestore
+            block = modulestore().get_items(self.runtime.course_id, qualifiers={'name': root_block_id}, depth=0)[0]
+            root_block_id = unicode(block.location)
             get_root = False
-        print root_block_id
         user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
             return {'error': 'permission denied'}
