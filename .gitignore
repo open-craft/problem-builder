@@ -6,3 +6,5 @@
 /dist
 /templates
 *.iml
+.idea/*
+problem_builder.tests.*

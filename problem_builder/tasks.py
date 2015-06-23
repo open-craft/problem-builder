@@ -6,40 +6,53 @@ import time
 from celery.task import task
 from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
-from opaque_keys.edx.keys import UsageKey
+from opaque_keys import InvalidKeyError
+from opaque_keys.edx.keys import UsageKey, CourseKey
 from xmodule.modulestore.django import modulestore
 
 from .mcq import MCQBlock, RatingBlock
+from problem_builder import AnswerBlock
 from .sub_api import sub_api
 
 logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(source_block_id_str, user_id):
+def export_data(course_id, source_block_id_str, block_types, user_id, get_root=True):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
     start_timestamp = time.time()
 
     logger.debug("Beginning data export")
-
-    block_key = UsageKey.from_string(source_block_id_str)
-    src_block = modulestore().get_item(block_key)
-    course_key = src_block.scope_ids.usage_id.course_key.replace(branch=None, version_guid=None)
+    try:
+        course_key = CourseKey.from_string(course_id)
+        src_block = modulestore().get_items(course_key, qualifiers={'name': source_block_id_str}, depth=0)[0]
+        if src_block is None:
+            raise InvalidKeyError
+    except InvalidKeyError:
+        raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
 
-    # Get the root block:
     root = src_block
-    while root.parent:
-        root = root.get_parent()
+    if get_root:
+        # Get the root block for the course.
+        while root.parent:
+            root = root.get_parent()
+
+    type_map = {cls.__name__: cls for cls in [MCQBlock, RatingBlock, AnswerBlock]}
+
+    if not block_types:
+        block_types = tuple(type_map.values())
+    else:
+        block_types = tuple(type_map[class_name] for class_name in block_types)
 
     # Build an ordered list of blocks to include in the export - each block is a column in the CSV file
     blocks_to_include = []
 
     def scan_for_blocks(block):
         """ Recursively scan the course tree for blocks of interest """
-        if isinstance(block, (MCQBlock, RatingBlock)):
+        if isinstance(block, block_types):
             blocks_to_include.append(block)
         elif block.has_children:
             for child_id in block.children:
@@ -56,12 +69,23 @@ def export_data(source_block_id_str, user_id):
     # Load the actual student submissions for each block in blocks_to_include.
     # Note this requires one giant query per block (all student submissions for each block, one block at a time)
     student_submissions = {}  # Key is student ID, value is a list with same length as blocks_to_include
-    for idx, block in enumerate(blocks_to_include, start=1):  # start=1 since first column is stuent ID
+    for idx, block in enumerate(blocks_to_include, start=1):  # start=1 since first column is student ID
         # Get all of the most recent student submissions for this block:
         block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
         block_type = block.scope_ids.block_type
-        for submission in sub_api.get_all_submissions(course_key_str, block_id, block_type):
-            student_id = submission['student_id']
+        if not user_id:
+            submissions = sub_api.get_all_submissions(course_key_str, block_id, block_type)
+        else:
+            student_dict = {
+                'student_id': user_id,
+                'item_id': block_id,
+                'course_id': course_key_str,
+                'item_type': block_type,
+            }
+            submissions = sub_api.get_submissions(student_dict, limit=1)
+        for submission in submissions:
+            # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
+            student_id = submission.get('student_id', user_id)
             if student_id not in student_submissions:
                 student_submissions[student_id] = [student_id] + [""] * len(blocks_to_include)
             student_submissions[student_id][idx] = submission['answer']

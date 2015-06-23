@@ -31,6 +31,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
+from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
 from .step import StepMixin
 import uuid
 
@@ -102,7 +103,7 @@ class AnswerMixin(object):
 
 
 @XBlock.needs("i18n")
-class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
+class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
     """
     A field where the student enters an answer
 
@@ -199,6 +200,11 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """
         self.student_input = submission[0]['value'].strip()
         self.save()
+
+        if sub_api:
+            # Also send to the submissions API:
+            sub_api.create_submission(self.student_item_key, self.student_input)
+
         log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return self.get_results()
 

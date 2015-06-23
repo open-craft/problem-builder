@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import time
-import pdb
-import sys
 
 from mock import patch, Mock
+from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
 from problem_builder.data_export import DataExportBlock
@@ -82,3 +81,11 @@ class DataExportTest(SeleniumXBlockTest):
         self.wait_until_visible(download_button)
         self.wait_until_visible(delete_button)
         self.assertIn('A report is available for download.', status_area.text)
+
+    def test_non_staff_disabled(self):
+        data_export = self.go_to_view()
+        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-start')
+        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-cancel')
+        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-download')
+        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-delete')
+        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-status')

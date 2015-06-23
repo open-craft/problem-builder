@@ -24,6 +24,7 @@ All processing is done offline.
 """
 import json
 from xblock.core import XBlock
+from xblock.exceptions import JsonHandlerError
 from xblock.fields import Scope, String, Dict
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
@@ -31,6 +32,12 @@ from xblockutils.resources import ResourceLoader
 loader = ResourceLoader(__name__)
 
 
+# Make '_' a no-op so we can scrape strings
+def _(text):
+    return text
+
+
+@XBlock.needs("i18n")
 @XBlock.wants('user')
 class DataExportBlock(XBlock):
     """
@@ -38,6 +45,12 @@ class DataExportBlock(XBlock):
 
     All processing is done offline.
     """
+    display_name = String(
+        display_name=_("Title (Display name)"),
+        help=_("Title to display"),
+        default=_("Data Export"),
+        scope=Scope.settings
+    )
     active_export_task_id = String(
         # The UUID of the celery AsyncResult for the most recent export,
         # IF we are sill waiting for it to finish
@@ -61,10 +74,6 @@ class DataExportBlock(XBlock):
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
         return Fragment(u'<p>Data Export Block</p><p>This block only works from the LMS.</p>')
-
-    def studio_view(self, context=None):
-        """ 'Edit' form view in Studio """
-        return Fragment(u'<p>This block has no configuration options.</p>')
 
     def check_pending_export(self):
         """
@@ -91,10 +100,16 @@ class DataExportBlock(XBlock):
         """ Normal View """
         if not self.user_is_staff():
             return Fragment(u'<p>This interface can only be used by course staff.</p>')
-        html = loader.render_template('templates/html/data_export.html')
+        block_choices = {
+            _('Multiple Choice Question'): 'MCQBlock',
+            _('Rating Question'): 'RatingBlock',
+            _('Long Answer'): 'AnswerBlock',
+        }
+        html = loader.render_template('templates/html/data_export.html', {'block_choices': block_choices})
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.initialize_js('DataExportBlock')
         return fragment
 
@@ -117,12 +132,21 @@ class DataExportBlock(XBlock):
             'download_url': self.download_url_for_last_report,
         }
 
+    def raise_error(self, code, message):
+        """
+        Raises an error and marks the block with a simulated failed task dict.
+        """
+        self.last_export_result = {
+            'error': message,
+        }
+        raise JsonHandlerError(code, message)
+
     @XBlock.json_handler
-    def get_status(self, request, suffix=''):
+    def get_status(self, data, suffix=''):
         return self._get_status()
 
     @XBlock.json_handler
-    def delete_export(self, request, suffix=''):
+    def delete_export(self, data, suffix=''):
         self._delete_export()
         return self._get_status()
 
@@ -131,13 +155,38 @@ class DataExportBlock(XBlock):
         self.active_export_task_id = ''
 
     @XBlock.json_handler
-    def start_export(self, request, suffix=''):
+    def start_export(self, data, suffix=''):
         """ Start a new asynchronous export """
+        block_types = data.get('block_types', None)
+        username = data.get('username', None)
+        root_block_id = data.get('root_block_id', None)
+        if not root_block_id:
+            root_block_id = self.scope_ids.usage_id
+            # Block ID not in workbench runtime.
+            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
+            get_root = True
+        else:
+            get_root = False
+        user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
             return {'error': 'permission denied'}
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
         self._delete_export()
-        async_result = export_data_task.delay(unicode(self.scope_ids.usage_id), self.get_user_id())
+        if not username:
+            user_id = None
+        else:
+            user_id = user_service.get_anonymous_user_id(username, unicode(self.runtime.course_id))
+            if user_id is None:
+                self.raise_error(404, _("Could not find the specified username."))
+
+        async_result = export_data_task.delay(
+            # course_id not available in workbench.
+            unicode(getattr(self.runtime, 'course_id', 'course_id')),
+            root_block_id,
+            block_types,
+            user_id,
+            get_root=get_root,
+        )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.
             # Store the result now, because we won't be able to retrieve it later :-/
@@ -150,7 +199,6 @@ class DataExportBlock(XBlock):
             # The task is running asynchronously. Store the result ID so we can query its progress:
             self.active_export_task_id = async_result.id
         return self._get_status()
-        return {'result': 'started'}
 
     @XBlock.json_handler
     def cancel_export(self, request, suffix=''):
@@ -171,7 +219,3 @@ class DataExportBlock(XBlock):
     def user_is_staff(self):
         """Return a Boolean value indicating whether the current user is a member of staff."""
         return self._get_user_attr('edx-platform.user_is_staff')
-
-    def get_user_id(self):
-        """Get the edx-platform user_id of the current user."""
-        return self._get_user_attr('edx-platform.user_id')
