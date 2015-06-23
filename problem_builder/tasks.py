@@ -7,7 +7,7 @@ from celery.task import task
 from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
-from opaque_keys.edx.keys import UsageKey
+from opaque_keys.edx.keys import UsageKey, CourseKey
 from xmodule.modulestore.django import modulestore
 
 from .mcq import MCQBlock, RatingBlock
@@ -18,7 +18,7 @@ logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(source_block_id_str, block_types, user_id, get_root=True):
+def export_data(course_id, source_block_id_str, block_types, user_id, get_root=True):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
@@ -26,9 +26,10 @@ def export_data(source_block_id_str, block_types, user_id, get_root=True):
 
     logger.debug("Beginning data export")
     try:
-        block_key = UsageKey.from_string(source_block_id_str)
-        src_block = modulestore().get_item(block_key)
-        course_key = src_block.scope_ids.usage_id.course_key.replace(branch=None, version_guid=None)
+        course_key = CourseKey.from_string(course_id)
+        src_block = modulestore().get_items(course_key, qualifiers={'name': source_block_id_str}, depth=0)[0]
+        if src_block is None:
+            raise InvalidKeyError
     except InvalidKeyError:
         raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
@@ -44,7 +45,7 @@ def export_data(source_block_id_str, block_types, user_id, get_root=True):
     if not block_types:
         block_types = tuple(type_map.values())
     else:
-        block_types = tuple([type_map[class_name] for class_name in block_types])
+        block_types = tuple(type_map[class_name] for class_name in block_types)
 
     # Build an ordered list of blocks to include in the export - each block is a column in the CSV file
     blocks_to_include = []

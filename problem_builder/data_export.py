@@ -28,7 +28,6 @@ from xblock.exceptions import JsonHandlerError
 from xblock.fields import Scope, String, Dict
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
-from problem_builder.sub_api import SubmittingXBlockMixin
 
 loader = ResourceLoader(__name__)
 
@@ -40,7 +39,7 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class DataExportBlock(SubmittingXBlockMixin, XBlock):
+class DataExportBlock(XBlock):
     """
     DataExportBlock: An XBlock for instructors to export student answers from a course.
 
@@ -162,12 +161,11 @@ class DataExportBlock(SubmittingXBlockMixin, XBlock):
         username = data.get('username', None)
         root_block_id = data.get('root_block_id', None)
         if not root_block_id:
-            root_block_id = unicode(self.scope_ids.usage_id)
+            root_block_id = self.scope_ids.usage_id
+            # Block ID not in workbench runtime.
+            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
             get_root = True
         else:
-            from xmodule.modulestore.django import modulestore
-            block = modulestore().get_items(self.runtime.course_id, qualifiers={'name': root_block_id}, depth=0)[0]
-            root_block_id = unicode(block.location)
             get_root = False
         user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
@@ -182,7 +180,12 @@ class DataExportBlock(SubmittingXBlockMixin, XBlock):
                 self.raise_error(404, _("Could not find the specified username."))
 
         async_result = export_data_task.delay(
-            root_block_id, block_types, user_id, get_root=get_root,
+            # course_id not available in workbench.
+            unicode(getattr(self.runtime, 'course_id', 'course_id')),
+            root_block_id,
+            block_types,
+            user_id,
+            get_root=get_root,
         )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.

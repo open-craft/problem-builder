@@ -11,28 +11,43 @@
   <button class="data-export-delete">{% trans "Delete result" %}</button>
 </div>
 
-<div class="export-options">
-  <div>
-    <label>
-      {% trans "Select which blocks to filter by (selecting none will grab all types):" %}
-      <select multiple name="block_types">
-        {% for label, value in block_choices.items %}
-        <option value="{{value}}">{{label}}</option>
-        {% endfor %}
-      </select>
-    </label>
+<div class="data-export-options">
+  <div class="data-export-field-container">
+    <div class="data-export-field">
+      <label>
+        <span>{% trans "Problem types:" %}</span>
+        <select multiple name="block_types">
+          {% for label, value in block_choices.items %}
+          <option value="{{value}}">{{label}}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <div class="data-export-helptext">
+      {% trans "Select which types of problem to include (selecting none will grab all types)" %}
+    </div>
   </div>
-  <div>
-    <label>
+  <div class="data-export-field-container">
+    <div class="data-export-field">
+      <label>
+        <span>{% trans "Root block ID:" %}</span>
+        <input type="text" name="root_block_id" />
+      </label>
+    </div>
+    <div class="data-export-helptext">
       {% trans "Input the ID of a chapter, section, or unit if you wish to only get results under it. Otherwise, it will grab all results for the course." %}
-      <input type="text" name="root_block_id" />
-    </label>
+    </div>
   </div>
-  <div>
-    <label>
+  <div class="data-export-field-container">
+    <div class="data-export-field">
+      <label>
+        <span>{% trans "Username:" %}</span>
+        <input type="text" name="username" />
+      </label>
+    </div>
+    <div class="data-export-helptext">
       {% trans "Input the username of a student if you wish to query for a specific one. Otherwise, it will grab all results for all students." %}
-      <input type="text" name="username" />
-    </label>
+    </div>
   </div>
 </div>
 <div class="data-export-actions">

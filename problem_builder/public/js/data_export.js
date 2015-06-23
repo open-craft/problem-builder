@@ -11,7 +11,7 @@ function DataExportBlock(runtime, element) {
     var $downloadButton = $element.find('.data-export-download');
     var $deleteButton = $element.find('.data-export-delete');
     var $blockTypes = $element.find("select[name='block_types']");
-    var $rootBlockIds = $element.find("input[name='root_block_id']");
+    var $rootBlockId = $element.find("input[name='root_block_id']");
     var $username = $element.find("input[name='username']");
 
     var status;
@@ -102,11 +102,11 @@ function DataExportBlock(runtime, element) {
         $button.on('click', function() {
             var data;
             if (form_submit) {
-                data = {};
-                data['block_types'] = $blockTypes.val();
-                data['block_types'] = $blockTypes.val();
-                data['root_block_id'] = $rootBlockIds.val();
-                data['username'] = $username.val();
+                data = {
+                    block_types: $blockTypes.val(),
+                    root_block_id: $rootBlockId.val(),
+                    username: $username.val()
+                };
                 data = JSON.stringify(data);
             } else {
                 data = '{}';
