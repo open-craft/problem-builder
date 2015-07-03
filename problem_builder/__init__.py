@@ -2,7 +2,7 @@ from .mentoring import MentoringBlock
 from .answer import AnswerBlock, AnswerRecapBlock
 from .choice import ChoiceBlock
 from .dashboard import DashboardBlock
-from .data_export import DataExportBlock
+from .data_export import StudentAnswersDashboardBlock
 from .mcq import MCQBlock, RatingBlock
 from .mrq import MRQBlock
 from .message import MentoringMessageBlock

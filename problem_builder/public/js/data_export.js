@@ -1,4 +1,4 @@
-function DataExportBlock(runtime, element) {
+function StudentAnswersDashboardBlock(runtime, element) {
     'use strict';
     var $element = $(element);
     // Set up gettext in case it isn't available in the client runtime:

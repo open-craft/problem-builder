@@ -18,7 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Data Export: An XBlock for instructors to export student answers from a course.
+Student Answers Dashboard: An XBlock for instructors to export student answers from a course.
 
 All processing is done offline.
 """
@@ -39,16 +39,16 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class DataExportBlock(XBlock):
+class StudentAnswersDashboardBlock(XBlock):
     """
-    DataExportBlock: An XBlock for instructors to export student answers from a course.
+    StudentAnswersDashboardBlock: An XBlock for instructors to export student answers from a course.
 
     All processing is done offline.
     """
     display_name = String(
         display_name=_("Title (Display name)"),
         help=_("Title to display"),
-        default=_("Data Export"),
+        default=_("Student Answers Dashboard"),
         scope=Scope.settings
     )
     active_export_task_id = String(
@@ -67,13 +67,13 @@ class DataExportBlock(XBlock):
 
     @property
     def display_name_with_default(self):
-        return "Data Export"
+        return "Student Answers Dashboard"
 
     def author_view(self, context=None):
         """ Studio View """
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
-        return Fragment(u'<p>Data Export Block</p><p>This block only works from the LMS.</p>')
+        return Fragment(u'<p>Student Answers Dashboard Block</p><p>This block only works from the LMS.</p>')
 
     def check_pending_export(self):
         """
@@ -110,7 +110,7 @@ class DataExportBlock(XBlock):
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        fragment.initialize_js('DataExportBlock')
+        fragment.initialize_js('StudentAnswersDashboardBlock')
         return fragment
 
     @property

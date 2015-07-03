@@ -6,7 +6,7 @@ from mock import patch, Mock
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
-from problem_builder.data_export import DataExportBlock
+from problem_builder.data_export import StudentAnswersDashboardBlock
 
 
 class MockTasksModule(object):
@@ -40,10 +40,10 @@ class MockInstructorTaskModelsModule(object):
         ]
 
 
-class DataExportTest(SeleniumXBlockTest):
+class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
     def setUp(self):
-        super(DataExportTest, self).setUp()
+        super(StudentAnswersDashboardTest, self).setUp()
         self.set_scenario_xml("""
         <vertical_demo>
           <pb-data-export url_name="data_export"/>
@@ -59,7 +59,7 @@ class DataExportTest(SeleniumXBlockTest):
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(DataExportBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export(self):
         data_export = self.go_to_view()
         start_button = data_export.find_element_by_class_name('data-export-start')
