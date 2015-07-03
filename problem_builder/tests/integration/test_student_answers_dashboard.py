@@ -6,7 +6,7 @@ from mock import patch, Mock
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
-from problem_builder.data_export import StudentAnswersDashboardBlock
+from problem_builder.student_answers_dashboard import StudentAnswersDashboardBlock
 
 
 class MockTasksModule(object):

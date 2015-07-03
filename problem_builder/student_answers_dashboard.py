@@ -105,10 +105,13 @@ class StudentAnswersDashboardBlock(XBlock):
             _('Rating Question'): 'RatingBlock',
             _('Long Answer'): 'AnswerBlock',
         }
-        html = loader.render_template('templates/html/data_export.html', {'block_choices': block_choices})
+        html = loader.render_template(
+            'templates/html/student_answers_dashboard.html',
+            {'block_choices': block_choices}
+        )
         fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/student_answers_dashboard.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/student_answers_dashboard.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.initialize_js('StudentAnswersDashboardBlock')
         return fragment
