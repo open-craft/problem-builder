@@ -89,6 +89,8 @@ function StudentAnswersDashboardBlock(runtime, element) {
             // Display results
             var $resultTable = $('.data-export-results table tbody');
 
+            $resultTable.empty();
+
             _.each(status.last_export_result.display_data, function(row) {
 
                 var tr = $('<tr>');
