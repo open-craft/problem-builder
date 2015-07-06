@@ -90,18 +90,14 @@ function StudentAnswersDashboardBlock(runtime, element) {
             var $resultTable = $('.data-export-results table tbody');
 
             _.each(status.last_export_result.display_data, function(row) {
-                $resultTable.append($('<tr>').html(
-                    _.template(
-                        '<td><%= section %></td>' +
-                            '<td><%= subsection %></td>' +
-                            '<td><%= unit %></td>' +
-                            '<td><%= type %></td>' +
-                            '<td><%= question %></td>' +
-                            '<td><%= answer %></td>' +
-                            '<td><%= username %></td>',
-                        row
-                    )
-                ));
+
+                var tr = $('<tr>');
+
+                _.each(row, function(cell) {
+                    tr.append($('<td>').text(cell));
+                });
+
+                $resultTable.append(tr);
             });
 
         } else {
