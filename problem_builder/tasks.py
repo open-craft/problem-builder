@@ -8,6 +8,8 @@ from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import UsageKey, CourseKey
+from student.models import user_by_anonymous_id
+from submissions.models import StudentItem
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
@@ -71,6 +73,8 @@ def export_data(course_id, source_block_id_str, block_types, user_id, get_root=T
     rows.append([""] + [block.scope_ids.block_type for block in blocks_to_include])
     rows.append([""] + [block.scope_ids.usage_id for block in blocks_to_include])
 
+    table = []
+
     # Load the actual student submissions for each block in blocks_to_include.
     # Note this requires one giant query per block (all student submissions for each block, one block at a time)
     student_submissions = {}  # Key is student ID, value is a list with same length as blocks_to_include
@@ -88,12 +92,18 @@ def export_data(course_id, source_block_id_str, block_types, user_id, get_root=T
                 'item_type': block_type,
             }
             submissions = sub_api.get_submissions(student_dict, limit=1)
+
         for submission in submissions:
             # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
             student_id = submission.get('student_id', user_id)
+
             if student_id not in student_submissions:
                 student_submissions[student_id] = [student_id] + [""] * len(blocks_to_include)
             student_submissions[student_id][idx] = submission['answer']
+
+            # Extract data for display
+            table_row = _extract_data_for_display(submission, student_id, block_type)
+            table.append(table_row)
 
     # Now change from a dict to an array ordered by student ID as we generate the remaining rows:
     for student_id in sorted(student_submissions.iterkeys()):
@@ -113,4 +123,56 @@ def export_data(course_id, source_block_id_str, block_types, user_id, get_root=T
         "report_filename": filename,
         "start_timestamp": start_timestamp,
         "generation_time_s": generation_time_s,
+        "display_data": table,
+    }
+
+
+def _extract_data_for_display(submission, student_id, block_type):
+    """
+    Extract data that will be displayed on Student Answers Dashboard
+    from `submission`.
+    """
+
+    # Username
+    user = user_by_anonymous_id(student_id)
+    username = user.username
+
+    # Question
+    student_item = StudentItem.objects.get(pk=submission['student_item'])
+
+    block_key = UsageKey.from_string(student_item.item_id)
+    block = modulestore().get_item(block_key)
+
+    # Answer
+    answer = submission['answer']
+
+    try:
+        choices = block.children
+    except AttributeError:
+        pass
+    else:
+        for choice in choices:
+            choice_block = modulestore().get_item(choice)
+            if choice_block.value == answer:
+                answer = choice_block.content
+                break
+
+    # Unit
+    mentoring_block = modulestore().get_item(block.parent)
+    unit = modulestore().get_item(mentoring_block.parent)
+
+    # Subsection
+    subsection = modulestore().get_item(unit.parent)
+
+    # Section
+    section = modulestore().get_item(subsection.parent)
+
+    return {
+        'section': section.display_name,
+        'subsection': subsection.display_name,
+        'unit': unit.display_name,
+        'type': block_type,
+        'question': block.question,
+        'answer': answer,
+        'username': username
     }

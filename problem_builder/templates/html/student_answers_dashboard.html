@@ -3,14 +3,6 @@
 
 <p>{% trans "You can export all student answers to multiple-choice questions and long-form answers to a CSV file here." %}</p>
 
-<div class="data-export-status"></div>
-
-<div class="data-export-actions">
-  <button class="data-export-download">{% trans "Download result" %}</button>
-  <button class="data-export-cancel">{% trans "Cancel current export" %}</button>
-  <button class="data-export-delete">{% trans "Delete result" %}</button>
-</div>
-
 <div class="data-export-options">
   <div class="data-export-field-container">
     <div class="data-export-field">
@@ -51,5 +43,31 @@
   </div>
 </div>
 <div class="data-export-actions">
-    <button class="data-export-start">{% trans "Start a new export" %}</button>
+  <button class="data-export-start">{% trans "Start a new export" %}</button>
+</div>
+
+<div class="data-export-results">
+  <h3>{% trans "Results" %}</h3>
+  <table>
+    <thead>
+      <tr>
+        <td>{% trans "Section" %}</td>
+        <td>{% trans "Subsection" %}</td>
+        <td>{% trans "Unit" %}</td>
+        <td>{% trans "Type" %}</td>
+        <td>{% trans "Question" %}</td>
+        <td>{% trans "Answer" %}</td>
+        <td>{% trans "Username" %}</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div class="data-export-status"></div>
+
+<div class="data-export-actions">
+  <button class="data-export-download">{% trans "Download result" %}</button>
+  <button class="data-export-cancel">{% trans "Cancel current export" %}</button>
+  <button class="data-export-delete">{% trans "Delete result" %}</button>
 </div>

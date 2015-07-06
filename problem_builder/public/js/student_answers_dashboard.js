@@ -85,6 +85,25 @@ function StudentAnswersDashboardBlock(runtime, element) {
                     )
                 ));
             }
+
+            // Display results
+            var $resultTable = $('.data-export-results table tbody');
+
+            _.each(status.last_export_result.display_data, function(row) {
+                $resultTable.append($('<tr>').html(
+                    _.template(
+                        '<td><%= section %></td>' +
+                            '<td><%= subsection %></td>' +
+                            '<td><%= unit %></td>' +
+                            '<td><%= type %></td>' +
+                            '<td><%= question %></td>' +
+                            '<td><%= answer %></td>' +
+                            '<td><%= username %></td>',
+                        row
+                    )
+                ));
+            });
+
         } else {
             if (status.export_pending) {
                 $statusArea.append($('<p>').text(

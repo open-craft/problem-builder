@@ -1,10 +1,11 @@
-.data-export-options {
+.data-export-options, .data-export-results {
     margin-top: 2em;
 }
 .data-export-actions button {
     display: none;
 }
 .data-export-status {
+    margin-top: 2em;
     height: 8em;
 }
 .data-export-field {
@@ -19,4 +20,15 @@
 }
 .data-export-field-container {
     margin-bottom: 1em;
+}
+.data-export-results table {
+    margin-top: 1em;
+    border: 2px solid gray;
+}
+.data-export-results thead {
+    border-bottom: 2px solid gray;
+    font-weight: bold;
+}
+.data-export-results td {
+    padding: 5px;
 }
