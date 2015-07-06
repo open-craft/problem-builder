@@ -13,6 +13,7 @@ function StudentAnswersDashboardBlock(runtime, element) {
     var $blockTypes = $element.find("select[name='block_types']");
     var $rootBlockId = $element.find("input[name='root_block_id']");
     var $username = $element.find("input[name='username']");
+    var $resultTable = $element.find('.data-export-results');
 
     var status;
     function getStatus() {
@@ -43,6 +44,20 @@ function StudentAnswersDashboardBlock(runtime, element) {
         $('.data-export-status', $element).empty().append(
             $('<i>').addClass('icon fa fa-spinner fa-spin')
         );
+    }
+
+    function hideResults() {
+        $resultTable.hide();
+    }
+
+    function showResults() {
+        $resultTable.show();
+    }
+
+    function maybeShowResults() {
+        if (status.last_export_result) {
+            showResults();
+        }
     }
 
     function handleError(data) {
@@ -87,9 +102,9 @@ function StudentAnswersDashboardBlock(runtime, element) {
             }
 
             // Display results
-            var $resultTable = $('.data-export-results table tbody');
+            var $resultTableBody = $resultTable.find('tbody');
 
-            $resultTable.empty();
+            $resultTableBody.empty();
 
             _.each(status.last_export_result.display_data, function(row) {
 
@@ -99,8 +114,10 @@ function StudentAnswersDashboardBlock(runtime, element) {
                     tr.append($('<td>').text(cell));
                 });
 
-                $resultTable.append(tr);
+                $resultTableBody.append(tr);
             });
+
+            showResults();
 
         } else {
             if (status.export_pending) {
@@ -143,6 +160,10 @@ function StudentAnswersDashboardBlock(runtime, element) {
     addHandler($startButton, 'start_export', true);
     addHandler($cancelButton, 'cancel_export');
     addHandler($deleteButton, 'delete_export');
+
+    $startButton.on('click', hideResults);
+    $cancelButton.on('click', maybeShowResults);
+    $deleteButton.on('click', hideResults);
 
     $downloadButton.on('click', function() {
         window.location.href = status.download_url;

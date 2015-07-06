@@ -21,6 +21,9 @@
 .data-export-field-container {
     margin-bottom: 1em;
 }
+.data-export-results {
+    display: none;
+}
 .data-export-results table {
     margin-top: 1em;
     border: 2px solid gray;
