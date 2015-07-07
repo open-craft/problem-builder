@@ -21,7 +21,7 @@ logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(course_id, source_block_id_str, block_types, user_id, get_root=True):
+def export_data(course_id, source_block_id_str, block_types, user_id, match_string, get_root=True):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
@@ -93,8 +93,10 @@ def export_data(course_id, source_block_id_str, block_types, user_id, get_root=T
             student_id = submission.get('student_id', user_id)
 
             # Extract data for display
-            row = _extract_data_for_display(submission, student_id, block_type)
-            rows.append(row)
+            # "row" will be None if answer does not match "match_string"
+            row = _extract_data_for_display(submission, student_id, block_type, match_string)
+            if row:
+                rows.append(row)
 
     # Generate the CSV:
     filename = u"pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))
@@ -113,7 +115,7 @@ def export_data(course_id, source_block_id_str, block_types, user_id, get_root=T
     }
 
 
-def _extract_data_for_display(submission, student_id, block_type):
+def _extract_data_for_display(submission, student_id, block_type, match_string):
     """
     Extract data that will be displayed on Student Answers Dashboard
     from `submission`.
@@ -142,6 +144,10 @@ def _extract_data_for_display(submission, student_id, block_type):
             if choice_block.value == answer:
                 answer = choice_block.content
                 break
+
+    # Short-circuit if answer does not match search criteria
+    if not match_string.lower() in answer.lower():
+        return
 
     # Unit
     mentoring_block = modulestore().get_item(block.parent)

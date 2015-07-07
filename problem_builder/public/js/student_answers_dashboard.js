@@ -13,6 +13,7 @@ function StudentAnswersDashboardBlock(runtime, element) {
     var $blockTypes = $element.find("select[name='block_types']");
     var $rootBlockId = $element.find("input[name='root_block_id']");
     var $username = $element.find("input[name='username']");
+    var $matchString = $element.find("input[name='match_string']");
     var $resultTable = $element.find('.data-export-results');
 
     var status;
@@ -139,7 +140,8 @@ function StudentAnswersDashboardBlock(runtime, element) {
                 data = {
                     block_types: $blockTypes.val(),
                     root_block_id: $rootBlockId.val(),
-                    username: $username.val()
+                    username: $username.val(),
+                    match_string: $matchString.val()
                 };
                 data = JSON.stringify(data);
             } else {

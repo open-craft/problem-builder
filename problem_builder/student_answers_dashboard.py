@@ -163,6 +163,7 @@ class StudentAnswersDashboardBlock(XBlock):
         block_types = data.get('block_types', None)
         username = data.get('username', None)
         root_block_id = data.get('root_block_id', None)
+        match_string = data.get('match_string', None)
         if not root_block_id:
             root_block_id = self.scope_ids.usage_id
             # Block ID not in workbench runtime.
@@ -190,7 +191,8 @@ class StudentAnswersDashboardBlock(XBlock):
             root_block_id,
             block_types,
             user_id,
-            get_root=get_root,
+            match_string,
+            get_root=get_root
         )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.
