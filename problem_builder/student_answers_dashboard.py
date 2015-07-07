@@ -164,20 +164,16 @@ class StudentAnswersDashboardBlock(XBlock):
         username = data.get('username', None)
         root_block_id = data.get('root_block_id', None)
         match_string = data.get('match_string', None)
-        if not root_block_id:
-            root_block_id = self.scope_ids.usage_id
-            # Block ID not in workbench runtime.
-            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
-            get_root = True
+
+        # Process user-submitted data
+        if block_types == 'all':
+            block_types = []
         else:
-            get_root = False
+            block_types = [block_types]
+
         user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
             return {'error': 'permission denied'}
-        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
-        self._delete_export()
-        # Make sure we nail down our state before sending off an asynchronous task.
-        self.save()
         if not username:
             user_id = None
         else:
@@ -185,6 +181,19 @@ class StudentAnswersDashboardBlock(XBlock):
             if user_id is None:
                 self.raise_error(404, _("Could not find the specified username."))
 
+        if not root_block_id:
+            root_block_id = self.scope_ids.usage_id
+            # Block ID not in workbench runtime.
+            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
+            get_root = True
+        else:
+            get_root = False
+
+        # Launch task
+        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
+        self._delete_export()
+        # Make sure we nail down our state before sending off an asynchronous task.
+        self.save()
         async_result = export_data_task.delay(
             # course_id not available in workbench.
             unicode(getattr(self.runtime, 'course_id', 'course_id')),

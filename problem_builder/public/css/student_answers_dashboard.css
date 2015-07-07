@@ -1,37 +1,67 @@
-.data-export-options, .data-export-results {
+.data-export-options, .data-export-results, .data-export-status {
     margin-top: 2em;
 }
-.data-export-actions button {
-    display: none;
+.data-export-options, .data-export-results table {
+    border: 2px solid #999;
 }
-.data-export-status {
-    margin-top: 2em;
-    height: 8em;
+.data-export-options, .data-export-results thead {
+    background-color: #ddd;
+}
+.data-export-options {
+    display: table;
+    padding: 1em;
+}
+.data-export-header, .data-export-row {
+    display: table-row;
+}
+.data-export-header h3, .data-export-results thead {
+    font-weight: bold;
+}
+.data-export-header h3 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+.data-export-field-container, .data-export-options .data-export-actions {
+    display: table-cell;
+    padding-left: 1em;
 }
 .data-export-field {
     margin-top: .5em;
     margin-bottom: .5em;
 }
 .data-export-field label span {
-    font-weight: bold;
+    padding-right: .5em;
+    vertical-align: middle;
 }
-.data-export-helptext {
-    font-size: 75%;
+.data-export-field input, .data-export-field select {
+    max-width: 60%;
+    float: right;
 }
-.data-export-field-container {
-    margin-bottom: 1em;
-}
-.data-export-results {
+.data-export-results, .data-export-download, .data-export-cancel, .data-export-delete {
     display: none;
 }
 .data-export-results table {
     margin-top: 1em;
-    border: 2px solid gray;
 }
 .data-export-results thead {
-    border-bottom: 2px solid gray;
-    font-weight: bold;
+    border-bottom: 2px solid #999;
 }
 .data-export-results td {
+    border-left: 1px solid #999;
     padding: 5px;
+}
+.data-export-results .even {
+    background-color: #eee;
+}
+.data-export-info p {
+    font-size: 75%;
+}
+.data-export-status {
+    margin-bottom: 1em;
+}
+.data-export-status i {
+    font-size: 3em;
+}
+.data-export-actions {
+    text-align: right;
 }

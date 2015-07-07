@@ -44,7 +44,7 @@ function StudentAnswersDashboardBlock(runtime, element) {
         $deleteButton.prop('disabled', true);
         $('.data-export-status', $element).empty().append(
             $('<i>').addClass('icon fa fa-spinner fa-spin')
-        );
+        ).css("text-align", "center");
     }
 
     function hideResults() {
@@ -68,8 +68,10 @@ function StudentAnswersDashboardBlock(runtime, element) {
     }
 
     function updateView() {
-        var $statusArea = $('.data-export-status', $element), startTime;
+        var $exportInfo = $('.data-export-info', $element),
+            $statusArea = $('.data-export-status', $element), startTime;
         $statusArea.empty();
+        $exportInfo.empty();
         $startButton.toggle(!status.export_pending).prop('disabled', false);
         $cancelButton.toggle(status.export_pending).prop('disabled', false);
         $downloadButton.toggle(Boolean(status.download_url)).prop('disabled', false);
@@ -82,16 +84,14 @@ function StudentAnswersDashboardBlock(runtime, element) {
                         {'error': status.last_export_result.error}
                     )
                 ));
+                hideResults();
             } else {
                 startTime = new Date(status.last_export_result.start_timestamp * 1000);
-                $statusArea.append($('<p>').text(
-                    gettext('A report is available for download.')
-                ));
-                $statusArea.append($('<p>').text(
+                $exportInfo.append($('<p>').text(
                     _.template(
                         ngettext(
-                            'It was created at <%= creation_time %> and took <%= seconds %> second to finish.',
-                            'It was created at <%= creation_time %> and took <%= seconds %> seconds to finish.',
+                            'Results retrieved on <%= creation_time %> (<%= seconds %> second).',
+                            'Results retrieved on <%= creation_time %> (<%= seconds %> seconds).',
                             status.last_export_result.generation_time_s.toFixed(1)
                         ),
                         {
@@ -100,34 +100,26 @@ function StudentAnswersDashboardBlock(runtime, element) {
                         }
                     )
                 ));
-            }
-
-            // Display results
-            var $resultTableBody = $resultTable.find('tbody');
-
-            $resultTableBody.empty();
-
-            _.each(status.last_export_result.display_data, function(row) {
-
-                var tr = $('<tr>');
-
-                _.each(row, function(cell) {
-                    tr.append($('<td>').text(cell));
+                // Display results
+                var $resultTableBody = $resultTable.find('tbody');
+                $resultTableBody.empty();
+                _.each(status.last_export_result.display_data, function(row, index) {
+                    var tr = $('<tr>');
+                    if (index % 2 === 0) {
+                        tr.addClass('even');
+                    }
+                    _.each(row, function(cell) {
+                        tr.append($('<td>').text(cell));
+                    });
+                    $resultTableBody.append(tr);
                 });
-
-                $resultTableBody.append(tr);
-            });
-
-            showResults();
+                showResults();
+            }
 
         } else {
             if (status.export_pending) {
                 $statusArea.append($('<p>').text(
                     gettext('The report is currently being generated…')
-                ));
-            } else {
-                $statusArea.append($('<p>').text(
-                    gettext('No report data available.')
                 ));
             }
         }
