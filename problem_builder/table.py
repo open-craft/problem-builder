@@ -24,13 +24,15 @@ import errno
 
 
 from xblock.core import XBlock
-from xblock.fields import Scope, String
+from xblock.fields import Scope, String, Boolean
 from xblock.fragment import Fragment
 
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
 # Globals ###########################################################
+from problem_builder import AnswerRecapBlock
+from problem_builder.dashboard import ExportMixin
 
 loader = ResourceLoader(__name__)
 
@@ -42,7 +44,8 @@ def _(text):
 # Classes ###########################################################
 
 
-class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlock):
+@XBlock.wants("user")
+class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, ExportMixin, XBlock):
     """
     Table-type display of information from mentoring blocks
 
@@ -66,8 +69,17 @@ class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin,
             {"display_name": "Immunity Map", "value": "immunity-map"},
         ],
     )
-    editable_fields = ("type", )
+    editable_fields = ("type", "allow_download")
+    allow_download = Boolean(
+        display_name=_("Allow Download"),
+        help=_("Allow students to download a copy of the table for themselves."),
+        default=False,
+        scope=Scope.content
+    )
     has_children = True
+
+    css_path = 'public/css/mentoring-table.css'
+    js_path = 'public/js/review_blocks.js'
 
     def student_view(self, context):
         context = context.copy() if context else {}
@@ -83,6 +95,7 @@ class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin,
             fragment.add_frag_resources(child_frag)
         context['header_values'] = header_values if any(header_values) else None
         context['content_values'] = content_values
+        context['allow_download'] = self.allow_download
 
         if self.type:
             # Load an optional background image:
@@ -96,11 +109,23 @@ class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin,
                 else:
                     raise
 
+        report_template = loader.render_template('templates/html/mentoring-table-report.html', {
+            'title': self.display_name,
+            'css': loader.load_unicode(AnswerRecapBlock.css_path) + loader.load_unicode(self.css_path),
+            'student_name': self._get_user_full_name(),
+            'course_name': self._get_course_name(),
+        })
+
         fragment.add_content(loader.render_template('templates/html/mentoring-table.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring-table.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/jquery-shorten.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring-table.js'))
-        fragment.initialize_js('MentoringTableBlock')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, self.js_path))
+        fragment.initialize_js(
+            'MentoringTableBlock', {
+                'reportContentSelector': '.mentoring-table-container',
+                'reportTemplate': report_template,
+            }
+        )
 
         return fragment
 

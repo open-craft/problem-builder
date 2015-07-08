@@ -272,6 +272,8 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     )
     editable_fields = ('name', 'display_name', 'description')
 
+    css_path = 'public/css/answer.css'
+
     @property
     def student_input(self):
         if self.name:
@@ -287,7 +289,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
         html = loader.render_template('templates/html/answer_read_only.html', context)
 
         fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
         return fragment
 
     def student_view(self, context=None):

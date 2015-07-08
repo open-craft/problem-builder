@@ -1,6 +1,6 @@
 // Client side code for the Problem Builder Dashboard XBlock
 // So far, this code is only used to generate a downloadable report.
-function PBDashboardBlock(runtime, element, initData) {
+function ExportBase(runtime, element, initData) {
     "use strict";
 
     var reportTemplate = initData.reportTemplate;
@@ -32,7 +32,7 @@ function PBDashboardBlock(runtime, element, initData) {
         // Download Report:
         // Change the URL to a data: URI before continuing with the click event.
         if ($(this).attr('href').charAt(0) == '#') {
-            var $report = $('.dashboard-report', element).clone();
+            var $report = $(initData.reportContentSelector, element).clone();
             // Convert all images in $report to data URIs:
             $report.find('image').each(function() {
                 var origURL = $(this).attr('xlink:href');
@@ -48,4 +48,18 @@ function PBDashboardBlock(runtime, element, initData) {
 
     var $downloadLink = $('.report-download-link', element);
     $downloadLink.on('click', downloadReport);
+}
+
+function PBDashboardBlock(runtime, element, initData) {
+    new ExportBase(runtime, element, initData);
+}
+
+function MentoringTableBlock(runtime, element, initData) {
+    // Display an excerpt for long answers, with a "more" link to display the full text
+    $('.answer-table', element).shorten({
+        moreText: 'more',
+        lessText: 'less',
+        showChars: '500'
+    });
+    new ExportBase(runtime, element, initData)
 }

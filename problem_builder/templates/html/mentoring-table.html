@@ -1,23 +1,29 @@
-<div class="mentoring-table {{ self.type }}" style="background-image: url({{ bg_image_url }})">
-  <div class="cont-text-sr">{{ bg_image_description }}</div>
-  <table>
-    {% if header_values %}
-    <thead>
-      {% for header in header_values %}
-        <th>{{ header|safe }}</th>
-      {% endfor %}
-    </thead>
-    {% endif %}
-    <tbody>
-      <tr>
-        {% for content in content_values %}
-        <td>
-          <div class="mentoring-column">
-            {{content|safe}}
-          </div>
-        </td>
+{% load i18n %}
+<div class="mentoring-table-container">
+  <div class="mentoring-table {{ self.type }}" style="background-image: url({{ bg_image_url }})">
+    <div class="cont-text-sr">{{ bg_image_description }}</div>
+    <table>
+      {% if header_values %}
+      <thead>
+        {% for header in header_values %}
+          <th>{{ header|safe }}</th>
         {% endfor %}
-      </tr>
-    </tbody>
-  </table>
+      </thead>
+      {% endif %}
+      <tbody>
+        <tr>
+          {% for content in content_values %}
+          <td>
+            <div class="mentoring-column">
+              {{content|safe}}
+            </div>
+          </td>
+          {% endfor %}
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  {% if allow_download %}
+    <p><a class="report-download-link" href="#report_download" download="report.html">{% trans "Download report" %}</a></p>
+  {% endif %}
 </div>

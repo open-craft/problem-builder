@@ -58,6 +58,39 @@ def _(text):
 # Classes ###########################################################
 
 
+class ExportMixin(object):
+    """
+    Used by blocks which need to provide a downloadable export.
+    """
+    def _get_user_full_name(self):
+        """
+        Get the full name of the current user, for the downloadable report.
+        """
+        user_service = self.runtime.service(self, 'user')
+        if user_service:
+            return user_service.get_current_user().full_name
+        return ""
+
+    def _get_course_name(self):
+        """
+        Get the name of the current course, for the downloadable report.
+        """
+        try:
+            course_key = self.scope_ids.usage_id.course_key
+        except AttributeError:
+            return ""  # We are not in an edX runtime
+        try:
+            course_root_key = course_key.make_usage_key('course', 'course')
+            return self.runtime.get_block(course_root_key).display_name
+        except Exception:  # ItemNotFoundError most likely, but we can't import that exception in non-edX environments
+            # We may be on old mongo:
+            try:
+                course_root_key = course_key.make_usage_key('course', course_key.run)
+                return self.runtime.get_block(course_root_key).display_name
+            except Exception:
+                return ""
+
+
 class ColorRule(object):
     """
     A rule used to conditionally set colors
@@ -155,7 +188,7 @@ class InvalidUrlName(ValueError):
 
 @XBlock.needs("i18n")
 @XBlock.wants("user")
-class DashboardBlock(StudioEditableXBlockMixin, XBlock):
+class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
     """
     A block to summarize self-assessment results.
     """
@@ -260,7 +293,7 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         'color_rules', 'visual_rules', 'visual_title', 'visual_desc', 'header_html', 'footer_html',
     )
     css_path = 'public/css/dashboard.css'
-    js_path = 'public/js/dashboard.js'
+    js_path = 'public/js/review_blocks.js'
 
     def get_mentoring_blocks(self, mentoring_ids, ignore_errors=True):
         """
@@ -342,34 +375,6 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
             if rule.matches(value):
                 return rule.color_str
         return None
-
-    def _get_user_full_name(self):
-        """
-        Get the full name of the current user, for the downloadable report.
-        """
-        user_service = self.runtime.service(self, 'user')
-        if user_service:
-            return user_service.get_current_user().full_name
-        return ""
-
-    def _get_course_name(self):
-        """
-        Get the name of the current course, for the downloadable report.
-        """
-        try:
-            course_key = self.scope_ids.usage_id.course_key
-        except AttributeError:
-            return ""  # We are not in an edX runtime
-        try:
-            course_root_key = course_key.make_usage_key('course', 'course')
-            return self.runtime.get_block(course_root_key).display_name
-        except Exception:  # ItemNotFoundError most likely, but we can't import that exception in non-edX environments
-            # We may be on old mongo:
-            try:
-                course_root_key = course_key.make_usage_key('course', course_key.run)
-                return self.runtime.get_block(course_root_key).display_name
-            except Exception:
-                return ""
 
     def _get_problem_questions(self, mentoring_block):
         """ Generator returning only children of specified block that are MCQs """
@@ -469,7 +474,11 @@ class DashboardBlock(StudioEditableXBlockMixin, XBlock):
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, self.js_path))
-        fragment.initialize_js('PBDashboardBlock', {'reportTemplate': report_template})
+        fragment.initialize_js(
+            'PBDashboardBlock', {
+                'reportTemplate': report_template,
+                'reportContentSelector': '.dashboard-report'
+            })
         return fragment
 
     def validate_field_data(self, validation, data):
