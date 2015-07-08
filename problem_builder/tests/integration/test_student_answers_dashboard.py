@@ -46,7 +46,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         super(StudentAnswersDashboardTest, self).setUp()
         self.set_scenario_xml("""
         <vertical_demo>
-          <pb-data-export url_name="data_export"/>
+          <pb-student-answers-dashboard url_name="data_export"/>
         </vertical_demo>
         """)
 
@@ -60,13 +60,14 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
-    def test_data_export(self):
-        data_export = self.go_to_view()
-        start_button = data_export.find_element_by_class_name('data-export-start')
-        cancel_button = data_export.find_element_by_class_name('data-export-cancel')
-        download_button = data_export.find_element_by_class_name('data-export-download')
-        delete_button = data_export.find_element_by_class_name('data-export-delete')
-        status_area = data_export.find_element_by_class_name('data-export-status')
+    def test_data_export_success(self):
+        student_answers_dashboard = self.go_to_view()
+        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
+        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
+        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
+        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
+        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
+        info_area = student_answers_dashboard.find_element_by_class_name('data-export-info')
 
         start_button.click()
 
@@ -80,12 +81,55 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.wait_until_hidden(cancel_button)
         self.wait_until_visible(download_button)
         self.wait_until_visible(delete_button)
-        self.assertIn('A report is available for download.', status_area.text)
+        self.assertEqual('', status_area.text)
+        self.assertIn('Results retrieved on', info_area.text)
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(successful=False),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    def test_data_export_error(self):
+        student_answers_dashboard = self.go_to_view()
+        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
+        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
+        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
+        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
+        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
+        info_area = student_answers_dashboard.find_element_by_class_name('data-export-info')
+
+        start_button.click()
+
+        self.wait_until_hidden(start_button)
+        self.wait_until_visible(cancel_button)
+        self.wait_until_hidden(download_button)
+        self.wait_until_hidden(delete_button)
+        self.assertIn('The report is currently being generated', status_area.text)
+
+        self.wait_until_clickable(start_button)
+        self.wait_until_hidden(cancel_button)
+        self.wait_until_visible(delete_button)
+        self.assertIn('Data export failed. Reason:', status_area.text)
+        self.assertEqual('', info_area.text)
 
     def test_non_staff_disabled(self):
-        data_export = self.go_to_view()
-        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-start')
-        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-cancel')
-        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-download')
-        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-delete')
-        self.assertRaises(NoSuchElementException, data_export.find_element_by_class_name, 'data-export-status')
+        student_answers_dashboard = self.go_to_view()
+        self.assertRaises(
+            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-start'
+        )
+        self.assertRaises(
+            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-cancel'
+        )
+        self.assertRaises(
+            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-download'
+        )
+        self.assertRaises(
+            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-delete'
+        )
+        self.assertRaises(
+            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-results'
+        )
+        self.assertRaises(
+            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-status'
+        )
