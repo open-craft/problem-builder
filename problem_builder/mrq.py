@@ -21,8 +21,9 @@
 # Imports ###########################################################
 
 import logging
+import datetime as datetime
 
-from xblock.fields import List, Scope, Boolean
+from xblock.fields import List, Scope, Boolean, DateTime
 from xblock.validation import ValidationMessage
 from .questionnaire import QuestionnaireAbstractBlock
 from xblockutils.resources import ResourceLoader
@@ -69,9 +70,16 @@ class MRQBlock(QuestionnaireAbstractBlock):
         default=[],
     )
     hide_results = Boolean(display_name="Hide results", scope=Scope.content, default=False)
+
+    datetime = DateTime(
+        display_name="DateTime",
+        help="This field does not do anything - just renders in template",
+        default=datetime.datetime(2015, 01, 01)
+    )
+
     editable_fields = (
         'question', 'required_choices', 'ignored_choices', 'message', 'display_name',
-        'show_title', 'weight', 'hide_results',
+        'show_title', 'weight', 'hide_results', 'datetime'
     )
 
     def describe_choice_correctness(self, choice_value):

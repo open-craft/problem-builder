@@ -1,4 +1,9 @@
+{% load tz %}
 <fieldset class="choices questionnaire" data-hide_results="{{self.hide_results}}">
+  <!--  Avoid django timezone conversion to not confuse reviewers -->
+  {% localtime off %}
+    <p>{{ self.datetime|date }}</p>
+  {% endlocaltime %}
   <legend class="question">
 	  {% if not hide_header %}<h3 class="question-title">{{ self.display_name_with_default }}</h3>{% endif %}
     <p>{{ self.question|safe }}</p>
