@@ -203,7 +203,10 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, StepMixin, StudioEditableX
 
         if sub_api:
             # Also send to the submissions API:
-            sub_api.create_submission(self.student_item_key, self.student_input)
+            item_key = self.student_item_key
+            # Need to do this by our own ID, since an answer can be referred to multiple times.
+            item_key['item_id'] = self.name
+            sub_api.create_submission(item_key, self.student_input)
 
         log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return self.get_results()
@@ -283,9 +286,24 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
         context = context.copy() if context else {}
+        student_submissions_key = context.get('student_submissions_key')
         context['title'] = self.display_name
         context['description'] = self.description
-        context['student_input'] = self.student_input
+        if student_submissions_key:
+            location = self.location.replace(branch=None, version=None)  # Standardize the key in case it isn't already
+            target_key = {
+                'student_id': student_submissions_key,
+                'course_id': unicode(location.course_key),
+                'item_id': self.name,
+                'item_type': u'pb-answer',
+            }
+            submissions = sub_api.get_submissions(target_key, limit=1)
+            try:
+                context['student_input'] = submissions[0]['answer']
+            except IndexError:
+                context['student_input'] = None
+        else:
+            context['student_input'] = self.student_input
         html = loader.render_template('templates/html/answer_read_only.html', context)
 
         fragment = Fragment(html)

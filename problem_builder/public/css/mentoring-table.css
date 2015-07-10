@@ -52,3 +52,84 @@
   position: absolute;
   width: 1px;
 }
+
+.mentoring-table-container .share-with-container {
+    text-align: right;
+}
+
+.share-with-instructions {
+    max-width: 14.5em;
+}
+
+.mentoring-share-panel {
+    float: right;
+}
+
+.mentoring-share-panel .mentoring-share-with {
+    position: absolute;
+    right: 0;
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(221, 221, 221);
+    padding: 1em;
+}
+
+.mentoring-share-with .share-header {
+    text-align: left;
+}
+
+.mentoring-share-with .share-action-buttons {
+    text-align: center;
+    padding-top: .5em;
+}
+
+.mentoring-share-with .add-share-username {
+    margin-right: 1em;
+}
+
+.mentoring-share-with .share-errors {
+    color: darkred;
+    font-size: .75em;
+    text-align: center;
+}
+
+.new-share-container {
+    margin-top: .5em;
+}
+
+.shared-list li {
+    list-style-type: none;
+    display: block;
+    padding: .25em;
+    margin: 0;
+}
+
+.shared-list li .username {
+    display: inline-block;
+    float: left;
+}
+
+.share-panel-container {
+    text-align: right;
+}
+
+.share-notification {
+    border: 2px solid rgb(200, 200, 200);
+    max-width: 15em;
+    padding: 1em;
+    background-color: rgb(255, 255, 255);
+    position: absolute;
+    right: 0;
+    font-size: .8em;
+}
+
+.share-notification .notification-close {
+    float: right;
+}
+
+.report-download-container {
+    float: left;
+}
+
+.mentoring .identification {
+    padding-bottom: 1em;
+}
