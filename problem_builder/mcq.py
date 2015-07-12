@@ -123,7 +123,11 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
         fragment = Fragment(u"<p>{}</p>".format(self.question))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
         fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/problem_builder.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire_edit.js'))
+        fragment.initialize_js('QuestionnaireEdit')
         return fragment
 
     def validate_field_data(self, validation, data):
@@ -208,5 +212,9 @@ class RatingBlock(MCQBlock):
         }))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
         fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/problem_builder.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire_edit.js'))
+        fragment.initialize_js('QuestionnaireEdit')
         return fragment

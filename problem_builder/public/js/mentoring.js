@@ -113,6 +113,8 @@ function MentoringBlock(runtime, element) {
         }
     }
 
+    ProblemBuilder.transformClarifications(element);
+
     if (data.mode === 'standard') {
         MentoringStandardView(runtime, element, mentoring);
     }
