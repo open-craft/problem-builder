@@ -26,7 +26,7 @@ function DataExportBlock(runtime, element) {
     }
 
     function updateStatus(newStatus) {
-        var statusChanged = newStatus !== status;
+        var statusChanged = ! _.isEqual(newStatus, status);
         status = newStatus;
         if (status.export_pending) {
             // Keep polling for status updates when an export is running.

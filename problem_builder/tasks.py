@@ -9,6 +9,7 @@ from instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import UsageKey, CourseKey
 from xmodule.modulestore.django import modulestore
+from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from .mcq import MCQBlock, RatingBlock
 from problem_builder import AnswerBlock
@@ -56,7 +57,11 @@ def export_data(course_id, source_block_id_str, block_types, user_id, get_root=T
             blocks_to_include.append(block)
         elif block.has_children:
             for child_id in block.children:
-                scan_for_blocks(block.runtime.get_block(child_id))
+                try:
+                    scan_for_blocks(block.runtime.get_block(child_id))
+                except ItemNotFoundError:
+                    # Blocks may refer to missing children. Don't break in this case.
+                    pass
 
     scan_for_blocks(root)
 

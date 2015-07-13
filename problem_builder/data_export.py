@@ -172,6 +172,8 @@ class DataExportBlock(XBlock):
             return {'error': 'permission denied'}
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
         self._delete_export()
+        # Make sure we nail down our state before sending off an asynchronous task.
+        self.save()
         if not username:
             user_id = None
         else:
