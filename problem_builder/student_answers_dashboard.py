@@ -113,6 +113,7 @@ class StudentAnswersDashboardBlock(XBlock):
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/student_answers_dashboard.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/student_answers_dashboard.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
         fragment.initialize_js('StudentAnswersDashboardBlock')
         return fragment
 
