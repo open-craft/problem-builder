@@ -23,14 +23,16 @@ Instructor Tool: An XBlock for instructors to export student answers from a cour
 All processing is done offline.
 """
 import json
+from django.core.paginator import Paginator
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
-from xblock.fields import Scope, String, Dict
+from xblock.fields import Scope, String, Dict, List
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 
 loader = ResourceLoader(__name__)
 
+PAGE_SIZE = 15
 
 # Make '_' a no-op so we can scrape strings
 def _(text):
@@ -63,6 +65,12 @@ class InstructorToolBlock(XBlock):
         default=None,
         scope=Scope.user_state,
     )
+    display_data = List(
+        # The list of results associated with the most recent successful export.
+        # Stored separately to avoid the overhead of sending it to the client.
+        default=None,
+        scope=Scope.user_state,
+    )
     has_author_view = True
 
     @property
@@ -90,11 +98,26 @@ class InstructorToolBlock(XBlock):
         self.active_export_task_id = ''
         if task_result.successful():
             if isinstance(task_result.result, dict) and not task_result.result.get('error'):
+                self.display_data = task_result.result['display_data']
+                del task_result.result['display_data']
                 self.last_export_result = task_result.result
             else:
                 self.last_export_result = {'error': u'Unexpected result: {}'.format(repr(task_result.result))}
+                self.display_data = None
         else:
             self.last_export_result = {'error': unicode(task_result.result)}
+            self.display_data = None
+
+    @XBlock.json_handler
+    def get_result_page(self, data, suffix=''):
+        """ Return requested page of `last_export_result`. """
+        paginator = Paginator(self.display_data, PAGE_SIZE)
+        page = data.get('page', None)
+        return {
+            'display_data': paginator.page(page).object_list,
+            'num_results': len(self.display_data),
+            'page_size': PAGE_SIZE
+        }
 
     def student_view(self, context=None):
         """ Normal View """
@@ -144,6 +167,7 @@ class InstructorToolBlock(XBlock):
         self.last_export_result = {
             'error': message,
         }
+        self.display_data = None
         raise JsonHandlerError(code, message)
 
     @XBlock.json_handler
@@ -157,6 +181,7 @@ class InstructorToolBlock(XBlock):
 
     def _delete_export(self):
         self.last_export_result = None
+        self.display_data = None
         self.active_export_task_id = ''
 
     @XBlock.json_handler

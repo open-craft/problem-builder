@@ -7,7 +7,7 @@ from mock import patch, Mock
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
-from problem_builder.instructor_tool import InstructorToolBlock
+from problem_builder.instructor_tool import PAGE_SIZE, InstructorToolBlock
 
 
 class MockTasksModule(object):
@@ -199,7 +199,7 @@ class InstructorToolTest(SeleniumXBlockTest):
             successful=True, display_data=[[
                 'Test section', 'Test subsection', 'Test unit',
                 'Test type', 'Test question', 'Test answer', 'Test username'
-            ] for _ in range(45)]),
+            ] for _ in range(PAGE_SIZE*3)]),
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
@@ -224,7 +224,7 @@ class InstructorToolTest(SeleniumXBlockTest):
                 'Test type', 'Test question', 'Test answer', 'Test username'
         ]:
             occurrences = re.findall(contents, result_block.text)
-            self.assertEqual(len(occurrences), 15)
+            self.assertEqual(len(occurrences), PAGE_SIZE)
 
         self.assertFalse(first_page_button.is_enabled())
         self.assertFalse(prev_page_button.is_enabled())
