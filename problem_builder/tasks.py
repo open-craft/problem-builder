@@ -6,7 +6,6 @@ import time
 from celery.task import task
 from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
-from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey
 from student.models import user_by_anonymous_id
 from xmodule.modulestore.django import modulestore
@@ -31,9 +30,7 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
     try:
         course_key = CourseKey.from_string(course_id)
         src_block = modulestore().get_items(course_key, qualifiers={'name': source_block_id_str}, depth=0)[0]
-        if src_block is None:
-            raise InvalidKeyError
-    except InvalidKeyError:
+    except IndexError:
         raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
 
