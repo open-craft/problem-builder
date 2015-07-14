@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import time
 
 from mock import patch, Mock
@@ -12,7 +13,7 @@ from problem_builder.student_answers_dashboard import StudentAnswersDashboardBlo
 class MockTasksModule(object):
     """Mock for the tasks module, which can only be meaningfully import in the LMS."""
 
-    def __init__(self, successful=True):
+    def __init__(self, successful=True, display_data=[]):
         self.export_data = Mock()
         async_result = self.export_data.async_result
         async_result.ready.side_effect = [False, False, True, True]
@@ -24,10 +25,7 @@ class MockTasksModule(object):
                 report_filename='/file/report.csv',
                 start_timestamp=time.time(),
                 generation_time_s=23.4,
-                display_data=[[
-                    'Test section', 'Test subsection', 'Test unit',
-                    'Test type', 'Test question', 'Test answer', 'Test username'
-                ]]
+                display_data=display_data
             )
         else:
             async_result.result = 'error'
@@ -57,6 +55,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
     def test_students_dont_see_interface(self):
         data_export = self.go_to_view()
         self.assertIn('This interface can only be used by course staff.', data_export.text)
+
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
@@ -88,13 +87,14 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.wait_until_visible(download_button)
         self.wait_until_hidden(cancel_button)
         self.wait_until_visible(delete_button)
-        for contents in [
-                'Test section', 'Test subsection', 'Test unit',
-                'Test type', 'Test question', 'Test answer', 'Test username'
+        for column in [
+                'Section', 'Subsection', 'Unit',
+                'Type', 'Question', 'Answer', 'Username'
         ]:
-            self.assertIn(contents, result_block.text)
+            self.assertIn(column, result_block.text)
         self.assertIn('Results retrieved on', info_area.text)
         self.assertEqual('', status_area.text)
+
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=False),
@@ -127,6 +127,182 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.assertFalse(result_block.is_displayed())
         self.assertEqual('', info_area.text)
         self.assertIn('Data export failed. Reason:', status_area.text)
+
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(successful=True),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    def test_pagination_no_results(self):
+        student_answers_dashboard = self.go_to_view()
+        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
+        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
+        first_page_button = student_answers_dashboard.find_element_by_id('first-page')
+        prev_page_button = student_answers_dashboard.find_element_by_id('prev-page')
+        next_page_button = student_answers_dashboard.find_element_by_id('next-page')
+        last_page_button = student_answers_dashboard.find_element_by_id('last-page')
+        current_page_info = student_answers_dashboard.find_element_by_id('current-page')
+        total_pages_info = student_answers_dashboard.find_element_by_id('total-pages')
+
+        start_button.click()
+
+        self.wait_until_visible(result_block)
+
+        self.assertFalse(first_page_button.is_enabled())
+        self.assertFalse(prev_page_button.is_enabled())
+        self.assertFalse(next_page_button.is_enabled())
+        self.assertFalse(last_page_button.is_enabled())
+
+        self.assertEqual('0', current_page_info.text)
+        self.assertEqual('0', total_pages_info.text)
+
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(
+            successful=True, display_data=[[
+                'Test section', 'Test subsection', 'Test unit',
+                'Test type', 'Test question', 'Test answer', 'Test username'
+            ]]),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    def test_pagination_single_result(self):
+        student_answers_dashboard = self.go_to_view()
+        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
+        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
+        first_page_button = student_answers_dashboard.find_element_by_id('first-page')
+        prev_page_button = student_answers_dashboard.find_element_by_id('prev-page')
+        next_page_button = student_answers_dashboard.find_element_by_id('next-page')
+        last_page_button = student_answers_dashboard.find_element_by_id('last-page')
+        current_page_info = student_answers_dashboard.find_element_by_id('current-page')
+        total_pages_info = student_answers_dashboard.find_element_by_id('total-pages')
+
+        start_button.click()
+
+        self.wait_until_visible(result_block)
+
+        for contents in [
+                'Test section', 'Test subsection', 'Test unit',
+                'Test type', 'Test question', 'Test answer', 'Test username'
+        ]:
+            self.assertIn(contents, result_block.text)
+
+        self.assertFalse(first_page_button.is_enabled())
+        self.assertFalse(prev_page_button.is_enabled())
+        self.assertFalse(next_page_button.is_enabled())
+        self.assertFalse(last_page_button.is_enabled())
+
+        self.assertEqual('1', current_page_info.text)
+        self.assertEqual('1', total_pages_info.text)
+
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(
+            successful=True, display_data=[[
+                'Test section', 'Test subsection', 'Test unit',
+                'Test type', 'Test question', 'Test answer', 'Test username'
+            ] for r in range(45)]),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    def test_pagination_multiple_results(self):
+        student_answers_dashboard = self.go_to_view()
+        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
+        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
+        first_page_button = student_answers_dashboard.find_element_by_id('first-page')
+        prev_page_button = student_answers_dashboard.find_element_by_id('prev-page')
+        next_page_button = student_answers_dashboard.find_element_by_id('next-page')
+        last_page_button = student_answers_dashboard.find_element_by_id('last-page')
+        current_page_info = student_answers_dashboard.find_element_by_id('current-page')
+        total_pages_info = student_answers_dashboard.find_element_by_id('total-pages')
+
+        start_button.click()
+
+        self.wait_until_visible(result_block)
+
+        for contents in [
+                'Test section', 'Test subsection', 'Test unit',
+                'Test type', 'Test question', 'Test answer', 'Test username'
+        ]:
+            occurrences = re.findall(contents, result_block.text)
+            self.assertEqual(len(occurrences), 15)
+
+        self.assertFalse(first_page_button.is_enabled())
+        self.assertFalse(prev_page_button.is_enabled())
+        self.assertTrue(next_page_button.is_enabled())
+        self.assertTrue(last_page_button.is_enabled())
+
+        self.assertEqual('1', current_page_info.text)
+        self.assertEqual('3', total_pages_info.text)
+
+        # Test behavior of pagination controls
+
+        # - "Next" button
+
+        next_page_button.click() # Navigate to second page
+
+        self.assertTrue(first_page_button.is_enabled())
+        self.assertTrue(prev_page_button.is_enabled())
+        self.assertTrue(next_page_button.is_enabled())
+        self.assertTrue(last_page_button.is_enabled())
+
+        self.assertEqual('2', current_page_info.text)
+
+        next_page_button.click() # Navigate to third page
+
+        self.assertTrue(first_page_button.is_enabled())
+        self.assertTrue(prev_page_button.is_enabled())
+        self.assertFalse(next_page_button.is_enabled())
+        self.assertFalse(last_page_button.is_enabled())
+
+        self.assertEqual('3', current_page_info.text)
+
+        # - "Prev" button
+
+        prev_page_button.click() # Navigate to second page
+
+        self.assertTrue(first_page_button.is_enabled())
+        self.assertTrue(prev_page_button.is_enabled())
+        self.assertTrue(next_page_button.is_enabled())
+        self.assertTrue(last_page_button.is_enabled())
+
+        self.assertEqual('2', current_page_info.text)
+
+        prev_page_button.click() # Navigate to first page
+
+        self.assertFalse(first_page_button.is_enabled())
+        self.assertFalse(prev_page_button.is_enabled())
+        self.assertTrue(next_page_button.is_enabled())
+        self.assertTrue(last_page_button.is_enabled())
+
+        self.assertEqual('1', current_page_info.text)
+
+        # - "Last" button
+
+        last_page_button.click() # Navigate to last page
+
+        self.assertTrue(first_page_button.is_enabled())
+        self.assertTrue(prev_page_button.is_enabled())
+        self.assertFalse(next_page_button.is_enabled())
+        self.assertFalse(last_page_button.is_enabled())
+
+        self.assertEqual('3', current_page_info.text)
+
+        # - "First" button
+
+        first_page_button.click() # Navigate to first page
+
+        self.assertFalse(first_page_button.is_enabled())
+        self.assertFalse(prev_page_button.is_enabled())
+        self.assertTrue(next_page_button.is_enabled())
+        self.assertTrue(last_page_button.is_enabled())
+
+        self.assertEqual('1', current_page_info.text)
+
 
     def test_non_staff_disabled(self):
         student_answers_dashboard = self.go_to_view()

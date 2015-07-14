@@ -18,9 +18,16 @@ function StudentAnswersDashboardBlock(runtime, element) {
 
         model: Result,
 
-        getCurrentPage: function() {
+        getCurrentPage: function(object) {
             var currentPage = this.state.currentPage;
-            return this.getPage(currentPage);
+            if (object) {
+                return this.getPage(currentPage);
+            }
+            return currentPage;
+        },
+
+        getTotalPages: function() {
+            return this.state.totalPages;
         }
 
     });
@@ -28,9 +35,9 @@ function StudentAnswersDashboardBlock(runtime, element) {
     var ResultsView = Backbone.View.extend({
 
         render: function() {
-            this._insertRecords(this.collection.getCurrentPage());
+            this._insertRecords(this.collection.getCurrentPage(true));
             this._updateControls();
-            this.$('#total-pages').text(this.collection.state.totalPages);
+            this.$('#total-pages').text(this.collection.getTotalPages() || 0);
             return this;
         },
 
@@ -47,7 +54,11 @@ function StudentAnswersDashboardBlock(runtime, element) {
                 });
                 tbody.append(row);
             }, this);
-            this.$('#current-page').text(this.collection.state.currentPage);
+            if (this.collection.getTotalPages()) {
+                this.$('#current-page').text(this.collection.getCurrentPage());
+            } else {
+                this.$('#current-page').text(0);
+            }
         },
 
         events: {
@@ -82,8 +93,8 @@ function StudentAnswersDashboardBlock(runtime, element) {
         },
 
         _updateControls: function() {
-            var currentPage = this.collection.state.currentPage,
-                totalPages = this.collection.state.totalPages,
+            var currentPage = this.collection.getCurrentPage(),
+                totalPages = this.collection.getTotalPages(),
                 firstPage = '#first-page',
                 prevPage = '#prev-page',
                 nextPage = '#next-page',
@@ -91,7 +102,7 @@ function StudentAnswersDashboardBlock(runtime, element) {
                 all = [firstPage, prevPage, nextPage, lastPage],
                 backward = [firstPage, prevPage],
                 forward = [nextPage, lastPage];
-            if (totalPages === 1) {
+            if (!totalPages || totalPages === 1) {
                 this._disable(all);
             } else {
                 if (currentPage === 1) {
