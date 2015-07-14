@@ -18,12 +18,57 @@ function InstructorToolBlock(runtime, element) {
 
         model: Result,
 
-        getCurrentPage: function(returnObject) {
-            var currentPage = this.state.currentPage;
-            if (returnObject) {
-                return this.getPage(currentPage);
+        state: {
+            order: 0
+        },
+
+        url: runtime.handlerUrl(element, 'get_result_page'),
+
+        parseState: function(response) {
+            return {
+                totalRecords: response.num_results,
+                pageSize: response.page_size
+            };
+        },
+
+        parseRecords: function(response) {
+            return _.map(response.display_data, function(row) {
+                return new Result(null, { values: row });
+            });
+        },
+
+        fetchOptions: {
+            reset: true,
+            type: 'POST',
+            contentType: 'application/json',
+            processData: false,
+            beforeSend: function(jqXHR, options) {
+                options.data = JSON.stringify(options.data);
             }
-            return currentPage;
+        },
+
+        getFirstPage: function() {
+            Backbone.PageableCollection.prototype
+                .getFirstPage.call(this, this.fetchOptions);
+        },
+
+        getPreviousPage: function() {
+            Backbone.PageableCollection.prototype
+                .getPreviousPage.call(this, this.fetchOptions);
+        },
+
+        getNextPage: function() {
+            Backbone.PageableCollection.prototype
+                .getNextPage.call(this, this.fetchOptions);
+        },
+
+        getLastPage: function() {
+            Backbone.PageableCollection.prototype
+                .getLastPage.call(this, this.fetchOptions);
+        },
+
+        getCurrentPage: function() {
+            return this.state.currentPage;
         },
 
         getTotalPages: function() {
@@ -34,17 +79,21 @@ function InstructorToolBlock(runtime, element) {
 
     var ResultsView = Backbone.View.extend({
 
+        initialize: function() {
+            this.listenTo(this.collection, 'reset', this.render);
+        },
+
         render: function() {
-            this._insertRecords(this.collection.getCurrentPage(true));
+            this._insertRecords();
             this._updateControls();
             this.$('#total-pages').text(this.collection.getTotalPages() || 0);
             return this;
         },
 
-        _insertRecords: function(records) {
+        _insertRecords: function() {
             var tbody = this.$('tbody');
             tbody.empty();
-            records.each(function(result, index) {
+            this.collection.each(function(result, index) {
                 var row = $('<tr>');
                 _.each(Result.properties, function(name) {
                     row.append($('<td>').text(result.get(name)));
@@ -66,26 +115,26 @@ function InstructorToolBlock(runtime, element) {
         },
 
         _firstPage: function() {
-            this._insertRecords(this.collection.getFirstPage());
+            this.collection.getFirstPage();
             this._updateControls();
         },
 
         _prevPage: function() {
             if (this.collection.hasPreviousPage()) {
-                this._insertRecords(this.collection.getPreviousPage());
+                this.collection.getPreviousPage();
             }
             this._updateControls();
         },
 
         _nextPage: function() {
             if (this.collection.hasNextPage()) {
-                this._insertRecords(this.collection.getNextPage());
+                this.collection.getNextPage();
             }
             this._updateControls();
         },
 
         _lastPage: function() {
-            this._insertRecords(this.collection.getLastPage());
+            this.collection.getLastPage();
             this._updateControls();
         },
 
@@ -107,7 +156,7 @@ function InstructorToolBlock(runtime, element) {
     });
 
     var resultsView = new ResultsView({
-        collection: new Results([], { mode: "client", state: { pageSize: 15 } }),
+        collection: new Results([]),
         el: $element.find('#results')
     });
 
@@ -207,13 +256,7 @@ function InstructorToolBlock(runtime, element) {
                     )
                 ));
 
-                // Display results
-                var results = _.map(status.last_export_result.display_data, function(row) {
-                    return new Result(null, { values: row });
-                });
-
-                resultsView.collection.fullCollection.reset(results);
-                resultsView.render();
+                resultsView.collection.getFirstPage();
 
                 showResults();
             }
