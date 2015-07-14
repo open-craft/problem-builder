@@ -199,7 +199,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
             successful=True, display_data=[[
                 'Test section', 'Test subsection', 'Test unit',
                 'Test type', 'Test question', 'Test answer', 'Test username'
-            ] for r in range(45)]),
+            ] for _ in range(45)]),
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })

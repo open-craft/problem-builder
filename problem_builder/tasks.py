@@ -73,7 +73,7 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
 
     # Load the actual student submissions for each block in blocks_to_include.
     # Note this requires one giant query per block (all student submissions for each block, one block at a time)
-    for idx, block in enumerate(blocks_to_include, start=1):  # start=1 since first column is student ID
+    for block in blocks_to_include:
         # Get all of the most recent student submissions for this block:
         block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
         block_type = block.scope_ids.block_type
