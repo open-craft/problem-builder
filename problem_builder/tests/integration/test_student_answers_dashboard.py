@@ -56,7 +56,6 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         data_export = self.go_to_view()
         self.assertIn('This interface can only be used by course staff.', data_export.text)
 
-
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
         'instructor_task': True,
@@ -95,7 +94,6 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.assertIn('Results retrieved on', info_area.text)
         self.assertEqual('', status_area.text)
 
-
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=False),
         'instructor_task': True,
@@ -128,7 +126,6 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.assertEqual('', info_area.text)
         self.assertIn('Data export failed. Reason:', status_area.text)
 
-
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
         'instructor_task': True,
@@ -157,7 +154,6 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         self.assertEqual('0', current_page_info.text)
         self.assertEqual('0', total_pages_info.text)
-
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(
@@ -197,7 +193,6 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         self.assertEqual('1', current_page_info.text)
         self.assertEqual('1', total_pages_info.text)
-
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(
@@ -243,7 +238,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         # - "Next" button
 
-        next_page_button.click() # Navigate to second page
+        next_page_button.click()  # Navigate to second page
 
         self.assertTrue(first_page_button.is_enabled())
         self.assertTrue(prev_page_button.is_enabled())
@@ -252,7 +247,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         self.assertEqual('2', current_page_info.text)
 
-        next_page_button.click() # Navigate to third page
+        next_page_button.click()  # Navigate to third page
 
         self.assertTrue(first_page_button.is_enabled())
         self.assertTrue(prev_page_button.is_enabled())
@@ -263,7 +258,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         # - "Prev" button
 
-        prev_page_button.click() # Navigate to second page
+        prev_page_button.click()  # Navigate to second page
 
         self.assertTrue(first_page_button.is_enabled())
         self.assertTrue(prev_page_button.is_enabled())
@@ -272,7 +267,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         self.assertEqual('2', current_page_info.text)
 
-        prev_page_button.click() # Navigate to first page
+        prev_page_button.click()  # Navigate to first page
 
         self.assertFalse(first_page_button.is_enabled())
         self.assertFalse(prev_page_button.is_enabled())
@@ -283,7 +278,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         # - "Last" button
 
-        last_page_button.click() # Navigate to last page
+        last_page_button.click()  # Navigate to last page
 
         self.assertTrue(first_page_button.is_enabled())
         self.assertTrue(prev_page_button.is_enabled())
@@ -294,7 +289,7 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
 
         # - "First" button
 
-        first_page_button.click() # Navigate to first page
+        first_page_button.click()  # Navigate to first page
 
         self.assertFalse(first_page_button.is_enabled())
         self.assertFalse(prev_page_button.is_enabled())
@@ -302,7 +297,6 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.assertTrue(last_page_button.is_enabled())
 
         self.assertEqual('1', current_page_info.text)
-
 
     def test_non_staff_disabled(self):
         student_answers_dashboard = self.go_to_view()
