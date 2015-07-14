@@ -1,6 +1,130 @@
 function StudentAnswersDashboardBlock(runtime, element) {
     'use strict';
     var $element = $(element);
+
+    // Pagination
+
+    var Result = Backbone.Model.extend({
+
+        initialize: function(attrs, options) {
+            _.each(_.zip(Result.properties, options.values), function(pair) {
+                this.set(pair[0], pair[1]);
+            }, this);
+        }
+
+    }, { properties: ['section', 'subsection', 'unit', 'type', 'question', 'answer', 'username'] });
+
+    var Results = Backbone.PageableCollection.extend({
+
+        model: Result,
+
+        getCurrentPage: function() {
+            var currentPage = this.state.currentPage;
+            return this.getPage(currentPage);
+        }
+
+    });
+
+    var ResultsView = Backbone.View.extend({
+
+        render: function() {
+            this._insertRecords(this.collection.getCurrentPage());
+            this._updateControls();
+            this.$('#total-pages').text(this.collection.state.totalPages);
+            return this;
+        },
+
+        _insertRecords: function(records) {
+            var tbody = this.$('tbody');
+            tbody.empty();
+            records.each(function(result, index) {
+                var row = $('<tr>');
+                if (index % 2 === 0) {
+                    row.addClass('even');
+                }
+                _.each(Result.properties, function(name) {
+                    row.append($('<td>').text(result.get(name)));
+                });
+                tbody.append(row);
+            }, this);
+            this.$('#current-page').text(this.collection.state.currentPage);
+        },
+
+        events: {
+            'click #first-page': '_firstPage',
+            'click #prev-page': '_prevPage',
+            'click #next-page': '_nextPage',
+            'click #last-page': '_lastPage'
+        },
+
+        _firstPage: function() {
+            this._insertRecords(this.collection.getFirstPage());
+            this._updateControls();
+        },
+
+        _prevPage: function() {
+            if (this.collection.hasPreviousPage()) {
+                this._insertRecords(this.collection.getPreviousPage());
+            }
+            this._updateControls();
+        },
+
+        _nextPage: function() {
+            if (this.collection.hasNextPage()) {
+                this._insertRecords(this.collection.getNextPage());
+            }
+            this._updateControls();
+        },
+
+        _lastPage: function() {
+            this._insertRecords(this.collection.getLastPage());
+            this._updateControls();
+        },
+
+        _updateControls: function() {
+            var currentPage = this.collection.state.currentPage,
+                totalPages = this.collection.state.totalPages,
+                firstPage = '#first-page',
+                prevPage = '#prev-page',
+                nextPage = '#next-page',
+                lastPage = '#last-page',
+                all = [firstPage, prevPage, nextPage, lastPage],
+                backward = [firstPage, prevPage],
+                forward = [nextPage, lastPage];
+            if (totalPages === 1) {
+                this._disable(all);
+            } else {
+                if (currentPage === 1) {
+                    this._disable(backward);
+                    this._enable(forward);
+                } else if (currentPage === totalPages) {
+                    this._enable(backward);
+                    this._disable(forward);
+                } else {
+                    this._enable(all);
+                }
+            }
+        },
+
+        _enable: function(controls) {
+            _.each(controls, function(control) {
+                this.$(control).prop('disabled', false);
+            }, this);
+        },
+
+        _disable: function(controls) {
+            _.each(controls, function(control) {
+                this.$(control).prop('disabled', true);
+            }, this);
+        }
+
+    });
+
+    var resultsView = new ResultsView({
+        collection: new Results([], { mode: "client", state: { pageSize: 15 } }),
+        el: $element.find('#results')
+    });
+
     // Set up gettext in case it isn't available in the client runtime:
     if (typeof gettext == "undefined") {
         window.gettext = function gettext_stub(string) { return string; };
@@ -160,128 +284,5 @@ function StudentAnswersDashboardBlock(runtime, element) {
 
     showSpinner();
     getStatus();
-
-    // Pagination
-
-    var Result = Backbone.Model.extend({
-
-        initialize: function(attrs, options) {
-            _.each(_.zip(Result.properties, options.values), function(pair) {
-                this.set(pair[0], pair[1]);
-            }, this);
-        }
-
-    }, { properties: ['section', 'subsection', 'unit', 'type', 'question', 'answer', 'username'] });
-
-    var Results = Backbone.PageableCollection.extend({
-
-        model: Result,
-
-        getCurrentPage: function() {
-            var currentPage = this.state.currentPage;
-            return this.getPage(currentPage);
-        }
-
-    });
-
-    var ResultsView = Backbone.View.extend({
-
-        render: function() {
-            this._insertRecords(this.collection.getCurrentPage());
-            this._updateControls();
-            this.$('#total-pages').text(this.collection.state.totalPages);
-            return this;
-        },
-
-        _insertRecords: function(records) {
-            var tbody = this.$('tbody');
-            tbody.empty();
-            records.each(function(result, index) {
-                var row = $('<tr>');
-                if (index % 2 === 0) {
-                    row.addClass('even');
-                }
-                _.each(Result.properties, function(name) {
-                    row.append($('<td>').text(result.get(name)));
-                });
-                tbody.append(row);
-            }, this);
-            this.$('#current-page').text(this.collection.state.currentPage);
-        },
-
-        events: {
-            'click #first-page': '_firstPage',
-            'click #prev-page': '_prevPage',
-            'click #next-page': '_nextPage',
-            'click #last-page': '_lastPage'
-        },
-
-        _firstPage: function() {
-            this._insertRecords(this.collection.getFirstPage());
-            this._updateControls();
-        },
-
-        _prevPage: function() {
-            if (this.collection.hasPreviousPage()) {
-                this._insertRecords(this.collection.getPreviousPage());
-            }
-            this._updateControls();
-        },
-
-        _nextPage: function() {
-            if (this.collection.hasNextPage()) {
-                this._insertRecords(this.collection.getNextPage());
-            }
-            this._updateControls();
-        },
-
-        _lastPage: function() {
-            this._insertRecords(this.collection.getLastPage());
-            this._updateControls();
-        },
-
-        _updateControls: function() {
-            var currentPage = this.collection.state.currentPage,
-                totalPages = this.collection.state.totalPages,
-                firstPage = '#first-page',
-                prevPage = '#prev-page',
-                nextPage = '#next-page',
-                lastPage = '#last-page',
-                all = [firstPage, prevPage, nextPage, lastPage],
-                backward = [firstPage, prevPage],
-                forward = [nextPage, lastPage];
-            if (totalPages === 1) {
-                this._disable(all);
-            } else {
-                if (currentPage === 1) {
-                    this._disable(backward);
-                    this._enable(forward);
-                } else if (currentPage === totalPages) {
-                    this._enable(backward);
-                    this._disable(forward);
-                } else {
-                    this._enable(all);
-                }
-            }
-        },
-
-        _enable: function(controls) {
-            _.each(controls, function(control) {
-                this.$(control).prop('disabled', false);
-            }, this);
-        },
-
-        _disable: function(controls) {
-            _.each(controls, function(control) {
-                this.$(control).prop('disabled', true);
-            }, this);
-        }
-
-    });
-
-    var resultsView = new ResultsView({
-        collection: new Results([], { mode: "client", state: { pageSize: 15 } }),
-        el: $element.find('#results')
-    });
 
 }
