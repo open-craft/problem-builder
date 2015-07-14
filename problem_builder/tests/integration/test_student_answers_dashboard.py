@@ -24,6 +24,10 @@ class MockTasksModule(object):
                 report_filename='/file/report.csv',
                 start_timestamp=time.time(),
                 generation_time_s=23.4,
+                display_data=[[
+                    'Test section', 'Test subsection', 'Test unit',
+                    'Test type', 'Test question', 'Test answer', 'Test username'
+                ]]
             )
         else:
             async_result.result = 'error'
@@ -63,26 +67,34 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
     def test_data_export_success(self):
         student_answers_dashboard = self.go_to_view()
         start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
-        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
-        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
-        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
+        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
         info_area = student_answers_dashboard.find_element_by_class_name('data-export-info')
+        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
+        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
+        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
+        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
 
         start_button.click()
 
         self.wait_until_hidden(start_button)
-        self.wait_until_visible(cancel_button)
+        self.wait_until_hidden(result_block)
         self.wait_until_hidden(download_button)
+        self.wait_until_visible(cancel_button)
         self.wait_until_hidden(delete_button)
         self.assertIn('The report is currently being generated', status_area.text)
 
         self.wait_until_visible(start_button)
-        self.wait_until_hidden(cancel_button)
+        self.wait_until_visible(result_block)
         self.wait_until_visible(download_button)
+        self.wait_until_hidden(cancel_button)
         self.wait_until_visible(delete_button)
-        self.assertEqual('', status_area.text)
+        for contents in [
+                'Test section', 'Test subsection', 'Test unit',
+                'Test type', 'Test question', 'Test answer', 'Test username'
+        ]:
+            self.assertIn(contents, result_block.text)
         self.assertIn('Results retrieved on', info_area.text)
+        self.assertEqual('', status_area.text)
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=False),
@@ -93,25 +105,28 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
     def test_data_export_error(self):
         student_answers_dashboard = self.go_to_view()
         start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
-        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
-        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
-        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
+        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
         info_area = student_answers_dashboard.find_element_by_class_name('data-export-info')
+        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
+        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
+        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
+        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
 
         start_button.click()
 
         self.wait_until_hidden(start_button)
+        self.wait_until_hidden(result_block)
         self.wait_until_visible(cancel_button)
         self.wait_until_hidden(download_button)
         self.wait_until_hidden(delete_button)
         self.assertIn('The report is currently being generated', status_area.text)
 
-        self.wait_until_clickable(start_button)
+        self.wait_until_visible(start_button)
         self.wait_until_hidden(cancel_button)
         self.wait_until_visible(delete_button)
-        self.assertIn('Data export failed. Reason:', status_area.text)
+        self.assertFalse(result_block.is_displayed())
         self.assertEqual('', info_area.text)
+        self.assertIn('Data export failed. Reason:', status_area.text)
 
     def test_non_staff_disabled(self):
         student_answers_dashboard = self.go_to_view()
