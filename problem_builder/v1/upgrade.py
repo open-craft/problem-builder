@@ -38,14 +38,13 @@ from .studio_xml_utils import studio_update_from_node
 from .xml_changes import convert_xml_v1_to_v2
 
 
-def upgrade_block(block):
+def upgrade_block(store, block):
     """
     Given a MentoringBlock "block" with old-style (v1) data in its "xml_content" field, parse
     the XML and re-create the block with new-style (v2) children and settings.
     """
     assert isinstance(block, (MentoringBlock, NewMentoringBlock))
     assert bool(block.xml_content)  # If it's a v1 block it will have xml_content
-    store = block.runtime.modulestore
     xml_content_str = block.xml_content
     parser = etree.XMLParser(remove_blank_text=True)
     root = etree.parse(StringIO(xml_content_str), parser=parser).getroot()
@@ -77,6 +76,10 @@ def upgrade_block(block):
 
     # Was block already published?
     parent = store.get_item(block.parent)  # Don't use get_parent()/get_block() as it may be an outdated cached version
+    assert getattr(parent.location, 'branch', None) is None
+    assert getattr(parent.location, 'version_guid', None) is None
+    assert getattr(parent.children[0], 'branch', None) is None
+    assert getattr(parent.children[0], 'version_guid', None) is None
     parent_was_published = not store.has_changes(parent)
 
     old_usage_id = block.location
@@ -193,6 +196,6 @@ if __name__ == '__main__':
             block = course.runtime.get_block(block_id)
             print(u" ➔ Upgrading block {} of {} - \"{}\"".format(count, total, block.url_name))
             count += 1
-            upgrade_block(block)
+            upgrade_block(store, block)
 
     print(u" ➔ Complete.")
