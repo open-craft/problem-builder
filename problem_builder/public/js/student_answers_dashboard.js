@@ -18,9 +18,9 @@ function StudentAnswersDashboardBlock(runtime, element) {
 
         model: Result,
 
-        getCurrentPage: function(object) {
+        getCurrentPage: function(returnObject) {
             var currentPage = this.state.currentPage;
-            if (object) {
+            if (returnObject) {
                 return this.getPage(currentPage);
             }
             return currentPage;
@@ -46,9 +46,6 @@ function StudentAnswersDashboardBlock(runtime, element) {
             tbody.empty();
             records.each(function(result, index) {
                 var row = $('<tr>');
-                if (index % 2 === 0) {
-                    row.addClass('even');
-                }
                 _.each(Result.properties, function(name) {
                     row.append($('<td>').text(result.get(name)));
                 });
@@ -94,38 +91,16 @@ function StudentAnswersDashboardBlock(runtime, element) {
 
         _updateControls: function() {
             var currentPage = this.collection.getCurrentPage(),
-                totalPages = this.collection.getTotalPages(),
-                firstPage = '#first-page',
-                prevPage = '#prev-page',
-                nextPage = '#next-page',
-                lastPage = '#last-page',
-                all = [firstPage, prevPage, nextPage, lastPage],
-                backward = [firstPage, prevPage],
-                forward = [nextPage, lastPage];
-            if (!totalPages || totalPages === 1) {
-                this._disable(all);
-            } else {
-                if (currentPage === 1) {
-                    this._disable(backward);
-                    this._enable(forward);
-                } else if (currentPage === totalPages) {
-                    this._enable(backward);
-                    this._disable(forward);
-                } else {
-                    this._enable(all);
-                }
-            }
+                totalPages = this.collection.getTotalPages() || 0,
+                backward = ["#first-page", "#prev-page"],
+                forward = ["#next-page", "#last-page"];
+                this._enable(backward, currentPage > 1);
+                this._enable(forward, currentPage < totalPages);
         },
 
-        _enable: function(controls) {
+        _enable: function(controls, condition) {
             _.each(controls, function(control) {
-                this.$(control).prop('disabled', false);
-            }, this);
-        },
-
-        _disable: function(controls) {
-            _.each(controls, function(control) {
-                this.$(control).prop('disabled', true);
+                this.$(control).prop('disabled', !condition);
             }, this);
         }
 
@@ -187,12 +162,8 @@ function StudentAnswersDashboardBlock(runtime, element) {
     }
 
     function showResults() {
-        $resultTable.show();
-    }
-
-    function maybeShowResults() {
         if (status.last_export_result) {
-            showResults();
+            $resultTable.show();
         }
     }
 
@@ -286,7 +257,7 @@ function StudentAnswersDashboardBlock(runtime, element) {
     addHandler($deleteButton, 'delete_export');
 
     $startButton.on('click', hideResults);
-    $cancelButton.on('click', maybeShowResults);
+    $cancelButton.on('click', showResults);
     $deleteButton.on('click', hideResults);
 
     $downloadButton.on('click', function() {

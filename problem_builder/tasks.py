@@ -7,9 +7,8 @@ from celery.task import task
 from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
-from opaque_keys.edx.keys import UsageKey, CourseKey
+from opaque_keys.edx.keys import CourseKey
 from student.models import user_by_anonymous_id
-from submissions.models import StudentItem
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
@@ -67,36 +66,14 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
 
     scan_for_blocks(root)
 
-    # Define the header rows of our CSV:
+    # Define the header row of our CSV:
     rows = []
     rows.append(["Section", "Subsection", "Unit", "Type", "Question", "Answer", "Username"])
 
-    # Load the actual student submissions for each block in blocks_to_include.
-    # Note this requires one giant query per block (all student submissions for each block, one block at a time)
+    # Collect results for each block in blocks_to_include
     for block in blocks_to_include:
-        # Get all of the most recent student submissions for this block:
-        block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
-        block_type = block.scope_ids.block_type
-        if not user_id:
-            submissions = sub_api.get_all_submissions(course_key_str, block_id, block_type)
-        else:
-            student_dict = {
-                'student_id': user_id,
-                'item_id': block_id,
-                'course_id': course_key_str,
-                'item_type': block_type,
-            }
-            submissions = sub_api.get_submissions(student_dict, limit=1)
-
-        for submission in submissions:
-            # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
-            student_id = submission.get('student_id', user_id)
-
-            # Extract data for display
-            # "row" will be None if answer does not match "match_string"
-            row = _extract_data_for_display(submission, student_id, block_type, match_string)
-            if row:
-                rows.append(row)
+        results = _extract_data(course_key_str, block, user_id, match_string)
+        rows += results
 
     # Generate the CSV:
     filename = u"pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))
@@ -111,29 +88,100 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
         "report_filename": filename,
         "start_timestamp": start_timestamp,
         "generation_time_s": generation_time_s,
-        "display_data": [] if len(rows) == 1 else rows[1:]
+        "display_data": [] if len(rows) == 1 else rows[1:1001]  # Limit to preview of 1000 items
     }
 
 
-def _extract_data_for_display(submission, student_id, block_type, match_string):
+def _extract_data(course_key_str, block, user_id, match_string):
     """
-    Extract data that will be displayed on Student Answers Dashboard
-    from `submission`.
+    Extract results for `block`.
     """
+    rows = []
 
-    # Username
-    user = user_by_anonymous_id(student_id)
-    username = user.username
+    # Extract info for "Section", "Subsection", and "Unit" columns
+    section_name, subsection_name, unit_name = _get_context(block)
 
-    # Question
-    student_item = StudentItem.objects.get(pk=submission['student_item'])
+    # Extract info for "Type" column
+    block_type = _get_type(block)
 
-    block_key = UsageKey.from_string(student_item.item_id)
-    block = modulestore().get_item(block_key)
+    # Extract info for "Question" column
+    block_question = block.question
 
-    # Answer
+    # Extract info for "Answer" and "Username" columns
+    # - Get all of the most recent student submissions for this block:
+    submissions = _get_submissions(course_key_str, block, user_id)
+
+    # - For each submission, look up student's username and answer:
+    for submission in submissions:
+        username = _get_username(submission, user_id)
+        answer = _get_answer(block, submission)
+
+        # Short-circuit if answer does not match search criteria
+        if not match_string.lower() in answer.lower():
+            continue
+
+        rows.append([section_name, subsection_name, unit_name, block_type, block_question, answer, username])
+
+    return rows
+
+
+def _get_context(block):
+    """
+    Return section, subsection, and unit names for `block`.
+    """
+    block_names_by_type = {}
+    block_iter = block
+    while block_iter:
+        block_iter_type = block_iter.scope_ids.block_type
+        block_names_by_type[block_iter_type] = block_iter.display_name_with_default
+        block_iter = block_iter.get_parent() if block_iter.parent else None
+    section_name = block_names_by_type.get('chapter', '')
+    subsection_name = block_names_by_type.get('sequential', '')
+    unit_name = block_names_by_type.get('vertical', '')
+    return section_name, subsection_name, unit_name
+
+
+def _get_type(block):
+    """
+    Return type of `block`.
+    """
+    return block.scope_ids.block_type
+
+
+def _get_submissions(course_key_str, block, user_id):
+    """
+    Return submissions for `block`.
+    """
+    # Load the actual student submissions for `block`.
+    # Note this requires one giant query that retrieves all student submissions for `block` at once.
+    block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
+    block_type = _get_type(block)
+    if not user_id:
+        return sub_api.get_all_submissions(course_key_str, block_id, block_type)
+    else:
+        student_dict = {
+            'student_id': user_id,
+            'item_id': block_id,
+            'course_id': course_key_str,
+            'item_type': block_type,
+        }
+        return sub_api.get_submissions(student_dict, limit=1)
+
+
+def _get_username(submission, user_id):
+    """
+    Return username of student who provided `submission`.
+    """
+    # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
+    student_id = submission.get('student_id', user_id)
+    return user_by_anonymous_id(student_id).username
+
+
+def _get_answer(block, submission):
+    """
+    Return answer associated with this `submission` to `block`.
+    """
     answer = submission['answer']
-
     try:
         choices = block.children
     except AttributeError:
@@ -144,27 +192,4 @@ def _extract_data_for_display(submission, student_id, block_type, match_string):
             if choice_block.value == answer:
                 answer = choice_block.content
                 break
-
-    # Short-circuit if answer does not match search criteria
-    if not match_string.lower() in answer.lower():
-        return
-
-    # Unit
-    mentoring_block = modulestore().get_item(block.parent)
-    unit = modulestore().get_item(mentoring_block.parent)
-
-    # Subsection
-    subsection = modulestore().get_item(unit.parent)
-
-    # Section
-    section = modulestore().get_item(subsection.parent)
-
-    return [
-        section.display_name,
-        subsection.display_name,
-        unit.display_name,
-        block_type,
-        block.question,
-        answer,
-        username
-    ]
+    return answer
