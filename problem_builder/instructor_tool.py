@@ -34,6 +34,7 @@ loader = ResourceLoader(__name__)
 
 PAGE_SIZE = 15
 
+
 # Make '_' a no-op so we can scrape strings
 def _(text):
     return text
@@ -128,9 +129,53 @@ class InstructorToolBlock(XBlock):
             _('Rating Question'): 'RatingBlock',
             _('Long Answer'): 'AnswerBlock',
         }
+        block_types = ('pb-mcq', 'pb-rating', 'pb-answer')
+        flat_block_tree = []
+
+        def build_tree(block, ancestors):
+            """
+            Build up a tree of information about the XBlocks descending from root_block
+            """
+            block_id = block.scope_ids.usage_id.block_id
+            block_name = getattr(block, "display_name", None)
+            block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
+            if not block_name and block_type in block_types:
+                block_name = block.question
+            eligible = block_type in block_types
+            if eligible:
+                # If this block is a question whose answers we can export,
+                # we mark all of its ancestors as exportable too
+                if ancestors and not ancestors[-1]["eligible"]:
+                    for ancestor in ancestors:
+                        ancestor["eligible"] = True
+            new_entry = {
+                "depth": len(ancestors),
+                "id": block_id,
+                "name": block_name,
+                "eligible": eligible,
+            }
+            flat_block_tree.append(new_entry)
+            if block.has_children and not block_type == 'pb-mcq' and not \
+               getattr(block, "has_dynamic_children", lambda: False)():
+                for child_id in block.children:
+                    build_tree(block.runtime.get_block(child_id), ancestors=(ancestors + [new_entry]))
+
+        root_block = self
+        while root_block.parent:
+            root_block = root_block.get_parent()
+        root_entry = {
+            "depth": 0,
+            "id": root_block.scope_ids.usage_id.block_id,
+            "name": "All",
+        }
+        flat_block_tree.append(root_entry)
+        for child_id in root_block.children:
+            child_block = root_block.runtime.get_block(child_id)
+            build_tree(child_block, [root_entry])
+
         html = loader.render_template(
             'templates/html/instructor_tool.html',
-            {'block_choices': block_choices}
+            {'block_choices': block_choices, 'block_tree': flat_block_tree}
         )
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
@@ -212,9 +257,6 @@ class InstructorToolBlock(XBlock):
             root_block_id = self.scope_ids.usage_id
             # Block ID not in workbench runtime.
             root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
-            get_root = True
-        else:
-            get_root = False
 
         # Launch task
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
@@ -228,7 +270,6 @@ class InstructorToolBlock(XBlock):
             block_types,
             user_id,
             match_string,
-            get_root=get_root
         )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.

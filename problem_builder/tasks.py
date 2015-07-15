@@ -20,7 +20,7 @@ logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(course_id, source_block_id_str, block_types, user_id, match_string, get_root=True):
+def export_data(course_id, source_block_id_str, block_types, user_id, match_string):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
@@ -33,12 +33,6 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
     except IndexError:
         raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
-
-    root = src_block
-    if get_root:
-        # Get the root block for the course.
-        while root.parent:
-            root = root.get_parent()
 
     type_map = {cls.__name__: cls for cls in [MCQBlock, RatingBlock, AnswerBlock]}
 
@@ -62,7 +56,7 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
                     # Blocks may refer to missing children. Don't break in this case.
                     pass
 
-    scan_for_blocks(root)
+    scan_for_blocks(src_block)
 
     # Define the header row of our CSV:
     rows = []
