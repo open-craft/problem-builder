@@ -1,3 +1,179 @@
+.mentoring .title .shared-header {
+    margin: 1em 0em;
+}
+
+.mentoring .messages,
+.mentoring .assessment-messages {
+    display: none;
+}
+
+.mentoring .messages .title1,
+.mentoring .assessment-messages .title1 {
+    color: #333333;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-style: normal;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.mentoring .warning {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding: 15px 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+
+.mentoring .missing-dependency.warning {
+    display: none;
+}
+
+.mentoring .bold {
+    font-weight: bold;
+}
+.mentoring .italic {
+    font-style: italic;
+}
+
+.mentoring fieldset {
+    margin-top: 10px;
+}
+
+.mentoring h3 {
+    margin-top: 0px;
+    margin-bottom: 7px;
+}
+
+.mentoring .submit {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.mentoring .submit input {
+    display: none;
+}
+
+.mentoring legend {
+    white-space: normal;
+    display: table; /* Enable line-wrapping in IE8 */
+}
+
+.mentoring .choices legend.question p:last-child { /* Selector must be more specific than 'div.course-wrapper section.course-content p' */
+    margin-bottom: 0;
+}
+
+.mentoring .attempts {
+    margin-left: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.mentoring .attempts > span {
+    color: #777;
+    font-style: italic;
+    webkit-font-smoothing: antialiased;
+}
+
+.mentoring .checkmark-correct {
+    font-size: 22pt;
+    color: #629b2b;
+    float: left;
+}
+
+.mentoring .checkmark-partially-correct {
+    font-size: 22pt;
+    color: #e37222;
+    float: left;
+}
+
+.mentoring .checkmark-incorrect {
+    font-size: 22pt;
+    color: #ff0000;
+    float: left;
+}
+
+.mentoring .choice-result{
+    display:block;
+    float: left;
+    height:33.33px;
+}
+
+.mentoring .assessment-question-block {
+    border: 5px solid #e5ebee;
+    padding: 20px;
+}
+
+.mentoring .assessment-question-block > .xblock-v1-assessment_step_view,
+.mentoring .assessment-question-block > .xblock-assessment_step_view  {
+    display: none; /* Each "step" (question) is hidden at first, and shown one at a time by JavaScript */
+}
+
+.mentoring .assessment-checkmark {
+    margin-right: 10px;
+}
+
+.mentoring .grade .grade-result {
+    margin: 20px;
+}
+
+.mentoring .grade .checkmark-incorrect {
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.mentoring input[type=button],
+.mentoring input[type=button]:focus {
+    background-color: #3384ca;
+}
+
+.mentoring input[type=button][disabled],
+.mentoring input[type=button][disabled]:hover,
+.mentoring input[type=button][disabled]:focus {
+    background-color: #cccccc;
+}
+
+.mentoring input[type="checkbox"],
+.mentoring input[type="radio"] {
+    margin: 0;
+}
+
+.mentoring .review-list {
+    list-style: none;
+    padding-left: 0 !important;
+    margin-left: 0;
+}
+.mentoring .review-list li {
+    display: inline;
+}
+
+.mentoring .review-list li a{
+    font-weight: bold;
+}
+
+.mentoring .results-section {
+    float: left;
+}
+
+.mentoring .results-section p {
+    margin: 4px;
+}
+
+.mentoring .clear {
+    display: block;
+    clear: both;
+}
+
+.mentoring .review-link {
+    float: right;
+    display: none;
+}
+
 .pb-clarification span.clarification i {
     font-style: normal;
 }

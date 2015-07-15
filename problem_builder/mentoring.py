@@ -315,9 +315,8 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/problem_builder.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         js_file = 'public/js/mentoring_{}_view.js'.format('assessment' if self.is_assessment else 'standard')
         fragment.add_javascript_url(self.runtime.local_resource_url(self, js_file))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
@@ -733,7 +732,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         self.include_theme_files(fragment)
         return fragment
 
@@ -749,8 +748,9 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring_edit.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/problem_builder.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
         fragment.initialize_js('MentoringEditComponents')
         return fragment

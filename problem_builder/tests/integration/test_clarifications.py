@@ -41,7 +41,7 @@ class ClarificationTest(SeleniumXBlockTest):
 
     mcq_template = """
         <problem-builder>
-            <pb-mcq question="Who was your favorite character? {clarify}">
+            <pb-mcq question="Who was your favorite character? {clarify_escaped}">
                 <pb-choice value="gaius">Gaius Baltar</pb-choice>
                 <pb-choice value="adama">Admiral William Adama {clarify}</pb-choice>
                 <pb-choice value="starbuck">Starbuck</pb-choice>
@@ -51,7 +51,7 @@ class ClarificationTest(SeleniumXBlockTest):
 
     mrq_template = """
         <problem-builder>
-            <pb-mrq question="What makes a great {clarify} MRQ {clarify}?">
+            <pb-mrq question="What makes a great {clarify_escaped} MRQ {clarify_escaped}?">
                 <pb-choice value="1">Lots of choices</pb-choice>
                 <pb-choice value="2">Funny{clarify} choices</pb-choice>
                 <pb-choice value="3">Not sure {clarify}</pb-choice>
@@ -61,7 +61,7 @@ class ClarificationTest(SeleniumXBlockTest):
 
     rating_template = """
         <problem-builder>
-            <pb-rating name="rating_1_1" question="How do you rate {clarify} Battlestar Galactica?">
+            <pb-rating name="rating_1_1" question="How do you rate {clarify_escaped} Battlestar Galactica?">
                 <pb-choice value="6">More than 5 stars {clarify}</pb-choice>
             </pb-rating>
         </problem-builder>
@@ -69,20 +69,30 @@ class ClarificationTest(SeleniumXBlockTest):
 
     long_answer_template = """
         <problem-builder>
-            <pb-answer question="What did you think {clarify} of the ending?" />
+            <pb-answer question="What did you think {clarify_escaped} of the ending?" />
+        </problem-builder>
+    """
+
+    html_block_template = """
+        <problem-builder>
+            <html_demo><p>This is some raw {clarify} HTML code.</p></html_demo>
         </problem-builder>
     """
 
     def prepare_xml_scenario(self, xml_template):
         span = '<span class="pb-clarification">{}</span>'.format(self.clarification_text)
         escaped_span = escape(span, quote=True)
-        return xml_template.format(clarify=escaped_span)
+        return xml_template.format(
+            clarify=span,
+            clarify_escaped=escaped_span
+        )
 
     @ddt.data(
         (mcq_template, 2),
         (mrq_template, 4),
         (rating_template, 2),
         (long_answer_template, 1),
+        (html_block_template, 1),
     )
     @ddt.unpack
     def test_title(self, xml_template, tooltip_count):

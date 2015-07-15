@@ -15,8 +15,8 @@
         </div>
         <label class="choice-label" for="choice-{{ self.html_id }}-{{i}}">
           {{i}}
-          {% if i == '1' %} - {{ self.low }}{% endif %}
-          {% if i == '5' %} - {{ self.high }}{% endif %}
+          {% if i == '1' %} - {{ self.low|safe }}{% endif %}
+          {% if i == '5' %} - {{ self.high|safe }}{% endif %}
         </label>
         <div class="choice-tips-container">
           <div class="choice-tips"></div>

@@ -18,7 +18,7 @@ function MentoringEditComponents(runtime, element) {
         }
     });
 
-    ProblemBuilder.transformClarifications(element);
+    ProblemBuilderUtil.transformClarifications(element);
 
     runtime.listenTo('deleted-child', updateButtons);
 }

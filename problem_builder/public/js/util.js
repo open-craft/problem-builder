@@ -1,7 +1,7 @@
-window.ProblemBuilder = {
+window.ProblemBuilderUtil = {
 
     transformClarifications: function(element) {
-        element = $(element);
+        var $element = $(element);
 
         var transformExisting = function(node) {
             $('.pb-clarification', node).each(function() {
@@ -20,7 +20,7 @@ window.ProblemBuilder = {
         };
 
         // Transform all span.pb-clarifications already existing inside the element.
-        transformExisting(element);
+        transformExisting($element);
 
         // Transform all future span.pb-clarifications using mutation observer.
         // It's only needed in the Studio when editing xblock children because the
@@ -33,7 +33,7 @@ window.ProblemBuilder = {
                     });
                 })
             });
-            observer.observe(element[0], {childList: true, subtree: true});
+            observer.observe($element[0], {childList: true, subtree: true});
         }
     }
 

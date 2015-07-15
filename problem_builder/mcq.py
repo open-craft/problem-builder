@@ -115,19 +115,13 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
         log.debug(u'MCQ submission result: %s', result)
         return result
 
-    def author_edit_view(self, context):
+    def get_author_edit_view_fragment(self, context):
         """
         The options for the 1-5 values of the Likert scale aren't child blocks but we want to
         show them in the author edit view, for clarity.
         """
         fragment = Fragment(u"<p>{}</p>".format(self.question))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
-        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/problem_builder.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire_edit.js'))
-        fragment.initialize_js('QuestionnaireEdit')
         return fragment
 
     def validate_field_data(self, validation, data):
@@ -198,7 +192,7 @@ class RatingBlock(MCQBlock):
             {"display_name": dn, "value": val} for val, dn in zip(self.FIXED_VALUES, display_names)
             ] + super(RatingBlock, self).human_readable_choices
 
-    def author_edit_view(self, context):
+    def get_author_edit_view_fragment(self, context):
         """
         The options for the 1-5 values of the Likert scale aren't child blocks but we want to
         show them in the author edit view, for clarity.
@@ -211,10 +205,4 @@ class RatingBlock(MCQBlock):
             'accepted_statuses': [None] + [self.describe_choice_correctness(c) for c in "12345"],
         }))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
-        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/problem_builder.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire_edit.js'))
-        fragment.initialize_js('QuestionnaireEdit')
         return fragment
