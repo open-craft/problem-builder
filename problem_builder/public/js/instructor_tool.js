@@ -170,7 +170,7 @@ function InstructorToolBlock(runtime, element) {
     var $downloadButton = $element.find('.data-export-download');
     var $deleteButton = $element.find('.data-export-delete');
     var $blockTypes = $element.find("select[name='block_types']");
-    var $rootBlockId = $element.find("input[name='root_block_id']");
+    var $rootBlockId = $element.find("select[name='root_block_id']");
     var $username = $element.find("input[name='username']");
     var $matchString = $element.find("input[name='match_string']");
     var $resultTable = $element.find('.data-export-results');

@@ -27,8 +27,16 @@
     <div class="data-export-field-container">
       <div class="data-export-field">
         <label>
-          <span>{% trans "Root block ID:" %}</span>
-          <input type="text" name="root_block_id" />
+          <span>{% trans "Section/Question:" %}</span>
+          <select name="root_block_id">
+            {% for block in block_tree %}
+            <option value="{{ block.id }}"
+                    {% if not block.eligible %} disabled="disabled" {% endif %}>
+              {% for _ in ""|ljust:block.depth %}&nbsp;&nbsp;{% endfor %}
+              {{ block.name }}
+            </option>
+            {% endfor %}
+          </select>
         </label>
       </div>
     </div>
