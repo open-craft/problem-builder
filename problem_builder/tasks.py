@@ -14,6 +14,7 @@ from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from .mcq import MCQBlock, RatingBlock
 from problem_builder import AnswerBlock
+from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api
 
 logger = get_task_logger(__name__)
@@ -112,9 +113,10 @@ def _extract_data(course_key_str, block, user_id, match_string):
     submissions = _get_submissions(course_key_str, block, user_id)
 
     # - For each submission, look up student's username and answer:
+    answer_cache = {}
     for submission in submissions:
         username = _get_username(submission, user_id)
-        answer = _get_answer(block, submission)
+        answer = _get_answer(block, submission, answer_cache)
 
         # Short-circuit if answer does not match search criteria
         if not match_string.lower() in answer.lower():
@@ -177,19 +179,16 @@ def _get_username(submission, user_id):
     return user_by_anonymous_id(student_id).username
 
 
-def _get_answer(block, submission):
+def _get_answer(block, submission, answer_cache):
     """
-    Return answer associated with this `submission` to `block`.
+    Return answer associated with `submission` to `block`.
+
+    `answer_cache` is a dict that is reset for each block.
     """
     answer = submission['answer']
-    try:
-        choices = block.children
-    except AttributeError:
-        pass
-    else:
-        for choice in choices:
-            choice_block = modulestore().get_item(choice)
-            if choice_block.value == answer:
-                answer = choice_block.content
-                break
+    if isinstance(block, QuestionnaireAbstractBlock):
+        # Convert from answer ID to answer label
+        if answer not in answer_cache:
+            answer_cache[answer] = block.get_submission_display(answer)
+        return answer_cache[answer]
     return answer
