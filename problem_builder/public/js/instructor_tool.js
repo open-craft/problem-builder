@@ -87,6 +87,8 @@ function InstructorToolBlock(runtime, element) {
             this._insertRecords();
             this._updateControls();
             this.$('#total-pages').text(this.collection.getTotalPages() || 0);
+            $('.data-export-status', $element).empty();
+            this.$el.show(700);
             return this;
         },
 
@@ -225,7 +227,6 @@ function InstructorToolBlock(runtime, element) {
     function updateView() {
         var $exportInfo = $('.data-export-info', $element),
             $statusArea = $('.data-export-status', $element), startTime;
-        $statusArea.empty();
         $exportInfo.empty();
         $startButton.toggle(!status.export_pending).prop('disabled', false);
         $cancelButton.toggle(status.export_pending).prop('disabled', false);
@@ -255,10 +256,7 @@ function InstructorToolBlock(runtime, element) {
                         }
                     )
                 ));
-
                 resultsView.collection.getFirstPage();
-
-                showResults();
             }
         } else {
             if (status.export_pending) {
