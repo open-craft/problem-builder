@@ -17,5 +17,8 @@ function MentoringEditComponents(runtime, element) {
             $(this).addClass('disabled');
         }
     });
+
+    ProblemBuilderUtil.transformClarifications(element);
+
     runtime.listenTo('deleted-child', updateButtons);
 }

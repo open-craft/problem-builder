@@ -173,3 +173,11 @@
     float: right;
     display: none;
 }
+
+.pb-clarification span.clarification i {
+    font-style: normal;
+}
+
+.pb-clarification span.clarification i:hover {
+    color: rgb(0, 159, 230);
+}
