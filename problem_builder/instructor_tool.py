@@ -142,7 +142,7 @@ class InstructorToolBlock(XBlock):
             block_name = getattr(block, "display_name", None)
             block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
             if not block_name and block_type in block_types:
-                block_name = block.question
+                block_name = getattr(block, 'question', block.name)
             eligible = block_type in block_types
             if eligible:
                 # If this block is a question whose answers we can export,
