@@ -1,0 +1,85 @@
+{% load i18n %}
+<h2>{% trans "Instructor Tool" %}</h3>
+
+<div class="data-export-options">
+  <div class="data-export-header">
+    <h3>{% trans "Filters" %}</h3>
+  </div>
+  <div class="data-export-row">
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Username:" %}</span>
+          <input type="text" name="username" />
+        </label>
+      </div>
+    </div>
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Text:" %}</span>
+          <input type="text" name="match_string" />
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="data-export-row">
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Root block ID:" %}</span>
+          <input type="text" name="root_block_id" />
+        </label>
+      </div>
+    </div>
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Problem types:" %}</span>
+          <select name="block_types">
+            <option value="all">All</option>
+            {% for label, value in block_choices.items %}
+            <option value="{{value}}">{{label}}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="data-export-actions">
+      <button class="data-export-start">Search</button>
+    </div>
+  </div>
+</div>
+
+<div id="results" class="data-export-results">
+  <table>
+    <thead>
+      <tr>
+        <td>{% trans "Section" %}</td>
+        <td>{% trans "Subsection" %}</td>
+        <td>{% trans "Unit" %}</td>
+        <td>{% trans "Type" %}</td>
+        <td>{% trans "Question" %}</td>
+        <td>{% trans "Answer" %}</td>
+        <td>{% trans "Username" %}</td>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="data-export-info"></div>
+  <div class="data-export-result-actions">
+    <button id="first-page">First</button>
+    <button id="prev-page">Prev</button>
+    <span id="current-page"></span>/<span id="total-pages"></span>
+    <button id="next-page">Next</button>
+    <button id="last-page">Last</button>
+  </div>
+</div>
+
+<div class="data-export-status"></div>
+
+<div class="data-export-actions">
+  <button class="data-export-download">{% trans "Download as CSV" %}</button>
+  <button class="data-export-cancel">{% trans "Cancel search" %}</button>
+  <button class="data-export-delete">{% trans "Delete results" %}</button>
+</div>
