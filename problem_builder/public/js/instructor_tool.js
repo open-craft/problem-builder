@@ -81,14 +81,17 @@ function InstructorToolBlock(runtime, element) {
 
         initialize: function() {
             this.listenTo(this.collection, 'reset', this.render);
+            this.listenTo(this, 'rendered', this._show);
+            this.listenTo(this, 'processing', this._hide);
+            this.listenTo(this, 'error', this._hide);
+            this.listenTo(this, 'update', this._updateInfo);
         },
 
         render: function() {
             this._insertRecords();
             this._updateControls();
             this.$('#total-pages').text(this.collection.getTotalPages() || 0);
-            $('.data-export-status', $element).empty();
-            this.$el.show(700);
+            this.trigger('rendered');
             return this;
         },
 
@@ -107,6 +110,20 @@ function InstructorToolBlock(runtime, element) {
             } else {
                 this.$('#current-page').text(0);
             }
+        },
+
+        _show: function() {
+            this.$el.show(700);
+        },
+
+        _hide: function() {
+            this.$el.hide();
+        },
+
+        _updateInfo: function(info) {
+            var $exportInfo = this.$('.data-export-info');
+            $exportInfo.empty();
+            $exportInfo.append($('<p>').text(info));
         },
 
         events: {
@@ -162,6 +179,38 @@ function InstructorToolBlock(runtime, element) {
         el: $element.find('#results')
     });
 
+    // Status area
+
+    var StatusView = Backbone.View.extend({
+
+        initialize: function() {
+            this.listenTo(this, 'processing', this._showSpinner);
+            this.listenTo(this, 'notify', this._displayMessage);
+            this.listenTo(this, 'stopped', this._empty);
+            this.listenTo(resultsView, 'rendered', this._empty);
+        },
+
+        _showSpinner: function() {
+            this.$el.empty();
+            this.$el.append(
+                $('<i>').addClass('icon fa fa-spinner fa-spin')
+            ).css('text-align', 'center');
+        },
+
+        _displayMessage: function(message) {
+            this.$el.append($('<p>').text(message));
+        },
+
+        _empty: function() {
+            this.$el.empty();
+        }
+
+    });
+
+    var statusView = new StatusView({
+        el: $element.find('.data-export-status')
+    });
+
     // Set up gettext in case it isn't available in the client runtime:
     if (typeof gettext == "undefined") {
         window.gettext = function gettext_stub(string) { return string; };
@@ -198,24 +247,37 @@ function InstructorToolBlock(runtime, element) {
         if (statusChanged) updateView();
     }
 
-    function showSpinner() {
+    function disableActions() {
         $startButton.prop('disabled', true);
         $cancelButton.prop('disabled', true);
         $downloadButton.prop('disabled', true);
         $deleteButton.prop('disabled', true);
-        $('.data-export-status', $element).empty().append(
-            $('<i>').addClass('icon fa fa-spinner fa-spin')
-        ).css("text-align", "center");
     }
 
-    function hideResults() {
-        $resultTable.hide();
+    function showInfo(info) {
+        resultsView.trigger('update', info);
     }
 
     function showResults() {
         if (status.last_export_result) {
             $resultTable.show();
         }
+    }
+
+    function hideResults() {
+        resultsView.trigger('processing');
+    }
+
+    function showSpinner() {
+        statusView.trigger('processing');
+    }
+
+    function hideSpinner() {
+        statusView.trigger('stopped');
+    }
+
+    function showStatusMessage(message) {
+        statusView.trigger('notify', message);
     }
 
     function handleError(data) {
@@ -225,25 +287,22 @@ function InstructorToolBlock(runtime, element) {
     }
 
     function updateView() {
-        var $exportInfo = $('.data-export-info', $element),
-            $statusArea = $('.data-export-status', $element), startTime;
-        $exportInfo.empty();
+        var startTime;
         $startButton.toggle(!status.export_pending).prop('disabled', false);
         $cancelButton.toggle(status.export_pending).prop('disabled', false);
         $downloadButton.toggle(Boolean(status.download_url)).prop('disabled', false);
         $deleteButton.toggle(Boolean(status.last_export_result)).prop('disabled', false);
         if (status.last_export_result) {
             if (status.last_export_result.error) {
-                $statusArea.append($('<p>').text(
-                    _.template(
-                        gettext('Data export failed. Reason: <%= error %>'),
-                        {'error': status.last_export_result.error}
-                    )
-                ));
                 hideResults();
+                hideSpinner();
+                showStatusMessage(_.template(
+                    gettext('Data export failed. Reason: <%= error %>'),
+                    {'error': status.last_export_result.error}
+                ));
             } else {
                 startTime = new Date(status.last_export_result.start_timestamp * 1000);
-                $exportInfo.append($('<p>').text(
+                showInfo(
                     _.template(
                         ngettext(
                             'Results retrieved on <%= creation_time %> (<%= seconds %> second).',
@@ -254,15 +313,14 @@ function InstructorToolBlock(runtime, element) {
                             'creation_time': startTime.toString(),
                             'seconds': status.last_export_result.generation_time_s.toFixed(1)
                         }
-                    )
-                ));
+                    ));
                 resultsView.collection.getFirstPage();
             }
         } else {
             if (status.export_pending) {
-                $statusArea.append($('<p>').text(
-                    gettext('The report is currently being generated…')
-                ));
+                showStatusMessage(gettext('The report is currently being generated…'));
+            } else {
+                hideSpinner();
             }
         }
     }
@@ -290,6 +348,7 @@ function InstructorToolBlock(runtime, element) {
                 dataType: 'json'
             });
             showSpinner();
+            disableActions();
         });
     }
 
@@ -306,6 +365,7 @@ function InstructorToolBlock(runtime, element) {
     });
 
     showSpinner();
+    disableActions();
     getStatus();
 
 }
