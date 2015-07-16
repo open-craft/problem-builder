@@ -62,6 +62,36 @@ class InstructorToolTest(SeleniumXBlockTest):
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
+    def test_data_export_delete(self):
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        status_area = instructor_tool.find_element_by_class_name('data-export-status')
+        download_button = instructor_tool.find_element_by_class_name('data-export-download')
+        cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
+        delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
+
+        start_button.click()
+
+        self.wait_until_visible(result_block)
+        self.wait_until_visible(delete_button)
+
+        delete_button.click()
+
+        self.wait_until_hidden(result_block)
+        self.wait_until_hidden(delete_button)
+
+        self.assertTrue(start_button.is_enabled())
+        self.assertEqual('', status_area.text)
+        self.assertFalse(download_button.is_displayed())
+        self.assertFalse(cancel_button.is_displayed())
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(successful=True),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export_success(self):
         instructor_tool = self.go_to_view()
         start_button = instructor_tool.find_element_by_class_name('data-export-start')
