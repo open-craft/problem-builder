@@ -7,7 +7,7 @@ from mock import patch, Mock
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
-from problem_builder.student_answers_dashboard import StudentAnswersDashboardBlock
+from problem_builder.instructor_tool import InstructorToolBlock
 
 
 class MockTasksModule(object):
@@ -42,13 +42,13 @@ class MockInstructorTaskModelsModule(object):
         ]
 
 
-class StudentAnswersDashboardTest(SeleniumXBlockTest):
+class InstructorToolTest(SeleniumXBlockTest):
 
     def setUp(self):
-        super(StudentAnswersDashboardTest, self).setUp()
+        super(InstructorToolTest, self).setUp()
         self.set_scenario_xml("""
         <vertical_demo>
-          <pb-student-answers-dashboard url_name="data_export"/>
+          <pb-instructor-tool url_name="data_export"/>
         </vertical_demo>
         """)
 
@@ -61,16 +61,16 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export_success(self):
-        student_answers_dashboard = self.go_to_view()
-        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
-        info_area = student_answers_dashboard.find_element_by_class_name('data-export-info')
-        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
-        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
-        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
-        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        info_area = instructor_tool.find_element_by_class_name('data-export-info')
+        status_area = instructor_tool.find_element_by_class_name('data-export-status')
+        download_button = instructor_tool.find_element_by_class_name('data-export-download')
+        cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
+        delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
 
         start_button.click()
 
@@ -99,16 +99,16 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export_error(self):
-        student_answers_dashboard = self.go_to_view()
-        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
-        info_area = student_answers_dashboard.find_element_by_class_name('data-export-info')
-        status_area = student_answers_dashboard.find_element_by_class_name('data-export-status')
-        download_button = student_answers_dashboard.find_element_by_class_name('data-export-download')
-        cancel_button = student_answers_dashboard.find_element_by_class_name('data-export-cancel')
-        delete_button = student_answers_dashboard.find_element_by_class_name('data-export-delete')
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        info_area = instructor_tool.find_element_by_class_name('data-export-info')
+        status_area = instructor_tool.find_element_by_class_name('data-export-status')
+        download_button = instructor_tool.find_element_by_class_name('data-export-download')
+        cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
+        delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
 
         start_button.click()
 
@@ -131,17 +131,17 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_pagination_no_results(self):
-        student_answers_dashboard = self.go_to_view()
-        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
-        first_page_button = student_answers_dashboard.find_element_by_id('first-page')
-        prev_page_button = student_answers_dashboard.find_element_by_id('prev-page')
-        next_page_button = student_answers_dashboard.find_element_by_id('next-page')
-        last_page_button = student_answers_dashboard.find_element_by_id('last-page')
-        current_page_info = student_answers_dashboard.find_element_by_id('current-page')
-        total_pages_info = student_answers_dashboard.find_element_by_id('total-pages')
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        first_page_button = instructor_tool.find_element_by_id('first-page')
+        prev_page_button = instructor_tool.find_element_by_id('prev-page')
+        next_page_button = instructor_tool.find_element_by_id('next-page')
+        last_page_button = instructor_tool.find_element_by_id('last-page')
+        current_page_info = instructor_tool.find_element_by_id('current-page')
+        total_pages_info = instructor_tool.find_element_by_id('total-pages')
 
         start_button.click()
 
@@ -164,17 +164,17 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_pagination_single_result(self):
-        student_answers_dashboard = self.go_to_view()
-        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
-        first_page_button = student_answers_dashboard.find_element_by_id('first-page')
-        prev_page_button = student_answers_dashboard.find_element_by_id('prev-page')
-        next_page_button = student_answers_dashboard.find_element_by_id('next-page')
-        last_page_button = student_answers_dashboard.find_element_by_id('last-page')
-        current_page_info = student_answers_dashboard.find_element_by_id('current-page')
-        total_pages_info = student_answers_dashboard.find_element_by_id('total-pages')
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        first_page_button = instructor_tool.find_element_by_id('first-page')
+        prev_page_button = instructor_tool.find_element_by_id('prev-page')
+        next_page_button = instructor_tool.find_element_by_id('next-page')
+        last_page_button = instructor_tool.find_element_by_id('last-page')
+        current_page_info = instructor_tool.find_element_by_id('current-page')
+        total_pages_info = instructor_tool.find_element_by_id('total-pages')
 
         start_button.click()
 
@@ -203,17 +203,17 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(StudentAnswersDashboardBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_pagination_multiple_results(self):
-        student_answers_dashboard = self.go_to_view()
-        start_button = student_answers_dashboard.find_element_by_class_name('data-export-start')
-        result_block = student_answers_dashboard.find_element_by_class_name('data-export-results')
-        first_page_button = student_answers_dashboard.find_element_by_id('first-page')
-        prev_page_button = student_answers_dashboard.find_element_by_id('prev-page')
-        next_page_button = student_answers_dashboard.find_element_by_id('next-page')
-        last_page_button = student_answers_dashboard.find_element_by_id('last-page')
-        current_page_info = student_answers_dashboard.find_element_by_id('current-page')
-        total_pages_info = student_answers_dashboard.find_element_by_id('total-pages')
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        first_page_button = instructor_tool.find_element_by_id('first-page')
+        prev_page_button = instructor_tool.find_element_by_id('prev-page')
+        next_page_button = instructor_tool.find_element_by_id('next-page')
+        last_page_button = instructor_tool.find_element_by_id('last-page')
+        current_page_info = instructor_tool.find_element_by_id('current-page')
+        total_pages_info = instructor_tool.find_element_by_id('total-pages')
 
         start_button.click()
 
@@ -299,22 +299,22 @@ class StudentAnswersDashboardTest(SeleniumXBlockTest):
         self.assertEqual('1', current_page_info.text)
 
     def test_non_staff_disabled(self):
-        student_answers_dashboard = self.go_to_view()
+        instructor_tool = self.go_to_view()
         self.assertRaises(
-            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-start'
+            NoSuchElementException, instructor_tool.find_element_by_class_name, 'data-export-start'
         )
         self.assertRaises(
-            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-cancel'
+            NoSuchElementException, instructor_tool.find_element_by_class_name, 'data-export-cancel'
         )
         self.assertRaises(
-            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-download'
+            NoSuchElementException, instructor_tool.find_element_by_class_name, 'data-export-download'
         )
         self.assertRaises(
-            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-delete'
+            NoSuchElementException, instructor_tool.find_element_by_class_name, 'data-export-delete'
         )
         self.assertRaises(
-            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-results'
+            NoSuchElementException, instructor_tool.find_element_by_class_name, 'data-export-results'
         )
         self.assertRaises(
-            NoSuchElementException, student_answers_dashboard.find_element_by_class_name, 'data-export-status'
+            NoSuchElementException, instructor_tool.find_element_by_class_name, 'data-export-status'
         )

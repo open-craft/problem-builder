@@ -18,7 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Student Answers Dashboard: An XBlock for instructors to export student answers from a course.
+Instructor Tool: An XBlock for instructors to export student answers from a course.
 
 All processing is done offline.
 """
@@ -39,16 +39,16 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class StudentAnswersDashboardBlock(XBlock):
+class InstructorToolBlock(XBlock):
     """
-    StudentAnswersDashboardBlock: An XBlock for instructors to export student answers from a course.
+    InstructorToolBlock: An XBlock for instructors to export student answers from a course.
 
     All processing is done offline.
     """
     display_name = String(
         display_name=_("Title (Display name)"),
         help=_("Title to display"),
-        default=_("Student Answers Dashboard"),
+        default=_("Instructor Tool"),
         scope=Scope.settings
     )
     active_export_task_id = String(
@@ -67,13 +67,13 @@ class StudentAnswersDashboardBlock(XBlock):
 
     @property
     def display_name_with_default(self):
-        return "Student Answers Dashboard"
+        return "Instructor Tool"
 
     def author_view(self, context=None):
         """ Studio View """
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
-        return Fragment(u'<p>Student Answers Dashboard Block</p><p>This block only works from the LMS.</p>')
+        return Fragment(u'<p>Instructor Tool Block</p><p>This block only works from the LMS.</p>')
 
     def check_pending_export(self):
         """
@@ -106,16 +106,16 @@ class StudentAnswersDashboardBlock(XBlock):
             _('Long Answer'): 'AnswerBlock',
         }
         html = loader.render_template(
-            'templates/html/student_answers_dashboard.html',
+            'templates/html/instructor_tool.html',
             {'block_choices': block_choices}
         )
         fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/student_answers_dashboard.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/student_answers_dashboard.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/instructor_tool.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
-        fragment.initialize_js('StudentAnswersDashboardBlock')
+        fragment.initialize_js('InstructorToolBlock')
         return fragment
 
     @property

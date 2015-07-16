@@ -1,4 +1,4 @@
-function StudentAnswersDashboardBlock(runtime, element) {
+function InstructorToolBlock(runtime, element) {
     'use strict';
     var $element = $(element);
 
