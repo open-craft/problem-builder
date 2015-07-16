@@ -146,6 +146,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         start_button.click()
 
         self.wait_until_visible(result_block)
+        time.sleep(1)  # Allow some time for result block to fully fade in
 
         self.assertFalse(first_page_button.is_enabled())
         self.assertFalse(prev_page_button.is_enabled())
@@ -179,6 +180,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         start_button.click()
 
         self.wait_until_visible(result_block)
+        time.sleep(1)  # Allow some time for result block to fully fade in
 
         for contents in [
                 'Test section', 'Test subsection', 'Test unit',
@@ -218,6 +220,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         start_button.click()
 
         self.wait_until_visible(result_block)
+        time.sleep(1)  # Allow some time for result block to fully fade in
 
         for contents in [
                 'Test section', 'Test subsection', 'Test unit',
