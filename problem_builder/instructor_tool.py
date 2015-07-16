@@ -136,7 +136,9 @@ class InstructorToolBlock(XBlock):
             """
             Build up a tree of information about the XBlocks descending from root_block
             """
-            block_id = block.scope_ids.usage_id.block_id
+            block_id = block.scope_ids.usage_id
+            # Block ID not in workbench runtime.
+            block_id = unicode(getattr(block_id, 'block_id', block_id))
             block_name = getattr(block, "display_name", None)
             block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
             if not block_name and block_type in block_types:
@@ -163,12 +165,16 @@ class InstructorToolBlock(XBlock):
         root_block = self
         while root_block.parent:
             root_block = root_block.get_parent()
+        root_block_id = root_block.scope_ids.usage_id
+        # Block ID not in workbench runtime.
+        root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
         root_entry = {
             "depth": 0,
-            "id": root_block.scope_ids.usage_id.block_id,
+            "id": root_block_id,
             "name": "All",
         }
         flat_block_tree.append(root_entry)
+
         for child_id in root_block.children:
             child_block = root_block.runtime.get_block(child_id)
             build_tree(child_block, [root_entry])
