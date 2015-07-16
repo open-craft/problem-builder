@@ -18,7 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 """
-Data Export: An XBlock for instructors to export student answers from a course.
+Student Answers Dashboard: An XBlock for instructors to export student answers from a course.
 
 All processing is done offline.
 """
@@ -39,16 +39,16 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class DataExportBlock(XBlock):
+class StudentAnswersDashboardBlock(XBlock):
     """
-    DataExportBlock: An XBlock for instructors to export student answers from a course.
+    StudentAnswersDashboardBlock: An XBlock for instructors to export student answers from a course.
 
     All processing is done offline.
     """
     display_name = String(
         display_name=_("Title (Display name)"),
         help=_("Title to display"),
-        default=_("Data Export"),
+        default=_("Student Answers Dashboard"),
         scope=Scope.settings
     )
     active_export_task_id = String(
@@ -67,13 +67,13 @@ class DataExportBlock(XBlock):
 
     @property
     def display_name_with_default(self):
-        return "Data Export"
+        return "Student Answers Dashboard"
 
     def author_view(self, context=None):
         """ Studio View """
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
-        return Fragment(u'<p>Data Export Block</p><p>This block only works from the LMS.</p>')
+        return Fragment(u'<p>Student Answers Dashboard Block</p><p>This block only works from the LMS.</p>')
 
     def check_pending_export(self):
         """
@@ -105,12 +105,17 @@ class DataExportBlock(XBlock):
             _('Rating Question'): 'RatingBlock',
             _('Long Answer'): 'AnswerBlock',
         }
-        html = loader.render_template('templates/html/data_export.html', {'block_choices': block_choices})
+        html = loader.render_template(
+            'templates/html/student_answers_dashboard.html',
+            {'block_choices': block_choices}
+        )
         fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/data_export.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/data_export.js'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/student_answers_dashboard.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/student_answers_dashboard.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        fragment.initialize_js('DataExportBlock')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone-min.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
+        fragment.initialize_js('StudentAnswersDashboardBlock')
         return fragment
 
     @property
@@ -160,20 +165,17 @@ class DataExportBlock(XBlock):
         block_types = data.get('block_types', None)
         username = data.get('username', None)
         root_block_id = data.get('root_block_id', None)
-        if not root_block_id:
-            root_block_id = self.scope_ids.usage_id
-            # Block ID not in workbench runtime.
-            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
-            get_root = True
+        match_string = data.get('match_string', None)
+
+        # Process user-submitted data
+        if block_types == 'all':
+            block_types = []
         else:
-            get_root = False
+            block_types = [block_types]
+
         user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
             return {'error': 'permission denied'}
-        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
-        self._delete_export()
-        # Make sure we nail down our state before sending off an asynchronous task.
-        self.save()
         if not username:
             user_id = None
         else:
@@ -181,13 +183,27 @@ class DataExportBlock(XBlock):
             if user_id is None:
                 self.raise_error(404, _("Could not find the specified username."))
 
+        if not root_block_id:
+            root_block_id = self.scope_ids.usage_id
+            # Block ID not in workbench runtime.
+            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
+            get_root = True
+        else:
+            get_root = False
+
+        # Launch task
+        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
+        self._delete_export()
+        # Make sure we nail down our state before sending off an asynchronous task.
+        self.save()
         async_result = export_data_task.delay(
             # course_id not available in workbench.
             unicode(getattr(self.runtime, 'course_id', 'course_id')),
             root_block_id,
             block_types,
             user_id,
-            get_root=get_root,
+            match_string,
+            get_root=get_root
         )
         if async_result.ready():
             # In development mode, the task may have executed synchronously.

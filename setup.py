@@ -54,7 +54,8 @@ BLOCKS = [
     'pb-choice = problem_builder:ChoiceBlock',
 
     'pb-dashboard = problem_builder:DashboardBlock',
-    'pb-data-export = problem_builder:DataExportBlock',
+    'pb-data-export = problem_builder:StudentAnswersDashboardBlock',  # Deprecated; use pb-student-answers-dashboard instead
+    'pb-student-answers-dashboard = problem_builder:StudentAnswersDashboardBlock',
 ]
 
 setup(
