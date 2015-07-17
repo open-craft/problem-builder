@@ -4,6 +4,12 @@ function InstructorToolBlock(runtime, element) {
 
     // Pagination
 
+    $(document).ajaxSend(function(event, jqxhr, options) {
+        if (options.url.indexOf('get_result_page') !== -1) {
+            options.data = JSON.stringify(options.data);
+        }
+    });
+
     var Result = Backbone.Model.extend({
 
         initialize: function(attrs, options) {
@@ -41,10 +47,7 @@ function InstructorToolBlock(runtime, element) {
             reset: true,
             type: 'POST',
             contentType: 'application/json',
-            processData: false,
-            beforeSend: function(jqXHR, options) {
-                options.data = JSON.stringify(options.data);
-            }
+            processData: false
         },
 
         getFirstPage: function() {
