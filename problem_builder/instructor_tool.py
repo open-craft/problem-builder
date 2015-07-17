@@ -84,6 +84,11 @@ class InstructorToolBlock(XBlock):
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
         return Fragment(u'<p>Instructor Tool Block</p><p>This block only works from the LMS.</p>')
 
+    def studio_view(self, context=None):
+        """ View for editing Instructor Tool block in Studio. """
+        # Display friendly message explaining that the block is not editable.
+        return Fragment(u'<p>This is a preconfigured block. It is not editable.</p>')
+
     def check_pending_export(self):
         """
         If we're waiting for an export, see if it has finished, and if so, get the result.
