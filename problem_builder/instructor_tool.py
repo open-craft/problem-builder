@@ -149,21 +149,14 @@ class InstructorToolBlock(XBlock):
             """
             Return name of `block`.
 
-            - For MCQs, Ratings, Answer blocks this is one of:
+            Try attributes in the following order:
               - block.question
               - block.name (fallback for old courses)
-            - For other types of (non-eligible) blocks this is one of:
-              - block.question
               - block.display_name
-              - block ID (fallback if neither 'question' nor 'display_name' is suitable)
+              - block ID
             """
-            block_type = get_block_type(block)
-            # Eligible block (question)
-            if block_type in block_types:
-                return getattr(block, 'question', block.name)
-            # Non-eligible block (question or section/subsection/unit)
             # - Try "question" attribute:
-            block_name = getattr(block, 'question', None)
+            block_name = getattr(block, 'question', block.name)
             if not block_name:
                 # - Try display_name:
                 block_name = getattr(block, 'display_name', None)
