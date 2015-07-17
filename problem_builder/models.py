@@ -21,6 +21,7 @@
 # Imports ###########################################################
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Classes ###########################################################
@@ -47,3 +48,19 @@ class Answer(models.Model):
         # Force validation of max_length
         self.full_clean()
         super(Answer, self).save(*args, **kwargs)
+
+
+class Share(models.Model):
+    """
+    The XBlock User Service does not permit XBlocks instantiated with non-staff users
+    to query for arbitrary anonymous user IDs. In order to make sharing work, we have
+    to store them here.
+    """
+    shared_by = models.ForeignKey(User, related_name='problem_builder_shared_by')
+    submission_uid = models.CharField(max_length=32)
+    block_id = models.CharField(max_length=255, db_index=True)
+    shared_with = models.ForeignKey(User, related_name='problem_builder_shared_with')
+    notified = models.BooleanField(default=False, db_index=True)
+
+    class Meta(object):
+        unique_together = (('shared_by', 'shared_with', 'block_id'),)
