@@ -145,12 +145,22 @@ class InstructorToolBlock(XBlock):
             # Try accessing block ID. If usage_id does not have it, return usage_id itself
             return unicode(getattr(usage_id, 'block_id', usage_id))
 
+        def get_block_type(block):
+            """
+            Return type of `block`, taking into account different key styles that might be in use.
+            """
+            try:
+                block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
+            except AttributeError:
+                block_type = block.runtime.id_reader.get_block_type(block.scope_ids.usage_id)
+            return block_type
+
         def build_tree(block, ancestors):
             """
             Build up a tree of information about the XBlocks descending from root_block
             """
             block_name = getattr(block, "display_name", None)
-            block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
+            block_type = get_block_type(block)
             if not block_name and block_type in block_types:
                 block_name = getattr(block, 'question', block.name)
             eligible = block_type in block_types
