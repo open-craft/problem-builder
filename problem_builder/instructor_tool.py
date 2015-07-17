@@ -189,24 +189,25 @@ class InstructorToolBlock(XBlock):
             block_id = get_block_id(block)
             block_name = get_block_name(block)
             block_type = get_block_type(block)
-            eligible = block_type in block_types
-            if eligible:
-                # If this block is a question whose answers we can export,
-                # we mark all of its ancestors as exportable too
-                if ancestors and not ancestors[-1]["eligible"]:
-                    for ancestor in ancestors:
-                        ancestor["eligible"] = True
-            new_entry = {
-                "depth": len(ancestors),
-                "id": block_id,
-                "name": block_name,
-                "eligible": eligible,
-            }
-            flat_block_tree.append(new_entry)
-            if block.has_children and not block_type == 'pb-mcq' and not \
-               getattr(block, "has_dynamic_children", lambda: False)():
-                for child_id in block.children:
-                    build_tree(block.runtime.get_block(child_id), ancestors=(ancestors + [new_entry]))
+            if not block_type == 'pb-choice':
+                eligible = block_type in block_types
+                if eligible:
+                    # If this block is a question whose answers we can export,
+                    # we mark all of its ancestors as exportable too
+                    if ancestors and not ancestors[-1]["eligible"]:
+                        for ancestor in ancestors:
+                            ancestor["eligible"] = True
+
+                new_entry = {
+                    "depth": len(ancestors),
+                    "id": block_id,
+                    "name": block_name,
+                    "eligible": eligible,
+                }
+                flat_block_tree.append(new_entry)
+                if block.has_children and not getattr(block, "has_dynamic_children", lambda: False)():
+                    for child_id in block.children:
+                        build_tree(block.runtime.get_block(child_id), ancestors=(ancestors + [new_entry]))
 
         root_block = self
         while root_block.parent:
