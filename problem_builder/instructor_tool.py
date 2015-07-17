@@ -137,13 +137,18 @@ class InstructorToolBlock(XBlock):
         block_types = ('pb-mcq', 'pb-rating', 'pb-answer')
         flat_block_tree = []
 
+        def get_block_id(block):
+            """
+            Return ID of `block`, taking into account needs of both LMS/CMS and workbench runtimes.
+            """
+            usage_id = block.scope_ids.usage_id
+            # Try accessing block ID. If usage_id does not have it, return usage_id itself
+            return unicode(getattr(usage_id, 'block_id', usage_id))
+
         def build_tree(block, ancestors):
             """
             Build up a tree of information about the XBlocks descending from root_block
             """
-            block_id = block.scope_ids.usage_id
-            # Block ID not in workbench runtime.
-            block_id = unicode(getattr(block_id, 'block_id', block_id))
             block_name = getattr(block, "display_name", None)
             block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
             if not block_name and block_type in block_types:
@@ -157,7 +162,7 @@ class InstructorToolBlock(XBlock):
                         ancestor["eligible"] = True
             new_entry = {
                 "depth": len(ancestors),
-                "id": block_id,
+                "id": get_block_id(block),
                 "name": block_name,
                 "eligible": eligible,
             }
@@ -170,9 +175,7 @@ class InstructorToolBlock(XBlock):
         root_block = self
         while root_block.parent:
             root_block = root_block.get_parent()
-        root_block_id = root_block.scope_ids.usage_id
-        # Block ID not in workbench runtime.
-        root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
+        root_block_id = get_block_id(root_block)
         root_entry = {
             "depth": 0,
             "id": root_block_id,
