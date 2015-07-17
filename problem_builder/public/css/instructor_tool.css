@@ -26,7 +26,7 @@
     padding-left: 1em;
 }
 .data-export-field-container {
-    min-width: 45%;
+    width: 43%;
 }
 .data-export-options .data-export-actions {
     max-width: 10%;
@@ -40,7 +40,7 @@
     vertical-align: middle;
 }
 .data-export-field input, .data-export-field select {
-    max-width: 55%;
+    width: 55%;
     float: right;
 }
 .data-export-results, .data-export-download, .data-export-cancel, .data-export-delete {
