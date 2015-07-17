@@ -145,6 +145,33 @@ class InstructorToolBlock(XBlock):
             # Try accessing block ID. If usage_id does not have it, return usage_id itself
             return unicode(getattr(usage_id, 'block_id', usage_id))
 
+        def get_block_name(block):
+            """
+            Return name of `block`.
+
+            - For MCQs, Ratings, Answer blocks this is one of:
+              - block.question
+              - block.name (fallback for old courses)
+            - For other types of (non-eligible) blocks this is one of:
+              - block.question
+              - block.display_name
+              - block ID (fallback if neither 'question' nor 'display_name' is suitable)
+            """
+            block_type = get_block_type(block)
+            # Eligible block (question)
+            if block_type in block_types:
+                return getattr(block, 'question', block.name)
+            # Non-eligible block (question or section/subsection/unit)
+            # - Try "question" attribute:
+            block_name = getattr(block, 'question', None)
+            if not block_name:
+                # - Try display_name:
+                block_name = getattr(block, 'display_name', None)
+            if not block_name:
+                # - Default to ID:
+                block_name = get_block_id(block)
+            return block_name
+
         def get_block_type(block):
             """
             Return type of `block`, taking into account different key styles that might be in use.
@@ -159,10 +186,9 @@ class InstructorToolBlock(XBlock):
             """
             Build up a tree of information about the XBlocks descending from root_block
             """
-            block_name = getattr(block, "display_name", None)
+            block_id = get_block_id(block)
+            block_name = get_block_name(block)
             block_type = get_block_type(block)
-            if not block_name and block_type in block_types:
-                block_name = getattr(block, 'question', block.name)
             eligible = block_type in block_types
             if eligible:
                 # If this block is a question whose answers we can export,
@@ -172,7 +198,7 @@ class InstructorToolBlock(XBlock):
                         ancestor["eligible"] = True
             new_entry = {
                 "depth": len(ancestors),
-                "id": get_block_id(block),
+                "id": block_id,
                 "name": block_name,
                 "eligible": eligible,
             }
