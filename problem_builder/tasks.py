@@ -6,7 +6,6 @@ import time
 from celery.task import task
 from celery.utils.log import get_task_logger
 from instructor_task.models import ReportStore
-from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey
 from student.models import user_by_anonymous_id
 from xmodule.modulestore.django import modulestore
@@ -21,7 +20,7 @@ logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(course_id, source_block_id_str, block_types, user_id, match_string, get_root=True):
+def export_data(course_id, source_block_id_str, block_types, user_id, match_string):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
@@ -31,17 +30,9 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
     try:
         course_key = CourseKey.from_string(course_id)
         src_block = modulestore().get_items(course_key, qualifiers={'name': source_block_id_str}, depth=0)[0]
-        if src_block is None:
-            raise InvalidKeyError
-    except InvalidKeyError:
+    except IndexError:
         raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
-
-    root = src_block
-    if get_root:
-        # Get the root block for the course.
-        while root.parent:
-            root = root.get_parent()
 
     type_map = {cls.__name__: cls for cls in [MCQBlock, RatingBlock, AnswerBlock]}
 
@@ -65,7 +56,7 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
                     # Blocks may refer to missing children. Don't break in this case.
                     pass
 
-    scan_for_blocks(root)
+    scan_for_blocks(src_block)
 
     # Define the header row of our CSV:
     rows = []

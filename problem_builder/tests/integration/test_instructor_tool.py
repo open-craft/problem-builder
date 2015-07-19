@@ -7,7 +7,7 @@ from mock import patch, Mock
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
-from problem_builder.instructor_tool import InstructorToolBlock
+from problem_builder.instructor_tool import PAGE_SIZE, InstructorToolBlock
 
 
 class MockTasksModule(object):
@@ -55,6 +55,36 @@ class InstructorToolTest(SeleniumXBlockTest):
     def test_students_dont_see_interface(self):
         data_export = self.go_to_view()
         self.assertIn('This interface can only be used by course staff.', data_export.text)
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(successful=True),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
+    def test_data_export_delete(self):
+        instructor_tool = self.go_to_view()
+        start_button = instructor_tool.find_element_by_class_name('data-export-start')
+        result_block = instructor_tool.find_element_by_class_name('data-export-results')
+        status_area = instructor_tool.find_element_by_class_name('data-export-status')
+        download_button = instructor_tool.find_element_by_class_name('data-export-download')
+        cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
+        delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
+
+        start_button.click()
+
+        self.wait_until_visible(result_block)
+        self.wait_until_visible(delete_button)
+
+        delete_button.click()
+
+        self.wait_until_hidden(result_block)
+        self.wait_until_hidden(delete_button)
+
+        self.assertTrue(start_button.is_enabled())
+        self.assertEqual('', status_area.text)
+        self.assertFalse(download_button.is_displayed())
+        self.assertFalse(cancel_button.is_displayed())
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
@@ -146,6 +176,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         start_button.click()
 
         self.wait_until_visible(result_block)
+        time.sleep(1)  # Allow some time for result block to fully fade in
 
         self.assertFalse(first_page_button.is_enabled())
         self.assertFalse(prev_page_button.is_enabled())
@@ -179,6 +210,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         start_button.click()
 
         self.wait_until_visible(result_block)
+        time.sleep(1)  # Allow some time for result block to fully fade in
 
         for contents in [
                 'Test section', 'Test subsection', 'Test unit',
@@ -199,7 +231,7 @@ class InstructorToolTest(SeleniumXBlockTest):
             successful=True, display_data=[[
                 'Test section', 'Test subsection', 'Test unit',
                 'Test type', 'Test question', 'Test answer', 'Test username'
-            ] for _ in range(45)]),
+            ] for _ in range(PAGE_SIZE*3)]),
         'instructor_task': True,
         'instructor_task.models': MockInstructorTaskModelsModule(),
     })
@@ -218,13 +250,14 @@ class InstructorToolTest(SeleniumXBlockTest):
         start_button.click()
 
         self.wait_until_visible(result_block)
+        time.sleep(1)  # Allow some time for result block to fully fade in
 
         for contents in [
                 'Test section', 'Test subsection', 'Test unit',
                 'Test type', 'Test question', 'Test answer', 'Test username'
         ]:
             occurrences = re.findall(contents, result_block.text)
-            self.assertEqual(len(occurrences), 15)
+            self.assertEqual(len(occurrences), PAGE_SIZE)
 
         self.assertFalse(first_page_button.is_enabled())
         self.assertFalse(prev_page_button.is_enabled())
