@@ -149,6 +149,8 @@ def _get_submissions(course_key_str, block, user_id):
     # Note this requires one giant query that retrieves all student submissions for `block` at once.
     block_id = unicode(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
     block_type = _get_type(block)
+    if block_type == 'pb-answer':
+        block_id = block.name  # item_id of Long Answer submission matches question ID and not block ID
     if not user_id:
         return sub_api.get_all_submissions(course_key_str, block_id, block_type)
     else:
