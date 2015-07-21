@@ -134,7 +134,7 @@ class InstructorToolBlock(XBlock):
             _('Rating Question'): 'RatingBlock',
             _('Long Answer'): 'AnswerBlock',
         }
-        block_types = ('pb-mcq', 'pb-rating', 'pb-answer')
+        eligible_block_types = ('pb-mcq', 'pb-rating', 'pb-answer')
         flat_block_tree = []
 
         def get_block_id(block):
@@ -155,18 +155,10 @@ class InstructorToolBlock(XBlock):
               - block.display_name
               - block ID
             """
-            # - Try "question" attribute:
-            block_name = getattr(block, 'question', None)
-            if not block_name:
-                # Try question ID (name):
-                block_name = getattr(block, 'name', None)
-            if not block_name:
-                # - Try display_name:
-                block_name = getattr(block, 'display_name', None)
-            if not block_name:
-                # - Default to ID:
-                block_name = get_block_id(block)
-            return block_name
+            for attribute in ('question', 'name', 'display_name'):
+                if getattr(block, attribute, None):
+                    return getattr(block, attribute, None)
+            return get_block_id(block)
 
         def get_block_type(block):
             """
@@ -185,8 +177,8 @@ class InstructorToolBlock(XBlock):
             block_id = get_block_id(block)
             block_name = get_block_name(block)
             block_type = get_block_type(block)
-            if not block_type == 'pb-choice':
-                eligible = block_type in block_types
+            if block_type != 'pb-choice':
+                eligible = block_type in eligible_block_types
                 if eligible:
                     # If this block is a question whose answers we can export,
                     # we mark all of its ancestors as exportable too
