@@ -4,6 +4,6 @@
 {% endif %}
 <ul class="shared-list">
     {% for username in shared_with %}
-    <li><span class="username">{{username}}</span><button class="remove-share"><i class="fa fa-trash"></i></button></li>
+    <li><span class="username">{{username}}</span><a class="remove-share" href="#"><i class="fa fa-trash"></i></a></li>
     {% endfor %}
 </ul>

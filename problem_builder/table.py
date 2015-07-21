@@ -200,7 +200,7 @@ class MentoringTableBlock(
             raise JsonHandlerError(
                 400,
                 _('Some users could not be shared with. Please check these usernames: {}').format(
-                    ','.join(failed_users)
+                    ', '.join(failed_users)
                 )
             )
         return {}

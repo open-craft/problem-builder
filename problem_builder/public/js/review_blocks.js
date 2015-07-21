@@ -174,7 +174,7 @@ function MentoringTableBlock(runtime, element, initData) {
         })
     });
 
-    function addShare() {
+    function addShare(event) {
         var container = $newShareContainer.clone();
         container.find('.add-share-username').val('');
         container.insertAfter($element.find('.new-share-container').last());
@@ -182,12 +182,13 @@ function MentoringTableBlock(runtime, element, initData) {
     }
 
     function deleteShare(event) {
+        event.preventDefault();
         $.ajax({
             type: "POST",
             url: deleteShareUrl,
-            data: JSON.stringify({'username': $(event.target).prev()[0].innerHTML}),
+            data: JSON.stringify({'username': $(event.target).parent().prev()[0].innerHTML}),
             success: function () {
-                $(event.target).parent().remove();
+                $(event.target).parent().parent().remove();
                 $errorHolder.html('');
             },
             error: errorMessage
