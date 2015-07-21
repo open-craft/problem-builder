@@ -156,7 +156,10 @@ class InstructorToolBlock(XBlock):
               - block ID
             """
             # - Try "question" attribute:
-            block_name = getattr(block, 'question', block.name)
+            block_name = getattr(block, 'question', None)
+            if not block_name:
+                # Try question ID (name):
+                block_name = getattr(block, 'name', None)
             if not block_name:
                 # - Try display_name:
                 block_name = getattr(block, 'display_name', None)
