@@ -97,7 +97,7 @@ def _extract_data(course_key_str, block, user_id, match_string):
     block_type = _get_type(block)
 
     # Extract info for "Question" column
-    block_question = block.question
+    block_question = _get_question(block)
 
     # Extract info for "Answer" and "Username" columns
     # - Get all of the most recent student submissions for this block:
@@ -139,6 +139,13 @@ def _get_type(block):
     Return type of `block`.
     """
     return block.scope_ids.block_type
+
+
+def _get_question(block):
+    """
+    Return question for `block`; default to question ID if `question` is not set.
+    """
+    return block.question or block.name
 
 
 def _get_submissions(course_key_str, block, user_id):
