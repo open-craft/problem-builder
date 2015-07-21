@@ -59,6 +59,8 @@
 
 .share-with-instructions {
     max-width: 14.5em;
+    margin-bottom: 0;
+    text-align: left;
 }
 
 .mentoring-share-panel {
@@ -109,6 +111,8 @@
 .new-share-container {
     margin-top: .5em;
     vertical-align: top;
+    width: 100%;
+    text-align: left;
 }
 
 ul.shared-list {

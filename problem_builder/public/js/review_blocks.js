@@ -97,7 +97,9 @@ function MentoringTableBlock(runtime, element, initData) {
         sharedRefresh(data);
         $element.find(".new-share-container").each(function(index, container) {
             if (index === 0) {
-                $(container).find('.add-share-username').val('');
+                var $container = $(container);
+                $container.find('.add-share-username').val('');
+                $container.find('.add-share-field').show();
                 return;
             }
             $(container).remove()
@@ -166,6 +168,13 @@ function MentoringTableBlock(runtime, element, initData) {
     });
 
     $displayDropdown.on('change', function () {
+        if ($displayDropdown[0].selectedIndex !== 0) {
+            $shareButton.prop('disabled', true);
+            $element.find('.report-download-container').hide();
+        } else {
+            $shareButton.prop('disabled', false);
+            $element.find('.report-download-container').show();
+        }
         $.ajax({
             type: "POST",
             url: tableLoadURL,
@@ -174,11 +183,14 @@ function MentoringTableBlock(runtime, element, initData) {
         })
     });
 
-    function addShare(event) {
+    function addShare() {
         var container = $newShareContainer.clone();
         container.find('.add-share-username').val('');
         container.insertAfter($element.find('.new-share-container').last());
-        container.find('.add-share-field').on('click', addShare)
+        container.find('.add-share-field').on('click', addShare);
+        var buttons = $element.find('.new-share-container .add-share-field');
+        buttons.hide();
+        buttons.last().show();
     }
 
     function deleteShare(event) {
