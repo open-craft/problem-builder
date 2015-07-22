@@ -107,7 +107,7 @@ function MentoringBlock(runtime, element) {
     function getChildByName(name) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (child && child.name.toString() === name) {
+            if (child && typeof child.name !== 'undefined' && child.name.toString() === name) {
                 return child;
             }
         }
