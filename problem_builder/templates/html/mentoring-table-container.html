@@ -1,9 +1,6 @@
 {% load i18n %}
 {% if allow_sharing %}
 <div class="share-panel-container">
-  {% if allow_download %}
-  <div class="report-download-container"><a class="report-download-link" href="#report_download" download="report.html">{% trans "Download report" %}</a></div>
-  {% endif %}
   <div class="mentoring-share-panel">
     {% if view_options %}
     <span>{% trans "Display Map from:" %}</span>
@@ -15,22 +12,24 @@
     </select>
     {% endif %}
     <button class="mentoring-share-button">
-      <i class="fa fa-share"></i>Share
+      <i class="fa fa-share-alt"></i> Share
     </button>
     <div class="mentoring-share-with" style="display: none;">
-      <div class="share-with-instructions">
-        <p>{% trans "Enter the username of another student you'd like to share this with." %}</p>
-      </div>
       <div class="shared-with-container"></div>
+      <div class="share-with-instructions">
+        {% trans "Enter the username of another student you'd like to share this with:" %}
+      </div>
       <div class="new-share-container"><input class="add-share-username"><button class="add-share-field">+</button></div>
-      <div class="share-errors"></div>
+      <div class="share-errors-container">
+        <div class="share-errors"></div>
+      </div>
       <div class="share-action-buttons">
         <button class="do-share-button">Share</button>
       </div>
     </div>
     {% if share_notifications %}
     <div class="share-notification" data-shared="{{share_notifications}}">
-        <button class="notification-close"><i class="fa fa-close"></i></button>
+        <a class="notification-close"><i class="fa fa-close"></i></a>
         <p><strong>{% trans "Map added!" %}</strong></p>
         <p>
           {% blocktrans %}
@@ -52,3 +51,6 @@
     <div class="mentoring-table-target"></div>
   </div>
 </div>
+{% if allow_download %}
+<div class="report-download-container"><a class="report-download-link" href="#report_download" download="report.html">{% trans "Download report" %}</a></div>
+{% endif %}
