@@ -759,10 +759,16 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         By default, each Sequential block in a course ("Subsection" in Studio parlance) will
         display the display_name of each descendant in a tooltip above the content. We don't
-        want that - we only want to display the mentoring block as a whole as one item.
+        want that - we only want to display one title for this mentoring block as a whole.
         Otherwise things like "Choice (yes) (Correct)" will appear in the tooltip.
+
+        If this block has no title set, don't display any title. Then, if this is the only block
+        in the unit, the unit's title will be used. (Why isn't it always just used?)
         """
-        return [self.display_name]
+        has_explicitly_set_title = self.fields['display_name'].is_set_on(self)
+        if has_explicitly_set_title:
+            return [self.display_name]
+        return []
 
     @staticmethod
     def workbench_scenarios():
