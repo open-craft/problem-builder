@@ -380,8 +380,21 @@ class CommaSeparatedListToJson(Change):
                 self.node.attrib[attribute] = self._convert_value(self.node.attrib[attribute])
 
 
+class OptionalShowTitleDefaultToFalse(Change):
+    """
+    In recent versions of mentoring, show_title defaults to True. In old versions there were no
+    titles. If upgrading an old version, show_title should be set False.
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag in ("pb-answer", "pb-mrq", "pb-mcq", "pb-rating") and ("show_title" not in node.attrib)
+
+    def apply(self):
+        self.node.attrib["show_title"] = "false"
+
+
 # An *ordered* list of all XML schema changes:
-xml_changes = (
+xml_changes = [
     RenameMentoringTag,
     PrefixTags,
     HideTitle,
@@ -398,13 +411,20 @@ xml_changes = (
     AlternatingHTMLToQuestions,
     SharedHeaderToHTML,
     CommaSeparatedListToJson,
-)
+]
 
 
-def convert_xml_v1_to_v2(node):
+def convert_xml_to_v2(node, from_version="v1"):
     """
     Given an XML node, re-structure it as needed to convert it from v1 style to v2 style XML.
+
+    If from_version is set to "v0", then the "show_title" attribute on each question will be set
+    to False, for compatibility with old versions of the mentoring block that didn't have
+    question titles at all.
     """
+    if from_version == "v0":
+        xml_changes.append(OptionalShowTitleDefaultToFalse)
+
     # Apply each individual type of change one at a time:
     for change in xml_changes:
         # Walk the XML tree once and figure out all the changes we will need.

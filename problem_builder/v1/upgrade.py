@@ -25,6 +25,9 @@ optimized for editing in Studio.
 
 To run the script on devstack:
 SERVICE_VARIANT=cms DJANGO_SETTINGS_MODULE="cms.envs.devstack" python -m problem_builder.v1.upgrade [course id here]
+
+You can add "--version=v0" at the end of the command to upgrade from the oldest xblock-mentoring
+instance which was kept on gsehub's GitHub account.
 """
 import logging
 from lxml import etree
@@ -35,10 +38,10 @@ import sys
 import warnings
 from courseware.models import StudentModule
 from .studio_xml_utils import studio_update_from_node
-from .xml_changes import convert_xml_v1_to_v2
+from .xml_changes import convert_xml_to_v2
 
 
-def upgrade_block(store, block):
+def upgrade_block(store, block, from_version="v1"):
     """
     Given a MentoringBlock "block" with old-style (v1) data in its "xml_content" field, parse
     the XML and re-create the block with new-style (v2) children and settings.
@@ -51,7 +54,7 @@ def upgrade_block(store, block):
     assert root.tag == "mentoring"
     with warnings.catch_warnings(record=True) as warnings_caught:
         warnings.simplefilter("always")
-        convert_xml_v1_to_v2(root)
+        convert_xml_to_v2(root, from_version=from_version)
         for warning in warnings_caught:
             print(u"    ➔ {}".format(unicode(warning.message)))
 
@@ -140,6 +143,13 @@ if __name__ == '__main__':
     except (IndexError, InvalidKeyError):
         sys.exit("Need a course ID argument like 'HarvardX/GSE1.1x/3T2014' or 'course-v1:HarvardX+B101+2015'")
 
+    from_version = "v1"
+    if len(sys.argv) > 2:
+        if sys.argv[2] == "--version=v0":
+            from_version = "v0"
+        else:
+            sys.exit("invalid second argument: {}".format(' '.join(sys.argv[2:])))
+
     store = modulestore()
     course = store.get_course(course_id)
     if course is None:
@@ -196,6 +206,6 @@ if __name__ == '__main__':
             block = course.runtime.get_block(block_id)
             print(u" ➔ Upgrading block {} of {} - \"{}\"".format(count, total, block.url_name))
             count += 1
-            upgrade_block(store, block)
+            upgrade_block(store, block, from_version)
 
     print(u" ➔ Complete.")
