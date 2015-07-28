@@ -31,7 +31,7 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
     margin-bottom: 1.41575em;
 }
 
-.themed-xblock.mentoring .choices-list {
+.themed-xblock.mentoring .questionnaire .choices-list {
     display: table;
     width: 100%;
     border-spacing: 0;
@@ -54,7 +54,7 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
     vertical-align: top;
 }
 
-.themed-xblock.mentoring .choice-tips {
+.themed-xblock.mentoring .choice-tips-container .choice-tips {
     position: relative;
 }
 
