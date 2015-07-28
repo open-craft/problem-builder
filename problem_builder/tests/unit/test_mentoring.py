@@ -6,6 +6,7 @@ from problem_builder import MentoringBlock
 from problem_builder.mentoring import _default_theme_config
 
 
+@ddt.ddt
 class TestMentoringBlock(unittest.TestCase):
     def test_sends_progress_event_when_rendered_student_view_with_display_submit_false(self):
         block = MentoringBlock(MagicMock(), DictFieldData({
@@ -30,6 +31,21 @@ class TestMentoringBlock(unittest.TestCase):
             block.student_view(context={})
 
             self.assertFalse(patched_runtime.publish.called)
+
+    @ddt.data(True, False)
+    def test_get_content_titles(self, has_title_set):
+        """
+        Test that we don't send a title to the LMS for the sequential's tooltips when no title
+        is set
+        """
+        if has_title_set:
+            data = {'display_name': 'Custom Title'}
+            expected = ['Custom Title']
+        else:
+            data = {}
+            expected = []
+        block = MentoringBlock(MagicMock(), DictFieldData(data), Mock())
+        self.assertEqual(block.get_content_titles(), expected)
 
 
 @ddt.ddt
