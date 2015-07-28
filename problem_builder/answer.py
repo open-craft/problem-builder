@@ -85,6 +85,23 @@ class AnswerMixin(object):
         )
         return answer_data
 
+    @property
+    def student_input(self):
+        if self.name:
+            return self.get_model_object().student_input
+        return ''
+
+    @XBlock.json_handler
+    def answer_value(self, data, suffix=''):
+        """ Current value of the answer, for refresh by client """
+        return {'value': self.student_input}
+
+    @XBlock.json_handler
+    def refresh_html(self, data, suffix=''):
+        """ Complete HTML view of the XBlock, for refresh by client """
+        frag = self.mentoring_view({})
+        return {'html': frag.content}
+
     def validate_field_data(self, validation, data):
         """
         Validate this block's field data.
@@ -277,12 +294,6 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
 
     css_path = 'public/css/answer.css'
 
-    @property
-    def student_input(self):
-        if self.name:
-            return self.get_model_object().student_input
-        return ''
-
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
         context = context.copy() if context else {}
@@ -308,6 +319,8 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/answer_recap.js'))
+        fragment.initialize_js('AnswerRecapBlock')
         return fragment
 
     def student_view(self, context=None):

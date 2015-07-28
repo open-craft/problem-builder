@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="xblock-answer" data-completed="{{ student_input|yesno:"true,false" }}">
+<div class="xblock-answer">
   {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
   {% if description %}<p>{{ description|safe }}</p>{% endif %}
   <blockquote class="answer read_only">

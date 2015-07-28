@@ -11,6 +11,11 @@ function AnswerBlock(runtime, element) {
             if (completed === 'True' && this.mode === 'standard') {
                 checkmark.addClass('checkmark-correct icon-ok fa-check');
             }
+
+            // In the LMS, the HTML of multiple units can be loaded at once,
+            // and the user can flip among them. If that happens, the answer in
+            // our HTML may be out of date.
+            this.refreshAnswer();
         },
 
         submit: function() {
@@ -69,6 +74,25 @@ function AnswerBlock(runtime, element) {
                 }
             }
             return true;
+        },
+
+        refreshAnswer: function() {
+            $.ajax({
+                type: 'POST',
+                url: runtime.handlerUrl(element, 'answer_value'),
+                data: '{}',
+                dataType: 'json',
+                success: function(data) {
+                    // Update the answer to the latest, unless the user has made an edit
+                    var newAnswer = data.value;
+                    var $textarea = $(':input', element);
+                    var currentAnswer = $textarea.val();
+                    var origAnswer = $('.orig-student-answer', element).text();
+                    if (currentAnswer == origAnswer && currentAnswer != newAnswer) {
+                        $textarea.val(newAnswer);
+                    }
+                },
+            });
         }
     };
 }
