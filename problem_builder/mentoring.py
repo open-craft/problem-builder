@@ -291,7 +291,9 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
-            if not isinstance(child, MentoringMessageBlock):
+            if child is None:  # child should not be None but it can happen due to bugs or permission issues
+                child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+            elif not isinstance(child, MentoringMessageBlock):
                 try:
                     if self.is_assessment and isinstance(child, StepMixin):
                         child_fragment = child.render('assessment_step_view', context)

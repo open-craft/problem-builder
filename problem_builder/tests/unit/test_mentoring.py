@@ -47,6 +47,21 @@ class TestMentoringBlock(unittest.TestCase):
         block = MentoringBlock(MagicMock(), DictFieldData(data), Mock())
         self.assertEqual(block.get_content_titles(), expected)
 
+    def test_does_not_crash_when_get_child_is_broken(self):
+        block = MentoringBlock(MagicMock(), DictFieldData({
+            'children': ['invalid_id'],
+        }), Mock())
+
+        with patch.object(block, 'runtime') as patched_runtime:
+            patched_runtime.publish = Mock()
+            patched_runtime.service().ugettext = lambda str: str
+            patched_runtime.get_block = lambda block_id: None
+            patched_runtime.load_block_type = lambda block_id: Mock
+
+            fragment = block.student_view(context={})
+
+            self.assertIn('Unable to load child component', fragment.content)
+
 
 @ddt.ddt
 class TestMentoringBlockTheming(unittest.TestCase):
