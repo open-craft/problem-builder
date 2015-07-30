@@ -19,7 +19,6 @@
 #
 
 # Imports ###########################################################
-
 from .base_test import MentoringBaseTest
 
 
@@ -34,8 +33,10 @@ class MentoringProgressionTest(MentoringBaseTest):
         """
         self.assertEqual(warning_dom.text, 'You need to complete the previous step before attempting this step.')
         warning_link = warning_dom.find_element_by_xpath('./*')
-        link_href = 'http://localhost:8081{}'.format(link_href)
-        self.assertEqual(warning_link.get_attribute('href'), link_href)
+        self.assertTrue(
+            warning_link.get_attribute('href').endswith(link_href),
+            "expected link href '{}' to end with '{}'".format(warning_link.get_attribute('href'), link_href)
+        )
 
     def assert_warning_is_hidden(self, mentoring):
         for elem in mentoring.find_elements_by_css_selector('.warning'):
