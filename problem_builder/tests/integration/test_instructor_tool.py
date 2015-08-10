@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 import re
 import time
 
@@ -49,12 +50,49 @@ class InstructorToolTest(SeleniumXBlockTest):
         self.set_scenario_xml("""
         <vertical_demo>
           <pb-instructor-tool url_name="data_export"/>
+          <problem-builder mode="standard">
+            <pb-answer name="answer" question="Is this a long long long long long long long long long long question?" />
+          </problem-builder>
         </vertical_demo>
         """)
 
     def test_students_dont_see_interface(self):
         data_export = self.go_to_view()
         self.assertIn('This interface can only be used by course staff.', data_export.text)
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(successful=True),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
+    def test_export_field_container_width(self):
+        instructor_tool = self.go_to_view()
+
+        export_field_container = instructor_tool.find_element_by_class_name('data-export-field-container')
+        parent_div = export_field_container.find_element_by_xpath('..')
+
+        export_field_container_width = export_field_container.size['width']
+        parent_div_width = parent_div.size['width']
+
+        self.assertTrue(export_field_container_width <= math.ceil(0.43 * parent_div_width))
+
+    @patch.dict('sys.modules', {
+        'problem_builder.tasks': MockTasksModule(successful=True),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
+    })
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
+    def test_root_block_select_width(self):
+        instructor_tool = self.go_to_view()
+
+        root_block_select = instructor_tool.find_element_by_name('root_block_id')
+        parent_div = root_block_select.find_element_by_xpath('../..')
+
+        root_block_select_width = root_block_select.size['width']
+        parent_div_width = parent_div.size['width']
+
+        self.assertTrue(root_block_select_width <= math.ceil(0.55 * parent_div_width))
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),

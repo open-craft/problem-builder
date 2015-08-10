@@ -134,6 +134,26 @@ class InstructorToolBlock(XBlock):
             _('Rating Question'): 'RatingBlock',
             _('Long Answer'): 'AnswerBlock',
         }
+
+        flat_block_tree = self._build_course_tree()
+
+        html = loader.render_template(
+            'templates/html/instructor_tool.html',
+            {'block_choices': block_choices, 'block_tree': flat_block_tree}
+        )
+        fragment = Fragment(html)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/instructor_tool.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone-min.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
+        fragment.initialize_js('InstructorToolBlock')
+        return fragment
+
+    def _build_course_tree(self):
+        """
+        Return flat tree of blocks belonging to this block's parent course.
+        """
         eligible_block_types = ('pb-mcq', 'pb-rating', 'pb-answer')
         flat_block_tree = []
 
@@ -172,7 +192,7 @@ class InstructorToolBlock(XBlock):
 
         def build_tree(block, ancestors):
             """
-            Build up a tree of information about the XBlocks descending from root_block
+            Build up a tree of information about the XBlocks descending from `block`.
             """
             block_id = get_block_id(block)
             block_name = get_block_name(block)
@@ -205,6 +225,7 @@ class InstructorToolBlock(XBlock):
             "depth": 0,
             "id": root_block_id,
             "name": "All",
+            "eligible": False,
         }
         flat_block_tree.append(root_entry)
 
@@ -212,18 +233,7 @@ class InstructorToolBlock(XBlock):
             child_block = root_block.runtime.get_block(child_id)
             build_tree(child_block, [root_entry])
 
-        html = loader.render_template(
-            'templates/html/instructor_tool.html',
-            {'block_choices': block_choices, 'block_tree': flat_block_tree}
-        )
-        fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/instructor_tool.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone-min.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
-        fragment.initialize_js('InstructorToolBlock')
-        return fragment
+        return flat_block_tree
 
     @property
     def download_url_for_last_report(self):
