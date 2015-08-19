@@ -282,7 +282,7 @@ class InstructorToolBlock(XBlock):
     def start_export(self, data, suffix=''):
         """ Start a new asynchronous export """
         block_types = data.get('block_types', None)
-        username = data.get('username', None)
+        usernames = data.get('usernames', None)
         root_block_id = data.get('root_block_id', None)
         match_string = data.get('match_string', None)
 
@@ -295,12 +295,17 @@ class InstructorToolBlock(XBlock):
         user_service = self.runtime.service(self, 'user')
         if not self.user_is_staff():
             return {'error': 'permission denied'}
-        if not username:
-            user_id = None
+        if not usernames:
+            user_ids = None
         else:
-            user_id = user_service.get_anonymous_user_id(username, unicode(self.runtime.course_id))
-            if user_id is None:
-                self.raise_error(404, _("Could not find the specified username."))
+            user_ids = []
+            for username in usernames.split(','):
+                username = username.strip()
+                user_id = user_service.get_anonymous_user_id(username, unicode(self.runtime.course_id))
+                if user_id:
+                    user_ids.append(user_id)
+            if not user_ids:
+                self.raise_error(404, _("Could not find any of the specified usernames."))
 
         if not root_block_id:
             root_block_id = self.scope_ids.usage_id
@@ -317,7 +322,7 @@ class InstructorToolBlock(XBlock):
             unicode(getattr(self.runtime, 'course_id', 'course_id')),
             root_block_id,
             block_types,
-            user_id,
+            user_ids,
             match_string,
         )
         if async_result.ready():
