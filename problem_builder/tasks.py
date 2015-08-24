@@ -20,7 +20,7 @@ logger = get_task_logger(__name__)
 
 
 @task()
-def export_data(course_id, source_block_id_str, block_types, user_id, match_string):
+def export_data(course_id, source_block_id_str, block_types, user_ids, match_string):
     """
     Exports student answers to all MCQ questions to a CSV file.
     """
@@ -64,8 +64,13 @@ def export_data(course_id, source_block_id_str, block_types, user_id, match_stri
 
     # Collect results for each block in blocks_to_include
     for block in blocks_to_include:
-        results = _extract_data(course_key_str, block, user_id, match_string)
-        rows += results
+        if not user_ids:
+            results = _extract_data(course_key_str, block, None, match_string)
+            rows += results
+        else:
+            for user_id in user_ids:
+                results = _extract_data(course_key_str, block, user_id, match_string)
+                rows += results
 
     # Generate the CSV:
     filename = u"pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))

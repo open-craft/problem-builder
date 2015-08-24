@@ -225,7 +225,7 @@ function InstructorToolBlock(runtime, element) {
     var $deleteButton = $element.find('.data-export-delete');
     var $blockTypes = $element.find("select[name='block_types']");
     var $rootBlockId = $element.find("select[name='root_block_id']");
-    var $username = $element.find("input[name='username']");
+    var $usernames = $element.find("input[name='usernames']");
     var $matchString = $element.find("input[name='match_string']");
     var $resultTable = $element.find('.data-export-results');
 
@@ -335,7 +335,7 @@ function InstructorToolBlock(runtime, element) {
                 data = {
                     block_types: $blockTypes.val(),
                     root_block_id: $rootBlockId.val(),
-                    username: $username.val(),
+                    usernames: $usernames.val(),
                     match_string: $matchString.val()
                 };
                 data = JSON.stringify(data);
