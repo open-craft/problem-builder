@@ -407,13 +407,13 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         if completed:
             # Student has achieved a perfect score
-            return self.get_message_html('completed')
+            return self.get_message_content('completed')
         elif self.max_attempts_reached:
             # Student has not achieved a perfect score and cannot try again
-            return self.get_message_html('max_attempts_reached')
+            return self.get_message_content('max_attempts_reached')
         else:
             # Student did not achieve a perfect score but can try again:
-            return self.get_message_html('incomplete')
+            return self.get_message_content('incomplete')
 
     @property
     def assessment_message(self):
@@ -421,7 +421,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Get the message to display to a student following a submission in assessment mode.
         """
         if not self.max_attempts_reached:
-            return self.get_message_html('on-assessment-review')
+            return self.get_message_content('on-assessment-review')
         else:
             return None
 
@@ -689,13 +689,11 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     def max_attempts_reached(self):
         return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
 
-    def get_message_html(self, message_type):
-        html = u""
+    def get_message_content(self, message_type):
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if isinstance(child, MentoringMessageBlock) and child.type == message_type:
-                html += child.render('mentoring_view', {}).content  # TODO: frament_text_rewriting ?
-        return html
+                return child.content
 
     def validate(self):
         """
