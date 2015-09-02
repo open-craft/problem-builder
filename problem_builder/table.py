@@ -113,7 +113,11 @@ class MentoringTableBlock(
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             # Child should be an instance of MentoringTableColumn
-            header_values.append(child.header)
+            header = child.header
+            # Make sure /jump_to_id/ URLs are expanded correctly
+            if getattr(self.runtime, 'replace_jump_to_id_urls', None):
+                header = self.runtime.replace_jump_to_id_urls(header)
+            header_values.append(header)
             child_frag = child.render('mentoring_view', context)
             content_values.append(child_frag.content)
         context['header_values'] = header_values if any(header_values) else None
