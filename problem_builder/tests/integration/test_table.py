@@ -20,6 +20,8 @@
 
 # Imports ###########################################################
 
+from mock import patch
+from workbench.runtime import WorkbenchRuntime
 from .base_test import MentoringBaseTest
 
 
@@ -54,3 +56,16 @@ class MentoringTableBlockTest(MentoringBaseTest):
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows[0].text, 'This is the answer #1')
         self.assertEqual(rows[1].text, 'This is the answer #2')
+
+        # Ensure that table block makes an effort to translate URLs in column headers
+        link_template = "<a href='http://www.test.com'>{}</a> in a column header."
+        original_contents = link_template.format('Link')
+        updated_contents = link_template.format('Updated link')
+
+        with patch.object(WorkbenchRuntime, 'replace_jump_to_id_urls', create=True) as patched_method:
+            patched_method.return_value = updated_contents
+
+            table = self.go_to_page('Table 3', css_selector='.mentoring-table')
+            patched_method.assert_called_once_with(original_contents)
+            link = table.find_element_by_css_selector('a')
+            self.assertEquals(link.text, 'Updated link')
