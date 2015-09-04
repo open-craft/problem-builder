@@ -13,6 +13,8 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         checkmark.removeClass('checkmark-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
+        checkmark.removeClass('checkmark-clickable');
+        checkmark.off('click');
 
         // Clear all selections
         $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
@@ -271,7 +273,8 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         handleResults(response);
         var options = {
             max_attempts: response.max_attempts,
-            num_attempts: response.num_attempts
+            num_attempts: response.num_attempts,
+            checkmark: checkmark
         };
         var result = response.results[1];
         var child = mentoring.steps[active_child];

@@ -197,11 +197,11 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
     ):
         question = self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring, question)
         self.assertIn("What do you like in this MRQ?", mentoring.text)
 
         if extended_feedback:
             self.assert_disabled(controls.submit)
+            self.check_question_feedback(mentoring, question)
             if alternative_review:
                 self.assert_clickable(controls.review_link)
                 self.assert_hidden(controls.try_again)
@@ -212,6 +212,18 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
             self.ending_controls(controls, last)
 
         return question
+
+    def check_question_feedback(self, mentoring, question):
+        question_checkmark = mentoring.find_element_by_css_selector('.assessment-checkmark')
+        question_feedback = question.find_element_by_css_selector(".feedback")
+        self.assertTrue(question_feedback.is_displayed())
+        self.assertEqual(question_feedback.text, "Question Feedback Message")
+
+        question.click()
+        self.assertFalse(question_feedback.is_displayed())
+
+        question_checkmark.click()
+        self.assertTrue(question_feedback.is_displayed())
 
     def multiple_response_question(self, number, mentoring, controls, choice_names, result, last=False):
         question = self.peek_at_multiple_response_question(number, mentoring, controls, last=last)
@@ -298,6 +310,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         incorrect_marks = mentoring.find_elements_by_css_selector('.checkmark-incorrect')
         self.assertEqual(len(correct_marks), 5)
         self.assertEqual(len(incorrect_marks), 0)
+
         item_feedbacks = [
             "This is something everyone has to like about this MRQ",
             "This is something everyone has to like about this MRQ",

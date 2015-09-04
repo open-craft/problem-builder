@@ -192,8 +192,16 @@ function MRQBlock(runtime, element) {
             var messageView = MessageView(element, mentoring);
 
             if (result.message) {
-                messageView.showMessage('<div class="message-content">' + result.message + '</div>'+
-                                        '<div class="close icon-remove-sign fa-times-circle"></div>');
+                var msg = '<div class="message-content">' + result.message + '</div>' +
+                          '<div class="close icon-remove-sign fa-times-circle"></div>';
+                messageView.showMessage(msg);
+                if (options.checkmark) {
+                    options.checkmark.addClass('checkmark-clickable');
+                    options.checkmark.on('click', function(ev) {
+                        ev.stopPropagation();
+                        messageView.showMessage(msg);
+                    })
+                }
             }
 
             var questionnaireDOM = $('fieldset.questionnaire', element);

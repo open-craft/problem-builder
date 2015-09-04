@@ -118,6 +118,10 @@
     margin-right: 10px;
 }
 
+.mentoring .assessment-checkmark.checkmark-clickable {
+    cursor: pointer;
+}
+
 .mentoring .grade .grade-result {
     margin: 20px;
 }
