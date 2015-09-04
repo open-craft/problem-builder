@@ -255,7 +255,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     @property
     def score(self):
         """Compute the student score taking into account the weight of each step."""
-        steps = [self.runtime.get_block(step_id) for step_id in self.steps]
+        steps = self.get_steps()
         steps_map = {q.name: q for q in steps}
         total_child_weight = sum(float(step.weight) for step in steps)
         if total_child_weight == 0:
@@ -283,7 +283,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         self.migrate_fields()
 
         # Validate self.step:
-        num_steps = len(self.steps)
+        num_steps = len(self.get_steps())
         if self.step > num_steps:
             self.step = num_steps
 
@@ -435,15 +435,13 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             return []  # Review tips are only used in assessment mode, and only on the last step.
         review_tips = []
         status_cache = dict(self.student_results)
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
-            if child.name:
-                result = status_cache.get(child.name)
-                if result and result.get('status') != 'correct':
-                    # The student got this wrong. Check if there is a review tip to show.
-                    tip_html = child.get_review_tip()
-                    if tip_html:
-                        review_tips.append(tip_html)
+        for child in self.get_steps():
+            result = status_cache.get(child.name)
+            if result and result.get('status') != 'correct':
+                # The student got this wrong. Check if there is a review tip to show.
+                tip_html = child.get_review_tip()
+                if tip_html:
+                    review_tips.append(tip_html)
         return review_tips
 
     @property
@@ -513,8 +511,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         show_message = bool(self.student_results)
 
         # In standard mode, all children is visible simultaneously, so need collecting responses from all of them
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
+        for child in self.get_steps():
             child_result = child.get_last_result()
             results.append([child.name, child_result])
             completed = completed and (child_result.get('status', None) == 'correct')
@@ -537,8 +534,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         completed = True
         choices = dict(self.student_results)
         # Only one child should ever be of concern with this method.
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
+        for child in self.get_steps():
             if child.name and child.name in queries:
                 results = [child.name, child.get_results(choices[child.name])]
                 # Children may have their own definition of 'completed' which can vary from the general case
@@ -571,8 +567,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         submit_results = []
         previously_completed = self.completed
         completed = True
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
+        for child in self.get_steps():
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
