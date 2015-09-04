@@ -1,6 +1,7 @@
 function MentoringAssessmentView(runtime, element, mentoring) {
     var gradeTemplate = _.template($('#xblock-grade-template').html());
-    var reviewQuestionsTemplate = _.template($('#xblock-review-questions-template').html());
+    var reviewQuestionsTemplate = _.template($('#xblock-review-questions-template').html()); // Detailed list of which questions the user got wrong
+    var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var submitDOM, nextDOM, reviewDOM, tryAgainDOM, messagesDOM, reviewLinkDOM;
     var submitXHR;
     var checkmark;
@@ -63,8 +64,20 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         }
 
         mentoring.renderAttempts();
-        if (data.assessment_message && (data.max_attempts === 0 || data.num_attempts < data.max_attempts)) {
-            mentoring.setContent(messagesDOM, data.assessment_message);
+        if (data.max_attempts === 0 || data.num_attempts < data.max_attempts) {
+            var messageHTML = '';
+            if (data.assessment_message) {
+                messageHTML += data.assessment_message; // Overall on-assessment-review message
+            }
+            if (data.assessment_review_tips.length > 0) {
+                messageHTML += reviewTipsTemplate({
+                    // on-assessment-review-question messages specific to questions the student got wrong:
+                    tips: data.assessment_review_tips
+                });
+            }
+            if (messageHTML.length > 0) {
+                mentoring.setContent(messagesDOM, messageHTML);
+            }
             messagesDOM.show();
         }
         $('a.question-link', element).click(reviewJump);

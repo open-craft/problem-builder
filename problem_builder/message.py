@@ -84,6 +84,20 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
                 "used up all of their allowed attempts."
             ),
         },
+        "on-assessment-review-question": {
+            "display_name": _(u"Study tips if this question was wrong"),
+            "long_display_name": _(u"Study tips shown during assessment review if wrong"),
+            "default": _(
+                u"Review ____."
+            ),
+            "description": _(
+                u"In assessment mode, this message will be shown when the student is reviewing "
+                "their answers to the assessment, if the student got this specific question "
+                "wrong and is allowed to try again. "
+                "This message is ignored in standard mode and is not shown if the student has "
+                "used up all of their allowed attempts."
+            ),
+        },
     }
 
     content = String(
@@ -103,6 +117,10 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
             {"value": "incomplete", "display_name": MESSAGE_TYPES["incomplete"]["display_name"]},
             {"value": "max_attempts_reached", "display_name": MESSAGE_TYPES["max_attempts_reached"]["display_name"]},
             {"value": "on-assessment-review", "display_name": MESSAGE_TYPES["on-assessment-review"]["display_name"]},
+            {
+                "value": "on-assessment-review-question",
+                "display_name": MESSAGE_TYPES["on-assessment-review-question"]["display_name"]
+            },
         ),
     )
     editable_fields = ("content", )

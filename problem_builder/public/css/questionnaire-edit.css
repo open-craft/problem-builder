@@ -4,3 +4,13 @@
   height: 30px;
   line-height: 30px;
 }
+
+.xblock[data-block-type=pb-mcq] .submission-message-help p,
+.xblock[data-block-type=pb-mrq] .submission-message-help p,
+.xblock[data-block-type=pb-rating] .submission-message-help p {
+	border-top: 1px solid #ddd;
+	font-size: 0.85em;
+	font-style: italic;
+	margin-top: 1em;
+	padding-top: 0.3em;
+}

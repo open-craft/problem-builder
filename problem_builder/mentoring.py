@@ -34,6 +34,7 @@ from xblock.validation import ValidationMessage
 from .message import MentoringMessageBlock
 from .step import StepParentMixin, StepMixin
 
+from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
@@ -323,8 +324,10 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.add_javascript_url(self.runtime.local_resource_url(self, js_file))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_review_questions.html'), "text/html")
+        if self.is_assessment:
+            fragment.add_resource(
+                loader.load_unicode('templates/html/mentoring_assessment_templates.html'), "text/html"
+            )
 
         self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
@@ -424,6 +427,28 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             return self.get_message_content('on-assessment-review')
         else:
             return None
+
+    @property
+    def review_tips(self):
+        """ Get review tips, shown for wrong answers in assessment mode. """
+        if not self.is_assessment or self.step != len(self.steps):
+            return []  # Review tips are only used in assessment mode, and only on the last step.
+        review_tips = []
+        status_cache = dict(self.student_results)
+        for child_id in self.steps:
+            child = self.runtime.get_block(child_id)
+            if child.name:
+                result = status_cache.get(child.name)
+                if result and result.get('status') != 'correct':
+                    # The student got this wrong. Check if there is a review tip to show.
+                    tip_html = child.get_review_tip()
+                    if tip_html:
+                        review_tips.append(tip_html)
+        return review_tips
+
+    @property
+    def review_tips_json(self):
+        return json.dumps(self.review_tips)
 
     def show_extended_feedback(self):
         return self.extended_feedback and self.max_attempts_reached
@@ -604,6 +629,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
         steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
         assessment_message = None
+        review_tips = []
 
         for child in children:
             if child.name and child.name in submissions:
@@ -639,6 +665,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             })
             event_data['final_grade'] = score.raw
             assessment_message = self.assessment_message
+            review_tips = self.review_tips
 
             self.num_attempts += 1
             self.completed = True
@@ -663,6 +690,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             'partial': self.partial_json(stringify=False),
             'extended_feedback': self.show_extended_feedback() or '',
             'assessment_message': assessment_message,
+            'assessment_review_tips': review_tips,
         }
 
     @XBlock.json_handler
@@ -691,9 +719,10 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
     def get_message_content(self, message_type):
         for child_id in self.children:
-            child = self.runtime.get_block(child_id)
-            if isinstance(child, MentoringMessageBlock) and child.type == message_type:
-                return child.content
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == message_type:
+                    return child.content
 
     def validate(self):
         """

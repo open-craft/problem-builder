@@ -56,3 +56,24 @@
     <hr/>
   </div>
 </script>
+
+<!-- Template for extended feedback: Show extended feedback details when all attempts are used up. -->
+<script type="text/template" id="xblock-review-questions-template">
+<% var q, last_question; %>
+<ul class="review-list <%= label %>-list">
+    <% for (var question in questions) {{ q = questions[question]; last_question = question == questions.length - 1; %>
+    <li><a href="#" class="question-link" data-step="<%= q.number %>"><%= _.template(gettext("Question {number}"), {number: q.number}, {interpolate: /\{(.+?)\}/g}) %></a></li>
+    <% }} %>
+</ul>
+</script>
+
+<!-- Tips about specific questions the student got wrong. From pb-message[type=on-assessment-review-question] blocks -->
+<script type="text/template" id="xblock-review-tips-template">
+<p class="review-tips-intro"><%= gettext("You might consider reviewing the following items before your next assessment attempt:") %></p>
+<ul class="review-tips-list">
+    <% for (var tip_idx in tips) {{ %>
+        <li><%= tips[tip_idx] %></li>
+    <% }} %>
+</ul>
+</script>
+
