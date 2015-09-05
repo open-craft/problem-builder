@@ -379,6 +379,56 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         if extended_feedback:
             self.extended_feedback_checks(mentoring, controls, expected_results)
 
+    def test_review_tips(self):
+        params = {
+            "max_attempts": 3,
+            "extended_feedback": False,
+            "include_review_tips": True
+        }
+        mentoring, controls = self.load_assessment_scenario("assessment.xml", params)
+
+        # Get one question wrong and one partially wrong on attempt 1 of 3: ####################
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT)
+        self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
+        self.rating_question(3, mentoring, controls, "5 - Extremely good", CORRECT)
+        self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
+
+        # The review tips for MCQ 2 and the MRQ should be shown:
+        messages = mentoring.find_element_by_css_selector('.assessment-messages')
+        self.assertTrue(messages.is_displayed())
+        self.assertIn('You might consider reviewing the following items', messages.text)
+        self.assertIn('Take another look at', messages.text)
+        self.assertIn('Lesson 1', messages.text)
+        self.assertNotIn('Lesson 2', messages.text)  # This MCQ was correct
+        self.assertIn('Lesson 3', messages.text)
+        # The on-assessment-review message is also shown if attempts remain:
+        self.assertIn('Assessment additional feedback message text', messages.text)
+
+        self.assert_clickable(controls.try_again)
+        controls.try_again.click()
+
+        # Get no questions wrong on attempt 2 of 3: ############################################
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT, saved_value='This is the answer')
+        self.single_choice_question(2, mentoring, controls, 'Yes', CORRECT)
+        self.rating_question(3, mentoring, controls, "5 - Extremely good", CORRECT)
+        user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
+        self.multiple_response_question(4, mentoring, controls, user_selection, CORRECT, last=True)
+
+        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+        self.assertNotIn('You might consider reviewing the following items', messages.text)
+
+        self.assert_clickable(controls.try_again)
+        controls.try_again.click()
+
+        # Get some questions wrong again on attempt 3 of 3:
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT, saved_value='This is the answer')
+        self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
+        self.rating_question(3, mentoring, controls, "1 - Not good at all", INCORRECT)
+        self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
+
+        # The review tips will not be shown because no attempts remain:
+        self.assert_messages_empty(mentoring)
+
     def test_single_question_assessment(self):
         """
         No 'Next Question' button on single question assessment.
