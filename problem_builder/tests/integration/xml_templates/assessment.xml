@@ -32,7 +32,7 @@
         <pb-tip values='["notwant"]'>Your loss!</pb-tip>
     </pb-rating>
 
-    <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices='["gracefulness","elegance","beauty"]'>
+    <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices='["gracefulness","elegance","beauty"]' message="Question Feedback Message">
         <pb-choice value="elegance">Its elegance</pb-choice>
         <pb-choice value="beauty">Its beauty</pb-choice>
         <pb-choice value="gracefulness">Its gracefulness</pb-choice>
