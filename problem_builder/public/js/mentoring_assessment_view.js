@@ -23,6 +23,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         $('.grade').html('');
         $('.attempts').html('');
+        assessmentMessageDOM.html('');
         reviewTipsDOM.empty().hide();
     }
 

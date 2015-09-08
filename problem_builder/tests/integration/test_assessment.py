@@ -281,6 +281,10 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assertEqual(message_wrapper.text, text)
         self.assertTrue(message_wrapper.is_displayed())
 
+    def assert_no_message_text(self, mentoring):
+        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
+        self.assertEqual(message_wrapper.text, '')
+
     def extended_feedback_checks(self, mentoring, controls, expected_results):
         # Multiple choice is third correctly answered question
         self.assert_hidden(controls.review_link)
@@ -346,6 +350,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_message_text(mentoring, "Assessment additional feedback message text")
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
+        self.assert_no_message_text(mentoring)
 
         self.freeform_answer(
             1, mentoring, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
