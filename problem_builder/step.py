@@ -45,7 +45,7 @@ class StepParentMixin(object):
     An XBlock mixin for a parent block containing Step children
     """
 
-    @property
+    @lazy
     def steps(self):
         """
         Get the usage_ids of all of this XBlock's children that are "Steps"

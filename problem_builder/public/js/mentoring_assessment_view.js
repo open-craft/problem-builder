@@ -2,7 +2,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     var gradeTemplate = _.template($('#xblock-grade-template').html());
     var reviewQuestionsTemplate = _.template($('#xblock-review-questions-template').html()); // Detailed list of which questions the user got wrong
     var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
-    var submitDOM, nextDOM, reviewDOM, tryAgainDOM, messagesDOM, reviewLinkDOM;
+    var submitDOM, nextDOM, reviewDOM, tryAgainDOM, messagesDOM, reviewLinkDOM, reviewTipsDOM;
     var submitXHR;
     var checkmark;
     var active_child;
@@ -24,6 +24,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         $('.grade').html('');
         $('.attempts').html('');
         messagesDOM.empty().hide();
+        reviewTipsDOM.empty().hide();
     }
 
     function no_more_attempts() {
@@ -65,20 +66,18 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         mentoring.renderAttempts();
         if (data.max_attempts === 0 || data.num_attempts < data.max_attempts) {
-            var messageHTML = '';
             if (data.assessment_message) {
-                messageHTML += data.assessment_message; // Overall on-assessment-review message
+                // Overall on-assessment-review message:
+                mentoring.setContent(messagesDOM, data.assessment_message);
+                messagesDOM.show();
             }
             if (data.assessment_review_tips.length > 0) {
-                messageHTML += reviewTipsTemplate({
-                    // on-assessment-review-question messages specific to questions the student got wrong:
+                // on-assessment-review-question messages specific to questions the student got wrong:
+                mentoring.setContent(reviewTipsDOM, reviewTipsTemplate({
                     tips: data.assessment_review_tips
-                });
+                }));
+                reviewTipsDOM.show();
             }
-            if (messageHTML.length > 0) {
-                mentoring.setContent(messagesDOM, messageHTML);
-            }
-            messagesDOM.show();
         }
         $('a.question-link', element).click(reviewJump);
     }
@@ -114,6 +113,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         reviewLinkDOM = $(element).find('.review-link');
         checkmark = $('.assessment-checkmark', element);
         messagesDOM = $('.assessment-messages', element);
+        reviewTipsDOM = $('.assessment-review-tips', element);
 
         submitDOM.show();
         submitDOM.bind('click', submit);

@@ -394,15 +394,15 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
 
         # The review tips for MCQ 2 and the MRQ should be shown:
-        messages = mentoring.find_element_by_css_selector('.assessment-messages')
-        self.assertTrue(messages.is_displayed())
-        self.assertIn('You might consider reviewing the following items', messages.text)
-        self.assertIn('Take another look at', messages.text)
-        self.assertIn('Lesson 1', messages.text)
-        self.assertNotIn('Lesson 2', messages.text)  # This MCQ was correct
-        self.assertIn('Lesson 3', messages.text)
+        review_tips = mentoring.find_element_by_css_selector('.assessment-review-tips')
+        self.assertTrue(review_tips.is_displayed())
+        self.assertIn('You might consider reviewing the following items', review_tips.text)
+        self.assertIn('Take another look at', review_tips.text)
+        self.assertIn('Lesson 1', review_tips.text)
+        self.assertNotIn('Lesson 2', review_tips.text)  # This MCQ was correct
+        self.assertIn('Lesson 3', review_tips.text)
         # The on-assessment-review message is also shown if attempts remain:
-        self.assertIn('Assessment additional feedback message text', messages.text)
+        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
 
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
@@ -415,7 +415,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.multiple_response_question(4, mentoring, controls, user_selection, CORRECT, last=True)
 
         self.assert_messages_text(mentoring, "Assessment additional feedback message text")
-        self.assertNotIn('You might consider reviewing the following items', messages.text)
+        self.assertFalse(review_tips.is_displayed())
 
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
@@ -427,7 +427,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
 
         # The review tips will not be shown because no attempts remain:
-        self.assert_messages_empty(mentoring)
+        self.assertFalse(review_tips.is_displayed())
 
     def test_single_question_assessment(self):
         """
