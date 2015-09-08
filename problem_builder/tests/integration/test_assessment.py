@@ -350,6 +350,8 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_message_text(mentoring, "Assessment additional feedback message text")
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
+
+        self.wait_until_hidden(controls.try_again)
         self.assert_no_message_text(mentoring)
 
         self.freeform_answer(
