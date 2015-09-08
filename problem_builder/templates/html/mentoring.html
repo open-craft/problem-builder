@@ -16,6 +16,8 @@
   {% endif %}
 
   <div class="{{self.mode}}-question-block">
+    <div class="assessment-message"></div>
+
     {{child_content|safe}}
 
     {% if self.display_submit %}
@@ -33,8 +35,6 @@
          data-incorrect="{{ self.incorrect_json }}"
          data-partial="{{ self.partial_json }}">
     </div>
-
-    <div class="assessment-messages"></div>
 
     <div class="submit">
       {% if self.mode == 'assessment' %}

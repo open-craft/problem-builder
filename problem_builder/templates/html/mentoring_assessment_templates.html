@@ -1,10 +1,4 @@
 <script type="text/template" id="xblock-grade-template">
-  <% if (_.isNumber(max_attempts) && max_attempts > 0 && num_attempts >= max_attempts) {{ %>
-  <p><%= gettext("Note: you have used all attempts. Continue to the next unit.") %></p>
-  <% }} else {{ %>
-  <p><%= gettext("Note: if you retake this assessment, only your final score counts.") %></p>
-  <% }} %>
-
   <div class="grade-result">
     <h2>
       <%= _.template(gettext("You scored {percent}% on this assessment."), {percent: score}, {interpolate: /\{(.+?)\}/g}) %>

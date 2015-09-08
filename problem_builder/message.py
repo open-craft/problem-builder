@@ -75,7 +75,8 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
             "display_name": _(u"Review with attempts left"),
             "long_display_name": _(u"Message shown during review when attempts remain"),
             "default": _(
-                u"You may try this assessment again, and only the latest score will be used."
+                u"Note: if you retake this assessment, only your final score counts. "
+                "If you would like to keep this score, please continue to the next unit."
             ),
             "description": _(
                 u"In assessment mode, this message will be shown when the student is reviewing "

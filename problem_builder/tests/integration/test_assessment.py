@@ -243,7 +243,6 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), mentoring)
         self.assert_persistent_elements_present(mentoring)
         if expected["max_attempts"] > 0 and expected["num_attempts"] < expected["max_attempts"]:
-            self.assertIn("Note: if you retake this assessment, only your final score counts.", mentoring.text)
             self.assertFalse(mentoring.find_elements_by_css_selector('.review-list'))
         elif extended_feedback:
             for q_type in ['correct', 'incorrect', 'partial']:
@@ -277,16 +276,10 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.review_link)
 
-    def assert_messages_text(self, mentoring, text):
-        messages = mentoring.find_element_by_css_selector('.assessment-messages')
-        self.assertEqual(messages.text, text)
-        self.assertTrue(messages.is_displayed())
-
-    def assert_messages_empty(self, mentoring):
-        messages = mentoring.find_element_by_css_selector('.assessment-messages')
-        self.assertEqual(messages.text, '')
-        self.assertFalse(messages.find_elements_by_xpath('./*'))
-        self.assertFalse(messages.is_displayed())
+    def assert_message_text(self, mentoring, text):
+        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
+        self.assertEqual(message_wrapper.text, text)
+        self.assertTrue(message_wrapper.is_displayed())
 
     def extended_feedback_checks(self, mentoring, controls, expected_results):
         # Multiple choice is third correctly answered question
@@ -345,12 +338,12 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.peek_at_review(mentoring, controls, expected_results, extended_feedback=extended_feedback)
 
         if max_attempts == 1:
-            self.assert_messages_empty(mentoring)
+            self.assert_message_text(mentoring, "Note: you have used all attempts. Continue to the next unit.")
             self.assert_disabled(controls.try_again)
             return
 
         # The on-assessment-review message is shown if attempts remain:
-        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+        self.assert_message_text(mentoring, "Assessment additional feedback message text")
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
 
@@ -373,9 +366,9 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         else:
             self.assert_clickable(controls.try_again)
         if 1 <= max_attempts <= 2:
-            self.assert_messages_empty(mentoring)  # The on-assessment-review message is not shown if no attempts remain
+            self.assert_message_text(mentoring, "Note: you have used all attempts. Continue to the next unit.")
         else:
-            self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+            self.assert_message_text(mentoring, "Assessment additional feedback message text")
         if extended_feedback:
             self.extended_feedback_checks(mentoring, controls, expected_results)
 
@@ -402,7 +395,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assertNotIn('Lesson 2', review_tips.text)  # This MCQ was correct
         self.assertIn('Lesson 3', review_tips.text)
         # The on-assessment-review message is also shown if attempts remain:
-        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+        self.assert_message_text(mentoring, "Assessment additional feedback message text")
 
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
@@ -414,7 +407,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
         self.multiple_response_question(4, mentoring, controls, user_selection, CORRECT, last=True)
 
-        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+        self.assert_message_text(mentoring, "Assessment additional feedback message text")
         self.assertFalse(review_tips.is_displayed())
 
         self.assert_clickable(controls.try_again)
@@ -442,7 +435,11 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         }
 
         self.peek_at_review(mentoring, controls, expected_results)
-        self.assert_messages_empty(mentoring)
+        self.assert_message_text(
+            mentoring,
+            "Note: if you retake this assessment, only your final score counts. "
+            "If you would like to keep this score, please continue to the next unit."
+        )
 
         self.wait_until_clickable(controls.try_again)
         controls.try_again.click()
