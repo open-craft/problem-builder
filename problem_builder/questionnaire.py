@@ -181,8 +181,8 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire_edit.js'))
-        fragment.initialize_js('QuestionnaireEdit')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+        fragment.initialize_js('MentoringEditComponents')
         return fragment
 
     def validate_field_data(self, validation, data):

@@ -5,6 +5,13 @@
   line-height: 30px;
 }
 
+.xblock .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover {
+  background-color: #ccc;
+  border-color: #888;
+  cursor: default;
+}
+
 .xblock[data-block-type=pb-mcq] .submission-message-help p,
 .xblock[data-block-type=pb-mrq] .submission-message-help p,
 .xblock[data-block-type=pb-rating] .submission-message-help p {
