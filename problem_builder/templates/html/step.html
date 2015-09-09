@@ -1,0 +1,17 @@
+<div class="pb-step">
+  {% if show_title %}
+  <div class="title">
+    <h3>
+      {% if title %}
+        {{ title }}
+      {% else %}
+        {{ self.display_name_with_default }}
+      {% endif %}
+    </h3>
+  </div>
+  {% endif %}
+
+  {% for child_content in child_contents %}
+    {{ child_content|safe }}
+  {% endfor %}
+</div>

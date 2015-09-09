@@ -48,6 +48,9 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
     """
+    CATEGORY = 'pb-mcq'
+    STUDIO_LABEL = _(u"Multiple Choice Question")
+
     student_choice = String(
         # {Last input submitted by the student
         default="",
@@ -158,6 +161,9 @@ class RatingBlock(MCQBlock):
     """
     An XBlock used to rate something on a five-point scale, e.g. Likert Scale
     """
+    CATEGORY = 'pb-rating'
+    STUDIO_LABEL = _(u"Rating Question")
+
     low = String(
         display_name=_("Low"),
         help=_("Label for low ratings"),

@@ -26,6 +26,8 @@ from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+from problem_builder.mixins import XBlockWithTranslationServiceMixin
+
 
 # Make '_' a no-op so we can scrape strings
 def _(text):
@@ -35,7 +37,7 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
+class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin):
     """
     A message which can be conditionally displayed at the mentoring block level,
     for example upon completion of the block
@@ -126,10 +128,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
     )
     editable_fields = ("content", )
 
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
-
     def mentoring_view(self, context=None):
         """ Render this message for use by a mentoring block. """
         html = u'<div class="submission-message {msg_type}">{content}</div>'.format(
@@ -184,3 +182,23 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
             block.content += etree.tostring(child, encoding='unicode')
 
         return block
+
+
+class CompletedMentoringMessageShim(object):
+    CATEGORY = 'pb-message'
+    STUDIO_LABEL = _("Message (Complete)")
+
+
+class IncompleteMentoringMessageShim(object):
+    CATEGORY = 'pb-message'
+    STUDIO_LABEL = _("Message (Incomplete)")
+
+
+class MaxAttemptsReachedMentoringMessageShim(object):
+    CATEGORY = 'pb-message'
+    STUDIO_LABEL = _("Message (Max # Attempts)")
+
+
+class OnAssessmentReviewMentoringMessageShim(object):
+    CATEGORY = 'pb-message'
+    STUDIO_LABEL = _("Message (Assessment Review)")

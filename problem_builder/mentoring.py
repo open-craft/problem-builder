@@ -24,6 +24,9 @@ import logging
 import json
 
 from collections import namedtuple
+from itertools import chain
+
+from lazy.lazy import lazy
 
 from xblock.core import XBlock
 from xblock.exceptions import NoSuchViewError, JsonHandlerError
@@ -31,12 +34,18 @@ from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
-from .message import MentoringMessageBlock
-from .step import StepParentMixin, StepMixin
+from .message import (
+    MentoringMessageBlock, CompletedMentoringMessageShim, IncompleteMentoringMessageShim,
+    MaxAttemptsReachedMentoringMessageShim, OnAssessmentReviewMentoringMessageShim
+)
+from .mixins import _normalize_id, StepParentMixin, QuestionMixin, XBlockWithTranslationServiceMixin
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
+from xblockutils.studio_editable import (
+    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin
+)
+
 
 try:
     # Used to detect if we're in the workbench so we can add Font Awesome
@@ -70,7 +79,89 @@ PARTIAL = 'partial'
 
 @XBlock.needs("i18n")
 @XBlock.wants('settings')
-class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioContainerXBlockMixin):
+class BaseMentoringBlock(
+        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin
+):
+    """
+    An XBlock that defines functionality shared by mentoring blocks.
+    """
+    # Content
+    show_title = Boolean(
+        display_name=_("Show title"),
+        help=_("Display the title?"),
+        default=True,
+        scope=Scope.content
+    )
+
+    has_children = True
+
+    icon_class = 'problem'
+    block_settings_key = 'mentoring'
+    theme_key = 'theme'
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the usage_id.
+        """
+        try:
+            return super(BaseMentoringBlock, self).url_name
+        except AttributeError:
+            return unicode(self.scope_ids.usage_id)
+
+    def get_theme(self):
+        """
+        Gets theme settings from settings service. Falls back to default (LMS) theme
+        if settings service is not available, xblock theme settings are not set or does
+        contain mentoring theme settings.
+        """
+        settings_service = self.runtime.service(self, "settings")
+        if settings_service:
+            xblock_settings = settings_service.get_settings_bucket(self)
+            if xblock_settings and self.theme_key in xblock_settings:
+                return xblock_settings[self.theme_key]
+        return _default_theme_config
+
+    def include_theme_files(self, fragment):
+        theme = self.get_theme()
+        theme_package, theme_files = theme['package'], theme['locations']
+        for theme_file in theme_files:
+            fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
+
+    @XBlock.json_handler
+    def view(self, data, suffix=''):
+        """
+        Current HTML view of the XBlock, for refresh by client
+        """
+        frag = self.student_view({})
+        return {'html': frag.content}
+
+    @XBlock.json_handler
+    def publish_event(self, data, suffix=''):
+        """
+        Publish data for analytics purposes
+        """
+        event_type = data.pop('event_type')
+        self.runtime.publish(self, event_type, data)
+
+        return {'result': 'ok'}
+
+    def author_preview_view(self, context):
+        """
+        Child blocks can override this to add a custom preview shown to
+        authors in Studio when not editing this block's children.
+        """
+        fragment = self.student_view(context)
+        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+            "url_name": self.url_name
+        }))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        self.include_theme_files(fragment)
+        return fragment
+
+
+class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentMixin):
     """
     An XBlock providing mentoring capabilities
 
@@ -121,12 +212,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         default='',
         scope=Scope.content,
         multiline_editor=True
-    )
-    show_title = Boolean(
-        display_name=_("Show title"),
-        help=_("Display the title?"),
-        default=True,
-        scope=Scope.content
     )
 
     # Settings
@@ -196,34 +281,13 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         'display_name', 'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
         'display_submit', 'feedback_label', 'weight', 'extended_feedback'
     )
-    icon_class = 'problem'
+
     has_score = True
-    has_children = True
-
-    block_settings_key = 'mentoring'
-    theme_key = 'theme'
-
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def is_assessment(self):
         """ Checks if mentoring XBlock is in assessment mode """
         return self.mode == 'assessment'
-
-    def get_theme(self):
-        """
-        Gets theme settings from settings service. Falls back to default (LMS) theme
-        if settings service is not available, xblock theme settings are not set or does
-        contain mentoring theme settings.
-        """
-        settings_service = self.runtime.service(self, "settings")
-        if settings_service:
-            xblock_settings = settings_service.get_settings_bucket(self)
-            if xblock_settings and self.theme_key in xblock_settings:
-                return xblock_settings[self.theme_key]
-        return _default_theme_config
 
     def get_question_number(self, question_id):
         """
@@ -231,7 +295,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         """
         for child_id in self.children:
             question = self.runtime.get_block(child_id)
-            if isinstance(question, StepMixin) and (question.name == question_id):
+            if isinstance(question, QuestionMixin) and (question.name == question_id):
                 return question.step_number
         raise ValueError("Question ID in answer set not a step of this Mentoring Block!")
 
@@ -272,12 +336,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
-    def include_theme_files(self, fragment):
-        theme = self.get_theme()
-        theme_package, theme_files = theme['package'], theme['locations']
-        for theme_file in theme_files:
-            fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
-
     def student_view(self, context):
         # Migrate stored data if necessary
         self.migrate_fields()
@@ -296,7 +354,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
                 child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
             elif not isinstance(child, MentoringMessageBlock):
                 try:
-                    if self.is_assessment and isinstance(child, StepMixin):
+                    if self.is_assessment and isinstance(child, QuestionMixin):
                         child_fragment = child.render('assessment_step_view', context)
                     else:
                         child_fragment = child.render('mentoring_view', context)
@@ -374,35 +432,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Returns the URL of the next step's page
         """
         return '/jump_to_id/{}'.format(self.next_step)
-
-    @property
-    def url_name(self):
-        """
-        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
-        defer to super(). In the workbench or any other platform, we use the usage_id.
-        """
-        try:
-            return super(MentoringBlock, self).url_name
-        except AttributeError:
-            return unicode(self.scope_ids.usage_id)
-
-    @XBlock.json_handler
-    def view(self, data, suffix=''):
-        """
-        Current HTML view of the XBlock, for refresh by client
-        """
-        frag = self.student_view({})
-        return {'html': frag.content}
-
-    @XBlock.json_handler
-    def publish_event(self, data, suffix=''):
-        """
-        Publish data for analytics purposes
-        """
-        event_type = data.pop('event_type')
-        self.runtime.publish(self, event_type, data)
-
-        return {'result': 'ok'}
 
     def get_message(self, completed):
         """
@@ -622,7 +651,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         current_child = None
         children = [self.runtime.get_block(child_id) for child_id in self.children]
         children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
-        steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
+        steps = [child for child in children if isinstance(child, QuestionMixin)]  # Faster than the self.steps property
         assessment_message = None
         review_tips = []
 
@@ -751,19 +780,6 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             ))
         return validation
 
-    def author_preview_view(self, context):
-        """
-        Child blocks can override this to add a custom preview shown to authors in Studio when
-        not editing this block's children.
-        """
-        fragment = self.student_view(context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
-            "url_name": self.url_name
-        }))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
-        self.include_theme_files(fragment)
-        return fragment
-
     def author_edit_view(self, context):
         """
         Add some HTML to the author view that allows authors to add child blocks.
@@ -804,3 +820,99 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Scenarios displayed by the workbench. Load them from external (private) repository
         """
         return loader.load_scenarios_from_path('templates/xml')
+
+
+class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin):
+    """
+    An XBlock providing mentoring capabilities with explicit steps
+    """
+    # Settings
+    display_name = String(
+        display_name=_("Title (Display name)"),
+        help=_("Title to display"),
+        default=_("Mentoring Questions (with explicit steps)"),
+        scope=Scope.settings
+    )
+
+    editable_fields = ('display_name',)
+
+    @lazy
+    def questions(self):
+        """ Get the usage_ids of all of this XBlock's children that are "Questions" """
+        return list(chain.from_iterable(self.runtime.get_block(step_id).steps for step_id in self.steps))
+
+    @property
+    def steps(self):
+        """
+        Get the usage_ids of all of this XBlock's children that are "Steps"
+        """
+        from .step import MentoringStepBlock  # Import here to avoid circular dependency
+        return [
+            _normalize_id(child_id) for child_id in self.children if
+            child_isinstance(self, child_id, MentoringStepBlock)
+        ]
+
+    def student_view(self, context):
+        fragment = Fragment()
+        child_content = u""
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if child is None:  # child should not be None but it can happen due to bugs or permission issues
+                child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+            elif not isinstance(child, MentoringMessageBlock):
+                child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
+                fragment.add_frag_resources(child_fragment)
+                child_content += child_fragment.content
+
+        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
+            'self': self,
+            'title': self.display_name,
+            'show_title': self.show_title,
+            'child_content': child_content,
+        }))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+
+        self.include_theme_files(fragment)
+
+        return fragment
+
+    @property
+    def allowed_nested_blocks(self):
+        """
+        Returns a list of allowed nested XBlocks. Each item can be either
+        * An XBlock class
+        * A NestedXBlockSpec
+
+        If XBlock class is used it is assumed that this XBlock is enabled and allows multiple instances.
+        NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
+        instances
+        """
+        from .step import MentoringStepBlock  # Import here to avoid circular dependency
+        return [
+            MentoringStepBlock,
+            NestedXBlockSpec(CompletedMentoringMessageShim, boilerplate='completed'),
+            NestedXBlockSpec(IncompleteMentoringMessageShim, boilerplate='incomplete'),
+            NestedXBlockSpec(MaxAttemptsReachedMentoringMessageShim, boilerplate='max_attempts_reached'),
+            NestedXBlockSpec(OnAssessmentReviewMentoringMessageShim, boilerplate='on-assessment-review'),
+        ]
+
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add child blocks.
+        """
+        context['wrap_children'] = {
+            'head': u'<div class="mentoring">',
+            'tail': u'</div>'
+        }
+        fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
+        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+            "url_name": self.url_name
+        }))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps_edit.js'))
+        fragment.initialize_js('MentoringWithStepsEdit')
+        return fragment

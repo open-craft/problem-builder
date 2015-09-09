@@ -18,9 +18,25 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from lazy import lazy
+from lazy.lazy import lazy
+
+from xblock.core import XBlock
 from xblock.fields import String, Boolean, Scope
+from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
+from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import (
+    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
+)
+
+from problem_builder.answer import AnswerBlock, AnswerRecapBlock
+from problem_builder.mcq import MCQBlock, RatingBlock
+from problem_builder.mixins import EnumerableChildMixin
+from problem_builder.mrq import MRQBlock
+from problem_builder.table import MentoringTableBlock
+
+
+loader = ResourceLoader(__name__)
 
 
 # Make '_' a no-op so we can scrape strings
@@ -40,81 +56,108 @@ def _normalize_id(key):
     return key
 
 
-class StepParentMixin(object):
+class HtmlBlockShim(object):
+    CATEGORY = 'html'
+    STUDIO_LABEL = _(u"HTML")
+
+
+@XBlock.needs('i18n')
+class MentoringStepBlock(
+        StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
+        EnumerableChildMixin, XBlock
+):
     """
-    An XBlock mixin for a parent block containing Step children
+    An XBlock for a step.
     """
-
-    @lazy
-    def steps(self):
-        """
-        Get the usage_ids of all of this XBlock's children that are "Steps"
-        """
-        return [_normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, StepMixin)]
-
-    def get_steps(self):
-        """ Get the step children of this block, cached if possible. """
-        if getattr(self, "_steps_cache", None) is None:
-            self._steps_cache = [self.runtime.get_block(child_id) for child_id in self.steps]
-        return self._steps_cache
-
-
-class StepMixin(object):
-    """
-    An XBlock mixin for a child block that is a "Step".
-
-    A step is a question that the user can answer (as opposed to a read-only child).
-    """
-    has_author_view = True
+    CAPTION = _(u"Step")
+    STUDIO_LABEL = _(u"Mentoring Step")
+    CATEGORY = 'pb-mentoring-step'
 
     # Fields:
     display_name = String(
-        display_name=_("Question title"),
-        help=_('Leave blank to use the default ("Question 1", "Question 2", etc.)'),
-        default="",  # Blank will use 'Question x' - see display_name_with_default
-        scope=Scope.content
-    )
-    show_title = Boolean(
-        display_name=_("Show title"),
-        help=_("Display the title?"),
-        default=True,
+        display_name=_("Step Title"),
+        help=_('Leave blank to use sequential numbering'),
+        default="",
         scope=Scope.content
     )
 
-    @lazy
-    def step_number(self):
-        return list(self.get_parent().steps).index(_normalize_id(self.scope_ids.usage_id)) + 1
+    editable_fields = ('display_name', 'show_title',)
 
     @lazy
-    def lonely_step(self):
-        if _normalize_id(self.scope_ids.usage_id) not in self.get_parent().steps:
-            raise ValueError("Step's parent should contain Step", self, self.get_parent().steps)
-        return len(self.get_parent().steps) == 1
+    def siblings(self):
+        return self.get_parent().steps
 
     @property
-    def display_name_with_default(self):
-        """ Get the title/display_name of this question. """
-        if self.display_name:
-            return self.display_name
-        if not self.lonely_step:
-            return self._(u"Question {number}").format(number=self.step_number)
-        return self._(u"Question")
-
-    def author_view(self, context):
-        context = context.copy() if context else {}
-        context['hide_header'] = True
-        return self.mentoring_view(context)
-
-    def author_preview_view(self, context):
-        context = context.copy() if context else {}
-        context['hide_header'] = True
-        return self.student_view(context)
-
-    def assessment_step_view(self, context=None):
+    def allowed_nested_blocks(self):
         """
-        assessment_step_view is the same as mentoring_view, except its DIV will have a different
-        class (.xblock-v1-assessment_step_view) that we use for assessments to hide all the
-        steps with CSS and to detect which children of mentoring are "Steps" and which are just
-        decorative elements/instructions.
+        Returns a list of allowed nested XBlocks. Each item can be either
+        * An XBlock class
+        * A NestedXBlockSpec
+
+        If XBlock class is used it is assumed that this XBlock is enabled and allows multiple instances.
+        NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
+        instances
         """
-        return self.mentoring_view(context)
+        return [
+            NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
+            MCQBlock, RatingBlock, MRQBlock, HtmlBlockShim,
+            AnswerRecapBlock, MentoringTableBlock,
+        ]
+
+    @property
+    def steps(self):
+        """ Get the usage_ids of all of this XBlock's children that are "Questions" """
+        from mixins import QuestionMixin
+        return [
+            _normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, QuestionMixin)
+        ]
+
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add child blocks.
+        """
+        local_context = dict(context)
+        local_context['wrap_children'] = {
+            'head': u'<div class="mentoring">',
+            'tail': u'</div>'
+        }
+        fragment = super(MentoringStepBlock, self).author_edit_view(local_context)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_edit.js'))
+        fragment.initialize_js('StepEdit')
+        return fragment
+
+    def student_view(self, context=None):
+        """ Student View """
+        return self._render_view(context, 'student_view')
+
+    def mentoring_view(self, context=None):
+        """ Mentoring View """
+        return self._render_view(context, 'mentoring_view')
+
+    def _render_view(self, context, view):
+        """ Actually renders a view """
+        fragment = Fragment()
+        child_contents = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if child is None:  # child should not be None but it can happen due to bugs or permission issues
+                child_contents.append(u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component.")))
+            else:
+                child_fragment = self._render_child_fragment(child, context, view)
+
+                fragment.add_frag_resources(child_fragment)
+                child_contents.append(child_fragment.content)
+
+        fragment.add_content(loader.render_template('templates/html/step.html', {
+            'self': self,
+            'title': self.display_name,
+            'show_title': self.show_title,
+            'child_contents': child_contents,
+        }))
+
+        return fragment

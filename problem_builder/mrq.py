@@ -44,6 +44,9 @@ class MRQBlock(QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-response questions
     """
+    CATEGORY = 'pb-mrq'
+    STUDIO_LABEL = _(u"Multiple Response Question")
+
     student_choices = List(
         # Last submissions by the student
         default=[],

@@ -1,6 +1,6 @@
 import unittest
 
-from problem_builder.step import StepMixin, StepParentMixin
+from problem_builder.mixins import QuestionMixin, StepParentMixin
 from mock import Mock
 
 
@@ -32,7 +32,7 @@ class BaseClass(object):
     pass
 
 
-class Step(BaseClass, StepMixin):
+class Step(BaseClass, QuestionMixin):
     def __init__(self):
         pass
 
@@ -41,7 +41,7 @@ class NotAStep(object):
     pass
 
 
-class TestStepMixin(unittest.TestCase):
+class TestQuestionMixin(unittest.TestCase):
     def test_single_step_is_returned_correctly(self):
         block = Parent()
         step = Step()
@@ -77,18 +77,18 @@ class TestStepMixin(unittest.TestCase):
         self.assertEquals(step1.step_number, 2)
         self.assertEquals(step2.step_number, 1)
 
-    def test_lonely_step_is_true_for_stand_alone_steps(self):
+    def test_lonely_child_is_true_for_stand_alone_steps(self):
         block = Parent()
         step1 = Step()
         block._set_children_for_test(1, "2", step1, "Step", NotAStep(), False)
 
-        self.assertTrue(step1.lonely_step)
+        self.assertTrue(step1.lonely_child)
 
-    def test_lonely_step_is_true_if_parent_have_more_steps(self):
+    def test_lonely_child_is_true_if_parent_have_more_steps(self):
         block = Parent()
         step1 = Step()
         step2 = Step()
         block._set_children_for_test(1, step2, "2", step1, "Step", NotAStep(), False)
 
-        self.assertFalse(step1.lonely_step)
-        self.assertFalse(step2.lonely_step)
+        self.assertFalse(step1.lonely_child)
+        self.assertFalse(step2.lonely_child)
