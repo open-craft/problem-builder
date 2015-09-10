@@ -2,13 +2,11 @@
     margin: 1em 0em;
 }
 
-.mentoring .messages,
-.mentoring .assessment-messages {
+.mentoring .messages {
     display: none;
 }
 
-.mentoring .messages .title1,
-.mentoring .assessment-messages .title1 {
+.mentoring .messages .title1 {
     color: #333333;
     text-transform: uppercase;
     font-weight: bold;
@@ -177,6 +175,26 @@
     float: right;
     display: none;
 }
+
+.mentoring .assessment-review-tips p.review-tips-intro {
+    margin-top: 1.2em;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+
+.mentoring .assessment-review-tips .review-tips-list {
+    margin-top: 0;
+    padding-top: 0;
+}
+.mentoring .assessment-review-tips .review-tips-list li {
+    margin-left: 0.5em;
+    padding-left: 0;
+}
+.mentoring .assessment-review-tips .review-tips-list li p {
+    display: inline;
+    margin: 0;
+}
+
 
 .pb-clarification span.clarification i {
     font-style: normal;

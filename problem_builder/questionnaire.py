@@ -33,6 +33,7 @@ from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContain
 
 from .choice import ChoiceBlock
 from .mentoring import MentoringBlock
+from .message import MentoringMessageBlock
 from .step import StepMixin
 from .tip import TipBlock
 
@@ -180,8 +181,8 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire_edit.js'))
-        fragment.initialize_js('QuestionnaireEdit')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+        fragment.initialize_js('MentoringEditComponents')
         return fragment
 
     def validate_field_data(self, validation, data):
@@ -226,3 +227,11 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
                 break
             values_with_tips.update(values)
         return validation
+
+    def get_review_tip(self):
+        """ Get the text to show on the assessment review when the student gets this question wrong """
+        for child_id in self.children:
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == "on-assessment-review-question":
+                    return child.content

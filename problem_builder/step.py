@@ -45,12 +45,18 @@ class StepParentMixin(object):
     An XBlock mixin for a parent block containing Step children
     """
 
-    @property
+    @lazy
     def steps(self):
         """
         Get the usage_ids of all of this XBlock's children that are "Steps"
         """
         return [_normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, StepMixin)]
+
+    def get_steps(self):
+        """ Get the step children of this block, cached if possible. """
+        if getattr(self, "_steps_cache", None) is None:
+            self._steps_cache = [self.runtime.get_block(child_id) for child_id in self.steps]
+        return self._steps_cache
 
 
 class StepMixin(object):

@@ -75,11 +75,26 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
             "display_name": _(u"Review with attempts left"),
             "long_display_name": _(u"Message shown during review when attempts remain"),
             "default": _(
-                u"You may try this assessment again, and only the latest score will be used."
+                u"Note: if you retake this assessment, only your final score counts. "
+                "If you would like to keep this score, please continue to the next unit."
             ),
             "description": _(
                 u"In assessment mode, this message will be shown when the student is reviewing "
                 "their answers to the assessment, if the student is allowed to try again. "
+                "This message is ignored in standard mode and is not shown if the student has "
+                "used up all of their allowed attempts."
+            ),
+        },
+        "on-assessment-review-question": {
+            "display_name": _(u"Study tips if this question was wrong"),
+            "long_display_name": _(u"Study tips shown during assessment review if wrong"),
+            "default": _(
+                u"Review ____."
+            ),
+            "description": _(
+                u"In assessment mode, this message will be shown when the student is reviewing "
+                "their answers to the assessment, if the student got this specific question "
+                "wrong and is allowed to try again. "
                 "This message is ignored in standard mode and is not shown if the student has "
                 "used up all of their allowed attempts."
             ),
@@ -103,6 +118,10 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin):
             {"value": "incomplete", "display_name": MESSAGE_TYPES["incomplete"]["display_name"]},
             {"value": "max_attempts_reached", "display_name": MESSAGE_TYPES["max_attempts_reached"]["display_name"]},
             {"value": "on-assessment-review", "display_name": MESSAGE_TYPES["on-assessment-review"]["display_name"]},
+            {
+                "value": "on-assessment-review-question",
+                "display_name": MESSAGE_TYPES["on-assessment-review-question"]["display_name"]
+            },
         ),
     )
     editable_fields = ("content", )

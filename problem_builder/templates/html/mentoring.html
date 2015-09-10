@@ -16,6 +16,8 @@
   {% endif %}
 
   <div class="{{self.mode}}-question-block">
+    <div class="assessment-message"></div>
+
     {{child_content|safe}}
 
     {% if self.display_submit %}
@@ -28,12 +30,11 @@
          data-num_attempts="{{ self.num_attempts }}"
          data-extended_feedback="{%if self.extended_feedback %}True{% endif %}"
          data-assessment_message="{{ self.assessment_message }}"
+         data-assessment_review_tips="{{ self.review_tips_json }}"
          data-correct="{{ self.correct_json }}"
          data-incorrect="{{ self.incorrect_json }}"
          data-partial="{{ self.partial_json }}">
     </div>
-
-    <div class="assessment-messages"></div>
 
     <div class="submit">
       {% if self.mode == 'assessment' %}
@@ -52,6 +53,7 @@
     </div>
     {% endif %}
     <div class="messages"></div>
+    <div class="assessment-review-tips"></div>
   </div>
   <div class="review-link"><a href="#">Review final grade</a></div>
 </div>

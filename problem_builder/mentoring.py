@@ -34,6 +34,7 @@ from xblock.validation import ValidationMessage
 from .message import MentoringMessageBlock
 from .step import StepParentMixin, StepMixin
 
+from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
@@ -254,7 +255,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     @property
     def score(self):
         """Compute the student score taking into account the weight of each step."""
-        steps = [self.runtime.get_block(step_id) for step_id in self.steps]
+        steps = self.get_steps()
         steps_map = {q.name: q for q in steps}
         total_child_weight = sum(float(step.weight) for step in steps)
         if total_child_weight == 0:
@@ -282,7 +283,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         self.migrate_fields()
 
         # Validate self.step:
-        num_steps = len(self.steps)
+        num_steps = len(self.get_steps())
         if self.step > num_steps:
             self.step = num_steps
 
@@ -323,8 +324,10 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         fragment.add_javascript_url(self.runtime.local_resource_url(self, js_file))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_grade.html'), "text/html")
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_review_questions.html'), "text/html")
+        if self.is_assessment:
+            fragment.add_resource(
+                loader.load_unicode('templates/html/mentoring_assessment_templates.html'), "text/html"
+            )
 
         self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
@@ -421,9 +424,29 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         Get the message to display to a student following a submission in assessment mode.
         """
         if not self.max_attempts_reached:
-            return self.get_message_content('on-assessment-review')
+            return self.get_message_content('on-assessment-review', or_default=True)
         else:
             return None
+
+    @property
+    def review_tips(self):
+        """ Get review tips, shown for wrong answers in assessment mode. """
+        if not self.is_assessment or self.step != len(self.steps):
+            return []  # Review tips are only used in assessment mode, and only on the last step.
+        review_tips = []
+        status_cache = dict(self.student_results)
+        for child in self.get_steps():
+            result = status_cache.get(child.name)
+            if result and result.get('status') != 'correct':
+                # The student got this wrong. Check if there is a review tip to show.
+                tip_html = child.get_review_tip()
+                if tip_html:
+                    review_tips.append(tip_html)
+        return review_tips
+
+    @property
+    def review_tips_json(self):
+        return json.dumps(self.review_tips)
 
     def show_extended_feedback(self):
         return self.extended_feedback and self.max_attempts_reached
@@ -488,8 +511,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         show_message = bool(self.student_results)
 
         # In standard mode, all children is visible simultaneously, so need collecting responses from all of them
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
+        for child in self.get_steps():
             child_result = child.get_last_result()
             results.append([child.name, child_result])
             completed = completed and (child_result.get('status', None) == 'correct')
@@ -512,8 +534,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         completed = True
         choices = dict(self.student_results)
         # Only one child should ever be of concern with this method.
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
+        for child in self.get_steps():
             if child.name and child.name in queries:
                 results = [child.name, child.get_results(choices[child.name])]
                 # Children may have their own definition of 'completed' which can vary from the general case
@@ -546,8 +567,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         submit_results = []
         previously_completed = self.completed
         completed = True
-        for child_id in self.steps:
-            child = self.runtime.get_block(child_id)
+        for child in self.get_steps():
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
@@ -604,6 +624,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
         children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
         steps = [child for child in children if isinstance(child, StepMixin)]  # Faster than the self.steps property
         assessment_message = None
+        review_tips = []
 
         for child in children:
             if child.name and child.name in submissions:
@@ -639,6 +660,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             })
             event_data['final_grade'] = score.raw
             assessment_message = self.assessment_message
+            review_tips = self.review_tips
 
             self.num_attempts += 1
             self.completed = True
@@ -663,6 +685,7 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
             'partial': self.partial_json(stringify=False),
             'extended_feedback': self.show_extended_feedback() or '',
             'assessment_message': assessment_message,
+            'assessment_review_tips': review_tips,
         }
 
     @XBlock.json_handler
@@ -689,11 +712,16 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
     def max_attempts_reached(self):
         return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
 
-    def get_message_content(self, message_type):
+    def get_message_content(self, message_type, or_default=False):
         for child_id in self.children:
-            child = self.runtime.get_block(child_id)
-            if isinstance(child, MentoringMessageBlock) and child.type == message_type:
-                return child.content
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == message_type:
+                    return child.content
+        if or_default:
+            # Return the default value since no custom message is set.
+            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
+            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
 
     def validate(self):
         """

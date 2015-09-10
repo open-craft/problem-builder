@@ -16,3 +16,8 @@
 .mentoring h3 {
     text-transform: uppercase;
 }
+
+.themed-xblock.mentoring .assessment-review-tips .review-tips-list li {
+    margin-left: 1.8em;
+    padding-left: 0;
+}

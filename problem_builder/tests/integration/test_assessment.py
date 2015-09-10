@@ -255,7 +255,6 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), mentoring)
         self.assert_persistent_elements_present(mentoring)
         if expected["max_attempts"] > 0 and expected["num_attempts"] < expected["max_attempts"]:
-            self.assertIn("Note: if you retake this assessment, only your final score counts.", mentoring.text)
             self.assertFalse(mentoring.find_elements_by_css_selector('.review-list'))
         elif extended_feedback:
             for q_type in ['correct', 'incorrect', 'partial']:
@@ -289,16 +288,14 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.review_link)
 
-    def assert_messages_text(self, mentoring, text):
-        messages = mentoring.find_element_by_css_selector('.assessment-messages')
-        self.assertEqual(messages.text, text)
-        self.assertTrue(messages.is_displayed())
+    def assert_message_text(self, mentoring, text):
+        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
+        self.assertEqual(message_wrapper.text, text)
+        self.assertTrue(message_wrapper.is_displayed())
 
-    def assert_messages_empty(self, mentoring):
-        messages = mentoring.find_element_by_css_selector('.assessment-messages')
-        self.assertEqual(messages.text, '')
-        self.assertFalse(messages.find_elements_by_xpath('./*'))
-        self.assertFalse(messages.is_displayed())
+    def assert_no_message_text(self, mentoring):
+        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
+        self.assertEqual(message_wrapper.text, '')
 
     def extended_feedback_checks(self, mentoring, controls, expected_results):
         # Multiple choice is third correctly answered question
@@ -358,14 +355,17 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.peek_at_review(mentoring, controls, expected_results, extended_feedback=extended_feedback)
 
         if max_attempts == 1:
-            self.assert_messages_empty(mentoring)
+            self.assert_message_text(mentoring, "Note: you have used all attempts. Continue to the next unit.")
             self.assert_disabled(controls.try_again)
             return
 
         # The on-assessment-review message is shown if attempts remain:
-        self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+        self.assert_message_text(mentoring, "Assessment additional feedback message text")
         self.assert_clickable(controls.try_again)
         controls.try_again.click()
+
+        self.wait_until_hidden(controls.try_again)
+        self.assert_no_message_text(mentoring)
 
         self.freeform_answer(
             1, mentoring, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
@@ -386,11 +386,61 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         else:
             self.assert_clickable(controls.try_again)
         if 1 <= max_attempts <= 2:
-            self.assert_messages_empty(mentoring)  # The on-assessment-review message is not shown if no attempts remain
+            self.assert_message_text(mentoring, "Note: you have used all attempts. Continue to the next unit.")
         else:
-            self.assert_messages_text(mentoring, "Assessment additional feedback message text")
+            self.assert_message_text(mentoring, "Assessment additional feedback message text")
         if extended_feedback:
             self.extended_feedback_checks(mentoring, controls, expected_results)
+
+    def test_review_tips(self):
+        params = {
+            "max_attempts": 3,
+            "extended_feedback": False,
+            "include_review_tips": True
+        }
+        mentoring, controls = self.load_assessment_scenario("assessment.xml", params)
+
+        # Get one question wrong and one partially wrong on attempt 1 of 3: ####################
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT)
+        self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
+        self.rating_question(3, mentoring, controls, "5 - Extremely good", CORRECT)
+        self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
+
+        # The review tips for MCQ 2 and the MRQ should be shown:
+        review_tips = mentoring.find_element_by_css_selector('.assessment-review-tips')
+        self.assertTrue(review_tips.is_displayed())
+        self.assertIn('You might consider reviewing the following items', review_tips.text)
+        self.assertIn('Take another look at', review_tips.text)
+        self.assertIn('Lesson 1', review_tips.text)
+        self.assertNotIn('Lesson 2', review_tips.text)  # This MCQ was correct
+        self.assertIn('Lesson 3', review_tips.text)
+        # The on-assessment-review message is also shown if attempts remain:
+        self.assert_message_text(mentoring, "Assessment additional feedback message text")
+
+        self.assert_clickable(controls.try_again)
+        controls.try_again.click()
+
+        # Get no questions wrong on attempt 2 of 3: ############################################
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT, saved_value='This is the answer')
+        self.single_choice_question(2, mentoring, controls, 'Yes', CORRECT)
+        self.rating_question(3, mentoring, controls, "5 - Extremely good", CORRECT)
+        user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
+        self.multiple_response_question(4, mentoring, controls, user_selection, CORRECT, last=True)
+
+        self.assert_message_text(mentoring, "Assessment additional feedback message text")
+        self.assertFalse(review_tips.is_displayed())
+
+        self.assert_clickable(controls.try_again)
+        controls.try_again.click()
+
+        # Get some questions wrong again on attempt 3 of 3:
+        self.freeform_answer(1, mentoring, controls, 'This is the answer', CORRECT, saved_value='This is the answer')
+        self.single_choice_question(2, mentoring, controls, 'Maybe not', INCORRECT)
+        self.rating_question(3, mentoring, controls, "1 - Not good at all", INCORRECT)
+        self.multiple_response_question(4, mentoring, controls, ("Its beauty",), PARTIAL, last=True)
+
+        # The review tips will not be shown because no attempts remain:
+        self.assertFalse(review_tips.is_displayed())
 
     def test_single_question_assessment(self):
         """
@@ -405,7 +455,11 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         }
 
         self.peek_at_review(mentoring, controls, expected_results)
-        self.assert_messages_empty(mentoring)
+        self.assert_message_text(
+            mentoring,
+            "Note: if you retake this assessment, only your final score counts. "
+            "If you would like to keep this score, please continue to the next unit."
+        )
 
         self.wait_until_clickable(controls.try_again)
         controls.try_again.click()
