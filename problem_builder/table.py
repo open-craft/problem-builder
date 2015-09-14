@@ -30,10 +30,11 @@ from xblock.fields import Scope, String, Boolean, Dict
 from xblock.fragment import Fragment
 
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
+from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlockWithPreviewMixin
 
 # Globals ###########################################################
-from problem_builder import AnswerRecapBlock
+
+from problem_builder.answer import AnswerRecapBlock
 from problem_builder.dashboard import ExportMixin
 from problem_builder.models import Share
 from problem_builder.sub_api import SubmittingXBlockMixin
@@ -51,7 +52,8 @@ def _(text):
 @XBlock.wants("user")
 @XBlock.wants("submissions")
 class MentoringTableBlock(
-        StudioEditableXBlockMixin, SubmittingXBlockMixin, StudioContainerXBlockMixin, ExportMixin, XBlock
+    StudioEditableXBlockMixin, SubmittingXBlockMixin, StudioContainerXBlockMixin, ExportMixin, XBlock,
+    XBlockWithPreviewMixin
 ):
     """
     Table-type display of information from mentoring blocks
@@ -59,6 +61,9 @@ class MentoringTableBlock(
     Used to present summary of information entered by the students in mentoring blocks.
     Supports different types of formatting through the `type` parameter.
     """
+    CATEGORY = 'pb-table'
+    STUDIO_LABEL = _(u"Answer Recap Table")
+
     display_name = String(
         display_name=_("Display name"),
         help=_("Title of the table"),

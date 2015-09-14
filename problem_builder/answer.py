@@ -30,9 +30,9 @@ from xblock.fields import Scope, Float, Integer, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin
+from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
-from .step import StepMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
 import uuid
 
 
@@ -49,7 +49,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class AnswerMixin(object):
+class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
@@ -114,19 +114,18 @@ class AnswerMixin(object):
         if not data.name:
             add_error(u"A Question ID is required.")
 
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
-
 
 @XBlock.needs("i18n")
-class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
+class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEditableXBlockMixin, XBlock):
     """
     A field where the student enters an answer
 
     Must be included as a child of a mentoring block. Answers are persisted as django model instances
     to make them searchable and referenceable across xblocks.
     """
+    CATEGORY = 'pb-answer'
+    STUDIO_LABEL = _(u"Long Answer")
+
     name = String(
         display_name=_("Question ID (name)"),
         help=_("The ID of this block. Should be unique unless you want the answer to be used in multiple places."),
@@ -273,6 +272,9 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
     A block that displays an answer previously entered by the student (read-only).
     """
+    CATEGORY = 'pb-answer-recap'
+    STUDIO_LABEL = _(u"Long Answer Recap")
+
     name = String(
         display_name=_("Question ID"),
         help=_("The ID of the question for which to display the student's answer."),

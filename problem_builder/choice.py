@@ -27,7 +27,9 @@ from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
-from xblockutils.studio_editable import StudioEditableXBlockMixin
+from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
+
+from problem_builder.mixins import XBlockWithTranslationServiceMixin
 
 
 # Make '_' a no-op so we can scrape strings
@@ -38,7 +40,7 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
+class ChoiceBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, XBlock):
     """
     Custom choice of an answer for a MCQ/MRQ
     """
@@ -55,10 +57,6 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlock):
         default="",
     )
     editable_fields = ('content', 'value')
-
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def display_name_with_default(self):

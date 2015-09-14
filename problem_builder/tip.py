@@ -30,6 +30,8 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
+from problem_builder.mixins import XBlockWithTranslationServiceMixin
+
 loader = ResourceLoader(__name__)
 
 
@@ -41,7 +43,7 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class TipBlock(StudioEditableXBlockMixin, XBlock):
+class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBlock):
     """
     Each choice can define a tip depending on selection
     """
@@ -72,10 +74,6 @@ class TipBlock(StudioEditableXBlockMixin, XBlock):
         default=''
     )
     editable_fields = ('values', 'content', 'width', 'height')
-
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
 
     @property
     def display_name_with_default(self):

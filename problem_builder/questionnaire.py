@@ -29,12 +29,12 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
+from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlockWithPreviewMixin
 
 from .choice import ChoiceBlock
 from .mentoring import MentoringBlock
 from .message import MentoringMessageBlock
-from .step import StepMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
 from .tip import TipBlock
 
 # Globals ###########################################################
@@ -50,7 +50,10 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, StepMixin, XBlock):
+class QuestionnaireAbstractBlock(
+    StudioEditableXBlockMixin, StudioContainerXBlockMixin, QuestionMixin, XBlock, XBlockWithPreviewMixin,
+    XBlockWithTranslationServiceMixin
+):
     """
     An abstract class used for MCQ/MRQ blocks
 
@@ -87,10 +90,6 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     )
     editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
     has_children = True
-
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
 
     @lazy
     def html_id(self):

@@ -1,9 +1,13 @@
 /* Display of url_name below content */
+.xblock[data-block-type=pb-mentoring-step] .url-name-footer,
+.xblock[data-block-type=pb-mentoring] .url-name-footer,
 .xblock[data-block-type=problem-builder] .url-name-footer,
 .xblock[data-block-type=mentoring] .url-name-footer {
   font-style: italic;
 }
 
+.xblock[data-block-type=pb-mentoring-step] .url-name-footer .url-name,
+.xblock[data-block-type=pb-mentoring] .url-name-footer .url-name,
 .xblock[data-block-type=problem-builder] .url-name-footer .url-name,
 .xblock[data-block-type=mentoring] .url-name-footer .url-name {
   margin: 0 10px;
@@ -11,6 +15,8 @@
 }
 
 /* Custom appearance for our "Add" buttons */
+.xblock[data-block-type=pb-mentoring-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
+.xblock[data-block-type=pb-mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
   width: 200px;
@@ -18,6 +24,10 @@
   line-height: 30px;
 }
 
+.xblock[data-block-type=pb-mentoring-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock[data-block-type=pb-mentoring-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
+.xblock[data-block-type=pb-mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock[data-block-type=pb-mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
 .xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
@@ -27,6 +37,7 @@
   cursor: default;
 }
 
+.xblock[data-block-type=pb-mentoring] .submission-message-help p,
 .xblock[data-block-type=problem-builder] .submission-message-help p {
 	border-top: 1px solid #ddd;
 	font-size: 0.85em;
