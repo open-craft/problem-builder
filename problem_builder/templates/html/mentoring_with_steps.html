@@ -1,0 +1,17 @@
+{% load i18n %}
+<div class="mentoring themed-xblock" data-step="{{ self.step }}">
+
+  {% if show_title and title %}
+  <div class="title">
+    <h2>{{ title }}</h2>
+  </div>
+  {% endif %}
+
+  <div class="assessment-question-block">
+    {{child_content|safe}}
+    <div class="submit">
+      <input type="button" class="input-next" value="Next Step" disabled="disabled" />
+    </div>
+  </div>
+
+</div>

@@ -865,15 +865,18 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                 fragment.add_frag_resources(child_fragment)
                 child_content += child_fragment.content
 
-        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
+        fragment.add_content(loader.render_template('templates/html/mentoring_with_steps.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,
             'child_content': child_content,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         self.include_theme_files(fragment)
+
+        fragment.initialize_js('MentoringWithStepsBlock')
 
         return fragment
 
