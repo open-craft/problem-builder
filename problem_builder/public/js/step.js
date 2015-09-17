@@ -1,6 +1,7 @@
 function MentoringStepBlock(runtime, element) {
 
     var children = runtime.children(element);
+    var submitXHR;
 
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
@@ -31,6 +32,25 @@ function MentoringStepBlock(runtime, element) {
                 }
             }
             return is_valid;
+        },
+
+        submit: function(result_handler) {
+            var handler_name = 'submit';
+            var data = {};
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child && child.name !== undefined && typeof(child[handler_name]) !== "undefined") {
+                    data[child.name.toString()] = child[handler_name]();
+                }
+            }
+            var handlerUrl = runtime.handlerUrl(element, handler_name);
+            if (submitXHR) {
+                submitXHR.abort();
+            }
+            submitXHR = $.post(handlerUrl, JSON.stringify(data))
+                .success(function(response) {
+                    result_handler(response);
+                });
         }
 
     };

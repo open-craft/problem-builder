@@ -18,12 +18,13 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import logging
+
 from lazy.lazy import lazy
 
 from xblock.core import XBlock
-from xblock.fields import String, Boolean, Scope
+from xblock.fields import String, List, Scope
 from xblock.fragment import Fragment
-from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
@@ -31,11 +32,12 @@ from xblockutils.studio_editable import (
 
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
-from problem_builder.mixins import EnumerableChildMixin
+from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
 from problem_builder.mrq import MRQBlock
 from problem_builder.table import MentoringTableBlock
 
 
+log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 
@@ -64,7 +66,7 @@ class HtmlBlockShim(object):
 @XBlock.needs('i18n')
 class MentoringStepBlock(
         StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
-        EnumerableChildMixin, XBlock
+        EnumerableChildMixin, StepParentMixin, XBlock
 ):
     """
     An XBlock for a step.
@@ -79,6 +81,11 @@ class MentoringStepBlock(
         help=_('Leave blank to use sequential numbering'),
         default="",
         scope=Scope.content
+    )
+    student_results = List(
+        # Store results of student choices.
+        default=[],
+        scope=Scope.user_state
     )
 
     editable_fields = ('display_name', 'show_title',)
@@ -104,13 +111,38 @@ class MentoringStepBlock(
             AnswerRecapBlock, MentoringTableBlock,
         ]
 
-    @property
-    def steps(self):
-        """ Get the usage_ids of all of this XBlock's children that are "Questions" """
-        from mixins import QuestionMixin
-        return [
-            _normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, QuestionMixin)
-        ]
+    @XBlock.json_handler
+    def submit(self, submissions, suffix=''):
+        log.info(u'Received submissions: {}'.format(submissions))
+
+        # Submit child blocks (questions) and gather results
+        submit_results = []
+        for child in self.get_steps():
+            if child.name and child.name in submissions:
+                submission = submissions[child.name]
+                child_result = child.submit(submission)
+                submit_results.append([child.name, child_result])
+                child.save() # FIXME: Is this necessary? Child blocks also save themselves ...
+
+        # Update results stored for this step
+        while self.student_results:
+            self.student_results.pop()
+        for result in submit_results:
+            self.student_results.append(result)
+
+        # Compute "answer status" for this step
+        if all(result[1]['status'] == 'correct' for result in submit_results):
+            completed = 'correct'
+        elif all(result[1]['status'] == 'incorrect' for result in submit_results):
+            completed = 'incorrect'
+        else:
+            completed = 'partial'
+
+        return {
+            'message': 'Success!',
+            'completed': completed,
+            'results': submit_results,
+        }
 
     def author_edit_view(self, context):
         """
