@@ -146,6 +146,10 @@ class MentoringStepBlock(
             'results': submit_results,
         }
 
+    def reset(self):
+        while self.student_results:
+            self.student_results.pop()
+
     def author_edit_view(self, context):
         """
         Add some HTML to the author view that allows authors to add child blocks.

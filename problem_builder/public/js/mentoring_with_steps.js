@@ -4,7 +4,7 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('pb-mentoring-step') > -1; }
     );
     var step = $('.mentoring', element).data('step');
-    var active_child, checkmark, submitDOM, nextDOM;
+    var active_child, checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;
 
     function isLastChild() {
         return (active_child === steps.length-1);
@@ -15,7 +15,6 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify(step+1))
             .success(function(response) {
                 step = response.step;
-                console.log('Step: ' + step);
             });
     }
 
@@ -36,6 +35,11 @@ function MentoringWithStepsBlock(runtime, element) {
 
         nextDOM.removeAttr("disabled");
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
+
+        if (isLastChild()) {
+            tryAgainDOM.removeAttr('disabled');
+            tryAgainDOM.show();
+        }
     }
 
     function submit() {
@@ -103,6 +107,27 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
+    function handleTryAgain(result) {
+        if (result.result !== 'success')
+            return;
+
+        active_child = -1;
+        displayNextChild();
+        tryAgainDOM.hide();
+        submitDOM.show();
+        if (! isLastChild()) {
+            nextDOM.show();
+        }
+    }
+
+    function tryAgain() {
+        var handlerUrl = runtime.handlerUrl(element, 'try_again');
+        if (submitXHR) {
+            submitXHR.abort();
+        }
+        submitXHR = $.post(handlerUrl, JSON.stringify({})).success(handleTryAgain);
+    }
+
     function initXBlockView() {
         checkmark = $('.assessment-checkmark', element);
 
@@ -113,6 +138,9 @@ function MentoringWithStepsBlock(runtime, element) {
         nextDOM = $(element).find('.submit .input-next');
         nextDOM.bind('click', displayNextChild);
         nextDOM.show();
+
+        tryAgainDOM = $(element).find('.submit .input-try-again');
+        tryAgainDOM.bind('click', tryAgain);
 
         var options = {
             onChange: onChange

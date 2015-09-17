@@ -916,6 +916,19 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'step': self.step
         }
 
+    @XBlock.json_handler
+    def try_again(self, data, suffix=''):
+        self.step = 0
+
+        step_blocks = [self.runtime.get_block(child_id) for child_id in self.steps]
+
+        for step in step_blocks:
+            step.reset()
+
+        return {
+            'result': 'success'
+        }
+
     def author_edit_view(self, context):
         """
         Add some HTML to the author view that allows authors to add child blocks.
