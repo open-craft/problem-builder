@@ -4,7 +4,7 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('pb-mentoring-step') > -1; }
     );
     var active_child = -1;
-    var nextDOM;
+    var submitDOM, nextDOM;
 
     function isLastChild() {
         return (active_child === steps.length-1);
@@ -22,6 +22,7 @@ function MentoringWithStepsBlock(runtime, element) {
         if (isLastChild()) {
             nextDOM.attr('disabled', 'disabled');
         }
+        validateXBlock();
     }
 
     function findNextChild() {
@@ -31,14 +32,45 @@ function MentoringWithStepsBlock(runtime, element) {
         $(child.element).show();
     }
 
-    function initXBlockView() {
+    function onChange() {
+        validateXBlock();
+    }
 
-        displayNextChild();
+    function validateXBlock() {
+        var is_valid = true;
+        var child = steps[active_child];
+        if (child) {
+            is_valid = child['validate']();
+        }
+        if (!is_valid) {
+            submitDOM.attr('disabled', 'disabled');
+        } else {
+            submitDOM.removeAttr('disabled');
+        }
+    }
+
+    function initSteps(options) {
+        for (var i=0; i < steps.length; i++) {
+            var step = steps[i];
+            step['initChildren'](options);
+        }
+    }
+
+    function initXBlockView() {
+        submitDOM = $(element).find('.submit .input-main');
+        submitDOM.show();
 
         nextDOM = $(element).find('.submit .input-next');
         nextDOM.bind('click', displayNextChild);
         nextDOM.removeAttr('disabled');
         nextDOM.show();
+
+        var options = {
+            onChange: onChange
+        };
+        initSteps(options);
+
+        displayNextChild();
     }
 
     initXBlockView();

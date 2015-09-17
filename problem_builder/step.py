@@ -160,4 +160,7 @@ class MentoringStepBlock(
             'child_contents': child_contents,
         }))
 
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step.js'))
+        fragment.initialize_js('MentoringStepBlock')
+
         return fragment
