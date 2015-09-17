@@ -3,14 +3,27 @@ function MentoringWithStepsBlock(runtime, element) {
     var steps = runtime.children(element).filter(
         function(c) { return c.element.className.indexOf('pb-mentoring-step') > -1; }
     );
-    var active_child = -1;
-    var checkmark, submitDOM, nextDOM;
+    var step = $('.mentoring', element).data('step');
+    var active_child, checkmark, submitDOM, nextDOM;
 
     function isLastChild() {
         return (active_child === steps.length-1);
     }
 
+    function updateStep() {
+        var handlerUrl = runtime.handlerUrl(element, 'update_step');
+        $.post(handlerUrl, JSON.stringify(step+1))
+            .success(function(response) {
+                step = response.step;
+                console.log('Step: ' + step);
+            });
+    }
+
     function handleResults(response) {
+        // Update step so next step is shown on page reload (even if user does not click "Next Step")
+        updateStep();
+
+        // Update UI
         if (response.completed === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
         } else if (response.completed === 'partial') {
@@ -106,6 +119,8 @@ function MentoringWithStepsBlock(runtime, element) {
         };
         initSteps(options);
 
+        active_child = step;
+        active_child -= 1;
         displayNextChild();
     }
 

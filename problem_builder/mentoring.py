@@ -834,6 +834,14 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         scope=Scope.settings
     )
 
+    # User state
+    step = Integer(
+        # Keep track of the student progress.
+        default=0,
+        scope=Scope.user_state,
+        enforce_type=True
+    )
+
     editable_fields = ('display_name',)
 
     @lazy
@@ -899,6 +907,14 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             NestedXBlockSpec(MaxAttemptsReachedMentoringMessageShim, boilerplate='max_attempts_reached'),
             NestedXBlockSpec(OnAssessmentReviewMentoringMessageShim, boilerplate='on-assessment-review'),
         ]
+
+    @XBlock.json_handler
+    def update_step(self, step, suffix=''):
+        if step < len(self.steps):
+            self.step = step
+        return {
+            'step': self.step
+        }
 
     def author_edit_view(self, context):
         """

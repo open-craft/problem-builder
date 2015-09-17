@@ -75,13 +75,15 @@ class MentoringStepBlock(
     STUDIO_LABEL = _(u"Mentoring Step")
     CATEGORY = 'pb-mentoring-step'
 
-    # Fields:
+    # Settings
     display_name = String(
         display_name=_("Step Title"),
         help=_('Leave blank to use sequential numbering'),
         default="",
         scope=Scope.content
     )
+
+    # User state
     student_results = List(
         # Store results of student choices.
         default=[],
