@@ -2,7 +2,7 @@ import unittest
 import ddt
 from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
-from problem_builder import MentoringBlock
+from problem_builder import MentoringBlock, MentoringMessageBlock, MCQBlock
 from problem_builder.mentoring import _default_theme_config
 
 
@@ -139,3 +139,33 @@ class TestMentoringBlockTheming(unittest.TestCase):
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.author_preview_view({})
             patched_include_theme_files.assert_called_with(fragment)
+
+
+class TestMentoringBlockJumpToIds(unittest.TestCase):
+    def setUp(self):
+        self.service_mock = Mock()
+        self.runtime_mock = Mock()
+        self.runtime_mock.service = Mock(return_value=self.service_mock)
+        self.block = MentoringBlock(self.runtime_mock, DictFieldData({'mode': 'assessment'}), Mock())
+        self.block.children = ['dummy_id']
+        self.message_block = MentoringMessageBlock(
+            self.runtime_mock, DictFieldData({'type': 'bogus', 'content': 'test'}), Mock()
+        )
+        self.block.runtime.replace_jump_to_id_urls = lambda x: x.replace('test', 'replaced-url')
+
+    def test_get_message_content(self):
+        with patch('problem_builder.mentoring.child_isinstance') as mock_child_isinstance:
+            mock_child_isinstance.return_value = True
+            self.runtime_mock.get_block = Mock()
+            self.runtime_mock.get_block.return_value = self.message_block
+            self.assertEqual(self.block.get_message_content('bogus'), 'replaced-url')
+
+    def test_get_tip_content(self):
+        self.mcq_block = MCQBlock(self.runtime_mock, DictFieldData({'name': 'test_mcq'}), Mock())
+        self.mcq_block.get_review_tip = Mock()
+        self.mcq_block.get_review_tip.return_value = self.message_block.content
+        self.block.steps = []
+        self.block.get_steps = Mock()
+        self.block.get_steps.return_value = [self.mcq_block]
+        self.block.student_results = {'test_mcq': {'status': 'incorrect'}}
+        self.assertEqual(self.block.review_tips, ['replaced-url'])
