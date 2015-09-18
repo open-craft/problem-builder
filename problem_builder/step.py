@@ -124,7 +124,7 @@ class MentoringStepBlock(
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
                 submit_results.append([child.name, child_result])
-                child.save() # FIXME: Is this necessary? Child blocks also save themselves ...
+                child.save()
 
         # Update results stored for this step
         while self.student_results:
