@@ -58,6 +58,12 @@ def _normalize_id(key):
     return key
 
 
+class Correctness(object):
+    CORRECT = 'correct'
+    PARTIAL = 'partial'
+    INCORRECT = 'incorrect'
+
+
 class HtmlBlockShim(object):
     CATEGORY = 'html'
     STUDIO_LABEL = _(u"HTML")
@@ -127,18 +133,17 @@ class MentoringStepBlock(
                 child.save()
 
         # Update results stored for this step
-        while self.student_results:
-            self.student_results.pop()
+        self.reset()
         for result in submit_results:
             self.student_results.append(result)
 
         # Compute "answer status" for this step
         if all(result[1]['status'] == 'correct' for result in submit_results):
-            completed = 'correct'
+            completed = Correctness.CORRECT
         elif all(result[1]['status'] == 'incorrect' for result in submit_results):
-            completed = 'incorrect'
+            completed = Correctness.INCORRECT
         else:
-            completed = 'partial'
+            completed = Correctness.PARTIAL
 
         return {
             'message': 'Success!',

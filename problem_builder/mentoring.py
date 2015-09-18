@@ -835,7 +835,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     )
 
     # User state
-    step = Integer(
+    active_step = Integer(
         # Keep track of the student progress.
         default=0,
         scope=Scope.user_state,
@@ -862,22 +862,23 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     def student_view(self, context):
         fragment = Fragment()
-        child_content = u""
+        children_contents = []
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+                child_content = u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
             elif not isinstance(child, MentoringMessageBlock):
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
                 fragment.add_frag_resources(child_fragment)
-                child_content += child_fragment.content
+                child_content = child_fragment.content
+            children_contents.append(child_content)
 
         fragment.add_content(loader.render_template('templates/html/mentoring_with_steps.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,
-            'child_content': child_content,
+            'children_contents': children_contents,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
@@ -909,16 +910,16 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         ]
 
     @XBlock.json_handler
-    def update_step(self, step, suffix=''):
-        if step < len(self.steps):
-            self.step = step
+    def update_active_step(self, new_value, suffix=''):
+        if new_value < len(self.steps):
+            self.active_step = new_value
         return {
-            'step': self.step
+            'active_step': self.active_step
         }
 
     @XBlock.json_handler
     def try_again(self, data, suffix=''):
-        self.step = 0
+        self.active_step = 0
 
         step_blocks = [self.runtime.get_block(child_id) for child_id in self.steps]
 
@@ -926,7 +927,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             step.reset()
 
         return {
-            'result': 'success'
+            'active_step': self.active_step
         }
 
     def author_edit_view(self, context):

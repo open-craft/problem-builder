@@ -3,24 +3,24 @@ function MentoringWithStepsBlock(runtime, element) {
     var steps = runtime.children(element).filter(
         function(c) { return c.element.className.indexOf('pb-mentoring-step') > -1; }
     );
-    var step = $('.mentoring', element).data('step');
-    var active_child, checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;
+    var activeStep = $('.mentoring', element).data('active-step');
+    var checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;
 
-    function isLastChild() {
-        return (active_child === steps.length-1);
+    function isLastStep() {
+        return (activeStep === steps.length-1);
     }
 
-    function updateStep() {
-        var handlerUrl = runtime.handlerUrl(element, 'update_step');
-        $.post(handlerUrl, JSON.stringify(step+1))
+    function updateActiveStep(newValue) {
+        var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
+        $.post(handlerUrl, JSON.stringify(newValue))
             .success(function(response) {
-                step = response.step;
+                activeStep = response.active_step;
             });
     }
 
     function handleResults(response) {
-        // Update step so next step is shown on page reload (even if user does not click "Next Step")
-        updateStep();
+        // Update active step so next step is shown on page reload (even if user does not click "Next Step")
+        updateActiveStep(activeStep+1);
 
         // Update UI
         if (response.completed === 'correct') {
@@ -36,16 +36,16 @@ function MentoringWithStepsBlock(runtime, element) {
         nextDOM.removeAttr("disabled");
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
 
-        if (isLastChild()) {
+        if (isLastStep()) {
             tryAgainDOM.removeAttr('disabled');
             tryAgainDOM.show();
         }
     }
 
     function submit() {
-        // We do not handle submissions at this level, so just forward to "submit" method of current step
-        var child = steps[active_child];
-        child['submit'](handleResults);
+        // We do not handle submissions at this level, so just forward to "submit" method of active step
+        var step = steps[activeStep];
+        step.submit(handleResults);
     }
 
     function hideAllSteps() {
@@ -61,23 +61,21 @@ function MentoringWithStepsBlock(runtime, element) {
         hideAllSteps();
     }
 
-    function displayNextChild() {
+    function updateDisplay() {
         cleanAll();
-        findNextChild();
+        showActiveStep();
         nextDOM.attr('disabled', 'disabled');
         validateXBlock();
     }
 
-    function findNextChild() {
-        // find the next real child block to display. HTMLBlock are always displayed
-        ++active_child;
-        var child = steps[active_child];
-        $(child.element).show();
+    function showActiveStep() {
+        var step = steps[activeStep];
+        $(step.element).show();
     }
 
     function onChange() {
         // We do not allow users to modify answers belonging to a step after submitting them:
-        // Once an answer has been submitted (next button is enabled),
+        // Once an answer has been submitted ("Next Step" button is enabled),
         // start ignoring changes to the answer.
         if (nextDOM.attr('disabled')) {
             validateXBlock();
@@ -85,17 +83,17 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function validateXBlock() {
-        var is_valid = true;
-        var child = steps[active_child];
-        if (child) {
-            is_valid = child['validate']();
+        var isValid = true;
+        var step = steps[activeStep];
+        if (step) {
+            isValid = step.validate();
         }
-        if (!is_valid) {
+        if (!isValid) {
             submitDOM.attr('disabled', 'disabled');
         } else {
             submitDOM.removeAttr('disabled');
         }
-        if (isLastChild()) {
+        if (isLastStep()) {
             nextDOM.hide();
         }
     }
@@ -103,19 +101,16 @@ function MentoringWithStepsBlock(runtime, element) {
     function initSteps(options) {
         for (var i=0; i < steps.length; i++) {
             var step = steps[i];
-            step['initChildren'](options);
+            step.initChildren(options);
         }
     }
 
     function handleTryAgain(result) {
-        if (result.result !== 'success')
-            return;
-
-        active_child = -1;
-        displayNextChild();
+        activeStep = result.active_step;
+        updateDisplay();
         tryAgainDOM.hide();
         submitDOM.show();
-        if (! isLastChild()) {
+        if (! isLastStep()) {
             nextDOM.show();
         }
     }
@@ -132,24 +127,22 @@ function MentoringWithStepsBlock(runtime, element) {
         checkmark = $('.assessment-checkmark', element);
 
         submitDOM = $(element).find('.submit .input-main');
-        submitDOM.bind('click', submit);
+        submitDOM.on('click', submit);
         submitDOM.show();
 
         nextDOM = $(element).find('.submit .input-next');
-        nextDOM.bind('click', displayNextChild);
+        nextDOM.on('click', updateDisplay);
         nextDOM.show();
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
-        tryAgainDOM.bind('click', tryAgain);
+        tryAgainDOM.on('click', tryAgain);
 
         var options = {
             onChange: onChange
         };
         initSteps(options);
 
-        active_child = step;
-        active_child -= 1;
-        displayNextChild();
+        updateDisplay();
     }
 
     initXBlockView();

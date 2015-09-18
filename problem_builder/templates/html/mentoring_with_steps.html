@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="mentoring themed-xblock" data-step="{{ self.step }}">
+<div class="mentoring themed-xblock" data-active-step="{{ self.active_step }}">
 
   {% if show_title and title %}
   <div class="title">
@@ -8,7 +8,11 @@
   {% endif %}
 
   <div class="assessment-question-block">
-    {{child_content|safe}}
+
+    {% for child_content in children_contents %}
+      {{ child_content|safe }}
+    {% endfor %}
+
     <div class="submit">
       <span class="assessment-checkmark fa icon-2x"></span>
       <input type="button" class="input-main" value="Submit" disabled="disabled" />
