@@ -834,6 +834,14 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         scope=Scope.settings
     )
 
+    # User state
+    active_step = Integer(
+        # Keep track of the student progress.
+        default=0,
+        scope=Scope.user_state,
+        enforce_type=True
+    )
+
     editable_fields = ('display_name',)
 
     @lazy
@@ -854,26 +862,30 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     def student_view(self, context):
         fragment = Fragment()
-        child_content = u""
+        children_contents = []
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+                child_content = u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
             elif not isinstance(child, MentoringMessageBlock):
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
                 fragment.add_frag_resources(child_fragment)
-                child_content += child_fragment.content
+                child_content = child_fragment.content
+            children_contents.append(child_content)
 
-        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
+        fragment.add_content(loader.render_template('templates/html/mentoring_with_steps.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,
-            'child_content': child_content,
+            'children_contents': children_contents,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         self.include_theme_files(fragment)
+
+        fragment.initialize_js('MentoringWithStepsBlock')
 
         return fragment
 
@@ -896,6 +908,27 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             NestedXBlockSpec(MaxAttemptsReachedMentoringMessageShim, boilerplate='max_attempts_reached'),
             NestedXBlockSpec(OnAssessmentReviewMentoringMessageShim, boilerplate='on-assessment-review'),
         ]
+
+    @XBlock.json_handler
+    def update_active_step(self, new_value, suffix=''):
+        if new_value < len(self.steps):
+            self.active_step = new_value
+        return {
+            'active_step': self.active_step
+        }
+
+    @XBlock.json_handler
+    def try_again(self, data, suffix=''):
+        self.active_step = 0
+
+        step_blocks = [self.runtime.get_block(child_id) for child_id in self.steps]
+
+        for step in step_blocks:
+            step.reset()
+
+        return {
+            'active_step': self.active_step
+        }
 
     def author_edit_view(self, context):
         """
