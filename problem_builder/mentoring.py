@@ -469,6 +469,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             if result and result.get('status') != 'correct':
                 # The student got this wrong. Check if there is a review tip to show.
                 tip_html = child.get_review_tip()
+                if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                    tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
                 if tip_html:
                     review_tips.append(tip_html)
         return review_tips
@@ -746,7 +748,10 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             if child_isinstance(self, child_id, MentoringMessageBlock):
                 child = self.runtime.get_block(child_id)
                 if child.type == message_type:
-                    return child.content
+                    content = child.content
+                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                        content = self.runtime.replace_jump_to_id_urls(content)
+                    return content
         if or_default:
             # Return the default value since no custom message is set.
             # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
