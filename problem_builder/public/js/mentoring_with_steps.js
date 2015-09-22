@@ -14,6 +14,10 @@ function MentoringWithStepsBlock(runtime, element) {
         return (activeStep === -1);
     }
 
+    function reviewStepPresent() {
+        return reviewStep.length > 0;
+    }
+
     function updateActiveStep(newValue) {
         var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
         $.post(handlerUrl, JSON.stringify(newValue))
@@ -41,7 +45,12 @@ function MentoringWithStepsBlock(runtime, element) {
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
 
         if (isLastStep()) {
-            reviewDOM.removeAttr('disabled');
+            if (reviewStepPresent()) {
+                reviewDOM.removeAttr('disabled');
+            } else {
+                tryAgainDOM.removeAttr('disabled');
+                tryAgainDOM.show();
+            }
         }
     }
 
@@ -72,7 +81,7 @@ function MentoringWithStepsBlock(runtime, element) {
             showActiveStep();
             validateXBlock();
             nextDOM.attr('disabled', 'disabled');
-            if (isLastStep()) {
+            if (isLastStep() && reviewStepPresent()) {
                 reviewDOM.show();
             }
         }
