@@ -4,7 +4,7 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
     var activeStep = $('.mentoring', element).data('active-step');
-    var checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;
+    var reviewStep, checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -124,6 +124,9 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function initXBlockView() {
+        reviewStep = $('.sb-review-step', element);
+        reviewStep.hide();
+
         checkmark = $('.assessment-checkmark', element);
 
         submitDOM = $(element).find('.submit .input-main');
