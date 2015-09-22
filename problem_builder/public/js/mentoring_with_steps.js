@@ -1,7 +1,7 @@
 function MentoringWithStepsBlock(runtime, element) {
 
     var steps = runtime.children(element).filter(
-        function(c) { return c.element.className.indexOf('pb-mentoring-step') > -1; }
+        function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
     var activeStep = $('.mentoring', element).data('active-step');
     var checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;

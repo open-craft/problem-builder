@@ -79,7 +79,7 @@ class MentoringStepBlock(
     """
     CAPTION = _(u"Step")
     STUDIO_LABEL = _(u"Mentoring Step")
-    CATEGORY = 'pb-mentoring-step'
+    CATEGORY = 'sb-step'
 
     # Settings
     display_name = String(
