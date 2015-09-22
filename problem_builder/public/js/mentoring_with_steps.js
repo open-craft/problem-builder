@@ -84,6 +84,7 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewStep.show();
         submitDOM.hide();
         nextDOM.hide();
+        reviewDOM.hide();
         tryAgainDOM.removeAttr('disabled');
         tryAgainDOM.show();
     }
@@ -127,7 +128,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showGrade() {
         cleanAll();
-        reviewStep.show();
+        showReviewStep();
     }
 
     function handleTryAgain(result) {
