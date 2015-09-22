@@ -10,6 +10,10 @@ function MentoringWithStepsBlock(runtime, element) {
         return (activeStep === steps.length-1);
     }
 
+    function atReviewStep() {
+        return (activeStep === -1);
+    }
+
     function updateActiveStep(newValue) {
         var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
         $.post(handlerUrl, JSON.stringify(newValue))
@@ -64,12 +68,24 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function updateDisplay() {
         cleanAll();
-        showActiveStep();
-        validateXBlock();
-        nextDOM.attr('disabled', 'disabled');
-        if (isLastStep()) {
-            reviewDOM.show();
+        if (atReviewStep()) {
+            showReviewStep();
+        } else {
+            showActiveStep();
+            validateXBlock();
+            nextDOM.attr('disabled', 'disabled');
+            if (isLastStep()) {
+                reviewDOM.show();
+            }
         }
+    }
+
+    function showReviewStep() {
+        reviewStep.show();
+        submitDOM.hide();
+        nextDOM.hide();
+        tryAgainDOM.removeAttr('disabled');
+        tryAgainDOM.show();
     }
 
     function showActiveStep() {

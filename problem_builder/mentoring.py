@@ -865,6 +865,11 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             child_isinstance(self, child_id, MentoringStepBlock)
         ]
 
+    @property
+    def has_review_step(self):
+        from .step import ReviewStepBlock
+        return any(child_isinstance(self, child_id, ReviewStepBlock) for child_id in self.children)
+
     def student_view(self, context):
         fragment = Fragment()
         children_contents = []
@@ -919,6 +924,9 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     def update_active_step(self, new_value, suffix=''):
         if new_value < len(self.steps):
             self.active_step = new_value
+        elif new_value == len(self.steps):
+            if self.has_review_step:
+                self.active_step = -1
         return {
             'active_step': self.active_step
         }
