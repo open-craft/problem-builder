@@ -42,8 +42,6 @@ function MentoringWithStepsBlock(runtime, element) {
 
         if (isLastStep()) {
             reviewDOM.removeAttr('disabled');
-            tryAgainDOM.removeAttr('disabled');
-            tryAgainDOM.show();
         }
     }
 
