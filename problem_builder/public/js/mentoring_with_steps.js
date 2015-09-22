@@ -109,9 +109,15 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
+    function showGrade() {
+        cleanAll();
+        reviewStep.show();
+    }
+
     function handleTryAgain(result) {
         activeStep = result.active_step;
         updateDisplay();
+        reviewStep.hide();
         tryAgainDOM.hide();
         submitDOM.show();
         if (! isLastStep()) {
@@ -143,6 +149,7 @@ function MentoringWithStepsBlock(runtime, element) {
         nextDOM.show();
 
         reviewDOM = $(element).find('.submit .input-review');
+        reviewDOM.on('click', showGrade);
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
         tryAgainDOM.on('click', tryAgain);
