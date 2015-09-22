@@ -4,7 +4,7 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
     var activeStep = $('.mentoring', element).data('active-step');
-    var reviewStep, checkmark, submitDOM, nextDOM, tryAgainDOM, submitXHR;
+    var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM, submitXHR;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -37,6 +37,7 @@ function MentoringWithStepsBlock(runtime, element) {
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
 
         if (isLastStep()) {
+            reviewDOM.removeAttr('disabled');
             tryAgainDOM.removeAttr('disabled');
             tryAgainDOM.show();
         }
@@ -64,8 +65,11 @@ function MentoringWithStepsBlock(runtime, element) {
     function updateDisplay() {
         cleanAll();
         showActiveStep();
-        nextDOM.attr('disabled', 'disabled');
         validateXBlock();
+        nextDOM.attr('disabled', 'disabled');
+        if (isLastStep()) {
+            reviewDOM.show();
+        }
     }
 
     function showActiveStep() {
@@ -112,6 +116,7 @@ function MentoringWithStepsBlock(runtime, element) {
         submitDOM.show();
         if (! isLastStep()) {
             nextDOM.show();
+            reviewDOM.hide();
         }
     }
 
@@ -136,6 +141,8 @@ function MentoringWithStepsBlock(runtime, element) {
         nextDOM = $(element).find('.submit .input-next');
         nextDOM.on('click', updateDisplay);
         nextDOM.show();
+
+        reviewDOM = $(element).find('.submit .input-review');
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
         tryAgainDOM.on('click', tryAgain);
