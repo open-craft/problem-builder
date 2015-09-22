@@ -1,5 +1,5 @@
 from .mentoring import MentoringBlock, MentoringWithExplicitStepsBlock
-from .step import MentoringStepBlock
+from .step import MentoringStepBlock, ReviewStepBlock
 from .answer import AnswerBlock, AnswerRecapBlock
 from .choice import ChoiceBlock
 from .dashboard import DashboardBlock

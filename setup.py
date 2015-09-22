@@ -43,6 +43,7 @@ BLOCKS = [
     'problem-builder = problem_builder:MentoringBlock',
     'step-builder = problem_builder:MentoringWithExplicitStepsBlock',
     'sb-step = problem_builder:MentoringStepBlock',
+    'sb-review-step = problem_builder:ReviewStepBlock',
 
     'pb-table = problem_builder:MentoringTableBlock',
     'pb-column = problem_builder:MentoringTableColumn',

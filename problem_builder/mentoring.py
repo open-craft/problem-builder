@@ -905,9 +905,10 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
         instances
         """
-        from .step import MentoringStepBlock  # Import here to avoid circular dependency
+        from .step import MentoringStepBlock, ReviewStepBlock  # Import here to avoid circular dependency
         return [
             MentoringStepBlock,
+            ReviewStepBlock,
             NestedXBlockSpec(CompletedMentoringMessageShim, boilerplate='completed'),
             NestedXBlockSpec(IncompleteMentoringMessageShim, boilerplate='incomplete'),
             NestedXBlockSpec(MaxAttemptsReachedMentoringMessageShim, boilerplate='max_attempts_reached'),

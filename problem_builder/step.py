@@ -207,3 +207,28 @@ class MentoringStepBlock(
         fragment.initialize_js('MentoringStepBlock')
 
         return fragment
+
+
+class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
+    """ A dedicated step for reviewing results for a mentoring block """
+    CATEGORY = 'sb-review-step'
+    STUDIO_LABEL = _("Review Step")
+
+    display_name = String(
+        default="Review Step"
+    )
+
+    def mentoring_view(self, context=None):
+        """ Mentoring View """
+        return self._render_view(context)
+
+    def student_view(self, context=None):
+        """ Student View """
+        return self._render_view(context)
+
+    def _render_view(self, context):
+        fragment = Fragment()
+        fragment.add_content(loader.render_template('templates/html/review_step.html', {
+            'self': self,
+        }))
+        return fragment
