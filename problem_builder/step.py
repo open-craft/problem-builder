@@ -103,6 +103,11 @@ class MentoringStepBlock(
         return self.get_parent().steps
 
     @property
+    def is_last_step(self):
+        parent = self.get_parent()
+        return self.step_number == len(parent.steps)
+
+    @property
     def allowed_nested_blocks(self):
         """
         Returns a list of allowed nested XBlocks. Each item can be either
@@ -149,6 +154,7 @@ class MentoringStepBlock(
             'message': 'Success!',
             'completed': completed,
             'results': submit_results,
+            'update_attempts': self.is_last_step
         }
 
     def reset(self):

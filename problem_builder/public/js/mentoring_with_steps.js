@@ -26,9 +26,17 @@ function MentoringWithStepsBlock(runtime, element) {
             });
     }
 
+    function updateNumAttempts() {
+        var handlerUrl = runtime.handlerUrl(element, 'update_num_attempts');
+        $.post(handlerUrl, JSON.stringify({}));
+    }
+
     function handleResults(response) {
         // Update active step so next step is shown on page reload (even if user does not click "Next Step")
         updateActiveStep(activeStep+1);
+        if (response.update_attempts) {
+            updateNumAttempts();
+        }
 
         // Update UI
         if (response.completed === 'correct') {
