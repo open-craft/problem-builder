@@ -4,7 +4,8 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
     var activeStep = $('.mentoring', element).data('active-step');
-    var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM, assessmentMessageDOM, submitXHR;
+    var attemptsTemplate = _.template($('#xblock-attempts-template').html());
+    var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM, assessmentMessageDOM, attemptsDOM, submitXHR;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -80,6 +81,7 @@ function MentoringWithStepsBlock(runtime, element) {
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
         hideAllSteps();
         assessmentMessageDOM.html('');
+        attemptsDOM.html('');
     }
 
     function updateDisplay() {
@@ -87,6 +89,7 @@ function MentoringWithStepsBlock(runtime, element) {
         if (atReviewStep()) {
             showAssessmentMessage();
             showReviewStep();
+            showAttempts();
         } else {
             showActiveStep();
             validateXBlock();
@@ -109,6 +112,13 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewDOM.hide();
         tryAgainDOM.removeAttr('disabled');
         tryAgainDOM.show();
+    }
+
+    function showAttempts() {
+        var data = attemptsDOM.data();
+        if (data.max_attempts > 0) {
+            attemptsDOM.html(attemptsTemplate(data));
+        } // Don't show attempts if unlimited attempts available (max_attempts === 0)
     }
 
     function showActiveStep() {
@@ -152,6 +162,7 @@ function MentoringWithStepsBlock(runtime, element) {
         cleanAll();
         showAssessmentMessage();
         showReviewStep();
+        showAttempts();
     }
 
     function handleTryAgain(result) {
@@ -195,6 +206,7 @@ function MentoringWithStepsBlock(runtime, element) {
         tryAgainDOM.on('click', tryAgain);
 
         assessmentMessageDOM = $('.assessment-message', element);
+        attemptsDOM = $('.attempts', element);
 
         var options = {
             onChange: onChange
