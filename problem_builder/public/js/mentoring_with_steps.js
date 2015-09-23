@@ -29,7 +29,10 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function updateNumAttempts() {
         var handlerUrl = runtime.handlerUrl(element, 'update_num_attempts');
-        $.post(handlerUrl, JSON.stringify({}));
+        $.post(handlerUrl, JSON.stringify({}))
+            .success(function(response) {
+                attemptsDOM.data('num_attempts', response.num_attempts);
+            });
     }
 
     function handleResults(response) {
@@ -163,6 +166,11 @@ function MentoringWithStepsBlock(runtime, element) {
         showAssessmentMessage();
         showReviewStep();
         showAttempts();
+        // Disable "Try again" button if no attempts left
+        var data = attemptsDOM.data();
+        if (data.max_attempts > 0 && data.num_attempts >= data.max_attempts) {
+            tryAgainDOM.attr("disabled", "disabled");
+        }
     }
 
     function handleTryAgain(result) {

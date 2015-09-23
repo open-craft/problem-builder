@@ -980,7 +980,9 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     @XBlock.json_handler
     def update_num_attempts(self, data, suffix=''):
         self.num_attempts += 1
-        return {}
+        return {
+            'num_attempts': self.num_attempts
+        }
 
     @XBlock.json_handler
     def try_again(self, data, suffix=''):
