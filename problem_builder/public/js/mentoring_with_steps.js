@@ -98,6 +98,7 @@ function MentoringWithStepsBlock(runtime, element) {
             validateXBlock();
             nextDOM.attr('disabled', 'disabled');
             if (isLastStep() && reviewStepPresent()) {
+                reviewDOM.attr('disabled', 'disabled');
                 reviewDOM.show();
             }
         }
