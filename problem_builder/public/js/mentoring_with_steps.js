@@ -19,6 +19,14 @@ function MentoringWithStepsBlock(runtime, element) {
         return reviewStep.length > 0;
     }
 
+    function someAttemptsLeft() {
+        var data = attemptsDOM.data();
+        if (data.max_attempts === 0) { // Unlimited number of attempts available
+            return true;
+        }
+        return (data.num_attempts < data.max_attempts);
+    }
+
     function updateActiveStep(newValue) {
         var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
         $.post(handlerUrl, JSON.stringify(newValue))
@@ -60,8 +68,12 @@ function MentoringWithStepsBlock(runtime, element) {
             if (reviewStepPresent()) {
                 reviewDOM.removeAttr('disabled');
             } else {
-                tryAgainDOM.removeAttr('disabled');
-                tryAgainDOM.show();
+                if (someAttemptsLeft()) {
+                    tryAgainDOM.removeAttr('disabled');
+                    tryAgainDOM.show();
+                } else {
+                    showAttempts();
+                }
             }
         }
     }
@@ -168,8 +180,7 @@ function MentoringWithStepsBlock(runtime, element) {
         showReviewStep();
         showAttempts();
         // Disable "Try again" button if no attempts left
-        var data = attemptsDOM.data();
-        if (data.max_attempts > 0 && data.num_attempts >= data.max_attempts) {
+        if (!someAttemptsLeft()) {
             tryAgainDOM.attr("disabled", "disabled");
         }
     }
