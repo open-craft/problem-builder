@@ -225,7 +225,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     display_name = String(
         display_name=_("Title (Display name)"),
         help=_("Title to display"),
-        default=_("Mentoring Questions"),
+        default=_("Problem Builder"),
         scope=Scope.settings
     )
     feedback_label = String(
@@ -850,7 +850,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     display_name = String(
         display_name=_("Title (display name)"),
         help=_("Title to display"),
-        default=_("Mentoring Questions (with explicit steps)"),
+        default=_("Step Builder"),
         scope=Scope.settings
     )
 
