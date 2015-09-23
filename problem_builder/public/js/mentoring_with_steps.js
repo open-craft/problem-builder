@@ -4,7 +4,7 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
     var activeStep = $('.mentoring', element).data('active-step');
-    var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM, submitXHR;
+    var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM, assessmentMessageDOM, submitXHR;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -71,11 +71,13 @@ function MentoringWithStepsBlock(runtime, element) {
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
         hideAllSteps();
+        assessmentMessageDOM.html('');
     }
 
     function updateDisplay() {
         cleanAll();
         if (atReviewStep()) {
+            showAssessmentMessage();
             showReviewStep();
         } else {
             showActiveStep();
@@ -85,6 +87,11 @@ function MentoringWithStepsBlock(runtime, element) {
                 reviewDOM.show();
             }
         }
+    }
+
+    function showAssessmentMessage() {
+        var data = $('.grade', element).data();
+        assessmentMessageDOM.html(data.assessment_message);
     }
 
     function showReviewStep() {
@@ -135,6 +142,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showGrade() {
         cleanAll();
+        showAssessmentMessage();
         showReviewStep();
     }
 
@@ -177,6 +185,8 @@ function MentoringWithStepsBlock(runtime, element) {
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
         tryAgainDOM.on('click', tryAgain);
+
+        assessmentMessageDOM = $('.assessment-message', element);
 
         var options = {
             onChange: onChange

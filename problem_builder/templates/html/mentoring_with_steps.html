@@ -9,9 +9,15 @@
 
   <div class="assessment-question-block">
 
+    <div class="assessment-message"></div>
+
     {% for child_content in children_contents %}
       {{ child_content|safe }}
     {% endfor %}
+
+    <div class="grade"
+         data-assessment_message="{{ self.assessment_message }}"
+    </div>
 
     <div class="submit">
       <span class="assessment-checkmark fa icon-2x"></span>

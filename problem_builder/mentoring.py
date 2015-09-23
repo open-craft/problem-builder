@@ -870,6 +870,35 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         from .step import ReviewStepBlock
         return any(child_isinstance(self, child_id, ReviewStepBlock) for child_id in self.children)
 
+    @property
+    def max_attempts_reached(self):
+        return False
+
+    @property
+    def assessment_message(self):
+        """
+        Get the message to display to a student following a submission in assessment mode.
+        """
+        if not self.max_attempts_reached:
+            return self.get_message_content('on-assessment-review', or_default=True)
+        else:
+            assessment_message = _("Note: you have used all attempts. Continue to the next unit")
+            return '<p>{}</p>'.format(assessment_message)
+
+    def get_message_content(self, message_type, or_default=False):
+        for child_id in self.children:
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == message_type:
+                    content = child.content
+                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                        content = self.runtime.replace_jump_to_id_urls(content)
+                    return content
+        if or_default:
+            # Return the default value since no custom message is set.
+            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
+            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
+
     def student_view(self, context):
         fragment = Fragment()
         children_contents = []
