@@ -833,16 +833,22 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     """
     # Content
     max_attempts = Integer(
-        display_name=_("Max. Attempts Allowed"),
-        help=_("Maximum number of attempts allowed for this mentoring block"),
+        display_name=_("Max. attempts allowed"),
+        help=_("Maximum number of times students are allowed to attempt this mentoring block"),
         default=0,
         scope=Scope.content,
         enforce_type=True
     )
+    extended_feedback = Boolean(
+        display_name=_("Extended feedback"),
+        help=_("Show extended feedback when all attempts are used up?"),
+        default=False,
+        Scope=Scope.content
+    )
 
     # Settings
     display_name = String(
-        display_name=_("Title (Display name)"),
+        display_name=_("Title (display name)"),
         help=_("Title to display"),
         default=_("Mentoring Questions (with explicit steps)"),
         scope=Scope.settings
@@ -862,7 +868,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         enforce_type=True
     )
 
-    editable_fields = ('display_name', 'max_attempts')
+    editable_fields = ('display_name', 'max_attempts', 'extended_feedback')
 
     @lazy
     def questions(self):
