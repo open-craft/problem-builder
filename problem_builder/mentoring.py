@@ -869,6 +869,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """ Get the usage_ids of all of this XBlock's children that are "Questions" """
         return list(chain.from_iterable(self.runtime.get_block(step_id).steps for step_id in self.steps))
 
+    def get_questions(self):
+        """ Get all questions associated with this block, cached if possible. """
+        if getattr(self, "_questions_cache", None) is None:
+            self._questions_cache = [self.runtime.get_block(question_id) for question_id in self.questions]
+        return self._questions_cache
+
     @property
     def steps(self):
         """
@@ -879,6 +885,21 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             _normalize_id(child_id) for child_id in self.children if
             child_isinstance(self, child_id, MentoringStepBlock)
         ]
+
+    def get_steps(self):
+        """ Get the step children of this block, cached if possible. """
+        if getattr(self, "_steps_cache", None) is None:
+            self._steps_cache = [self.runtime.get_block(child_id) for child_id in self.steps]
+        return self._steps_cache
+
+    def answer_mapper(self, answer_status):
+        steps = self.get_steps()
+        answer_map = []
+        for step in steps:
+            for answer in step.student_results:
+                if answer[1]['status'] == answer_status:
+                    answer_map.append({'id': answer[0], 'details': answer[1]})
+        return answer_map
 
     @property
     def has_review_step(self):
@@ -899,6 +920,27 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         else:
             assessment_message = _("Note: you have used all attempts. Continue to the next unit")
             return '<p>{}</p>'.format(assessment_message)
+
+    @property
+    def score(self):
+        questions = self.get_questions()
+        total_child_weight = sum(float(question.weight) for question in questions)
+        if total_child_weight == 0:
+            return Score(0, 0, [], [], [])
+        steps = self.get_steps()
+        questions_map = {question.name: question for question in questions}
+        points_earned = 0
+        for step in steps:
+            for question_name, question_results in step.student_results:
+                question = questions_map.get(question_name)
+                if question:  # Under what conditions would this evaluate to False?
+                    points_earned += question_results['score'] * question.weight
+        score = points_earned / total_child_weight
+        correct = self.answer_mapper(CORRECT)
+        incorrect = self.answer_mapper(INCORRECT)
+        partially_correct = self.answer_mapper(PARTIAL)
+
+        return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
     def get_message_content(self, message_type, or_default=False):
         for child_id in self.children:
@@ -938,6 +980,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_assessment_templates.html'), "text/html")
 
         self.include_theme_files(fragment)
 
@@ -983,6 +1026,15 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             self.num_attempts += 1
         return {
             'num_attempts': self.num_attempts
+        }
+
+    @XBlock.json_handler
+    def get_score(self, data, suffix):
+        return {
+            'score': self.score.percentage,
+            'correct_answers': len(self.score.correct),
+            'incorrect_answers': len(self.score.incorrect),
+            'partially_correct_answers': len(self.score.partially_correct),
         }
 
     @XBlock.json_handler

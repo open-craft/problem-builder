@@ -154,7 +154,7 @@ class MentoringStepBlock(
             'message': 'Success!',
             'completed': completed,
             'results': submit_results,
-            'update_attempts': self.is_last_step
+            'attempt_complete': self.is_last_step
         }
 
     def reset(self):

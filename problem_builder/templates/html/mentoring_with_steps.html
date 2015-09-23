@@ -17,6 +17,10 @@
 
     <div class="grade"
          data-assessment_message="{{ self.assessment_message }}"
+         data-score="{{ self.score.percentage }}"
+         data-correct_answer="{{ self.score.correct|length }}"
+         data-incorrect_answer="{{ self.score.incorrect|length }}"
+         data-partially_correct_answer="{{ self.score.partially_correct|length }}">
     </div>
 
     <div class="submit">
