@@ -831,6 +831,15 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     """
     An XBlock providing mentoring capabilities with explicit steps
     """
+    # Content
+    max_attempts = Integer(
+        display_name=_("Max. Attempts Allowed"),
+        help=_("Maximum number of attempts allowed for this mentoring block"),
+        default=0,
+        scope=Scope.content,
+        enforce_type=True
+    )
+
     # Settings
     display_name = String(
         display_name=_("Title (Display name)"),
@@ -840,6 +849,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     )
 
     # User state
+    num_attempts = Integer(
+        # Number of attempts user has attempted this mentoring block
+        default=0,
+        scope=Scope.user_state,
+        enforce_type=True
+    )
     active_step = Integer(
         # Keep track of the student progress.
         default=0,
@@ -847,7 +862,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         enforce_type=True
     )
 
-    editable_fields = ('display_name',)
+    editable_fields = ('display_name', 'max_attempts')
 
     @lazy
     def questions(self):
