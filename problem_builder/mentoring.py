@@ -887,7 +887,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     @property
     def max_attempts_reached(self):
-        return False
+        return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
 
     @property
     def assessment_message(self):
