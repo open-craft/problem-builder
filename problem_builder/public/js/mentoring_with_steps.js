@@ -5,10 +5,11 @@ function MentoringWithStepsBlock(runtime, element) {
     );
     var activeStep = $('.mentoring', element).data('active-step');
     var gradeTemplate = _.template($('#xblock-review-template').html());
+    var reviewStepsTemplate = _.template($('#xblock-review-steps-template').html());
     var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
-        assessmentMessageDOM, gradeDOM, attemptsDOM, reviewTipsDOM, submitXHR;
+        assessmentMessageDOM, gradeDOM, attemptsDOM, reviewTipsDOM, reviewLinkDOM, submitXHR;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -151,8 +152,24 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showReviewStep() {
         reviewStep.show();
+
         var data = gradeDOM.data();
+
+        // Links for reviewing individual questions (WIP)
+        var enableExtendedFeedback = (!someAttemptsLeft() && data.extended_feedback);
+
+        _.extend(data, {
+            'runDetails': function(correctness) {
+                if (!enableExtendedFeedback) {
+                    return '';
+                }
+                var self = this;
+                return reviewStepsTemplate({'questions': self[correctness], 'correctness': correctness});
+            }
+        });
         gradeDOM.html(gradeTemplate(data));
+        $('a.step-link', element).on('click', getStepToReview);
+
         // Review tips
         if (someAttemptsLeft()) {
             if (data.assessment_review_tips.length > 0) {
@@ -169,6 +186,36 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewDOM.hide();
         tryAgainDOM.removeAttr('disabled');
         tryAgainDOM.show();
+    }
+
+    function getStepToReview(event) {
+        event.preventDefault();
+        var stepIndex = parseInt($(event.target).data('step')) - 1;
+        jumpToReview(stepIndex);
+    }
+
+    function jumpToReview(stepIndex) {
+        activeStep = stepIndex;
+        cleanAll();
+        reviewStep.hide();
+        showActiveStep();
+
+        if (isLastStep()) {
+            reviewDOM.show();
+            reviewDOM.removeAttr('disabled');
+            nextDOM.hide();
+            nextDOM.attr('disabled', 'disabled');
+        } else {
+            nextDOM.show();
+            nextDOM.removeAttr('disabled');
+        }
+
+        // ...
+        tryAgainDOM.hide();
+        submitDOM.show();
+        submitDOM.attr('disabled', 'disabled');
+        reviewLinkDOM.show();
+        // ...
     }
 
     function showAttempts() {
@@ -224,6 +271,13 @@ function MentoringWithStepsBlock(runtime, element) {
         if (!someAttemptsLeft()) {
             tryAgainDOM.attr("disabled", "disabled");
         }
+        nextDOM.off();
+        nextDOM.on('click', reviewNextStep);
+        reviewLinkDOM.hide();
+    }
+
+    function reviewNextStep() {
+        jumpToReview(activeStep+1);
     }
 
     function handleTryAgain(result) {
@@ -233,6 +287,8 @@ function MentoringWithStepsBlock(runtime, element) {
         tryAgainDOM.hide();
         submitDOM.show();
         if (! isLastStep()) {
+            nextDOM.off();
+            nextDOM.on('click', updateDisplay);
             nextDOM.show();
             reviewDOM.hide();
         }
@@ -257,7 +313,11 @@ function MentoringWithStepsBlock(runtime, element) {
         submitDOM.show();
 
         nextDOM = $(element).find('.submit .input-next');
-        nextDOM.on('click', updateDisplay);
+        if (atReviewStep()) {
+            nextDOM.on('click', reviewNextStep);
+        } else {
+            nextDOM.on('click', updateDisplay);
+        }
         nextDOM.show();
 
         reviewDOM = $(element).find('.submit .input-review');
@@ -270,6 +330,9 @@ function MentoringWithStepsBlock(runtime, element) {
         gradeDOM = $('.grade', element);
         attemptsDOM = $('.attempts', element);
         reviewTipsDOM = $('.assessment-review-tips', element);
+
+        reviewLinkDOM = $(element).find('.review-link');
+        reviewLinkDOM.on('click', showGrade);
 
         var options = {
             onChange: onChange

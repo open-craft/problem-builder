@@ -16,6 +16,7 @@
           ), {number_correct: correct_answer}, {interpolate: /\{(.+?)\}/g})
         %>
       </p>
+      <%= runDetails('correct') %>
     </div>
     <div class="clear"></div>
     <span class="assessment-checkmark icon-2x checkmark-partially-correct icon-ok fa fa-check"></span>
@@ -29,6 +30,7 @@
           ), {number_partially_correct: partially_correct_answer}, {interpolate: /\{(.+?)\}/g})
         %>
       </p>
+      <%= runDetails('partial') %>
     </div>
     <div class="clear"></div>
     <span class="assessment-checkmark icon-2x checkmark-incorrect icon-exclamation fa fa-exclamation"></span>
@@ -42,6 +44,7 @@
           ), {number_incorrect: incorrect_answer}, {interpolate: /\{(.+?)\}/g})
         %>
       </p>
+      <%= runDetails('incorrect') %>
     </div>
     <div class="clear"></div>
     <hr/>
@@ -49,11 +52,11 @@
 </script>
 
 <!-- Template for extended feedback: Show extended feedback details when all attempts are used up. -->
-<script type="text/template" id="xblock-review-questions-template">
+<script type="text/template" id="xblock-review-steps-template">
 <% var q, last_question; %>
-<ul class="review-list <%= label %>-list">
+<ul class="review-list <%= correctness %>-list">
     <% for (var question in questions) {{ q = questions[question]; last_question = question == questions.length - 1; %>
-    <li><a href="#" class="question-link" data-step="<%= q.number %>"><%= _.template(gettext("Question {number}"), {number: q.number}, {interpolate: /\{(.+?)\}/g}) %></a></li>
+    <li><a href="#" class="step-link" data-step="<%= q.step %>"><%= _.template(gettext("Question {number}"), {number: q.number}, {interpolate: /\{(.+?)\}/g}) %></a></li>
     <% }} %>
 </ul>
 </script>

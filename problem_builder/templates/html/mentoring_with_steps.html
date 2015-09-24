@@ -21,7 +21,11 @@
          data-correct_answer="{{ self.score.correct|length }}"
          data-incorrect_answer="{{ self.score.incorrect|length }}"
          data-partially_correct_answer="{{ self.score.partially_correct|length }}"
-         data-assessment_review_tips="{{ self.review_tips_json }}">
+         data-assessment_review_tips="{{ self.review_tips_json }}"
+         data-extended_feedback="{{ self.extended_feedback }}"
+         data-correct="{{ self.correct_json }}"
+         data-incorrect="{{ self.incorrect_json }}"
+         data-partial="{{ self.partial_json }}">
     </div>
 
     <div class="submit">
@@ -40,5 +44,7 @@
     <div class="assessment-review-tips"></div>
 
   </div>
+
+  <div class="review-link"><a href="#">Review final grade</a></div>
 
 </div>

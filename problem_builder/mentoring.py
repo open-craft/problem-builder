@@ -898,13 +898,22 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             self._steps_cache = [self.runtime.get_block(child_id) for child_id in self.steps]
         return self._steps_cache
 
+    def get_question_number(self, question_name):
+        question_names = [q.name for q in self.get_questions()]
+        return question_names.index(question_name) + 1
+
     def answer_mapper(self, answer_status):
         steps = self.get_steps()
         answer_map = []
         for step in steps:
             for answer in step.student_results:
                 if answer[1]['status'] == answer_status:
-                    answer_map.append({'id': answer[0], 'details': answer[1]})
+                    answer_map.append({
+                        'id': answer[0],
+                        'details': answer[1],
+                        'step': step.step_number,
+                        'number': self.get_question_number(answer[0]),
+                    })
         return answer_map
 
     @property
@@ -976,6 +985,22 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return {
             'review_tips': self.review_tips
         }
+
+    def show_extended_feedback(self):
+        return self.extended_feedback and self.max_attempts_reached
+
+    def feedback_dispatch(self, target_data):
+        if self.show_extended_feedback():
+            return json.dumps(target_data)
+
+    def correct_json(self):
+        return self.feedback_dispatch(self.score.correct)
+
+    def incorrect_json(self):
+        return self.feedback_dispatch(self.score.incorrect)
+
+    def partial_json(self):
+        return self.feedback_dispatch(self.score.partially_correct)
 
     def get_message_content(self, message_type, or_default=False):
         for child_id in self.children:
