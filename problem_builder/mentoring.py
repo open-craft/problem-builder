@@ -948,6 +948,35 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
+    @property
+    def review_tips(self):
+        """ Get review tips, shown for wrong answers. """
+        review_tips = []
+        status_cache = dict()
+        steps = self.get_steps()
+        for step in steps:
+            status_cache.update(dict(step.student_results))
+        for question in self.get_questions():
+            result = status_cache.get(question.name)
+            if result and result.get('status') != 'correct':
+                # The student got this wrong. Check if there is a review tip to show.
+                tip_html = question.get_review_tip()
+                if tip_html:
+                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                        tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
+                    review_tips.append(tip_html)
+        return review_tips
+
+    @property
+    def review_tips_json(self):
+        return json.dumps(self.review_tips)
+
+    @XBlock.json_handler
+    def get_review_tips(self, data, suffix):
+        return {
+            'review_tips': self.review_tips
+        }
+
     def get_message_content(self, message_type, or_default=False):
         for child_id in self.children:
             if child_isinstance(self, child_id, MentoringMessageBlock):

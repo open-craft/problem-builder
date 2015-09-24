@@ -20,7 +20,8 @@
          data-score="{{ self.score.percentage }}"
          data-correct_answer="{{ self.score.correct|length }}"
          data-incorrect_answer="{{ self.score.incorrect|length }}"
-         data-partially_correct_answer="{{ self.score.partially_correct|length }}">
+         data-partially_correct_answer="{{ self.score.partially_correct|length }}"
+         data-assessment_review_tips="{{ self.review_tips_json }}">
     </div>
 
     <div class="submit">
@@ -35,6 +36,9 @@
       </div>
 
     </div>
+
+    <div class="assessment-review-tips"></div>
+
   </div>
 
 </div>
