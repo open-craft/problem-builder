@@ -1015,7 +1015,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_assessment_templates.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_review_templates.html'), "text/html")
 
         self.include_theme_files(fragment)
 

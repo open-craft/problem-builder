@@ -4,7 +4,7 @@ function MentoringWithStepsBlock(runtime, element) {
         function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
     var activeStep = $('.mentoring', element).data('active-step');
-    var gradeTemplate = _.template($('#xblock-grade-template').html());
+    var gradeTemplate = _.template($('#xblock-review-template').html());
     var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
