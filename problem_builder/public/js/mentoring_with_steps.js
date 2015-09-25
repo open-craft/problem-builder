@@ -31,8 +31,7 @@ function MentoringWithStepsBlock(runtime, element) {
         return (data.num_attempts < data.max_attempts);
     }
 
-    function updateActiveStep(response) {
-        // Update UI
+    function showFeedback(response) {
         if (response.completed === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
         } else if (response.completed === 'partial') {
@@ -40,7 +39,14 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
         }
+    }
 
+    function handleResults(response) {
+        showFeedback(response);
+
+        // Update active step:
+        // If we end up at the review step, proceed with updating the number of attempts used.
+        // Otherwise, get UI ready for showing next step.
         var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
         $.post(handlerUrl, JSON.stringify(activeStep+1))
             .success(function(response) {
@@ -48,7 +54,7 @@ function MentoringWithStepsBlock(runtime, element) {
                 if (activeStep === -1) {
                     updateNumAttempts();
                 } else {
-                    handleResults();
+                    updateControls();
                 }
             });
     }
@@ -58,6 +64,7 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 attemptsDOM.data('num_attempts', response.num_attempts);
+                // Now that relevant info is up-to-date, get the latest grade
                 updateGrade();
             });
     }
@@ -79,11 +86,11 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 gradeDOM.data('assessment_review_tips', response.review_tips);
-                handleResults();
+                updateControls();
             });
     }
 
-    function handleResults() {
+    function updateControls() {
         submitDOM.attr('disabled', 'disabled');
 
         nextDOM.removeAttr("disabled");
@@ -106,7 +113,7 @@ function MentoringWithStepsBlock(runtime, element) {
     function submit() {
         // We do not handle submissions at this level, so just forward to "submit" method of active step
         var step = steps[activeStep];
-        step.submit(updateActiveStep);
+        step.submit(handleResults);
     }
 
     function getResults() {
@@ -116,13 +123,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function handleReviewResults(response) {
         // Show step-level feedback
-        if (response.completed === 'correct') {
-            checkmark.addClass('checkmark-correct icon-ok fa-check');
-        } else if (response.completed === 'partial') {
-            checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
-        } else {
-            checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
-        }
+        showFeedback(response);
         // Forward to active step to show answer level feedback
         var step = steps[activeStep];
         var results = response.results;
@@ -233,12 +234,10 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.removeAttr('disabled');
         }
 
-        // ...
         tryAgainDOM.hide();
         submitDOM.show();
         submitDOM.attr('disabled', 'disabled');
         reviewLinkDOM.show();
-        // ...
 
         getResults();
     }
@@ -305,10 +304,12 @@ function MentoringWithStepsBlock(runtime, element) {
         showAssessmentMessage();
         showReviewStep();
         showAttempts();
+
         // Disable "Try again" button if no attempts left
         if (!someAttemptsLeft()) {
             tryAgainDOM.attr("disabled", "disabled");
         }
+
         nextDOM.off();
         nextDOM.on('click', reviewNextStep);
         reviewLinkDOM.hide();

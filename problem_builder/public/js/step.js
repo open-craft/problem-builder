@@ -34,13 +34,13 @@ function MentoringStepBlock(runtime, element) {
             return is_valid;
         },
 
-        submit: function(result_handler) {
+        submit: function(resultHandler) {
             var handler_name = 'submit';
             var data = {};
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
-                if (child && child.name !== undefined && typeof(child[handler_name]) !== "undefined") {
-                    data[child.name.toString()] = child[handler_name]();
+                if (child && child.name !== undefined) {
+                    data[child.name.toString()] = callIfExists(child, handler_name);
                 }
             }
             var handlerUrl = runtime.handlerUrl(element, handler_name);
@@ -49,11 +49,11 @@ function MentoringStepBlock(runtime, element) {
             }
             submitXHR = $.post(handlerUrl, JSON.stringify(data))
                 .success(function(response) {
-                    result_handler(response);
+                    resultHandler(response);
                 });
         },
 
-        getResults: function(result_handler) {
+        getResults: function(resultHandler) {
             var handler_name = 'get_results';
             var data = [];
             for (var i = 0; i < children.length; i++) {
@@ -68,7 +68,7 @@ function MentoringStepBlock(runtime, element) {
             }
             resultsXHR = $.post(handlerUrl, JSON.stringify(data))
                 .success(function(response) {
-                    result_handler(response);
+                    resultHandler(response);
                 });
         },
 
