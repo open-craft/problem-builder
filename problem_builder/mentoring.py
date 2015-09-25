@@ -987,7 +987,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         }
 
     def show_extended_feedback(self):
-        return self.extended_feedback and self.max_attempts_reached
+        return self.extended_feedback
 
     def feedback_dispatch(self, target_data):
         if self.show_extended_feedback():
