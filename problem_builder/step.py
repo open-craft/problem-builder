@@ -260,4 +260,6 @@ class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
         fragment.add_content(loader.render_template('templates/html/review_step.html', {
             'self': self,
         }))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/review_step.js'))
+        fragment.initialize_js('ReviewStepBlock')
         return fragment

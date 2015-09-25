@@ -1,14 +1,22 @@
 function MentoringWithStepsBlock(runtime, element) {
 
-    var steps = runtime.children(element).filter(
+    var children = runtime.children(element);
+    var steps = children.filter(
         function(c) { return c.element.className.indexOf('sb-step') > -1; }
     );
+    var reviewStep;
+    for (var i = 0; i < children.length; i++) {
+        var child = children[i];
+        if (child.type === 'sb-review-step') {
+            reviewStep = child;
+            break;
+        }
+    }
+
     var activeStep = $('.mentoring', element).data('active-step');
-    var gradeTemplate = _.template($('#xblock-review-template').html());
-    var reviewStepsTemplate = _.template($('#xblock-review-steps-template').html());
     var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
-    var reviewStep, checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
+    var checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
         assessmentMessageDOM, gradeDOM, attemptsDOM, reviewTipsDOM, reviewLinkDOM, submitXHR;
 
     function isLastStep() {
@@ -17,10 +25,6 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function atReviewStep() {
         return (activeStep === -1);
-    }
-
-    function reviewStepPresent() {
-        return reviewStep.length > 0;
     }
 
     function someAttemptsLeft() {
@@ -97,7 +101,7 @@ function MentoringWithStepsBlock(runtime, element) {
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
 
         if (atReviewStep()) {
-            if (reviewStepPresent()) {
+            if (reviewStep) {
                 reviewDOM.removeAttr('disabled');
             } else {
                 if (someAttemptsLeft()) {
@@ -160,7 +164,7 @@ function MentoringWithStepsBlock(runtime, element) {
             showActiveStep();
             validateXBlock();
             nextDOM.attr('disabled', 'disabled');
-            if (isLastStep() && reviewStepPresent()) {
+            if (isLastStep() && reviewStep) {
                 reviewDOM.attr('disabled', 'disabled');
                 reviewDOM.show();
             }
@@ -173,23 +177,13 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function showReviewStep() {
-        reviewStep.show();
-
         var data = gradeDOM.data();
 
-        // Links for reviewing individual questions (WIP)
-        var enableExtendedFeedback = (!someAttemptsLeft() && data.extended_feedback);
+        // Forward to review step to render grade data
+        var showExtendedFeedback = (!someAttemptsLeft() && data.extended_feedback);
+        reviewStep.renderGrade(gradeDOM, showExtendedFeedback);
 
-        _.extend(data, {
-            'runDetails': function(correctness) {
-                if (!enableExtendedFeedback) {
-                    return '';
-                }
-                var self = this;
-                return reviewStepsTemplate({'questions': self[correctness], 'correctness': correctness});
-            }
-        });
-        gradeDOM.html(gradeTemplate(data));
+        // Add click handler that takes care of showing associated step to step links
         $('a.step-link', element).on('click', getStepToReview);
 
         if (someAttemptsLeft()) {
@@ -221,7 +215,6 @@ function MentoringWithStepsBlock(runtime, element) {
     function jumpToReview(stepIndex) {
         activeStep = stepIndex;
         cleanAll();
-        reviewStep.hide();
         showActiveStep();
 
         if (isLastStep()) {
@@ -322,7 +315,6 @@ function MentoringWithStepsBlock(runtime, element) {
     function handleTryAgain(result) {
         activeStep = result.active_step;
         updateDisplay();
-        reviewStep.hide();
         tryAgainDOM.hide();
         submitDOM.show();
         if (! isLastStep()) {
@@ -342,9 +334,6 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function initXBlockView() {
-        reviewStep = $('.sb-review-step', element);
-        reviewStep.hide();
-
         checkmark = $('.assessment-checkmark', element);
 
         submitDOM = $(element).find('.submit .input-main');
