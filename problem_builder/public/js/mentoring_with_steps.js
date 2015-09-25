@@ -31,11 +31,25 @@ function MentoringWithStepsBlock(runtime, element) {
         return (data.num_attempts < data.max_attempts);
     }
 
-    function updateActiveStep(newValue) {
+    function updateActiveStep(response) {
+        // Update UI
+        if (response.completed === 'correct') {
+            checkmark.addClass('checkmark-correct icon-ok fa-check');
+        } else if (response.completed === 'partial') {
+            checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
+        } else {
+            checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+        }
+
         var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
-        $.post(handlerUrl, JSON.stringify(newValue))
+        $.post(handlerUrl, JSON.stringify(activeStep+1))
             .success(function(response) {
                 activeStep = response.active_step;
+                if (activeStep === -1) {
+                    updateNumAttempts();
+                } else {
+                    handleResults();
+                }
             });
     }
 
@@ -44,6 +58,7 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 attemptsDOM.data('num_attempts', response.num_attempts);
+                updateGrade();
             });
     }
 
@@ -55,6 +70,7 @@ function MentoringWithStepsBlock(runtime, element) {
                 gradeDOM.data('correct_answer', response.correct_answers);
                 gradeDOM.data('incorrect_answer', response.incorrect_answers);
                 gradeDOM.data('partially_correct_answer', response.partially_correct_answers);
+                updateReviewTips();
             });
     }
 
@@ -63,35 +79,17 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 gradeDOM.data('assessment_review_tips', response.review_tips);
+                handleResults();
             });
     }
 
-    function handleResults(response) {
-        // Update active step so next step is shown on page reload (even if user does not click "Next Step")
-        updateActiveStep(activeStep+1);
-
-        // If step submitted was last step of this mentoring block, update grade and number of attempts used
-        if (response.attempt_complete) {
-            updateNumAttempts();
-            updateGrade();
-            updateReviewTips();
-        }
-
-        // Update UI
-        if (response.completed === 'correct') {
-            checkmark.addClass('checkmark-correct icon-ok fa-check');
-        } else if (response.completed === 'partial') {
-            checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
-        } else {
-            checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
-        }
-
+    function handleResults() {
         submitDOM.attr('disabled', 'disabled');
 
         nextDOM.removeAttr("disabled");
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
 
-        if (isLastStep()) {
+        if (atReviewStep()) {
             if (reviewStepPresent()) {
                 reviewDOM.removeAttr('disabled');
             } else {
@@ -108,7 +106,7 @@ function MentoringWithStepsBlock(runtime, element) {
     function submit() {
         // We do not handle submissions at this level, so just forward to "submit" method of active step
         var step = steps[activeStep];
-        step.submit(handleResults);
+        step.submit(updateActiveStep);
     }
 
     function getResults() {
