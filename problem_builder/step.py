@@ -157,6 +157,29 @@ class MentoringStepBlock(
             'attempt_complete': self.is_last_step
         }
 
+    @XBlock.json_handler
+    def get_results(self, queries, suffix=''):
+        results = {}
+        answers = dict(self.student_results)
+        for question in self.get_steps():
+            previous_results = answers[question.name]
+            result = question.get_results(previous_results)
+            results[question.name] = result
+
+        # Compute "answer status" for this step
+        if all(result[1]['status'] == 'correct' for result in self.student_results):
+            completed = Correctness.CORRECT
+        elif all(result[1]['status'] == 'incorrect' for result in self.student_results):
+            completed = Correctness.INCORRECT
+        else:
+            completed = Correctness.PARTIAL
+
+        # Add 'message' to results? Looks like it's not used on the client ...
+        return {
+            'results': results,
+            'completed': completed,
+        }
+
     def reset(self):
         while self.student_results:
             self.student_results.pop()

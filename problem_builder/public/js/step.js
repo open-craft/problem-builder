@@ -1,7 +1,7 @@
 function MentoringStepBlock(runtime, element) {
 
     var children = runtime.children(element);
-    var submitXHR;
+    var submitXHR, resultsXHR;
 
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
@@ -51,6 +51,36 @@ function MentoringStepBlock(runtime, element) {
                 .success(function(response) {
                     result_handler(response);
                 });
+        },
+
+        getResults: function(result_handler) {
+            var handler_name = 'get_results';
+            var data = [];
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child && child.name !== undefined) { // Check if we are dealing with a question
+                    data[i] = child.name;
+                }
+            }
+            var handlerUrl = runtime.handlerUrl(element, handler_name);
+            if (resultsXHR) {
+                resultsXHR.abort();
+            }
+            resultsXHR = $.post(handlerUrl, JSON.stringify(data))
+                .success(function(response) {
+                    result_handler(response);
+                });
+        },
+
+        handleReview: function(results, options) {
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child && child.name !== undefined) { // Check if we are dealing with a question
+                    var result = results[child.name];
+                    callIfExists(child, 'handleSubmit', result, options);
+                    callIfExists(child, 'handleReview', result);
+                }
+            }
         }
 
     };

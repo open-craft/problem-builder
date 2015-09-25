@@ -111,6 +111,29 @@ function MentoringWithStepsBlock(runtime, element) {
         step.submit(handleResults);
     }
 
+    function getResults() {
+        var step = steps[activeStep];
+        step.getResults(handleReviewResults);
+    }
+
+    function handleReviewResults(response) {
+        // Show step-level feedback
+        if (response.completed === 'correct') {
+            checkmark.addClass('checkmark-correct icon-ok fa-check');
+        } else if (response.completed === 'partial') {
+            checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
+        } else {
+            checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+        }
+        // Forward to active step to show answer level feedback
+        var step = steps[activeStep];
+        var results = response.results;
+        var options = {
+            checkmark: checkmark
+        };
+        step.handleReview(results, options);
+    }
+
     function hideAllSteps() {
         for (var i=0; i < steps.length; i++) {
             $(steps[i].element).hide();
@@ -216,6 +239,8 @@ function MentoringWithStepsBlock(runtime, element) {
         submitDOM.attr('disabled', 'disabled');
         reviewLinkDOM.show();
         // ...
+
+        getResults();
     }
 
     function showAttempts() {
@@ -258,7 +283,20 @@ function MentoringWithStepsBlock(runtime, element) {
     function initSteps(options) {
         for (var i=0; i < steps.length; i++) {
             var step = steps[i];
+            var mentoring = {
+                setContent: setContent
+            };
+            options.mentoring = mentoring;
             step.initChildren(options);
+        }
+    }
+
+    function setContent(dom, content) {
+        dom.html('');
+        dom.append(content);
+        var template = $('#light-child-template', dom).html();
+        if (template) {
+            dom.append(template);
         }
     }
 
