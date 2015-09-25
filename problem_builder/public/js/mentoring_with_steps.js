@@ -193,8 +193,11 @@ function MentoringWithStepsBlock(runtime, element) {
         gradeDOM.html(gradeTemplate(data));
         $('a.step-link', element).on('click', getStepToReview);
 
-        // Review tips
         if (someAttemptsLeft()) {
+
+            tryAgainDOM.removeAttr('disabled');
+
+            // Review tips
             if (data.assessment_review_tips.length > 0) {
                 // on-assessment-review-question messages specific to questions the student got wrong:
                 reviewTipsDOM.html(reviewTipsTemplate({
@@ -207,7 +210,6 @@ function MentoringWithStepsBlock(runtime, element) {
         submitDOM.hide();
         nextDOM.hide();
         reviewDOM.hide();
-        tryAgainDOM.removeAttr('disabled');
         tryAgainDOM.show();
     }
 
