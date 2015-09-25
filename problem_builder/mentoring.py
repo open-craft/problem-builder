@@ -989,18 +989,21 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     def show_extended_feedback(self):
         return self.extended_feedback
 
-    def feedback_dispatch(self, target_data):
+    def feedback_dispatch(self, target_data, stringify):
         if self.show_extended_feedback():
-            return json.dumps(target_data)
+            if stringify:
+                return json.dumps(target_data)
+            else:
+                return target_data
 
-    def correct_json(self):
-        return self.feedback_dispatch(self.score.correct)
+    def correct_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.correct, stringify)
 
-    def incorrect_json(self):
-        return self.feedback_dispatch(self.score.incorrect)
+    def incorrect_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.incorrect, stringify)
 
-    def partial_json(self):
-        return self.feedback_dispatch(self.score.partially_correct)
+    def partial_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.partially_correct, stringify)
 
     def get_message_content(self, message_type, or_default=False):
         for child_id in self.children:
@@ -1095,6 +1098,9 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'correct_answers': len(self.score.correct),
             'incorrect_answers': len(self.score.incorrect),
             'partially_correct_answers': len(self.score.partially_correct),
+            'correct': self.correct_json(stringify=False),
+            'incorrect': self.incorrect_json(False),
+            'partial': self.partial_json(False),
         }
 
     @XBlock.json_handler

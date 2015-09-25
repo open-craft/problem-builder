@@ -81,6 +81,9 @@ function MentoringWithStepsBlock(runtime, element) {
                 gradeDOM.data('correct_answer', response.correct_answers);
                 gradeDOM.data('incorrect_answer', response.incorrect_answers);
                 gradeDOM.data('partially_correct_answer', response.partially_correct_answers);
+                gradeDOM.data('correct', response.correct);
+                gradeDOM.data('incorrect', response.incorrect);
+                gradeDOM.data('partially', response.partial);
                 updateReviewTips();
             });
     }
