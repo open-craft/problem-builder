@@ -1093,11 +1093,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     @XBlock.json_handler
     def get_score(self, data, suffix):
+        score = self.score
         return {
-            'score': self.score.percentage,
-            'correct_answers': len(self.score.correct),
-            'incorrect_answers': len(self.score.incorrect),
-            'partially_correct_answers': len(self.score.partially_correct),
+            'score': score.percentage,
+            'correct_answers': len(score.correct),
+            'incorrect_answers': len(score.incorrect),
+            'partially_correct_answers': len(score.partially_correct),
             'correct': self.correct_json(stringify=False),
             'incorrect': self.incorrect_json(False),
             'partial': self.partial_json(False),
