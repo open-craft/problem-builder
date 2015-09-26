@@ -142,19 +142,10 @@ class MentoringStepBlock(
         for result in submit_results:
             self.student_results.append(result)
 
-        # Compute "answer status" for this step
-        if all(result[1]['status'] == 'correct' for result in submit_results):
-            completed = Correctness.CORRECT
-        elif all(result[1]['status'] == 'incorrect' for result in submit_results):
-            completed = Correctness.INCORRECT
-        else:
-            completed = Correctness.PARTIAL
-
         return {
             'message': 'Success!',
-            'completed': completed,
+            'step_status': self.answer_status,
             'results': submit_results,
-            'attempt_complete': self.is_last_step
         }
 
     @XBlock.json_handler
@@ -166,23 +157,25 @@ class MentoringStepBlock(
             result = question.get_results(previous_results)
             results[question.name] = result
 
-        # Compute "answer status" for this step
-        if all(result[1]['status'] == 'correct' for result in self.student_results):
-            completed = Correctness.CORRECT
-        elif all(result[1]['status'] == 'incorrect' for result in self.student_results):
-            completed = Correctness.INCORRECT
-        else:
-            completed = Correctness.PARTIAL
-
         # Add 'message' to results? Looks like it's not used on the client ...
         return {
             'results': results,
-            'completed': completed,
+            'step_status': self.answer_status,
         }
 
     def reset(self):
         while self.student_results:
             self.student_results.pop()
+
+    @property
+    def answer_status(self):
+        if all(result[1]['status'] == 'correct' for result in self.student_results):
+            answer_status = Correctness.CORRECT
+        elif all(result[1]['status'] == 'incorrect' for result in self.student_results):
+            answer_status = Correctness.INCORRECT
+        else:
+            answer_status = Correctness.PARTIAL
+        return answer_status
 
     def author_edit_view(self, context):
         """

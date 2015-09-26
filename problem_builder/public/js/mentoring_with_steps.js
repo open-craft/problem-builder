@@ -36,9 +36,9 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function showFeedback(response) {
-        if (response.completed === 'correct') {
+        if (response.step_status === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
-        } else if (response.completed === 'partial') {
+        } else if (response.step_status === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
