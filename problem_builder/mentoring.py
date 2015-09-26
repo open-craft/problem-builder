@@ -92,6 +92,21 @@ class BaseMentoringBlock(
         default=True,
         scope=Scope.content
     )
+    max_attempts = Integer(
+        display_name=_("Max. attempts allowed"),
+        help=_("Maximum number of times students are allowed to attempt the questions belonging to this block"),
+        default=0,
+        scope=Scope.content,
+        enforce_type=True
+    )
+
+    # User state
+    num_attempts = Integer(
+        # Number of attempts a user has answered for this questions
+        default=0,
+        scope=Scope.user_state,
+        enforce_type=True
+    )
 
     has_children = True
 
@@ -109,6 +124,28 @@ class BaseMentoringBlock(
             return super(BaseMentoringBlock, self).url_name
         except AttributeError:
             return unicode(self.scope_ids.usage_id)
+
+    @property
+    def review_tips_json(self):
+        return json.dumps(self.review_tips)
+
+    @property
+    def max_attempts_reached(self):
+        return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
+
+    def get_message_content(self, message_type, or_default=False):
+        for child_id in self.children:
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == message_type:
+                    content = child.content
+                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                        content = self.runtime.replace_jump_to_id_urls(content)
+                    return content
+        if or_default:
+            # Return the default value since no custom message is set.
+            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
+            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
 
     def get_theme(self):
         """
@@ -128,6 +165,22 @@ class BaseMentoringBlock(
         theme_package, theme_files = theme['package'], theme['locations']
         for theme_file in theme_files:
             fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
+
+    def feedback_dispatch(self, target_data, stringify):
+        if self.show_extended_feedback():
+            if stringify:
+                return json.dumps(target_data)
+            else:
+                return target_data
+
+    def correct_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.correct, stringify)
+
+    def incorrect_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.incorrect, stringify)
+
+    def partial_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.partially_correct, stringify)
 
     @XBlock.json_handler
     def view(self, data, suffix=''):
@@ -185,13 +238,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         default=None,
         scope=Scope.content
     )
-    max_attempts = Integer(
-        display_name=_("Max. Attempts Allowed"),
-        help=_("Number of max attempts allowed for this questions"),
-        default=0,
-        scope=Scope.content,
-        enforce_type=True
-    )
     enforce_dependency = Boolean(
         display_name=_("Enforce Dependency"),
         help=_("Should the next step be the current block to complete?"),
@@ -246,12 +292,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         # Has the student completed this mentoring step?
         default=False,
         scope=Scope.user_state
-    )
-    num_attempts = Integer(
-        # Number of attempts a user has answered for this questions
-        default=0,
-        scope=Scope.user_state,
-        enforce_type=True
     )
     step = Integer(
         # Keep track of the student assessment progress.
@@ -475,28 +515,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
                     review_tips.append(tip_html)
         return review_tips
 
-    @property
-    def review_tips_json(self):
-        return json.dumps(self.review_tips)
-
     def show_extended_feedback(self):
         return self.extended_feedback and self.max_attempts_reached
-
-    def feedback_dispatch(self, target_data, stringify):
-        if self.show_extended_feedback():
-            if stringify:
-                return json.dumps(target_data)
-            else:
-                return target_data
-
-    def correct_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.correct, stringify)
-
-    def incorrect_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.incorrect, stringify)
-
-    def partial_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.partially_correct, stringify)
 
     @XBlock.json_handler
     def get_results(self, queries, suffix=''):
@@ -739,24 +759,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             'result': 'success'
         }
 
-    @property
-    def max_attempts_reached(self):
-        return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
-
-    def get_message_content(self, message_type, or_default=False):
-        for child_id in self.children:
-            if child_isinstance(self, child_id, MentoringMessageBlock):
-                child = self.runtime.get_block(child_id)
-                if child.type == message_type:
-                    content = child.content
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
-                        content = self.runtime.replace_jump_to_id_urls(content)
-                    return content
-        if or_default:
-            # Return the default value since no custom message is set.
-            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
-            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
-
     def validate(self):
         """
         Validates the state of this XBlock except for individual field values.
@@ -832,13 +834,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     An XBlock providing mentoring capabilities with explicit steps
     """
     # Content
-    max_attempts = Integer(
-        display_name=_("Max. attempts allowed"),
-        help=_("Maximum number of times students are allowed to attempt this mentoring block"),
-        default=0,
-        scope=Scope.content,
-        enforce_type=True
-    )
     extended_feedback = Boolean(
         display_name=_("Extended feedback"),
         help=_("Show extended feedback when all attempts are used up?"),
@@ -855,12 +850,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     )
 
     # User state
-    num_attempts = Integer(
-        # Number of attempts user has attempted this mentoring block
-        default=0,
-        scope=Scope.user_state,
-        enforce_type=True
-    )
     active_step = Integer(
         # Keep track of the student progress.
         default=0,
@@ -922,10 +911,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return any(child_isinstance(self, child_id, ReviewStepBlock) for child_id in self.children)
 
     @property
-    def max_attempts_reached(self):
-        return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
-
-    @property
     def assessment_message(self):
         """
         Get the message to display to a student following a submission in assessment mode.
@@ -976,10 +961,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                     review_tips.append(tip_html)
         return review_tips
 
-    @property
-    def review_tips_json(self):
-        return json.dumps(self.review_tips)
-
     @XBlock.json_handler
     def get_review_tips(self, data, suffix):
         return {
@@ -988,36 +969,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     def show_extended_feedback(self):
         return self.extended_feedback
-
-    def feedback_dispatch(self, target_data, stringify):
-        if self.show_extended_feedback():
-            if stringify:
-                return json.dumps(target_data)
-            else:
-                return target_data
-
-    def correct_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.correct, stringify)
-
-    def incorrect_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.incorrect, stringify)
-
-    def partial_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.partially_correct, stringify)
-
-    def get_message_content(self, message_type, or_default=False):
-        for child_id in self.children:
-            if child_isinstance(self, child_id, MentoringMessageBlock):
-                child = self.runtime.get_block(child_id)
-                if child.type == message_type:
-                    content = child.content
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
-                        content = self.runtime.replace_jump_to_id_urls(content)
-                    return content
-        if or_default:
-            # Return the default value since no custom message is set.
-            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
-            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
 
     def student_view(self, context):
         fragment = Fragment()
