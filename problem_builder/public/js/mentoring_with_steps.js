@@ -74,7 +74,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function updateGrade() {
-        var handlerUrl = runtime.handlerUrl(element, 'get_score');
+        var handlerUrl = runtime.handlerUrl(element, 'get_grade');
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 gradeDOM.data('score', response.score);
@@ -83,16 +83,9 @@ function MentoringWithStepsBlock(runtime, element) {
                 gradeDOM.data('partially_correct_answer', response.partially_correct_answers);
                 gradeDOM.data('correct', response.correct);
                 gradeDOM.data('incorrect', response.incorrect);
-                gradeDOM.data('partially', response.partial);
-                updateReviewTips();
-            });
-    }
-
-    function updateReviewTips() {
-        var handlerUrl = runtime.handlerUrl(element, 'get_review_tips');
-        $.post(handlerUrl, JSON.stringify({}))
-            .success(function(response) {
-                gradeDOM.data('assessment_review_tips', response.review_tips);
+                gradeDOM.data('partial', response.partial);
+                gradeDOM.data('assessment_message', response.assessment_message);
+                gradeDOM.data('assessment_review_tips', response.assessment_review_tips);
                 updateControls();
             });
     }

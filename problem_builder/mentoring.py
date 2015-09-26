@@ -961,12 +961,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                     review_tips.append(tip_html)
         return review_tips
 
-    @XBlock.json_handler
-    def get_review_tips(self, data, suffix):
-        return {
-            'review_tips': self.review_tips
-        }
-
     def show_extended_feedback(self):
         return self.extended_feedback
 
@@ -1043,7 +1037,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         }
 
     @XBlock.json_handler
-    def get_score(self, data, suffix):
+    def get_grade(self, data, suffix):
         score = self.score
         return {
             'score': score.percentage,
@@ -1053,6 +1047,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'correct': self.correct_json(stringify=False),
             'incorrect': self.incorrect_json(False),
             'partial': self.partial_json(False),
+            'assessment_message': self.assessment_message,
+            'assessment_review_tips': self.review_tips,
         }
 
     @XBlock.json_handler
