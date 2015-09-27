@@ -30,6 +30,8 @@ MentoringBlock.url_name = String()
 
 loader = ResourceLoader(__name__)
 
+CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
+
 
 class PopupCheckMixin(object):
     """
@@ -133,6 +135,88 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
 
         return mentoring, controls
 
+    def assert_hidden(self, elem):
+        self.assertFalse(elem.is_displayed())
+
+    def assert_disabled(self, elem):
+        self.assertTrue(elem.is_displayed())
+        self.assertFalse(elem.is_enabled())
+
+    def assert_clickable(self, elem):
+        self.assertTrue(elem.is_displayed())
+        self.assertTrue(elem.is_enabled())
+
+    def ending_controls(self, controls, last):
+        if last:
+            self.assert_hidden(controls.next_question)
+            self.assert_disabled(controls.review)
+        else:
+            self.assert_disabled(controls.next_question)
+            self.assert_hidden(controls.review)
+
+    def selected_controls(self, controls, last):
+        self.assert_clickable(controls.submit)
+        self.ending_controls(controls, last)
+
+    def assert_message_text(self, mentoring, text):
+        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
+        self.assertEqual(message_wrapper.text, text)
+        self.assertTrue(message_wrapper.is_displayed())
+
+    def assert_no_message_text(self, mentoring):
+        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
+        self.assertEqual(message_wrapper.text, '')
+
+    def check_question_feedback(self, step_builder, question):
+        question_checkmark = step_builder.find_element_by_css_selector('.assessment-checkmark')
+        question_feedback = question.find_element_by_css_selector(".feedback")
+        self.assertTrue(question_feedback.is_displayed())
+        self.assertEqual(question_feedback.text, "Question Feedback Message")
+
+        question.click()
+        self.assertFalse(question_feedback.is_displayed())
+
+        question_checkmark.click()
+        self.assertTrue(question_feedback.is_displayed())
+
+    def do_submit_wait(self, controls, last):
+        if last:
+            self.wait_until_clickable(controls.review)
+        else:
+            self.wait_until_clickable(controls.next_question)
+
+    def do_post(self, controls, last):
+        if last:
+            controls.review.click()
+        else:
+            controls.next_question.click()
+
+    def multiple_response_question(self, number, mentoring, controls, choice_names, result, last=False):
+        question = self.peek_at_multiple_response_question(number, mentoring, controls, last=last)
+
+        choices = GetChoices(question)
+        expected_choices = {
+            "Its elegance": False,
+            "Its beauty": False,
+            "Its gracefulness": False,
+            "Its bugs": False,
+        }
+        self.assertEquals(choices.state, expected_choices)
+
+        for name in choice_names:
+            choices.select(name)
+            expected_choices[name] = True
+
+        self.assertEquals(choices.state, expected_choices)
+
+        self.selected_controls(controls, last)
+
+        controls.submit.click()
+
+        self.do_submit_wait(controls, last)
+        self._assert_checkmark(mentoring, result)
+        controls.review.click()
+
     def expect_question_visible(self, number, mentoring, question_text=None):
         if not question_text:
             question_text = self.question_text(number)
@@ -162,6 +246,14 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         else:
             self.wait_until_clickable(controls.next_question)
             controls.next_question.click()
+
+    def _assert_checkmark(self, mentoring, result):
+        """Assert that only the desired checkmark is present."""
+        states = {CORRECT: 0, INCORRECT: 0, PARTIAL: 0}
+        states[result] += 1
+
+        for name, count in states.items():
+            self.assertEqual(len(mentoring.find_elements_by_css_selector(".checkmark-{}".format(name))), count)
 
 
 class GetChoices(object):

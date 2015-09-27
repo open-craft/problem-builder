@@ -18,9 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 from ddt import ddt, unpack, data
-from .base_test import MentoringAssessmentBaseTest, GetChoices
-
-CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
+from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
 
 
 @ddt
@@ -47,28 +45,9 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         controls.click()
         title.click()
 
-    def assert_hidden(self, elem):
-        self.assertFalse(elem.is_displayed())
-
-    def assert_disabled(self, elem):
-        self.assertTrue(elem.is_displayed())
-        self.assertFalse(elem.is_enabled())
-
-    def assert_clickable(self, elem):
-        self.assertTrue(elem.is_displayed())
-        self.assertTrue(elem.is_enabled())
-
     def assert_persistent_elements_present(self, mentoring):
         self.assertIn("A Simple Assessment", mentoring.text)
         self.assertIn("This paragraph is shared between all questions.", mentoring.text)
-
-    def _assert_checkmark(self, mentoring, result):
-        """Assert that only the desired checkmark is present."""
-        states = {CORRECT: 0, INCORRECT: 0, PARTIAL: 0}
-        states[result] += 1
-
-        for name, count in states.items():
-            self.assertEqual(len(mentoring.find_elements_by_css_selector(".checkmark-{}".format(name))), count)
 
     def go_to_workbench_main_page(self):
         self.browser.get(self.live_server_url)
@@ -103,35 +82,6 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.do_submit_wait(controls, last)
         self._assert_checkmark(mentoring, result)
         self.do_post(controls, last)
-
-    def ending_controls(self, controls, last):
-        if last:
-            self.assert_hidden(controls.next_question)
-            self.assert_disabled(controls.review)
-        else:
-            self.assert_disabled(controls.next_question)
-            self.assert_hidden(controls.review)
-
-    def selected_controls(self, controls, last):
-        self.assert_clickable(controls.submit)
-        if last:
-            self.assert_hidden(controls.next_question)
-            self.assert_disabled(controls.review)
-        else:
-            self.assert_disabled(controls.next_question)
-            self.assert_hidden(controls.review)
-
-    def do_submit_wait(self, controls, last):
-        if last:
-            self.wait_until_clickable(controls.review)
-        else:
-            self.wait_until_clickable(controls.next_question)
-
-    def do_post(self, controls, last):
-        if last:
-            controls.review.click()
-        else:
-            controls.next_question.click()
 
     def single_choice_question(self, number, mentoring, controls, choice_name, result, last=False):
         question = self.expect_question_visible(number, mentoring)
@@ -213,44 +163,6 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
 
         return question
 
-    def check_question_feedback(self, mentoring, question):
-        question_checkmark = mentoring.find_element_by_css_selector('.assessment-checkmark')
-        question_feedback = question.find_element_by_css_selector(".feedback")
-        self.assertTrue(question_feedback.is_displayed())
-        self.assertEqual(question_feedback.text, "Question Feedback Message")
-
-        question.click()
-        self.assertFalse(question_feedback.is_displayed())
-
-        question_checkmark.click()
-        self.assertTrue(question_feedback.is_displayed())
-
-    def multiple_response_question(self, number, mentoring, controls, choice_names, result, last=False):
-        question = self.peek_at_multiple_response_question(number, mentoring, controls, last=last)
-
-        choices = GetChoices(question)
-        expected_choices = {
-            "Its elegance": False,
-            "Its beauty": False,
-            "Its gracefulness": False,
-            "Its bugs": False,
-        }
-        self.assertEquals(choices.state, expected_choices)
-
-        for name in choice_names:
-            choices.select(name)
-            expected_choices[name] = True
-
-        self.assertEquals(choices.state, expected_choices)
-
-        self.selected_controls(controls, last)
-
-        controls.submit.click()
-
-        self.do_submit_wait(controls, last)
-        self._assert_checkmark(mentoring, result)
-        controls.review.click()
-
     def peek_at_review(self, mentoring, controls, expected, extended_feedback=False):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), mentoring)
         self.assert_persistent_elements_present(mentoring)
@@ -287,15 +199,6 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.assert_hidden(controls.next_question)
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.review_link)
-
-    def assert_message_text(self, mentoring, text):
-        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
-        self.assertEqual(message_wrapper.text, text)
-        self.assertTrue(message_wrapper.is_displayed())
-
-    def assert_no_message_text(self, mentoring):
-        message_wrapper = mentoring.find_element_by_css_selector('.assessment-message')
-        self.assertEqual(message_wrapper.text, '')
 
     def extended_feedback_checks(self, mentoring, controls, expected_results):
         # Multiple choice is third correctly answered question

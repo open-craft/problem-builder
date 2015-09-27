@@ -1,15 +1,21 @@
 function MentoringWithStepsBlock(runtime, element) {
 
+    // Set up gettext in case it isn't available in the client runtime:
+    if (typeof gettext == "undefined") {
+        window.gettext = function gettext_stub(string) { return string; };
+        window.ngettext = function ngettext_stub(strA, strB, n) { return n == 1 ? strA : strB; };
+    }
+
     var children = runtime.children(element);
-    var steps = children.filter(
-        function(c) { return c.element.className.indexOf('sb-step') > -1; }
-    );
+    var steps = [];
     var reviewStep;
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
-        if (child.type === 'sb-review-step') {
+        var blockType = $(child.element).data('block-type');
+        if (blockType === 'sb-step') {
+            steps.push(child);
+        } else if (blockType === 'sb-review-step') {
             reviewStep = child;
-            break;
         }
     }
 
@@ -33,6 +39,11 @@ function MentoringWithStepsBlock(runtime, element) {
             return true;
         }
         return (data.num_attempts < data.max_attempts);
+    }
+
+    function extendedFeedbackEnabled() {
+        var data = gradeDOM.data();
+        return data.extended_feedback === "True";
     }
 
     function showFeedback(response) {
@@ -139,6 +150,10 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
+    function clearSelections() {
+        $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
+    }
+
     function cleanAll() {
         checkmark.removeClass('checkmark-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
@@ -176,7 +191,7 @@ function MentoringWithStepsBlock(runtime, element) {
         var data = gradeDOM.data();
 
         // Forward to review step to render grade data
-        var showExtendedFeedback = (!someAttemptsLeft() && data.extended_feedback);
+        var showExtendedFeedback = (!someAttemptsLeft() && extendedFeedbackEnabled());
         reviewStep.renderGrade(gradeDOM, showExtendedFeedback);
 
         // Add click handler that takes care of showing associated step to step links
@@ -272,7 +287,8 @@ function MentoringWithStepsBlock(runtime, element) {
         for (var i=0; i < steps.length; i++) {
             var step = steps[i];
             var mentoring = {
-                setContent: setContent
+                setContent: setContent,
+                publish_event: publishEvent
             };
             options.mentoring = mentoring;
             step.initChildren(options);
@@ -286,6 +302,14 @@ function MentoringWithStepsBlock(runtime, element) {
         if (template) {
             dom.append(template);
         }
+    }
+
+    function publishEvent(data) {
+        $.ajax({
+            type: "POST",
+            url: runtime.handlerUrl(element, 'publish_event'),
+            data: JSON.stringify(data)
+        });
     }
 
     function showGrade() {
@@ -310,6 +334,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function handleTryAgain(result) {
         activeStep = result.active_step;
+        clearSelections();
         updateDisplay();
         tryAgainDOM.hide();
         submitDOM.show();
@@ -327,6 +352,23 @@ function MentoringWithStepsBlock(runtime, element) {
             submitXHR.abort();
         }
         submitXHR = $.post(handlerUrl, JSON.stringify({})).success(handleTryAgain);
+    }
+
+    function initClickHandlers() {
+        $(document).on("click", function(event, ui) {
+            var target = $(event.target);
+            var itemFeedbackParentSelector = '.choice';
+            var itemFeedbackSelector = ".choice .choice-tips";
+
+            function clickedInside(selector, parent_selector){
+                return target.is(selector) || target.parents(parent_selector).length>0;
+            }
+
+            if (!clickedInside(itemFeedbackSelector, itemFeedbackParentSelector)) {
+                $(itemFeedbackSelector).not(':hidden').hide();
+                $('.choice-tips-container').removeClass('with-tips');
+            }
+        });
     }
 
     function initXBlockView() {
@@ -366,6 +408,7 @@ function MentoringWithStepsBlock(runtime, element) {
         updateDisplay();
     }
 
+    initClickHandlers();
     initXBlockView();
 
 }

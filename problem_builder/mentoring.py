@@ -918,7 +918,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         if not self.max_attempts_reached:
             return self.get_message_content('on-assessment-review', or_default=True)
         else:
-            assessment_message = _("Note: you have used all attempts. Continue to the next unit")
+            assessment_message = _("Note: you have used all attempts. Continue to the next unit.")
             return '<p>{}</p>'.format(assessment_message)
 
     @property
@@ -985,6 +985,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'children_contents': children_contents,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
