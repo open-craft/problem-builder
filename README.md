@@ -1,21 +1,24 @@
-Problem Builder XBlock
-----------------------
+Problem Builder and Step Builder
+--------------------------------
 
 [![Build Status](https://travis-ci.org/open-craft/problem-builder.svg?branch=master)](https://travis-ci.org/open-craft/problem-builder)
 
-This XBlock allows creation of questions of various types and simulating the
-workflow of real-life mentoring, within an edX course.
+This repository provides two XBlocks: Problem Builder and Step Builder.
 
-It supports:
+Both blocks allow to create questions of various types. They can be
+used to simulate the workflow of real-life mentoring, within an edX
+course.
+
+Supported features include:
 
 * **Free-form answers** (textarea) which can be shared accross
   different XBlock instances (for example, to allow a student to
-  review and edit an answer he gave before).
-* **Self-assessment MCQs** (multiple choice), to display predetermined
-  feedback to a student based on his choices in the
+  review and edit an answer they gave before).
+* **Self-assessment MCQs** (multiple choice questions), to display
+  predetermined feedback to a student based on his choices in the
   self-assessment. Supports rating scales and arbitrary answers.
 * **MRQs (Multiple Response Questions)**, a type of multiple choice
-  question that allows the student to choose more than one choice.
+  question that allows the student to select more than one choice.
 * **Answer recaps** that display a read-only summary of a user's
   answer to a free-form question asked earlier in the course.
 * **Progression tracking**, to require that the student has
@@ -26,15 +29,15 @@ It supports:
 * **Dashboards**, for displaying a summary of the student's answers
   to multiple choice questions. [Details](doc/Dashboard.md)
 
-The screenshot shows an example of a problem builder block containing a
-free-form question, two MCQs and one MRQ.
+The following screenshot shows an example of a Problem Builder block
+containing a free-form question, two MCQs and one MRQ:
 
 ![Problem Builder Example](doc/img/mentoring-example.png)
 
 Installation
 ------------
 
-Install the requirements into the python virtual environment of your
+Install the requirements into the Python virtual environment of your
 `edx-platform` installation by running the following command from the
 root folder:
 
@@ -45,14 +48,20 @@ $ pip install -r requirements.txt
 Enabling in Studio
 ------------------
 
-You can enable the Problem Builder XBlock in studio through the advanced
-settings.
+You can enable the Problem Builder and Step Builder XBlocks in Studio
+by modifying the advanced settings for your course:
 
-1. From the main page of a specific course, navigate to `Settings ->
-   Advanced Settings` from the top menu.
-2. Check for the `advanced_modules` policy key, and add `"problem-builder"`
-   to the policy value list.
-3. Click the "Save changes" button.
+1. From the main page of a specific course, navigate to **Settings** ->
+   **Advanced Settings** from the top menu.
+2. Find the **Advanced Module List** setting.
+3. To enable Problem Builder for your course, add `"problem-builder"`
+   to the modules listed there.
+4. To enable Step Builder for your course, add `"step-builder"` to the
+   modules listed there.
+5. Click the **Save changes** button.
+
+Note that it is perfectly fine to enable both Problem Builder and Step
+Builder for your course -- the blocks do not interfere with each other.
 
 Usage
 -----
