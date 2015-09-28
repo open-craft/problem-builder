@@ -359,7 +359,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     @property
     def score(self):
         """Compute the student score taking into account the weight of each step."""
-        steps = self.get_steps()
+        steps = self.steps
         steps_map = {q.name: q for q in steps}
         total_child_weight = sum(float(step.weight) for step in steps)
         if total_child_weight == 0:
@@ -381,7 +381,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         self.migrate_fields()
 
         # Validate self.step:
-        num_steps = len(self.get_steps())
+        num_steps = len(self.steps)
         if self.step > num_steps:
             self.step = num_steps
 
@@ -500,11 +500,11 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     @property
     def review_tips(self):
         """ Get review tips, shown for wrong answers in assessment mode. """
-        if not self.is_assessment or self.step != len(self.steps):
+        if not self.is_assessment or self.step != len(self.step_ids):
             return []  # Review tips are only used in assessment mode, and only on the last step.
         review_tips = []
         status_cache = dict(self.student_results)
-        for child in self.get_steps():
+        for child in self.steps:
             result = status_cache.get(child.name)
             if result and result.get('status') != 'correct':
                 # The student got this wrong. Check if there is a review tip to show.
@@ -562,7 +562,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         show_message = bool(self.student_results)
 
         # In standard mode, all children is visible simultaneously, so need collecting responses from all of them
-        for child in self.get_steps():
+        for child in self.steps:
             child_result = child.get_last_result()
             results.append([child.name, child_result])
             completed = completed and (child_result.get('status', None) == 'correct')
@@ -585,7 +585,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         completed = True
         choices = dict(self.student_results)
         # Only one child should ever be of concern with this method.
-        for child in self.get_steps():
+        for child in self.steps:
             if child.name and child.name in queries:
                 results = [child.name, child.get_results(choices[child.name])]
                 # Children may have their own definition of 'completed' which can vary from the general case
@@ -618,7 +618,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         submit_results = []
         previously_completed = self.completed
         completed = True
-        for child in self.get_steps():
+        for child in self.steps:
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
@@ -673,7 +673,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         current_child = None
         children = [self.runtime.get_block(child_id) for child_id in self.children]
         children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
-        steps = [child for child in children if isinstance(child, QuestionMixin)]  # Faster than the self.steps property
+        # The following is faster than the self.step_ids property
+        steps = [child for child in children if isinstance(child, QuestionMixin)]
         assessment_message = None
         review_tips = []
 
@@ -860,20 +861,23 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     editable_fields = ('display_name', 'max_attempts', 'extended_feedback')
 
     @lazy
-    def questions(self):
-        """ Get the usage_ids of all of this XBlock's children that are "Questions" """
-        return list(chain.from_iterable(self.runtime.get_block(step_id).steps for step_id in self.steps))
-
-    def get_questions(self):
-        """ Get all questions associated with this block, cached if possible. """
-        if getattr(self, "_questions_cache", None) is None:
-            self._questions_cache = [self.runtime.get_block(question_id) for question_id in self.questions]
-        return self._questions_cache
-
-    @property
-    def steps(self):
+    def question_ids(self):
         """
-        Get the usage_ids of all of this XBlock's children that are "Steps"
+        Get the usage_ids of all of this XBlock's children that are "Questions".
+        """
+        return list(chain.from_iterable(self.runtime.get_block(step_id).step_ids for step_id in self.step_ids))
+
+    @lazy
+    def questions(self):
+        """
+        Get all questions associated with this block.
+        """
+        return [self.runtime.get_block(question_id) for question_id in self.question_ids]
+
+    @lazy
+    def step_ids(self):
+        """
+        Get the usage_ids of all of this XBlock's children that are steps.
         """
         from .step import MentoringStepBlock  # Import here to avoid circular dependency
         return [
@@ -881,18 +885,19 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             child_isinstance(self, child_id, MentoringStepBlock)
         ]
 
-    def get_steps(self):
-        """ Get the step children of this block, cached if possible. """
-        if getattr(self, "_steps_cache", None) is None:
-            self._steps_cache = [self.runtime.get_block(child_id) for child_id in self.steps]
-        return self._steps_cache
+    @lazy
+    def steps(self):
+        """
+        Get the step children of this block.
+        """
+        return [self.runtime.get_block(step_id) for step_id in self.step_ids]
 
     def get_question_number(self, question_name):
-        question_names = [q.name for q in self.get_questions()]
+        question_names = [q.name for q in self.questions]
         return question_names.index(question_name) + 1
 
     def answer_mapper(self, answer_status):
-        steps = self.get_steps()
+        steps = self.steps
         answer_map = []
         for step in steps:
             for answer in step.student_results:
@@ -923,11 +928,11 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     @property
     def score(self):
-        questions = self.get_questions()
+        questions = self.questions
         total_child_weight = sum(float(question.weight) for question in questions)
         if total_child_weight == 0:
             return Score(0, 0, [], [], [])
-        steps = self.get_steps()
+        steps = self.steps
         questions_map = {question.name: question for question in questions}
         points_earned = 0
         for step in steps:
@@ -947,10 +952,10 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """ Get review tips, shown for wrong answers. """
         review_tips = []
         status_cache = dict()
-        steps = self.get_steps()
+        steps = self.steps
         for step in steps:
             status_cache.update(dict(step.student_results))
-        for question in self.get_questions():
+        for question in self.questions:
             result = status_cache.get(question.name)
             if result and result.get('status') != 'correct':
                 # The student got this wrong. Check if there is a review tip to show.
@@ -1017,9 +1022,9 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     @XBlock.json_handler
     def update_active_step(self, new_value, suffix=''):
-        if new_value < len(self.steps):
+        if new_value < len(self.step_ids):
             self.active_step = new_value
-        elif new_value == len(self.steps):
+        elif new_value == len(self.step_ids):
             if self.has_review_step:
                 self.active_step = -1
         return {
@@ -1043,8 +1048,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'incorrect_answers': len(score.incorrect),
             'partially_correct_answers': len(score.partially_correct),
             'correct': self.correct_json(stringify=False),
-            'incorrect': self.incorrect_json(False),
-            'partial': self.partial_json(False),
+            'incorrect': self.incorrect_json(stringify=False),
+            'partial': self.partial_json(stringify=False),
             'assessment_message': self.assessment_message,
             'assessment_review_tips': self.review_tips,
         }
@@ -1053,7 +1058,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     def try_again(self, data, suffix=''):
         self.active_step = 0
 
-        step_blocks = [self.runtime.get_block(child_id) for child_id in self.steps]
+        step_blocks = [self.runtime.get_block(child_id) for child_id in self.step_ids]
 
         for step in step_blocks:
             step.reset()

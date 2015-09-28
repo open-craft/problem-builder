@@ -100,12 +100,12 @@ class MentoringStepBlock(
 
     @lazy
     def siblings(self):
-        return self.get_parent().steps
+        return self.get_parent().step_ids
 
     @property
     def is_last_step(self):
         parent = self.get_parent()
-        return self.step_number == len(parent.steps)
+        return self.step_number == len(parent.step_ids)
 
     @property
     def allowed_nested_blocks(self):
@@ -130,7 +130,7 @@ class MentoringStepBlock(
 
         # Submit child blocks (questions) and gather results
         submit_results = []
-        for child in self.get_steps():
+        for child in self.steps:
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
@@ -152,7 +152,7 @@ class MentoringStepBlock(
     def get_results(self, queries, suffix=''):
         results = {}
         answers = dict(self.student_results)
-        for question in self.get_steps():
+        for question in self.steps:
             previous_results = answers[question.name]
             result = question.get_results(previous_results)
             results[question.name] = result

@@ -79,7 +79,7 @@ class StepParentMixin(object):
     """
 
     @lazy
-    def steps(self):
+    def step_ids(self):
         """
         Get the usage_ids of all of this XBlock's children that are "Steps"
         """
@@ -87,11 +87,10 @@ class StepParentMixin(object):
             _normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, QuestionMixin)
         ]
 
-    def get_steps(self):
+    @lazy
+    def steps(self):
         """ Get the step children of this block, cached if possible. """
-        if getattr(self, "_steps_cache", None) is None:
-            self._steps_cache = [self.runtime.get_block(child_id) for child_id in self.steps]
-        return self._steps_cache
+        return [self.runtime.get_block(child_id) for child_id in self.step_ids]
 
 
 class QuestionMixin(EnumerableChildMixin):
@@ -114,7 +113,7 @@ class QuestionMixin(EnumerableChildMixin):
 
     @lazy
     def siblings(self):
-        return self.get_parent().steps
+        return self.get_parent().step_ids
 
     def author_view(self, context):
         context = context.copy() if context else {}
