@@ -1012,9 +1012,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return [
             MentoringStepBlock,
             ReviewStepBlock,
-            NestedXBlockSpec(CompletedMentoringMessageShim, boilerplate='completed'),
-            NestedXBlockSpec(IncompleteMentoringMessageShim, boilerplate='incomplete'),
-            NestedXBlockSpec(MaxAttemptsReachedMentoringMessageShim, boilerplate='max_attempts_reached'),
             NestedXBlockSpec(OnAssessmentReviewMentoringMessageShim, boilerplate='on-assessment-review'),
         ]
 
