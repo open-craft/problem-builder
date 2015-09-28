@@ -248,6 +248,10 @@ class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
         """ Student View """
         return self._render_view(context)
 
+    def studio_view(self, context=None):
+        """ Studio View """
+        return Fragment(u'<p>This is a preconfigured block. It is not editable.</p>')
+
     def _render_view(self, context):
         fragment = Fragment()
         fragment.add_content(loader.render_template('templates/html/review_step.html', {
