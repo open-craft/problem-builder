@@ -248,11 +248,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
 
         if max_attempts == 1:
-            self.assert_message_text(step_builder, "Note: you have used all attempts. Continue to the next unit.")
+            self.assert_message_text(step_builder, "On review message text")
             self.assert_disabled(controls.try_again)
             return
 
-        self.assert_message_text(step_builder, "Assessment additional feedback message text")
+        self.assert_message_text(step_builder, "Block incomplete message text")
         self.assert_clickable(controls.try_again)
 
         # Try again
@@ -282,9 +282,9 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             self.assert_clickable(controls.try_again)
 
         if 1 <= max_attempts <= 2:
-            self.assert_message_text(step_builder, "Note: you have used all attempts. Continue to the next unit.")
+            self.assert_message_text(step_builder, "On review message text")
         else:
-            self.assert_message_text(step_builder, "Assessment additional feedback message text")
+            self.assert_message_text(step_builder, "Block incomplete message text")
 
         if extended_feedback:
             self.extended_feedback_checks(step_builder, controls, expected_results)
@@ -311,8 +311,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.assertIn('Lesson 1', review_tips.text)
         self.assertNotIn('Lesson 2', review_tips.text)  # This MCQ was correct
         self.assertIn('Lesson 3', review_tips.text)
-        # The on-assessment-review message is also shown if attempts remain:
-        self.assert_message_text(step_builder, "Assessment additional feedback message text")
+        # If attempts remain and student got some answers wrong, show "incomplete" message
+        self.assert_message_text(step_builder, "Block incomplete message text")
 
         # Try again
         self.assert_clickable(controls.try_again)
@@ -327,7 +327,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
         self.multiple_response_question(None, step_builder, controls, user_selection, CORRECT, last=True)
 
-        self.assert_message_text(step_builder, "Assessment additional feedback message text")
+        # If attempts remain and student got all answers right, show "complete" message
+        self.assert_message_text(step_builder, "Block completed message text")
         self.assertFalse(review_tips.is_displayed())
 
         # Try again

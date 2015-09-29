@@ -56,8 +56,16 @@
 
   <sb-review-step></sb-review-step>
 
-  <pb-message type="on-assessment-review">
-    <html>Assessment additional feedback message text</html>
+  <pb-message type="completed">
+    <html>Block completed message text</html>
+  </pb-message>
+
+  <pb-message type="incomplete">
+    <html>Block incomplete message text</html>
+  </pb-message>
+
+  <pb-message type="on-review">
+    <html>On review message text</html>
   </pb-message>
 
 </step-builder>
