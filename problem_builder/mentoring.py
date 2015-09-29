@@ -318,7 +318,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     )
 
     editable_fields = (
-        'display_name', 'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
+        'display_name', 'followed_by', 'max_attempts', 'enforce_dependency',
         'display_submit', 'feedback_label', 'weight', 'extended_feedback'
     )
 
