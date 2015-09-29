@@ -372,11 +372,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function initXBlockView() {
+        // Hide steps until we're ready
+        hideAllSteps();
+
+        // Initialize references to relevant DOM elements and set up event handlers
         checkmark = $('.assessment-checkmark', element);
 
         submitDOM = $(element).find('.submit .input-main');
         submitDOM.on('click', submit);
-        submitDOM.show();
 
         nextDOM = $(element).find('.submit .input-next');
         if (atReviewStep()) {
@@ -384,7 +387,6 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             nextDOM.on('click', updateDisplay);
         }
-        nextDOM.show();
 
         reviewDOM = $(element).find('.submit .input-review');
         reviewDOM.on('click', showGrade);
@@ -400,12 +402,29 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewLinkDOM = $(element).find('.review-link');
         reviewLinkDOM.on('click', showGrade);
 
+        // Initialize individual steps
+        // (sets up click handlers for questions and makes sure answer data is up-to-date)
         var options = {
             onChange: onChange
         };
         initSteps(options);
 
-        updateDisplay();
+        // Refresh info about number of attempts used:
+        // In the LMS, the HTML of multiple units can be loaded at once,
+        // and the user can flip among them. If that happens, information about
+        // number of attempts student has used up may be out of date.
+        var handlerUrl = runtime.handlerUrl(element, 'get_num_attempts');
+        $.post(handlerUrl, JSON.stringify({}))
+            .success(function(response) {
+                attemptsDOM.data('num_attempts', response.num_attempts);
+
+                // Finally, show controls and content
+                submitDOM.show();
+                nextDOM.show();
+
+                updateDisplay();
+            });
+
     }
 
     initClickHandlers();
