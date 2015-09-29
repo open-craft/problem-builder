@@ -41,8 +41,9 @@ def package_data(pkg, root_list):
 
 BLOCKS = [
     'problem-builder = problem_builder:MentoringBlock',
-    'pb-mentoring = problem_builder:MentoringWithExplicitStepsBlock',
-    'pb-mentoring-step = problem_builder:MentoringStepBlock',
+    'step-builder = problem_builder:MentoringWithExplicitStepsBlock',
+    'sb-step = problem_builder:MentoringStepBlock',
+    'sb-review-step = problem_builder:ReviewStepBlock',
 
     'pb-table = problem_builder:MentoringTableBlock',
     'pb-column = problem_builder:MentoringTableColumn',

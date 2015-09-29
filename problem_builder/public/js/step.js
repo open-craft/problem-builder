@@ -1,7 +1,7 @@
 function MentoringStepBlock(runtime, element) {
 
     var children = runtime.children(element);
-    var submitXHR;
+    var submitXHR, resultsXHR;
 
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
@@ -34,13 +34,13 @@ function MentoringStepBlock(runtime, element) {
             return is_valid;
         },
 
-        submit: function(result_handler) {
+        submit: function(resultHandler) {
             var handler_name = 'submit';
             var data = {};
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
-                if (child && child.name !== undefined && typeof(child[handler_name]) !== "undefined") {
-                    data[child.name.toString()] = child[handler_name]();
+                if (child && child.name !== undefined) {
+                    data[child.name.toString()] = callIfExists(child, handler_name);
                 }
             }
             var handlerUrl = runtime.handlerUrl(element, handler_name);
@@ -49,8 +49,38 @@ function MentoringStepBlock(runtime, element) {
             }
             submitXHR = $.post(handlerUrl, JSON.stringify(data))
                 .success(function(response) {
-                    result_handler(response);
+                    resultHandler(response);
                 });
+        },
+
+        getResults: function(resultHandler) {
+            var handler_name = 'get_results';
+            var data = [];
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child && child.name !== undefined) { // Check if we are dealing with a question
+                    data[i] = child.name;
+                }
+            }
+            var handlerUrl = runtime.handlerUrl(element, handler_name);
+            if (resultsXHR) {
+                resultsXHR.abort();
+            }
+            resultsXHR = $.post(handlerUrl, JSON.stringify(data))
+                .success(function(response) {
+                    resultHandler(response);
+                });
+        },
+
+        handleReview: function(results, options) {
+            for (var i = 0; i < children.length; i++) {
+                var child = children[i];
+                if (child && child.name !== undefined) { // Check if we are dealing with a question
+                    var result = results[child.name];
+                    callIfExists(child, 'handleSubmit', result, options);
+                    callIfExists(child, 'handleReview', result);
+                }
+            }
         }
 
     };

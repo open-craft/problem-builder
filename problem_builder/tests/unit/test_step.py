@@ -47,7 +47,7 @@ class TestQuestionMixin(unittest.TestCase):
         step = Step()
         block._children = [step]
 
-        steps = [block.runtime.get_block(cid) for cid in block.steps]
+        steps = [block.runtime.get_block(cid) for cid in block.step_ids]
         self.assertSequenceEqual(steps, [step])
 
     def test_only_steps_are_returned(self):
@@ -56,7 +56,7 @@ class TestQuestionMixin(unittest.TestCase):
         step2 = Step()
         block._set_children_for_test(step1, 1, "2", "Step", NotAStep(), False, step2, NotAStep())
 
-        steps = [block.runtime.get_block(cid) for cid in block.steps]
+        steps = [block.runtime.get_block(cid) for cid in block.step_ids]
         self.assertSequenceEqual(steps, [step1, step2])
 
     def test_proper_number_is_returned_for_step(self):

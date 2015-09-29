@@ -1,0 +1,9 @@
+<!-- Tips about specific questions the student got wrong. From pb-message[type=on-assessment-review-question] blocks -->
+<script type="text/template" id="xblock-review-tips-template">
+<p class="review-tips-intro"><%= gettext("You might consider reviewing the following items before your next assessment attempt:") %></p>
+<ul class="review-tips-list">
+    <% for (var tip_idx in tips) {{ %>
+        <li><%= tips[tip_idx] %></li>
+    <% }} %>
+</ul>
+</script>

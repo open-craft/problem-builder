@@ -164,8 +164,7 @@ class TestMentoringBlockJumpToIds(unittest.TestCase):
         self.mcq_block = MCQBlock(self.runtime_mock, DictFieldData({'name': 'test_mcq'}), Mock())
         self.mcq_block.get_review_tip = Mock()
         self.mcq_block.get_review_tip.return_value = self.message_block.content
-        self.block.steps = []
-        self.block.get_steps = Mock()
-        self.block.get_steps.return_value = [self.mcq_block]
+        self.block.step_ids = []
+        self.block.steps = [self.mcq_block]
         self.block.student_results = {'test_mcq': {'status': 'incorrect'}}
         self.assertEqual(self.block.review_tips, ['replaced-url'])

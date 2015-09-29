@@ -79,7 +79,7 @@ class MentoringStepBlock(
     """
     CAPTION = _(u"Step")
     STUDIO_LABEL = _(u"Mentoring Step")
-    CATEGORY = 'pb-mentoring-step'
+    CATEGORY = 'sb-step'
 
     # Settings
     display_name = String(
@@ -100,7 +100,12 @@ class MentoringStepBlock(
 
     @lazy
     def siblings(self):
-        return self.get_parent().steps
+        return self.get_parent().step_ids
+
+    @property
+    def is_last_step(self):
+        parent = self.get_parent()
+        return self.step_number == len(parent.step_ids)
 
     @property
     def allowed_nested_blocks(self):
@@ -125,7 +130,7 @@ class MentoringStepBlock(
 
         # Submit child blocks (questions) and gather results
         submit_results = []
-        for child in self.get_steps():
+        for child in self.steps:
             if child.name and child.name in submissions:
                 submission = submissions[child.name]
                 child_result = child.submit(submission)
@@ -137,23 +142,40 @@ class MentoringStepBlock(
         for result in submit_results:
             self.student_results.append(result)
 
-        # Compute "answer status" for this step
-        if all(result[1]['status'] == 'correct' for result in submit_results):
-            completed = Correctness.CORRECT
-        elif all(result[1]['status'] == 'incorrect' for result in submit_results):
-            completed = Correctness.INCORRECT
-        else:
-            completed = Correctness.PARTIAL
-
         return {
             'message': 'Success!',
-            'completed': completed,
+            'step_status': self.answer_status,
             'results': submit_results,
+        }
+
+    @XBlock.json_handler
+    def get_results(self, queries, suffix=''):
+        results = {}
+        answers = dict(self.student_results)
+        for question in self.steps:
+            previous_results = answers[question.name]
+            result = question.get_results(previous_results)
+            results[question.name] = result
+
+        # Add 'message' to results? Looks like it's not used on the client ...
+        return {
+            'results': results,
+            'step_status': self.answer_status,
         }
 
     def reset(self):
         while self.student_results:
             self.student_results.pop()
+
+    @property
+    def answer_status(self):
+        if all(result[1]['status'] == 'correct' for result in self.student_results):
+            answer_status = Correctness.CORRECT
+        elif all(result[1]['status'] == 'incorrect' for result in self.student_results):
+            answer_status = Correctness.INCORRECT
+        else:
+            answer_status = Correctness.PARTIAL
+        return answer_status
 
     def author_edit_view(self, context):
         """
@@ -206,4 +228,35 @@ class MentoringStepBlock(
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step.js'))
         fragment.initialize_js('MentoringStepBlock')
 
+        return fragment
+
+
+class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
+    """ A dedicated step for reviewing results for a mentoring block """
+    CATEGORY = 'sb-review-step'
+    STUDIO_LABEL = _("Review Step")
+
+    display_name = String(
+        default="Review Step"
+    )
+
+    def mentoring_view(self, context=None):
+        """ Mentoring View """
+        return self._render_view(context)
+
+    def student_view(self, context=None):
+        """ Student View """
+        return self._render_view(context)
+
+    def studio_view(self, context=None):
+        """ Studio View """
+        return Fragment(u'<p>This is a preconfigured block. It is not editable.</p>')
+
+    def _render_view(self, context):
+        fragment = Fragment()
+        fragment.add_content(loader.render_template('templates/html/review_step.html', {
+            'self': self,
+        }))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/review_step.js'))
+        fragment.initialize_js('ReviewStepBlock')
         return fragment

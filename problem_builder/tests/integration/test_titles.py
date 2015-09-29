@@ -38,8 +38,8 @@ class TitleTest(SeleniumXBlockTest):
 
     @ddt.data(
         ('<problem-builder show_title="false"><pb-answer name="a"/></problem-builder>', None),
-        ('<problem-builder><pb-answer name="a"/></problem-builder>', "Mentoring Questions"),
-        ('<problem-builder mode="assessment"><pb-answer name="a"/></problem-builder>', "Mentoring Questions"),
+        ('<problem-builder><pb-answer name="a"/></problem-builder>', "Problem Builder"),
+        ('<problem-builder mode="assessment"><pb-answer name="a"/></problem-builder>', "Problem Builder"),
         ('<problem-builder display_name="A Question"><pb-answer name="a"/></problem-builder>', "A Question"),
         ('<problem-builder display_name="A Question" show_title="false"><pb-answer name="a"/></problem-builder>', None),
     )
