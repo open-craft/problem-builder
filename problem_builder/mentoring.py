@@ -36,7 +36,7 @@ from xblock.validation import ValidationMessage
 
 from .message import (
     MentoringMessageBlock, CompletedMentoringMessageShim, IncompleteMentoringMessageShim,
-    MaxAttemptsReachedMentoringMessageShim, OnAssessmentReviewMentoringMessageShim
+    OnReviewMentoringMessageShim
 )
 from .mixins import _normalize_id, StepParentMixin, QuestionMixin, XBlockWithTranslationServiceMixin
 
@@ -920,11 +920,13 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Get the message to display to a student following a submission in assessment mode.
         """
-        if not self.max_attempts_reached:
-            return self.get_message_content('on-assessment-review', or_default=True)
+        if self.max_attempts_reached:
+            return self.get_message_content('on-review', or_default=True)
         else:
-            assessment_message = _("Note: you have used all attempts. Continue to the next unit.")
-            return '<p>{}</p>'.format(assessment_message)
+            if self.complete:  # All answers correct
+                return self.get_message_content('completed', or_default=True)
+            else:
+                return self.get_message_content('incomplete', or_default=True)
 
     @property
     def score(self):
@@ -946,6 +948,10 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         partially_correct = self.answer_mapper(PARTIAL)
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
+
+    @property
+    def complete(self):
+        return not any(step.answer_status == 'incorrect' for step in self.steps)
 
     @property
     def review_tips(self):
@@ -1017,7 +1023,9 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return [
             MentoringStepBlock,
             ReviewStepBlock,
-            NestedXBlockSpec(OnAssessmentReviewMentoringMessageShim, boilerplate='on-assessment-review'),
+            NestedXBlockSpec(CompletedMentoringMessageShim, boilerplate='completed'),
+            NestedXBlockSpec(IncompleteMentoringMessageShim, boilerplate='incomplete'),
+            NestedXBlockSpec(OnReviewMentoringMessageShim, boilerplate='on-review'),
         ]
 
     @XBlock.json_handler
