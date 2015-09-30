@@ -1018,6 +1018,16 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         }
 
     @XBlock.json_handler
+    def publish_attempt(self, data, suffix):
+        score = self.score
+        grade_data = {
+            'value': score.raw,
+            'max_value': 1,
+        }
+        self.runtime.publish(self, 'grade', grade_data)
+        return {}
+
+    @XBlock.json_handler
     def get_grade(self, data, suffix):
         score = self.score
         return {

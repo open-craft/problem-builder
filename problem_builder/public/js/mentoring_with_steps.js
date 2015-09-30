@@ -79,7 +79,15 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 attemptsDOM.data('num_attempts', response.num_attempts);
-                // Now that relevant info is up-to-date, get the latest grade
+                publishAttempt();
+            });
+    }
+
+    function publishAttempt() {
+        var handlerUrl = runtime.handlerUrl(element, 'publish_attempt');
+        $.post(handlerUrl, JSON.stringify({}))
+            .success(function(response) {
+                // Now that relevant info is up-to-date and attempt has been published, get the latest grade
                 updateGrade();
             });
     }
