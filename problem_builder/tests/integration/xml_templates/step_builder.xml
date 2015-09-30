@@ -54,18 +54,18 @@
     </pb-mrq>
   </sb-step>
 
-  <sb-review-step></sb-review-step>
+  <sb-review-step>
+    <pb-message type="completed">
+      <html>Block completed message text</html>
+    </pb-message>
 
-  <pb-message type="completed">
-    <html>Block completed message text</html>
-  </pb-message>
+    <pb-message type="incomplete">
+      <html>Block incomplete message text</html>
+    </pb-message>
 
-  <pb-message type="incomplete">
-    <html>Block incomplete message text</html>
-  </pb-message>
-
-  <pb-message type="on-review">
-    <html>On review message text</html>
-  </pb-message>
+    <pb-message type="on-review">
+      <html>On review message text</html>
+    </pb-message>
+  </sb-review-step>
 
 </step-builder>

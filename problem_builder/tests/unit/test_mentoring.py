@@ -154,7 +154,7 @@ class TestMentoringBlockJumpToIds(unittest.TestCase):
         self.block.runtime.replace_jump_to_id_urls = lambda x: x.replace('test', 'replaced-url')
 
     def test_get_message_content(self):
-        with patch('problem_builder.mentoring.child_isinstance') as mock_child_isinstance:
+        with patch('problem_builder.mixins.child_isinstance') as mock_child_isinstance:
             mock_child_isinstance.return_value = True
             self.runtime_mock.get_block = Mock()
             self.runtime_mock.get_block.return_value = self.message_block

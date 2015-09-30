@@ -38,7 +38,9 @@ from .message import (
     MentoringMessageBlock, CompletedMentoringMessageShim, IncompleteMentoringMessageShim,
     OnReviewMentoringMessageShim
 )
-from .mixins import _normalize_id, StepParentMixin, QuestionMixin, XBlockWithTranslationServiceMixin
+from .mixins import (
+    _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
+)
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
@@ -80,7 +82,7 @@ PARTIAL = 'partial'
 @XBlock.needs("i18n")
 @XBlock.wants('settings')
 class BaseMentoringBlock(
-        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin
+        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin, MessageParentMixin
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -132,20 +134,6 @@ class BaseMentoringBlock(
     @property
     def max_attempts_reached(self):
         return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
-
-    def get_message_content(self, message_type, or_default=False):
-        for child_id in self.children:
-            if child_isinstance(self, child_id, MentoringMessageBlock):
-                child = self.runtime.get_block(child_id)
-                if child.type == message_type:
-                    content = child.content
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
-                        content = self.runtime.replace_jump_to_id_urls(content)
-                    return content
-        if or_default:
-            # Return the default value since no custom message is set.
-            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
-            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
 
     def get_theme(self):
         """
@@ -916,19 +904,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return any(child_isinstance(self, child_id, ReviewStepBlock) for child_id in self.children)
 
     @property
-    def assessment_message(self):
-        """
-        Get the message to display to a student following a submission in assessment mode.
-        """
-        if self.max_attempts_reached:
-            return self.get_message_content('on-review', or_default=True)
-        else:
-            if self.complete:  # All answers correct
-                return self.get_message_content('completed', or_default=True)
-            else:
-                return self.get_message_content('incomplete', or_default=True)
-
-    @property
     def score(self):
         questions = self.questions
         total_child_weight = sum(float(question.weight) for question in questions)
@@ -951,7 +926,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     @property
     def complete(self):
-        return not any(step.answer_status == 'incorrect' for step in self.steps)
+        return not self.score.incorrect and not self.score.partially_correct
 
     @property
     def review_tips(self):
@@ -1023,9 +998,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return [
             MentoringStepBlock,
             ReviewStepBlock,
-            NestedXBlockSpec(CompletedMentoringMessageShim, boilerplate='completed'),
-            NestedXBlockSpec(IncompleteMentoringMessageShim, boilerplate='incomplete'),
-            NestedXBlockSpec(OnReviewMentoringMessageShim, boilerplate='on-review'),
         ]
 
     @XBlock.json_handler
@@ -1058,7 +1030,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'correct': self.correct_json(stringify=False),
             'incorrect': self.incorrect_json(stringify=False),
             'partial': self.partial_json(stringify=False),
-            'assessment_message': self.assessment_message,
+            'complete': self.complete,
+            'max_attempts_reached': self.max_attempts_reached,
             'assessment_review_tips': self.review_tips,
         }
 

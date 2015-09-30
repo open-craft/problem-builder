@@ -93,6 +93,27 @@ class StepParentMixin(object):
         return [self.runtime.get_block(child_id) for child_id in self.step_ids]
 
 
+class MessageParentMixin(object):
+    """
+    An XBlock mixin for a parent block containing MentoringMessageBlock children
+    """
+
+    def get_message_content(self, message_type, or_default=False):
+        from problem_builder.message import MentoringMessageBlock  # Import here to avoid circular dependency
+        for child_id in self.children:
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == message_type:
+                    content = child.content
+                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                        content = self.runtime.replace_jump_to_id_urls(content)
+                    return content
+        if or_default:
+            # Return the default value since no custom message is set.
+            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
+            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
+
+
 class QuestionMixin(EnumerableChildMixin):
     """
     An XBlock mixin for a child block that is a "Step".

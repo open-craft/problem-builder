@@ -15,6 +15,7 @@
 }
 
 /* Custom appearance for our "Add" buttons */
+.xblock[data-block-type=sb-review-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=sb-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=step-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
@@ -24,6 +25,8 @@
   line-height: 30px;
 }
 
+.xblock[data-block-type=sb-review-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock[data-block-type=sb-review-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=sb-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
 .xblock[data-block-type=sb-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=step-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
@@ -37,6 +40,7 @@
   cursor: default;
 }
 
+.xblock[data-block-type=sb-review-step] .submission-message-help p,
 .xblock[data-block-type=step-builder] .submission-message-help p,
 .xblock[data-block-type=problem-builder] .submission-message-help p {
 	border-top: 1px solid #ddd;

@@ -32,7 +32,10 @@ from xblockutils.studio_editable import (
 
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
-from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
+from .message import (
+    CompletedMentoringMessageShim, IncompleteMentoringMessageShim, OnReviewMentoringMessageShim
+)
+from problem_builder.mixins import EnumerableChildMixin, MessageParentMixin, StepParentMixin
 from problem_builder.mrq import MRQBlock
 from problem_builder.table import MentoringTableBlock
 
@@ -231,7 +234,7 @@ class MentoringStepBlock(
         return fragment
 
 
-class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
+class ReviewStepBlock(MessageParentMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin, XBlock):
     """ A dedicated step for reviewing results for a mentoring block """
     CATEGORY = 'sb-review-step'
     STUDIO_LABEL = _("Review Step")
@@ -239,6 +242,45 @@ class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
     display_name = String(
         default="Review Step"
     )
+
+    @property
+    def allowed_nested_blocks(self):
+        """
+        Returns a list of allowed nested XBlocks. Each item can be either
+        * An XBlock class
+        * A NestedXBlockSpec
+
+        If XBlock class is used it is assumed that this XBlock is enabled and allows multiple instances.
+        NestedXBlockSpec allows explicitly setting disabled/enabled state,
+        disabled reason (if any) and single/multiple instances.
+        """
+        return [
+            NestedXBlockSpec(CompletedMentoringMessageShim, boilerplate='completed'),
+            NestedXBlockSpec(IncompleteMentoringMessageShim, boilerplate='incomplete'),
+            NestedXBlockSpec(OnReviewMentoringMessageShim, boilerplate='on-review'),
+        ]
+
+    @XBlock.json_handler
+    def get_assessment_message(self, grade, suffix):
+        complete = grade['complete']
+        max_attempts_reached = grade['max_attempts_reached']
+        return {
+            'assessment_message': self.assessment_message(complete, max_attempts_reached)
+        }
+
+    def assessment_message(self, complete=None, max_attempts_reached=None):
+        if complete is None and max_attempts_reached is None:
+            parent = self.get_parent()
+            complete = parent.complete
+            max_attempts_reached = parent.max_attempts_reached
+        if max_attempts_reached:
+            assessment_message = self.get_message_content('on-review', or_default=True)
+        else:
+            if complete:  # All answers correct
+                assessment_message = self.get_message_content('completed', or_default=True)
+            else:
+                assessment_message = self.get_message_content('incomplete', or_default=True)
+        return assessment_message
 
     def mentoring_view(self, context=None):
         """ Mentoring View """
@@ -259,4 +301,26 @@ class ReviewStepBlock(XBlockWithPreviewMixin, XBlock):
         }))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/review_step.js'))
         fragment.initialize_js('ReviewStepBlock')
+        return fragment
+
+    def author_preview_view(self, context):
+        return Fragment(
+            u"<p>{}</p>".format(
+                _(u"This block summarizes a student's performance on the parent Step Builder block.")
+            )
+        )
+
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add child blocks.
+        """
+        context['wrap_children'] = {
+            'head': u'<div class="mentoring">',
+            'tail': u'</div>'
+        }
+        fragment = super(ReviewStepBlock, self).author_edit_view(context)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/review_step_edit.js'))
+        fragment.initialize_js('ReviewStepEdit')
         return fragment
