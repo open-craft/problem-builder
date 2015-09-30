@@ -59,10 +59,23 @@ Step Builder will display one step at a time. All questions belonging
 to a step need to be completed before the step can be submitted.
 
 In addition to regular steps, Step Builder also provides a **Review
-Step** block which allows students to review their performance, and to
-jump back to individual steps to review their answers (if **Extended
-feedback** setting is on and maximum number of attempts has been
-reached). Note that only one such block is allowed per instance.
+Step** block which
+
+* allows students to review their performance
+
+* allows students to jump back to individual steps to review their
+  answers (if **Extended feedback** setting is on and maximum number
+  of attempts has been reached)
+
+* supports customizable messages that will be shown when
+
+  * the block is *complete*, i.e., if all answers that the student
+    provided are correct
+  * the block is *incomplete*, i.e., if some answers that the student
+    provided are incorrect or partially correct
+  * the student has used up all attempts
+
+Note that only one such block is allowed per instance.
 
 **Screenshots: Step**
 
@@ -80,10 +93,11 @@ partially correct).
 
 **Screenshots: Review Step**
 
-Unlimited attempts available:
+Unlimited attempts available, all answers correct:
 
 ![Unlimited attempts available](img/review-step-unlimited-attempts-available.png)
-Limited attempts, some attempts remaining:
+
+Limited attempts, some attempts remaining, some answers incorrect:
 
 ![Some attempts remaining](img/review-step-some-attempts-remaining.png)
 

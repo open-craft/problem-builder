@@ -23,7 +23,7 @@ function MentoringWithStepsBlock(runtime, element) {
     var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
-        assessmentMessageDOM, gradeDOM, attemptsDOM, reviewTipsDOM, reviewLinkDOM, submitXHR;
+        gradeDOM, attemptsDOM, reviewTipsDOM, reviewLinkDOM, submitXHR;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -79,7 +79,15 @@ function MentoringWithStepsBlock(runtime, element) {
         $.post(handlerUrl, JSON.stringify({}))
             .success(function(response) {
                 attemptsDOM.data('num_attempts', response.num_attempts);
-                // Now that relevant info is up-to-date, get the latest grade
+                publishAttempt();
+            });
+    }
+
+    function publishAttempt() {
+        var handlerUrl = runtime.handlerUrl(element, 'publish_attempt');
+        $.post(handlerUrl, JSON.stringify({}))
+            .success(function(response) {
+                // Now that relevant info is up-to-date and attempt has been published, get the latest grade
                 updateGrade();
             });
     }
@@ -95,10 +103,13 @@ function MentoringWithStepsBlock(runtime, element) {
                 gradeDOM.data('correct', response.correct);
                 gradeDOM.data('incorrect', response.incorrect);
                 gradeDOM.data('partial', response.partial);
-                gradeDOM.data('assessment_message', response.assessment_message);
                 gradeDOM.data('assessment_review_tips', response.assessment_review_tips);
-                updateControls();
+                updateReviewStep(response);
             });
+    }
+
+    function updateReviewStep(response) {
+        reviewStep.updateAssessmentMessage(response, updateControls);
     }
 
     function updateControls() {
@@ -159,8 +170,7 @@ function MentoringWithStepsBlock(runtime, element) {
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
         hideAllSteps();
-        assessmentMessageDOM.html('');
-        gradeDOM.html('');
+        hideReviewStep();
         attemptsDOM.html('');
         reviewTipsDOM.empty().hide();
     }
@@ -168,7 +178,6 @@ function MentoringWithStepsBlock(runtime, element) {
     function updateDisplay() {
         cleanAll();
         if (atReviewStep()) {
-            showAssessmentMessage();
             showReviewStep();
             showAttempts();
         } else {
@@ -182,13 +191,9 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
-    function showAssessmentMessage() {
-        var data = gradeDOM.data();
-        assessmentMessageDOM.html(data.assessment_message);
-    }
-
     function showReviewStep() {
-        var data = gradeDOM.data();
+        // Forward to review step to show assessment message
+        reviewStep.showAssessmentMessage();
 
         // Forward to review step to render grade data
         var showExtendedFeedback = (!someAttemptsLeft() && extendedFeedbackEnabled());
@@ -202,6 +207,7 @@ function MentoringWithStepsBlock(runtime, element) {
             tryAgainDOM.removeAttr('disabled');
 
             // Review tips
+            var data = gradeDOM.data();
             if (data.assessment_review_tips.length > 0) {
                 // on-assessment-review-question messages specific to questions the student got wrong:
                 reviewTipsDOM.html(reviewTipsTemplate({
@@ -215,6 +221,11 @@ function MentoringWithStepsBlock(runtime, element) {
         nextDOM.hide();
         reviewDOM.hide();
         tryAgainDOM.show();
+    }
+
+    function hideReviewStep() {
+        reviewStep.hideAssessmentMessage();
+        gradeDOM.html('');
     }
 
     function getStepToReview(event) {
@@ -314,7 +325,6 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showGrade() {
         cleanAll();
-        showAssessmentMessage();
         showReviewStep();
         showAttempts();
 
@@ -394,7 +404,6 @@ function MentoringWithStepsBlock(runtime, element) {
         tryAgainDOM = $(element).find('.submit .input-try-again');
         tryAgainDOM.on('click', tryAgain);
 
-        assessmentMessageDOM = $('.assessment-message', element);
         gradeDOM = $('.grade', element);
         attemptsDOM = $('.attempts', element);
         reviewTipsDOM = $('.assessment-review-tips', element);

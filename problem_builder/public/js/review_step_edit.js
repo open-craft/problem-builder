@@ -1,4 +1,4 @@
-function MentoringWithStepsEdit(runtime, element) {
+function ReviewStepEdit(runtime, element) {
     "use strict";
 
     var blockIsPresent = function(klass) {
@@ -21,12 +21,13 @@ function MentoringWithStepsEdit(runtime, element) {
     var initButtons = function(dataCategory) {
         var $buttons = $('.add-xblock-component-button[data-category='+dataCategory+']', element);
         $buttons.each(function() {
-            updateButton($(this), blockIsPresent('.xblock-header-sb-review-step'));
+            var msg_type = $(this).data('boilerplate');
+            updateButton($(this), blockIsPresent('.submission-message.'+msg_type));
         });
         $buttons.on('click', disableButton);
     };
 
-    initButtons('sb-review-step');
+    initButtons('pb-message');
 
     ProblemBuilderUtil.transformClarifications(element);
     StudioEditableXBlockMixin(runtime, element);

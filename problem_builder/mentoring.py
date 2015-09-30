@@ -34,16 +34,16 @@ from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
-from .message import (
-    MentoringMessageBlock, CompletedMentoringMessageShim, IncompleteMentoringMessageShim,
-    MaxAttemptsReachedMentoringMessageShim, OnAssessmentReviewMentoringMessageShim
+from .message import MentoringMessageBlock
+
+from .mixins import (
+    _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
 )
-from .mixins import _normalize_id, StepParentMixin, QuestionMixin, XBlockWithTranslationServiceMixin
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
-    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin
+    StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin
 )
 
 
@@ -80,7 +80,7 @@ PARTIAL = 'partial'
 @XBlock.needs("i18n")
 @XBlock.wants('settings')
 class BaseMentoringBlock(
-        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin
+        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin, MessageParentMixin
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -133,19 +133,20 @@ class BaseMentoringBlock(
     def max_attempts_reached(self):
         return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
 
-    def get_message_content(self, message_type, or_default=False):
-        for child_id in self.children:
-            if child_isinstance(self, child_id, MentoringMessageBlock):
-                child = self.runtime.get_block(child_id)
-                if child.type == message_type:
-                    content = child.content
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
-                        content = self.runtime.replace_jump_to_id_urls(content)
-                    return content
-        if or_default:
-            # Return the default value since no custom message is set.
-            # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
-            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
+    def get_content_titles(self):
+        """
+        By default, each Sequential block in a course ("Subsection" in Studio parlance) will
+        display the display_name of each descendant in a tooltip above the content. We don't
+        want that - we only want to display one title for this mentoring block as a whole.
+        Otherwise things like "Choice (yes) (Correct)" will appear in the tooltip.
+
+        If this block has no title set, don't display any title. Then, if this is the only block
+        in the unit, the unit's title will be used. (Why isn't it always just used?)
+        """
+        has_explicitly_set_title = self.fields['display_name'].is_set_on(self)
+        if has_explicitly_set_title:
+            return [self.display_name]
+        return []
 
     def get_theme(self):
         """
@@ -318,7 +319,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     )
 
     editable_fields = (
-        'display_name', 'mode', 'followed_by', 'max_attempts', 'enforce_dependency',
+        'display_name', 'followed_by', 'max_attempts', 'enforce_dependency',
         'display_submit', 'feedback_label', 'weight', 'extended_feedback'
     )
 
@@ -807,21 +808,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         fragment.initialize_js('MentoringEditComponents')
         return fragment
 
-    def get_content_titles(self):
-        """
-        By default, each Sequential block in a course ("Subsection" in Studio parlance) will
-        display the display_name of each descendant in a tooltip above the content. We don't
-        want that - we only want to display one title for this mentoring block as a whole.
-        Otherwise things like "Choice (yes) (Correct)" will appear in the tooltip.
-
-        If this block has no title set, don't display any title. Then, if this is the only block
-        in the unit, the unit's title will be used. (Why isn't it always just used?)
-        """
-        has_explicitly_set_title = self.fields['display_name'].is_set_on(self)
-        if has_explicitly_set_title:
-            return [self.display_name]
-        return []
-
     @staticmethod
     def workbench_scenarios():
         """
@@ -916,17 +902,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return any(child_isinstance(self, child_id, ReviewStepBlock) for child_id in self.children)
 
     @property
-    def assessment_message(self):
-        """
-        Get the message to display to a student following a submission in assessment mode.
-        """
-        if not self.max_attempts_reached:
-            return self.get_message_content('on-assessment-review', or_default=True)
-        else:
-            assessment_message = _("Note: you have used all attempts. Continue to the next unit.")
-            return '<p>{}</p>'.format(assessment_message)
-
-    @property
     def score(self):
         questions = self.questions
         total_child_weight = sum(float(question.weight) for question in questions)
@@ -946,6 +921,10 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         partially_correct = self.answer_mapper(PARTIAL)
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
+
+    @property
+    def complete(self):
+        return not self.score.incorrect and not self.score.partially_correct
 
     @property
     def review_tips(self):
@@ -1017,7 +996,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return [
             MentoringStepBlock,
             ReviewStepBlock,
-            NestedXBlockSpec(OnAssessmentReviewMentoringMessageShim, boilerplate='on-assessment-review'),
         ]
 
     @XBlock.json_handler
@@ -1040,6 +1018,16 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         }
 
     @XBlock.json_handler
+    def publish_attempt(self, data, suffix):
+        score = self.score
+        grade_data = {
+            'value': score.raw,
+            'max_value': 1,
+        }
+        self.runtime.publish(self, 'grade', grade_data)
+        return {}
+
+    @XBlock.json_handler
     def get_grade(self, data, suffix):
         score = self.score
         return {
@@ -1050,7 +1038,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'correct': self.correct_json(stringify=False),
             'incorrect': self.incorrect_json(stringify=False),
             'partial': self.partial_json(stringify=False),
-            'assessment_message': self.assessment_message,
+            'complete': self.complete,
+            'max_attempts_reached': self.max_attempts_reached,
             'assessment_review_tips': self.review_tips,
         }
 

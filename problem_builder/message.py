@@ -48,9 +48,8 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             "long_display_name": _(u"Message shown when complete"),
             "default": _(u"Great job!"),
             "description": _(
-                u"In standard mode, this message will be shown when the student achieves a "
-                "perfect score. "
-                "This message is ignored in assessment mode."
+                u"This message will be shown when the student achieves a perfect score. "
+                "Note that it is ignored in Problem Builder blocks using the legacy assessment mode."
             ),
         },
         "incomplete": {
@@ -58,9 +57,9 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             "long_display_name": _(u"Message shown when incomplete"),
             "default": _(u"Not quite! You can try again, though."),
             "description": _(
-                u"In standard mode, this message will be shown when the student gets at least "
-                "one question wrong, but is allowed to try again. "
-                "This message is ignored in assessment mode."
+                u"This message will be shown when the student gets at least one question wrong, "
+                "but is allowed to try again. "
+                "Note that it is ignored in Problem Builder blocks using the legacy assessment mode."
             ),
         },
         "max_attempts_reached": {
@@ -68,9 +67,9 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             "long_display_name": _(u"Message shown when student reaches max. # of attempts"),
             "default": _(u"Sorry, you have used up all of your allowed submissions."),
             "description": _(
-                u"In standard mode, this message will be shown when the student has used up "
+                u"This message will be shown when the student has used up "
                 "all of their allowed attempts without achieving a perfect score. "
-                "This message is ignored in assessment mode."
+                "Note that it is ignored in Problem Builder blocks using the legacy assessment mode."
             ),
         },
         "on-assessment-review": {
@@ -99,6 +98,18 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
                 "wrong and is allowed to try again. "
                 "This message is ignored in standard mode and is not shown if the student has "
                 "used up all of their allowed attempts."
+            ),
+        },
+        "on-review": {
+            "display_name": _(u"Message shown when no attempts left"),
+            "long_display_name": _(u"Message shown during review when no attempts remain"),
+            "default": _(
+                u"Note: you have used all attempts. Continue to the next unit."
+            ),
+            "description": _(
+                u"This message will be shown when the student is reviewing their answers to the assessment, "
+                "if the student has used up all of their allowed attempts. "
+                "It is not shown if the student is allowed to try again."
             ),
         },
     }
@@ -194,11 +205,6 @@ class IncompleteMentoringMessageShim(object):
     STUDIO_LABEL = _("Message (Incomplete)")
 
 
-class MaxAttemptsReachedMentoringMessageShim(object):
+class OnReviewMentoringMessageShim(object):
     CATEGORY = 'pb-message'
-    STUDIO_LABEL = _("Message (Max # Attempts)")
-
-
-class OnAssessmentReviewMentoringMessageShim(object):
-    CATEGORY = 'pb-message'
-    STUDIO_LABEL = _("Message (Assessment Review)")
+    STUDIO_LABEL = _("Message (Review)")
