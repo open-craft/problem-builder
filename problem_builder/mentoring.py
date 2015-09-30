@@ -34,10 +34,8 @@ from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
-from .message import (
-    MentoringMessageBlock, CompletedMentoringMessageShim, IncompleteMentoringMessageShim,
-    OnReviewMentoringMessageShim
-)
+from .message import MentoringMessageBlock
+
 from .mixins import (
     _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
 )
@@ -45,7 +43,7 @@ from .mixins import (
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
-    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin
+    StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin
 )
 
 
@@ -134,6 +132,21 @@ class BaseMentoringBlock(
     @property
     def max_attempts_reached(self):
         return self.max_attempts > 0 and self.num_attempts >= self.max_attempts
+
+    def get_content_titles(self):
+        """
+        By default, each Sequential block in a course ("Subsection" in Studio parlance) will
+        display the display_name of each descendant in a tooltip above the content. We don't
+        want that - we only want to display one title for this mentoring block as a whole.
+        Otherwise things like "Choice (yes) (Correct)" will appear in the tooltip.
+
+        If this block has no title set, don't display any title. Then, if this is the only block
+        in the unit, the unit's title will be used. (Why isn't it always just used?)
+        """
+        has_explicitly_set_title = self.fields['display_name'].is_set_on(self)
+        if has_explicitly_set_title:
+            return [self.display_name]
+        return []
 
     def get_theme(self):
         """
@@ -794,21 +807,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
         fragment.initialize_js('MentoringEditComponents')
         return fragment
-
-    def get_content_titles(self):
-        """
-        By default, each Sequential block in a course ("Subsection" in Studio parlance) will
-        display the display_name of each descendant in a tooltip above the content. We don't
-        want that - we only want to display one title for this mentoring block as a whole.
-        Otherwise things like "Choice (yes) (Correct)" will appear in the tooltip.
-
-        If this block has no title set, don't display any title. Then, if this is the only block
-        in the unit, the unit's title will be used. (Why isn't it always just used?)
-        """
-        has_explicitly_set_title = self.fields['display_name'].is_set_on(self)
-        if has_explicitly_set_title:
-            return [self.display_name]
-        return []
 
     @staticmethod
     def workbench_scenarios():
