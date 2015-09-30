@@ -1,6 +1,8 @@
-from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
-
+from mock import patch
 from ddt import ddt, data
+
+from workbench.runtime import WorkbenchRuntime
+from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
 
 
 @ddt
@@ -238,7 +240,23 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         # Last step
         # Submit MRQ, go to review
-        self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
+        with patch.object(WorkbenchRuntime, 'publish') as patched_method:
+            self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
+
+            # Check if "grade" event was published
+            # Note that we can't use patched_method.assert_called_once_with here
+            # because there is no way to obtain a reference to the block instance generated from the XML scenario
+            self.assertTrue(patched_method.called)
+            self.assertEquals(len(patched_method.call_args_list), 1)
+
+            block_object = self.load_root_xblock()
+
+            positional_args = patched_method.call_args[0]
+            block, event, data = positional_args
+
+            self.assertEquals(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
+            self.assertEquals(event, 'grade')
+            self.assertEquals(data, {'value': 0.625, 'max_value': 1})
 
         # Review step
         expected_results = {

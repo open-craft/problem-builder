@@ -262,8 +262,9 @@ class ReviewStepBlock(MessageParentMixin, StudioContainerWithNestedXBlocksMixin,
 
     @XBlock.json_handler
     def get_assessment_message(self, grade, suffix):
-        complete = grade['complete']
-        max_attempts_reached = grade['max_attempts_reached']
+        # Data passed as "grade" comes from "get_grade" handler of Step Builder (MentoringWithExplicitStepsBlock)
+        complete = grade.get('complete')
+        max_attempts_reached = grade.get('max_attempts_reached')
         return {
             'assessment_message': self.assessment_message(complete, max_attempts_reached)
         }
