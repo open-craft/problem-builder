@@ -108,7 +108,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         # Check grade breakdown
         if expected["correct"] == 1:
-            self.assertIn("You answered 1 questions correctly.".format(**expected), step_builder.text)
+            self.assertIn("You answered 1 question correctly.".format(**expected), step_builder.text)
         else:
             self.assertIn("You answered {correct} questions correctly.".format(**expected), step_builder.text)
 
@@ -261,15 +261,24 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.wait_until_hidden(controls.try_again)
         self.assert_no_message_text(step_builder)
 
+        # Step 1
+        # Submit free-form answer, go to next step
         self.freeform_answer(
             None, step_builder, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
         )
+        # Step 2
+        # Submit MCQ, go to next step
         self.single_choice_question(None, step_builder, controls, 'Yes', CORRECT)
+        # Step 3
+        # Submit rating, go to next step
         self.rating_question(None, step_builder, controls, "1 - Not good at all", INCORRECT)
 
+        # Last step
+        # Submit MRQ, go to review
         user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
         self.multiple_response_question(None, step_builder, controls, user_selection, CORRECT, last=True)
 
+        # Review step
         expected_results = {
             "correct": 3, "partial": 0, "incorrect": 1, "percentage": 75,
             "num_attempts": 2, "max_attempts": max_attempts
@@ -345,3 +354,87 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         # The review tips will not be shown because no attempts remain:
         self.assertFalse(review_tips.is_displayed())
+
+    def test_default_messages(self):
+        max_attempts = 3
+        extended_feedback = False
+        params = {
+            "max_attempts": max_attempts,
+            "extended_feedback": extended_feedback,
+        }
+        step_builder, controls = self.load_assessment_scenario("step_builder_default_messages.xml", params)
+
+        # First attempt: incomplete (second question wrong)
+
+        # Step 1
+        # Submit free-form answer, go to next step
+        self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
+
+        # Step 2
+        # Submit MCQ, go to next step
+        self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT, last=True)
+
+        # Review step
+        expected_results = {
+            "correct": 1, "partial": 0, "incorrect": 1, "percentage": 50,
+            "num_attempts": 1, "max_attempts": max_attempts
+        }
+        self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
+
+        # Should show default message for incomplete submission
+        self.assert_message_text(step_builder, "Not quite! You can try again, though.")
+
+        # Try again
+        controls.try_again.click()
+
+        self.wait_until_hidden(controls.try_again)
+        self.assert_no_message_text(step_builder)
+
+        # Second attempt: complete (both questions correct)
+
+        # Step 1
+        # Submit free-form answer, go to next step
+        self.freeform_answer(
+            None, step_builder, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
+        )
+        # Step 2
+        # Submit MCQ, go to next step
+        self.single_choice_question(None, step_builder, controls, 'Yes', CORRECT, last=True)
+
+        # Review step
+        expected_results = {
+            "correct": 2, "partial": 0, "incorrect": 0, "percentage": 100,
+            "num_attempts": 2, "max_attempts": max_attempts
+        }
+        self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
+
+        # Should show default message for complete submission
+        self.assert_message_text(step_builder, "Great job!")
+
+        # Try again
+        controls.try_again.click()
+
+        self.wait_until_hidden(controls.try_again)
+        self.assert_no_message_text(step_builder)
+
+        # Last attempt: complete (both questions correct)
+
+        # Step 1
+        # Submit free-form answer, go to next step
+        self.freeform_answer(
+            None, step_builder, controls, 'This is yet another answer', CORRECT,
+            saved_value='This is a different answer'
+        )
+        # Step 2
+        # Submit MCQ, go to next step
+        self.single_choice_question(None, step_builder, controls, 'Yes', CORRECT, last=True)
+
+        # Review step
+        expected_results = {
+            "correct": 2, "partial": 0, "incorrect": 0, "percentage": 100,
+            "num_attempts": 3, "max_attempts": max_attempts
+        }
+        self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
+
+        # Should show default message for review
+        self.assert_message_text(step_builder, "Note: you have used all attempts. Continue to the next unit.")
