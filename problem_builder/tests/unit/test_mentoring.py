@@ -168,3 +168,19 @@ class TestMentoringBlockJumpToIds(unittest.TestCase):
         self.block.steps = [self.mcq_block]
         self.block.student_results = {'test_mcq': {'status': 'incorrect'}}
         self.assertEqual(self.block.review_tips, ['replaced-url'])
+
+    def test_get_tip_content_no_tips(self):
+        self.mcq_block = MCQBlock(self.runtime_mock, DictFieldData({'name': 'test_mcq'}), Mock())
+        self.mcq_block.get_review_tip = Mock()
+        # If there are no review tips, get_review_tip will return None;
+        # simulate this situation here:
+        self.mcq_block.get_review_tip.return_value = None
+        self.block.step_ids = []
+        self.block.steps = [self.mcq_block]
+        self.block.student_results = {'test_mcq': {'status': 'incorrect'}}
+        try:
+            review_tips = self.block.review_tips
+        except TypeError:
+            self.fail('Trying to replace jump_to_id URLs in non-existent review tips.')
+        else:
+            self.assertEqual(review_tips, [])
