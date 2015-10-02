@@ -26,8 +26,13 @@ function MentoringWithStepsEdit(runtime, element) {
         $buttons.on('click', disableButton);
     };
 
-    initButtons('sb-review-step');
+    var updateButtons = function() {
+        initButtons('sb-review-step');
+    };
 
     ProblemBuilderUtil.transformClarifications(element);
-    StudioEditableXBlockMixin(runtime, element);
+
+    updateButtons();
+    runtime.listenTo('deleted-child', updateButtons);
+
 }

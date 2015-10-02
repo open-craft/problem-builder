@@ -27,8 +27,13 @@ function ReviewStepEdit(runtime, element) {
         $buttons.on('click', disableButton);
     };
 
-    initButtons('pb-message');
+    var updateButtons = function() {
+        initButtons('pb-message');
+    };
 
     ProblemBuilderUtil.transformClarifications(element);
-    StudioEditableXBlockMixin(runtime, element);
+
+    updateButtons();
+    runtime.listenTo('deleted-child', updateButtons);
+
 }
