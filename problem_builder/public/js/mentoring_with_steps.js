@@ -178,6 +178,11 @@ function MentoringWithStepsBlock(runtime, element) {
     function updateDisplay() {
         cleanAll();
         if (atReviewStep()) {
+            // Tell supporting runtimes to enable navigation between units;
+            // user is currently not in the middle of an attempt
+            // so it makes sense for them to be able to leave the current unit by clicking arrow buttons
+            notify('navigation', {state: 'unlock'});
+
             showReviewStep();
             showAttempts();
         } else {
@@ -324,6 +329,11 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function showGrade() {
+        // Tell supporting runtimes to enable navigation between units;
+        // user is currently not in the middle of an attempt
+        // so it makes sense for them to be able to leave the current unit by clicking arrow buttons
+        notify('navigation', {state: 'unlock'});
+
         cleanAll();
         showReviewStep();
         showAttempts();
@@ -343,6 +353,11 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function handleTryAgain(result) {
+        // Tell supporting runtimes to disable navigation between units;
+        // this keeps users from accidentally clicking arrow buttons
+        // and interrupting their experience with the current unit
+        notify('navigation', {state: 'lock'});
+
         activeStep = result.active_step;
         clearSelections();
         updateDisplay();
@@ -364,6 +379,13 @@ function MentoringWithStepsBlock(runtime, element) {
         submitXHR = $.post(handlerUrl, JSON.stringify({})).success(handleTryAgain);
     }
 
+    function notify(name, data){
+        // Notification interface does not exist in the workbench.
+        if (runtime.notify) {
+            runtime.notify(name, data);
+        }
+    }
+
     function initClickHandlers() {
         $(document).on("click", function(event, ui) {
             var target = $(event.target);
@@ -382,6 +404,11 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function initXBlockView() {
+        // Tell supporting runtimes to disable navigation between units;
+        // this keeps users from accidentally clicking arrow buttons
+        // and interrupting their experience with the current unit
+        notify('navigation', {state: 'lock'});
+
         // Hide steps until we're ready
         hideAllSteps();
 
