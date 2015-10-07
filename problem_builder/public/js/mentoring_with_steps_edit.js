@@ -1,6 +1,8 @@
 function MentoringWithStepsEdit(runtime, element) {
     "use strict";
 
+    var $buttons = $('.add-xblock-component-button[data-category=sb-review-step]', element);
+
     var blockIsPresent = function(klass) {
         return $('.xblock ' + klass).length > 0;
     };
@@ -18,16 +20,26 @@ function MentoringWithStepsEdit(runtime, element) {
         }
     };
 
-    var initButtons = function(dataCategory) {
-        var $buttons = $('.add-xblock-component-button[data-category='+dataCategory+']', element);
-        $buttons.each(function() {
-            updateButton($(this), blockIsPresent('.xblock-header-sb-review-step'));
+    var updateButtons = function(buttons) {
+        buttons.each(function() {
+            var button = $(this);
+            updateButton(button, blockIsPresent('.xblock-header-sb-review-step'));
         });
+    };
+
+    var initButtons = function() {
+        updateButtons($buttons);
         $buttons.on('click', disableButton);
     };
 
-    initButtons('sb-review-step');
+    var resetButtons = function() {
+        var $disabledButtons = $buttons.filter('.disabled');
+        updateButtons($disabledButtons);
+    };
 
     ProblemBuilderUtil.transformClarifications(element);
-    StudioEditableXBlockMixin(runtime, element);
+
+    initButtons();
+    runtime.listenTo('deleted-child', resetButtons);
+
 }
