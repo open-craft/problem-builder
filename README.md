@@ -118,7 +118,8 @@ following command:
 $ ./run_tests.py
 ```
 
-If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
+If you want to run only the integration or the unit tests, append the directory
+to the command. You can also run separate modules in this manner.
 
 ```bash
 $ ./run_tests.py problem_builder/tests/unit
