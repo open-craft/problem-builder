@@ -264,6 +264,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             "num_attempts": 1, "max_attempts": max_attempts
         }
         self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
+        if extended_feedback and max_attempts == 1:
+            self.assertIn("Question 1 and Question 3", step_builder.find_element_by_css_selector('.correct-list').text)
 
         if max_attempts == 1:
             self.assert_message_text(step_builder, "On review message text")
@@ -302,6 +304,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             "num_attempts": 2, "max_attempts": max_attempts
         }
         self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
+        if extended_feedback and max_attempts == 2:
+            self.assertIn(
+                "Question 1, Question 2, and Question 4",
+                step_builder.find_element_by_css_selector('.correct-list').text
+            )
 
         if max_attempts == 2:
             self.assert_disabled(controls.try_again)
