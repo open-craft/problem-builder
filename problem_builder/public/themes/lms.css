@@ -103,3 +103,11 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
 .themed-xblock.mentoring .choice.incorrect .choice-tips-container.active {
     border-color: #c1373f;
 }
+
+.themed-xblock.mentoring .review-list {
+    margin-top: 0;
+}
+
+.themed-xblock.mentoring .grade .grade-result .results-section p {
+    margin-bottom: 4px; /* Override LMS rule 'div.course-wrapper section.course-content p { margin-bottom: huge; }' */
+}

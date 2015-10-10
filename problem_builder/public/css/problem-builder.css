@@ -126,7 +126,6 @@
 
 .mentoring .grade .checkmark-incorrect {
     margin-left: 10px;
-    margin-right: 20px;
 }
 
 .mentoring input[type=button],
@@ -159,11 +158,12 @@
 }
 
 .mentoring .results-section {
-    float: left;
+    margin-left: 40px;
 }
 
 .mentoring .results-section p {
-    margin: 4px;
+    margin-bottom: 4px;
+    padding-top: 4px;
 }
 
 .mentoring .clear {

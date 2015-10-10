@@ -57,11 +57,19 @@
 
   <!-- Template for extended feedback: Show extended feedback details when all attempts are used up. -->
   <script type="text/template" id="xblock-step-links-template">
-  <% var q, last_question; %>
   <ul class="review-list <%= correctness %>-list">
-      <% for (var question in questions) {{ q = questions[question]; last_question = question == questions.length - 1; %>
-      <li><a href="#" class="step-link" data-step="<%= q.step %>"><%= _.template(gettext("Question {number}"), {number: q.number}, {interpolate: /\{(.+?)\}/g}) %></a></li>
-      <% }} %>
+      <% for (var question in questions) { %>
+        <%
+          var q = questions[question];
+          var last_question = question == questions.length - 1;
+          var second_last_question = question == questions.length - 2;
+        %>
+        <li>
+          <a href="#" class="step-link" data-step="<%= q.step %>"><%= 
+            _.template(gettext("Question {number}"), {number: q.number}, {interpolate: /\{(.+?)\}/g})
+          %></a><% if (!last_question) { %><%= (questions.length > 2 ? ", " : "") %><%= (second_last_question ? " " + gettext("and"): "") %><% } %>
+        </li>
+      <% } %>
   </ul>
   </script>
 
