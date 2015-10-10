@@ -22,7 +22,7 @@ Test that we can upgrade from mentoring v1 to problem builder (v2).
 """
 import ddt
 from lxml import etree
-from problem_builder import MentoringBlock
+from problem_builder.mentoring import MentoringBlock
 from problem_builder.v1.xml_changes import convert_xml_v1_to_v2
 import os.path
 from StringIO import StringIO

@@ -40,20 +40,20 @@ def package_data(pkg, root_list):
 # Main ##############################################################
 
 BLOCKS = [
-    'problem-builder = problem_builder:MentoringBlock',
+    'problem-builder = problem_builder.mentoring:MentoringBlock',
 
-    'pb-table = problem_builder:MentoringTableBlock',
-    'pb-column = problem_builder:MentoringTableColumn',
-    'pb-answer = problem_builder:AnswerBlock',
-    'pb-answer-recap = problem_builder:AnswerRecapBlock',
-    'pb-mcq = problem_builder:MCQBlock',
-    'pb-rating = problem_builder:RatingBlock',
-    'pb-mrq = problem_builder:MRQBlock',
-    'pb-message = problem_builder:MentoringMessageBlock',
-    'pb-tip = problem_builder:TipBlock',
-    'pb-choice = problem_builder:ChoiceBlock',
+    'pb-table = problem_builder.table:MentoringTableBlock',
+    'pb-column = problem_builder.table:MentoringTableColumn',
+    'pb-answer = problem_builder.answer:AnswerBlock',
+    'pb-answer-recap = problem_builder.answer:AnswerRecapBlock',
+    'pb-mcq = problem_builder.mcq:MCQBlock',
+    'pb-rating = problem_builder.mcq:RatingBlock',
+    'pb-mrq = problem_builder.mrq:MRQBlock',
+    'pb-message = problem_builder.message:MentoringMessageBlock',
+    'pb-tip = problem_builder.tip:TipBlock',
+    'pb-choice = problem_builder.choice:ChoiceBlock',
 
-    'pb-dashboard = problem_builder:DashboardBlock',
+    'pb-dashboard = problem_builder.dashboard:DashboardBlock',
     # Deprecated. You can temporarily uncomment and run 'python setup.py develop' if you have these blocks
     # installed from testing mentoring v2 and need to get past an error message.
     #'mentoring = problem_builder:MentoringBlock',  # Deprecated alias for problem-builder
