@@ -69,6 +69,6 @@ class MentoringThemeTest(MentoringAssessmentBaseTest):
         ('apros', "#ff0000")
     )
     def test_lms_theme_applied(self, theme, expected_color):
-        with mock.patch("problem_builder.MentoringBlock.get_theme") as patched_theme:
+        with mock.patch("problem_builder.mentoring.MentoringBlock.get_theme") as patched_theme:
             patched_theme.return_value = _get_mentoring_theme_settings(theme)
             self.assert_status_icon_color(expected_color)

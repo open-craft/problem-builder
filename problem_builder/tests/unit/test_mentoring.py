@@ -2,8 +2,7 @@ import unittest
 import ddt
 from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
-from problem_builder import MentoringBlock
-from problem_builder.mentoring import _default_theme_config
+from problem_builder.mentoring import MentoringBlock, _default_theme_config
 
 
 class TestMentoringBlock(unittest.TestCase):
