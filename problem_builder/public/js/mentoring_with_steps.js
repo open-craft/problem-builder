@@ -175,8 +175,14 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewTipsDOM.empty().hide();
     }
 
+    function updateNextLabel() {
+        var step = steps[activeStep];
+        nextDOM.attr('value', step.getStepLabel());
+    }
+
     function updateDisplay() {
         cleanAll();
+
         if (atReviewStep()) {
             // Tell supporting runtimes to enable navigation between units;
             // user is currently not in the middle of an attempt
@@ -188,6 +194,7 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             showActiveStep();
             validateXBlock();
+            updateNextLabel();
             nextDOM.attr('disabled', 'disabled');
             if (isLastStep() && reviewStep) {
                 reviewDOM.attr('disabled', 'disabled');
@@ -243,6 +250,7 @@ function MentoringWithStepsBlock(runtime, element) {
         activeStep = stepIndex;
         cleanAll();
         showActiveStep();
+        updateNextLabel();
 
         if (isLastStep()) {
             reviewDOM.show();
