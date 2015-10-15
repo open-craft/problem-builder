@@ -99,7 +99,13 @@ class MentoringStepBlock(
         scope=Scope.user_state
     )
 
-    editable_fields = ('display_name', 'show_title',)
+    next_button_label = String(
+        display_name=_("Next Button Label"),
+        help=_("Customize the text of the 'Next' button."),
+        default=_("Next Step")
+    )
+
+    editable_fields = ('display_name', 'show_title', 'next_button_label')
 
     @lazy
     def siblings(self):

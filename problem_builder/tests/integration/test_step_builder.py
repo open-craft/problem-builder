@@ -215,6 +215,21 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             None, step_builder, controls, extended_feedback=True, alternative_review=True
         )
 
+    def test_next_label(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_next.xml")
+        self.expect_question_visible(None, step_builder)
+        self.assertEqual(controls.next_question.get_attribute('value'), "Next Challenge")
+        self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
+        self.expect_question_visible(None, step_builder)
+        self.assertEqual(controls.next_question.get_attribute('value'), "Next Item")
+        self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
+        self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT, last=True)
+
+        # Check extended feedback loads the labels correctly.
+        step_builder.find_elements_by_css_selector('.correct-list li a')[0].click()
+        self.expect_question_visible(None, step_builder)
+        self.assertEqual(controls.next_question.get_attribute('value'), "Next Challenge")
+
     @data(
         {"max_attempts": 0, "extended_feedback": False},  # Unlimited attempts, no extended feedback
         {"max_attempts": 1, "extended_feedback": True},  # Limited attempts, extended feedback

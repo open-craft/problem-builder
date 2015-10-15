@@ -81,6 +81,10 @@ function MentoringStepBlock(runtime, element) {
                     callIfExists(child, 'handleReview', result);
                 }
             }
+        },
+
+        getStepLabel: function() {
+            return $('.sb-step', element).data('next-button-label');
         }
 
     };
