@@ -185,7 +185,7 @@ class RatingBlock(MCQBlock):
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
     )
-    editable_fields = MCQBlock.editable_fields + ('low', 'high')
+    editable_fields = MCQBlock.editable_fields + ('low', 'high', 'name')
 
     @property
     def all_choice_values(self):

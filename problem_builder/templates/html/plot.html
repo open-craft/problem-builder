@@ -1,0 +1,35 @@
+<div class="sb-plot">
+
+  <div class="quadrants">
+    <label>
+      Quadrant labels
+      <input type="button"
+             class="plot-quadrants"
+             data-q1-label="{{ self.q1_label }}"
+             data-q2-label="{{ self.q2_label }}"
+             data-q3-label="{{ self.q3_label }}"
+             data-q4-label="{{ self.q4_label }}"
+             value="Off">
+    </label>
+  </div>
+
+  <div class="overlays">
+    <h3>Compare your plot to others!</h3>
+
+    <input type="button"
+           class="plot-default"
+           data-claims="{{ self.default_claims }}"
+           data-point-color="{{ self.point_color_default }}"
+           data-overlay-on="false"
+           value="{{ self.plot_label }}"
+           />
+    <input type="button"
+           class="plot-average"
+           data-claims="{{ self.average_claims }}"
+           data-point-color="{{ self.point_color_average }}"
+           data-overlay-on="false"
+           value="Average"
+           />
+  </div>
+
+</div>

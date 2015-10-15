@@ -37,6 +37,7 @@ from .message import (
 )
 from problem_builder.mixins import EnumerableChildMixin, MessageParentMixin, StepParentMixin
 from problem_builder.mrq import MRQBlock
+from problem_builder.plot import PlotBlock
 from problem_builder.table import MentoringTableBlock
 
 
@@ -146,7 +147,7 @@ class MentoringStepBlock(
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
             MCQBlock, RatingBlock, MRQBlock, HtmlBlockShim,
-            AnswerRecapBlock, MentoringTableBlock,
+            AnswerRecapBlock, MentoringTableBlock, PlotBlock
         ] + additional_blocks
 
     @property

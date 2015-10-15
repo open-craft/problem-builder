@@ -1,0 +1,11 @@
+.quadrants label {
+    font-weight: bold;
+}
+
+.overlays {
+    float: right;
+}
+
+.quadrants input, .overlays input {
+    background-color: rgb(204, 204, 204);
+}

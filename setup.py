@@ -45,6 +45,8 @@ BLOCKS = [
     'sb-step = problem_builder.step:MentoringStepBlock',
     'sb-review-step = problem_builder.step:ReviewStepBlock',
 
+    'sb-plot = problem_builder.plot:PlotBlock',
+
     'pb-table = problem_builder.table:MentoringTableBlock',
     'pb-column = problem_builder.table:MentoringTableColumn',
     'pb-answer = problem_builder.answer:AnswerBlock',
