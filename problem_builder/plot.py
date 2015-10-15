@@ -44,6 +44,7 @@ def _(text):
 
 
 @XBlock.needs('i18n')
+@XBlock.wants('user')
 class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin, XBlock):
     """
     XBlock that displays plot that summarizes answers to scale questions.
@@ -141,32 +142,56 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
     @property
     def default_claims(self):
         if not self.claims:
-            return json.dumps([])
+            return []
+
+        course_id = unicode(getattr(self.runtime, 'course_id', 'course_id'))
+        course_key = CourseKey.from_string(course_id)
+        course_key_str = unicode(course_key)
+
+        user_service = self.runtime.service(self, 'user')
+        user = user_service.get_current_user()
+        username = user.opt_attrs.get('edx-platform.username')
+        anonymous_user_id = user_service.get_anonymous_user_id(username, course_id)
 
         mentoring_block = self.get_parent().get_parent()
+        question_ids, questions = mentoring_block.question_ids, mentoring_block.questions
         claims = []
         for line in self.claims.split('\n'):
             claim, q1, q2 = line.split(', ')
             r1, r2 = None, None
-            for step in mentoring_block.steps:
-                for student_result in step.student_results:
-                    child_name, child_result = student_result
-                    if child_name == q1:
-                        r1 = child_result['submission']
-                    if child_name == q2:  # Don't use "elif" here (would break cases in which q1 == q2)
-                        r2 = child_result['submission']
-                    if r1 is not None and r2 is not None:
-                        break
+            for question_id, question in zip(question_ids, questions):
+                if question.name == q1:
+                    r1 = self._default_response(course_key_str, question, question_id, anonymous_user_id)
+                if question.name == q2:
+                    r2 = self._default_response(course_key_str, question, question_id, anonymous_user_id)
                 if r1 is not None and r2 is not None:
                     break
             claims.append([claim, r1, r2])
 
-        return json.dumps(claims)
+        return claims
+
+    def _default_response(self, course_key_str, question, question_id, user_id):
+        from .tasks import _get_answer  # Import here to avoid circular dependency
+        # 1. Obtain block_type for question
+        question_type = question.scope_ids.block_type
+        # 2. Obtain submissions for question using course_key_str, block_id, block_type, user_id
+        student_dict = {
+            'student_id': user_id,
+            'course_id': course_key_str,
+            'item_id': question_id,
+            'item_type': question_type,
+        }
+        submissions = sub_api.get_submissions(student_dict, limit=1)  # Gets latest submission
+        # 3. Extract response from latest submission for question
+        answer_cache = {}
+        for submission in submissions:
+            answer = _get_answer(question, submission, answer_cache)
+            return int(answer)
 
     @property
     def average_claims(self):
         if not self.claims:
-            return json.dumps([])
+            return []
 
         course_id = unicode(getattr(self.runtime, 'course_id', 'course_id'))
         course_key = CourseKey.from_string(course_id)
@@ -187,14 +212,14 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
                     break
             claims.append([claim, r1, r2])
 
-        return json.dumps(claims)
+        return claims
 
     def _average_response(self, course_key_str, question, question_id):
         from .tasks import _get_answer  # Import here to avoid circular dependency
         # 1. Obtain block_type for question
         question_type = question.scope_ids.block_type
         # 2. Obtain submissions for question using course_key_str, block_id, block_type
-        submissions = sub_api.get_all_submissions(course_key_str, question_id, question_type)
+        submissions = sub_api.get_all_submissions(course_key_str, question_id, question_type)  # Gets latest submissions
         # 3. Extract responses from submissions for question and sum them up
         answer_cache = {}
         response_total = 0
@@ -206,6 +231,19 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         # 4. Calculate average response for question
         if num_submissions:
             return response_total / float(num_submissions)
+
+    def default_claims_json(self):
+        return json.dumps(self.default_claims)
+
+    def average_claims_json(self):
+        return json.dumps(self.average_claims)
+
+    @XBlock.json_handler
+    def get_data(self, data, suffix):
+        return {
+            'default_claims': self.default_claims,
+            'average_claims': self.average_claims,
+        }
 
     def clean_studio_edits(self, data):
         # FIXME: Use this to clean data.claims (remove leading/trailing whitespace, etc.)

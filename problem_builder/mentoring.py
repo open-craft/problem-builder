@@ -1062,6 +1062,11 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'active_step': self.active_step
         }
 
+    def author_preview_view(self, context):
+        context = context.copy() if context else {}
+        context['author_preview_view'] = True
+        return super(MentoringWithExplicitStepsBlock, self).author_preview_view(context)
+
     def author_edit_view(self, context):
         """
         Add some HTML to the author view that allows authors to add child blocks.

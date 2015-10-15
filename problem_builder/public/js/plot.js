@@ -57,7 +57,6 @@ function PlotBlock(runtime, element) {
     var defaultClaims = $('.plot-default', element).data('claims');
     var averageClaims = $('.plot-average', element).data('claims');
 
-
     // Colors
 
     var defaultColor = $('.plot-default', element).data('point-color');
@@ -75,48 +74,60 @@ function PlotBlock(runtime, element) {
     var defaultButton = $('.plot-default', element);
     var averageButton = $('.plot-average', element);
 
-    function toggleOverlay(claims, color, klass) {
+    function toggleOverlay(claims, color, klass, refresh) {
         var selector = "." + klass;
         var selection = svgContainer.selectAll(selector);
         if (selection.empty()) {
-            svgContainer.selectAll(selector)
-                .data(claims)
-                .enter()
-                .append("circle")
-                .attr("class", klass)
-                .attr("title", function(d) {
-                    return d[0] + ": " + d[1] + ", " + d[2];
-                })
-                .attr("cx", function(d) {
-                    return xScale(d[1]);
-                })
-                .attr("cy", function(d) {
-                    return yScale(d[2]);
-                })
-                .attr("r", 5)
-                .style("fill", color);
+            showOverlay(selection, claims, color, klass);
         } else {
-            selection.remove();
+            hideOverlay(selection);
+            if (refresh) {
+                toggleOverlay(claims, color, klass);
+            }
         }
     }
 
-    function toggleBorderColor(button, color) {
+    function showOverlay(selection, claims, color, klass) {
+        selection
+            .data(claims)
+            .enter()
+            .append("circle")
+            .attr("class", klass)
+            .attr("title", function(d) {
+                return d[0] + ": " + d[1] + ", " + d[2];
+            })
+            .attr("cx", function(d) {
+                return xScale(d[1]);
+            })
+            .attr("cy", function(d) {
+                return yScale(d[2]);
+            })
+            .attr("r", 5)
+            .style("fill", color);
+    }
+
+    function hideOverlay(selection) {
+        selection.remove();
+    }
+
+    function toggleBorderColor(button, color, refresh) {
         var $button = $(button);
         var overlayOn = $button.data("overlay-on");
-        if (overlayOn) {
+        if (overlayOn && !refresh) {
             $button.css("border-color", "rgb(237, 237, 237)");  // Default color: grey
+            $button.data("overlay-on", false);
         } else {
             $button.css("border-color", color);
+            $button.data("overlay-on", true);
         }
-        $button.data("overlay-on", !overlayOn);
     }
 
-    defaultButton.on('click', function() {
-        toggleOverlay(defaultClaims, defaultColor, 'claim-default');
-        toggleBorderColor(this, defaultColor);
+    defaultButton.on('click', function(event, refresh) {
+        toggleOverlay(defaultClaims, defaultColor, 'claim-default', refresh);
+        toggleBorderColor(this, defaultColor, refresh);
     });
 
-    averageButton.on('click', function() {
+    averageButton.on('click', function(event) {
         toggleOverlay(averageClaims, averageColor, 'claim-average');
         toggleBorderColor(this, averageColor);
     });
@@ -163,12 +174,43 @@ function PlotBlock(runtime, element) {
         toggleQuadrantLabels();
     });
 
-    // Show default overlay initially
-
-    defaultButton.trigger('click');
-
     // Quadrant labels are off initially; color of button for toggling them should reflect this
 
     quadrantsButton.css("border-color", "red");
+
+    // Functions that can be called from the outside
+
+    var dataXHR;
+
+    return {
+
+        update: function() {
+            var handlerUrl = runtime.handlerUrl(element, 'get_data');
+            if (dataXHR) {
+                dataXHR.abort();
+            }
+            dataXHR = $.post(handlerUrl, JSON.stringify({}))
+                .success(function(response) {
+                    defaultClaims = response.default_claims;
+                    averageClaims = response.average_claims;
+
+                    // Default overlay should be visible initially.
+                    // Might still be visible from a previous attempt;
+                    // in that case, we refresh it:
+                    defaultButton.trigger('click', 'refresh');
+
+                    // Average overlay should be hidden initially.
+                    // This is the default when (re-)loading the page from scratch.
+                    // However, the overlay might still be visible from a previous attempt;
+                    // in that case, we hide it:
+                    var selection = svgContainer.selectAll('.claim-average');
+                    if (!selection.empty()) {
+                        hideOverlay(selection);
+                        toggleBorderColor(averageButton, averageColor);
+                    }
+                });
+        }
+
+    };
 
 }
