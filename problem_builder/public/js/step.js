@@ -85,6 +85,10 @@ function MentoringStepBlock(runtime, element) {
 
         getStepLabel: function() {
             return $('.sb-step', element).data('next-button-label');
+        },
+
+        hasQuestion: function() {
+            return $('.sb-step', element).data('has-question')
         }
 
     };

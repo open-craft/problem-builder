@@ -125,6 +125,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
     """
     CATEGORY = 'pb-answer'
     STUDIO_LABEL = _(u"Long Answer")
+    answerable = True
 
     name = String(
         display_name=_("Question ID (name)"),

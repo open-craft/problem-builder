@@ -211,6 +211,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         # It should be possible to visit the MRQ from here
         self.wait_until_clickable(controls.next_question)
         controls.next_question.click()
+        self.html_section(step_builder, controls)
         self.peek_at_multiple_response_question(
             None, step_builder, controls, extended_feedback=True, alternative_review=True
         )
@@ -229,6 +230,24 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         step_builder.find_elements_by_css_selector('.correct-list li a')[0].click()
         self.expect_question_visible(None, step_builder)
         self.assertEqual(controls.next_question.get_attribute('value'), "Next Challenge")
+
+    def html_section(self, step_builder, controls, last=False):
+        self.wait_until_hidden(controls.submit)
+        target_control = controls.review if last else controls.next_question
+        self.wait_until_clickable(target_control)
+        target_control.click()
+
+    def test_html_last(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_html_last.xml")
+        # Step 1
+        # Submit free-form answer, go to next step
+        self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
+
+        # Step 2
+        # Submit MCQ, go to next step
+        self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
+
+        self.html_section(step_builder, controls, last=True)
 
     @data(
         {"max_attempts": 0, "extended_feedback": False},  # Unlimited attempts, no extended feedback
@@ -252,6 +271,9 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         # Step 3
         # Submit rating, go to next step
         self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT)
+
+        # Step 4, html with no question.
+        self.html_section(step_builder, controls)
 
         # Last step
         # Submit MRQ, go to review
@@ -308,6 +330,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         # Submit rating, go to next step
         self.rating_question(None, step_builder, controls, "1 - Not good at all", INCORRECT)
 
+        # Step 4, read only. Go to next step.
+        self.html_section(step_builder, controls)
         # Last step
         # Submit MRQ, go to review
         user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
@@ -350,6 +374,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
         self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
         self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT)
+        self.html_section(step_builder, controls)
         self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
 
         # The review tips for MCQ 2 and the MRQ should be shown:
@@ -374,6 +399,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.single_choice_question(None, step_builder, controls, 'Yes', CORRECT)
         self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT)
         user_selection = ("Its elegance", "Its beauty", "Its gracefulness")
+        self.html_section(step_builder, controls)
         self.multiple_response_question(None, step_builder, controls, user_selection, CORRECT, last=True)
 
         # If attempts remain and student got all answers right, show "complete" message
@@ -390,6 +416,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         )
         self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
         self.rating_question(None, step_builder, controls, "1 - Not good at all", INCORRECT)
+        self.html_section(step_builder, controls)
         self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
 
         # The review tips will not be shown because no attempts remain:

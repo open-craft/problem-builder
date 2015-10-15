@@ -56,6 +56,15 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
+    function postUpdateStep(response) {
+        activeStep = response.active_step;
+        if (activeStep === -1) {
+            updateNumAttempts();
+        } else {
+            updateControls();
+        }
+    }
+
     function handleResults(response) {
         showFeedback(response);
 
@@ -64,14 +73,7 @@ function MentoringWithStepsBlock(runtime, element) {
         // Otherwise, get UI ready for showing next step.
         var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
         $.post(handlerUrl, JSON.stringify(activeStep+1))
-            .success(function(response) {
-                activeStep = response.active_step;
-                if (activeStep === -1) {
-                    updateNumAttempts();
-                } else {
-                    updateControls();
-                }
-            });
+            .success(postUpdateStep);
     }
 
     function updateNumAttempts() {
@@ -138,6 +140,14 @@ function MentoringWithStepsBlock(runtime, element) {
         step.submit(handleResults);
     }
 
+    function markRead() {
+        var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
+        $.post(handlerUrl, JSON.stringify(activeStep+1)).success(function (response) {
+            postUpdateStep(response);
+            updateDisplay();
+        });
+    }
+
     function getResults() {
         var step = steps[activeStep];
         step.getResults(handleReviewResults);
@@ -195,9 +205,18 @@ function MentoringWithStepsBlock(runtime, element) {
             showActiveStep();
             validateXBlock();
             updateNextLabel();
-            nextDOM.attr('disabled', 'disabled');
+            var step = steps[activeStep];
+            if (step.hasQuestion()) {
+                nextDOM.attr('disabled', 'disabled');
+            } else {
+                nextDOM.removeAttr('disabled');
+            }
             if (isLastStep() && reviewStep) {
-                reviewDOM.attr('disabled', 'disabled');
+                if (step.hasQuestion()) {
+                    reviewDOM.attr('disabled', 'disabled');
+                } else {
+                    reviewDOM.removeAttr('disabled')
+                }
                 reviewDOM.show();
             }
         }
@@ -261,9 +280,14 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.show();
             nextDOM.removeAttr('disabled');
         }
+        var step = steps[activeStep];
 
         tryAgainDOM.hide();
-        submitDOM.show();
+        if (step.hasQuestion()) {
+            submitDOM.show();
+        } else {
+            submitDOM.hide();
+        }
         submitDOM.attr('disabled', 'disabled');
         reviewLinkDOM.show();
 
@@ -302,8 +326,19 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             submitDOM.removeAttr('disabled');
         }
-        if (isLastStep()) {
+        if (isLastStep() && step.hasQuestion()) {
             nextDOM.hide();
+        } else if (isLastStep()) {
+            reviewDOM.one('click', markRead);
+            reviewDOM.removeAttr('disabled');
+            nextDOM.hide()
+        } else if (!step.hasQuestion()) {
+            nextDOM.one('click', markRead);
+        }
+        if (step.hasQuestion()) {
+            submitDOM.show();
+        } else {
+            submitDOM.hide();
         }
     }
 
