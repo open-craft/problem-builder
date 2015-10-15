@@ -1,5 +1,5 @@
 import copy
-from problem_builder import MentoringBlock
+from problem_builder.mentoring import MentoringBlock
 from mock import MagicMock, Mock
 import unittest
 from xblock.field_data import DictFieldData

@@ -40,25 +40,25 @@ def package_data(pkg, root_list):
 # Main ##############################################################
 
 BLOCKS = [
-    'problem-builder = problem_builder:MentoringBlock',
-    'step-builder = problem_builder:MentoringWithExplicitStepsBlock',
-    'sb-step = problem_builder:MentoringStepBlock',
-    'sb-review-step = problem_builder:ReviewStepBlock',
+    'problem-builder = problem_builder.mentoring:MentoringBlock',
+    'step-builder = problem_builder.mentoring:MentoringWithExplicitStepsBlock',
+    'sb-step = problem_builder.step:MentoringStepBlock',
+    'sb-review-step = problem_builder.step:ReviewStepBlock',
 
-    'pb-table = problem_builder:MentoringTableBlock',
-    'pb-column = problem_builder:MentoringTableColumn',
-    'pb-answer = problem_builder:AnswerBlock',
-    'pb-answer-recap = problem_builder:AnswerRecapBlock',
-    'pb-mcq = problem_builder:MCQBlock',
-    'pb-rating = problem_builder:RatingBlock',
-    'pb-mrq = problem_builder:MRQBlock',
-    'pb-message = problem_builder:MentoringMessageBlock',
-    'pb-tip = problem_builder:TipBlock',
-    'pb-choice = problem_builder:ChoiceBlock',
+    'pb-table = problem_builder.table:MentoringTableBlock',
+    'pb-column = problem_builder.table:MentoringTableColumn',
+    'pb-answer = problem_builder.answer:AnswerBlock',
+    'pb-answer-recap = problem_builder.answer:AnswerRecapBlock',
+    'pb-mcq = problem_builder.mcq:MCQBlock',
+    'pb-rating = problem_builder.mcq:RatingBlock',
+    'pb-mrq = problem_builder.mrq:MRQBlock',
+    'pb-message = problem_builder.message:MentoringMessageBlock',
+    'pb-tip = problem_builder.tip:TipBlock',
+    'pb-choice = problem_builder.choice:ChoiceBlock',
 
-    'pb-dashboard = problem_builder:DashboardBlock',
-    'pb-data-export = problem_builder:InstructorToolBlock',  # Deprecated; use pb-instructor-tool instead
-    'pb-instructor-tool = problem_builder:InstructorToolBlock',
+    'pb-dashboard = problem_builder.dashboard:DashboardBlock',
+    'pb-data-export = problem_builder.instructor_tool:InstructorToolBlock',  # Deprecated; use 'pb-instructor-tool' now
+    'pb-instructor-tool = problem_builder.instructor_tool:InstructorToolBlock',
 ]
 
 setup(

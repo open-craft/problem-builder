@@ -5,7 +5,7 @@ import ddt
 import unittest
 from mock import Mock, patch
 from xblock.field_data import DictFieldData
-from problem_builder import InstructorToolBlock
+from problem_builder.instructor_tool import InstructorToolBlock
 
 
 @ddt.ddt

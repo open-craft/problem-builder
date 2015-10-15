@@ -32,7 +32,7 @@ instance which was kept on gsehub's GitHub account.
 import logging
 from lxml import etree
 from mentoring import MentoringBlock
-from problem_builder import MentoringBlock as NewMentoringBlock
+from problem_builder.mentoring import MentoringBlock as NewMentoringBlock
 from StringIO import StringIO
 import sys
 import warnings

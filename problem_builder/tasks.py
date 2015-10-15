@@ -12,7 +12,7 @@ from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from .mcq import MCQBlock, RatingBlock
-from problem_builder import AnswerBlock
+from problem_builder.answer import AnswerBlock
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api
 
