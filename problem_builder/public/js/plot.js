@@ -1,5 +1,7 @@
 function PlotBlock(runtime, element) {
 
+    // Plot
+
     // Define margins
     var margins = {top: 20, right: 20, bottom: 20, left: 20};
 
@@ -52,27 +54,30 @@ function PlotBlock(runtime, element) {
         .attr("transform", "translate(" + plotWidth / 2 + ", 0)")
         .call(yAxis);
 
-    // Claims
-
-    var defaultClaims = $('.plot-default', element).data('claims');
-    var averageClaims = $('.plot-average', element).data('claims');
-
-    // Colors
-
-    var defaultColor = $('.plot-default', element).data('point-color');
-    var averageColor = $('.plot-average', element).data('point-color');
-
-    // Quadrant labels
-
-    var q1Label = $('.plot-quadrants', element).data('q1-label');
-    var q2Label = $('.plot-quadrants', element).data('q2-label');
-    var q3Label = $('.plot-quadrants', element).data('q3-label');
-    var q4Label = $('.plot-quadrants', element).data('q4-label');
-
-    // Event handlers
+    // Buttons
 
     var defaultButton = $('.plot-default', element);
     var averageButton = $('.plot-average', element);
+    var quadrantsButton = $('.plot-quadrants', element);
+
+    // Claims
+
+    var defaultClaims = defaultButton.data('claims');
+    var averageClaims = averageButton.data('claims');
+
+    // Colors
+
+    var defaultColor = defaultButton.data('point-color');
+    var averageColor = averageButton.data('point-color');
+
+    // Quadrant labels
+
+    var q1Label = quadrantsButton.data('q1-label');
+    var q2Label = quadrantsButton.data('q2-label');
+    var q3Label = quadrantsButton.data('q3-label');
+    var q4Label = quadrantsButton.data('q4-label');
+
+    // Event handlers
 
     function toggleOverlay(claims, color, klass, refresh) {
         var selector = "." + klass;
@@ -122,18 +127,6 @@ function PlotBlock(runtime, element) {
         }
     }
 
-    defaultButton.on('click', function(event, refresh) {
-        toggleOverlay(defaultClaims, defaultColor, 'claim-default', refresh);
-        toggleBorderColor(this, defaultColor, refresh);
-    });
-
-    averageButton.on('click', function(event) {
-        toggleOverlay(averageClaims, averageColor, 'claim-average');
-        toggleBorderColor(this, averageColor);
-    });
-
-    var quadrantsButton = $('.plot-quadrants', element);
-
     function toggleQuadrantLabels() {
         var selection = svgContainer.selectAll(".quadrant-label");
         var quadrantLabelsOn = quadrantsButton.val() === 'On';
@@ -170,15 +163,24 @@ function PlotBlock(runtime, element) {
         }
     }
 
+    defaultButton.on('click', function(event, refresh) {
+        toggleOverlay(defaultClaims, defaultColor, 'claim-default', refresh);
+        toggleBorderColor(this, defaultColor, refresh);
+    });
+
+    averageButton.on('click', function(event) {
+        toggleOverlay(averageClaims, averageColor, 'claim-average');
+        toggleBorderColor(this, averageColor);
+    });
+
     quadrantsButton.on('click', function() {
         toggleQuadrantLabels();
     });
 
     // Quadrant labels are off initially; color of button for toggling them should reflect this
-
     quadrantsButton.css("border-color", "red");
 
-    // Functions that can be called from the outside
+    // API
 
     var dataXHR;
 

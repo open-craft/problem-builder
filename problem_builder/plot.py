@@ -21,6 +21,7 @@
 import json
 import logging
 
+from lazy.lazy import lazy
 from opaque_keys.edx.keys import CourseKey
 
 from xblock.core import XBlock
@@ -126,7 +127,7 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         help=_(
             'Claims and questions that should be included in the plot. '
             'Each line defines a triple of the form "claim, q1, q2", '
-            'where "claim" is arbitrary text that represents a claim (must be quoted using double-quotes), '
+            'where "claim" is arbitrary text that represents a claim, '
             'and "q1" and "q2" are IDs of scale questions. '
         ),
         default="",
@@ -139,19 +140,26 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         'q1_label', 'q2_label', 'q3_label', 'q4_label', 'claims'
     )
 
+    @lazy
+    def course_id(self):
+        return unicode(getattr(self.runtime, 'course_id', 'course_id'))
+
+    @lazy
+    def course_key_str(self):
+        course_key = CourseKey.from_string(self.course_id)
+        return unicode(course_key)
+
     @property
     def default_claims(self):
+        return self._get_claims(self._get_default_response)
+
+    @property
+    def average_claims(self):
+        return self._get_claims(self._get_average_response)
+
+    def _get_claims(self, response_function):
         if not self.claims:
             return []
-
-        course_id = unicode(getattr(self.runtime, 'course_id', 'course_id'))
-        course_key = CourseKey.from_string(course_id)
-        course_key_str = unicode(course_key)
-
-        user_service = self.runtime.service(self, 'user')
-        user = user_service.get_current_user()
-        username = user.opt_attrs.get('edx-platform.username')
-        anonymous_user_id = user_service.get_anonymous_user_id(username, course_id)
 
         mentoring_block = self.get_parent().get_parent()
         question_ids, questions = mentoring_block.question_ids, mentoring_block.questions
@@ -161,66 +169,45 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             r1, r2 = None, None
             for question_id, question in zip(question_ids, questions):
                 if question.name == q1:
-                    r1 = self._default_response(course_key_str, question, question_id, anonymous_user_id)
+                    r1 = response_function(self.course_key_str, question, question_id)
                 if question.name == q2:
-                    r2 = self._default_response(course_key_str, question, question_id, anonymous_user_id)
+                    r2 = response_function(self.course_key_str, question, question_id)
                 if r1 is not None and r2 is not None:
                     break
             claims.append([claim, r1, r2])
 
         return claims
 
-    def _default_response(self, course_key_str, question, question_id, user_id):
+    def _get_default_response(self, course_key_str, question, question_id):
         from .tasks import _get_answer  # Import here to avoid circular dependency
-        # 1. Obtain block_type for question
+        # 1. Obtain ID of current user that can be used to look up submissions
+        user_service = self.runtime.service(self, 'user')
+        user = user_service.get_current_user()
+        username = user.opt_attrs.get('edx-platform.username')
+        anonymous_user_id = user_service.get_anonymous_user_id(username, self.course_id)
+        # 2. Obtain block_type for question
         question_type = question.scope_ids.block_type
-        # 2. Obtain submissions for question using course_key_str, block_id, block_type, user_id
+        # 3. Obtain latest submission for question
         student_dict = {
-            'student_id': user_id,
+            'student_id': anonymous_user_id,
             'course_id': course_key_str,
             'item_id': question_id,
             'item_type': question_type,
         }
-        submissions = sub_api.get_submissions(student_dict, limit=1)  # Gets latest submission
-        # 3. Extract response from latest submission for question
+        submissions = sub_api.get_submissions(student_dict, limit=1)
+        # 4. Extract response from latest submission for question
         answer_cache = {}
         for submission in submissions:
             answer = _get_answer(question, submission, answer_cache)
             return int(answer)
 
-    @property
-    def average_claims(self):
-        if not self.claims:
-            return []
-
-        course_id = unicode(getattr(self.runtime, 'course_id', 'course_id'))
-        course_key = CourseKey.from_string(course_id)
-        course_key_str = unicode(course_key)
-
-        mentoring_block = self.get_parent().get_parent()
-        question_ids, questions = mentoring_block.question_ids, mentoring_block.questions
-        claims = []
-        for line in self.claims.split('\n'):
-            claim, q1, q2 = line.split(', ')
-            r1, r2 = None, None
-            for question_id, question in zip(question_ids, questions):
-                if question.name == q1:
-                    r1 = self._average_response(course_key_str, question, question_id)
-                if question.name == q2:
-                    r2 = self._average_response(course_key_str, question, question_id)
-                if r1 is not None and r2 is not None:
-                    break
-            claims.append([claim, r1, r2])
-
-        return claims
-
-    def _average_response(self, course_key_str, question, question_id):
+    def _get_average_response(self, course_key_str, question, question_id):
         from .tasks import _get_answer  # Import here to avoid circular dependency
         # 1. Obtain block_type for question
         question_type = question.scope_ids.block_type
-        # 2. Obtain submissions for question using course_key_str, block_id, block_type
-        submissions = sub_api.get_all_submissions(course_key_str, question_id, question_type)  # Gets latest submissions
-        # 3. Extract responses from submissions for question and sum them up
+        # 2. Obtain latest submissions for question
+        submissions = sub_api.get_all_submissions(course_key_str, question_id, question_type)
+        # 3. Extract responses from latest submissions for question and sum them up
         answer_cache = {}
         response_total = 0
         num_submissions = 0  # Can't use len(submissions) because submissions is a generator
@@ -244,16 +231,6 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             'default_claims': self.default_claims,
             'average_claims': self.average_claims,
         }
-
-    def clean_studio_edits(self, data):
-        # FIXME: Use this to clean data.claims (remove leading/trailing whitespace, etc.)
-        pass
-
-    def validate_field_data(self, validation, data):
-        # FIXME: Use this to validate data.claims:
-        # - Each line should be of the form "claim, q1, q2" (no quotes)
-        # - Entries for "claim", "q1", "q2" must point to existing blocks
-        pass
 
     def author_preview_view(self, context):
         return Fragment(
