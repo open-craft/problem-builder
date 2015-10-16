@@ -42,6 +42,7 @@ log = logging.getLogger(__name__)
 def _(text):
     return text
 
+
 def _normalize_id(key):
     """
     Helper method to normalize a key to avoid issues where some keys have version/branch and others don't.
@@ -251,7 +252,6 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         fragment = Fragment()
         fragment.add_content(loader.render_template('templates/html/plot.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/plot.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/d3.min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/plot.js'))
         fragment.initialize_js('PlotBlock')

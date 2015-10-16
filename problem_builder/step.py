@@ -231,7 +231,9 @@ class MentoringStepBlock(
 
     def _render_view(self, context, view):
         """ Actually renders a view """
-        rendering_for_studio = context.get('author_preview_view')
+        rendering_for_studio = False
+        if context:  # Workbench does not provide context
+            rendering_for_studio = context.get('author_preview_view')
 
         fragment = Fragment()
         child_contents = []

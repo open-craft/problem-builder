@@ -505,3 +505,84 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         # Should show default message for review
         self.assert_message_text(step_builder, "Note: you have used all attempts. Continue to the next unit.")
+
+    def answer_rating_question(self, step_number, question_number, step_builder, question, choice_name):
+        question_text = self.question_text(question_number)
+        self.wait_until_text_in(question_text, step_builder)
+        self.assertIn(question, step_builder.text)
+        choices = GetChoices(
+            step_builder, 'div[data-name="rating_{}_{}"] > .rating'.format(step_number, question_number)
+        )
+        choices.select(choice_name)
+
+    def submit_and_go_to_next_step(self, controls):
+        controls.submit.click()
+        self.wait_until_clickable(controls.next_question)
+        controls.next_question.click()
+
+    def plot_controls(self, step_builder):
+        class Namespace(object):
+            pass
+
+        plot_controls = Namespace()
+
+        plot_controls.default_button = step_builder.find_element_by_css_selector(".plot-default")
+        plot_controls.average_button = step_builder.find_element_by_css_selector(".plot-average")
+        plot_controls.quadrants_button = step_builder.find_element_by_css_selector(".plot-quadrants")
+
+        return plot_controls
+
+    def plot_empty(self, step_builder):
+        points = step_builder.find_elements_by_css_selector("circle")
+        self.assertEquals(points, [])
+
+    def check_quadrant_labels(self, step_builder, controls, hidden):
+        quadrant_labels = step_builder.find_elements_by_css_selector(".quadrant-label")
+        quadrants_button_border_colors = [
+            controls.quadrants_button.value_of_css_property('border-top-color'),
+            controls.quadrants_button.value_of_css_property('border-right-color'),
+            controls.quadrants_button.value_of_css_property('border-bottom-color'),
+            controls.quadrants_button.value_of_css_property('border-left-color'),
+        ]
+        print(quadrants_button_border_colors)
+        if hidden:
+            self.assertEquals(quadrant_labels, [])
+            # rgba(255, 0, 0, 1): "red"
+            self.assertTrue(all(bc == 'rgba(255, 0, 0, 1)' for bc in quadrants_button_border_colors))
+        else:
+            self.assertEquals(len(quadrant_labels), 4)
+            self.assertEquals(set(label.text for label in quadrant_labels), set(['Q1', 'Q2', 'Q3', 'Q4']))
+            # rgba(0, 128, 0, 1): "green"
+            self.assertTrue(all(bc == 'rgba(0, 128, 0, 1)' for bc in quadrants_button_border_colors))
+
+    def test_empty_plot(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_plot_defaults.xml", {})
+        # Step 1: Questions
+        # Provide first rating
+        self.answer_rating_question(1, 1, step_builder, "How much do you agree?", "1 - Disagree")
+        # Provide second rating
+        self.answer_rating_question(1, 2, step_builder, "How important do you think this is?", "5 - Very important")
+        # Advance
+        self.submit_and_go_to_next_step(controls)
+
+        # Step 2: Plot
+        # Check if plot is empty (default overlay on, average overlay off)
+        self.plot_empty(step_builder)
+        # Obtain references to plot controls
+        plot_controls = self.plot_controls(step_builder)
+        # Check if plot is empty (default overlay off, average overlay off)
+        plot_controls.default_button.click()
+        self.plot_empty(step_builder)
+        # Check if plot is empty (default overlay off, average overlay on)
+        plot_controls.average_button.click()
+        self.plot_empty(step_builder)
+        # Check if plot is empty (default overlay on, average overlay on)
+        plot_controls.default_button.click()
+        self.plot_empty(step_builder)
+        # Check quadrant labels
+        self.check_quadrant_labels(step_builder, plot_controls, hidden=True)
+        plot_controls.quadrants_button.click()
+        self.check_quadrant_labels(step_builder, plot_controls, hidden=False)
+
+    def test_plot(self):
+        pass
