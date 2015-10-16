@@ -22,7 +22,6 @@ import json
 import logging
 
 from lazy.lazy import lazy
-from opaque_keys.edx.keys import CourseKey
 
 from xblock.core import XBlock
 from xblock.fields import String, Scope
@@ -42,6 +41,17 @@ log = logging.getLogger(__name__)
 # Make '_' a no-op so we can scrape strings
 def _(text):
     return text
+
+def _normalize_id(key):
+    """
+    Helper method to normalize a key to avoid issues where some keys have version/branch and others don't.
+    e.g. self.scope_ids.usage_id != self.runtime.get_block(self.scope_ids.usage_id).scope_ids.usage_id
+    """
+    if hasattr(key, "for_branch"):
+        key = key.for_branch(None)
+    if hasattr(key, "for_version"):
+        key = key.for_version(None)
+    return key
 
 
 @XBlock.needs('i18n')
@@ -141,13 +151,9 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
     )
 
     @lazy
-    def course_id(self):
-        return unicode(getattr(self.runtime, 'course_id', 'course_id'))
-
-    @lazy
     def course_key_str(self):
-        course_key = CourseKey.from_string(self.course_id)
-        return unicode(course_key)
+        location = _normalize_id(self.location)
+        return unicode(location.course_key)
 
     @property
     def default_claims(self):
@@ -169,44 +175,39 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             r1, r2 = None, None
             for question_id, question in zip(question_ids, questions):
                 if question.name == q1:
-                    r1 = response_function(self.course_key_str, question, question_id)
+                    r1 = response_function(question, question_id)
                 if question.name == q2:
-                    r2 = response_function(self.course_key_str, question, question_id)
+                    r2 = response_function(question, question_id)
                 if r1 is not None and r2 is not None:
                     break
             claims.append([claim, r1, r2])
 
         return claims
 
-    def _get_default_response(self, course_key_str, question, question_id):
+    def _get_default_response(self, question, question_id):
         from .tasks import _get_answer  # Import here to avoid circular dependency
-        # 1. Obtain ID of current user that can be used to look up submissions
-        user_service = self.runtime.service(self, 'user')
-        user = user_service.get_current_user()
-        username = user.opt_attrs.get('edx-platform.username')
-        anonymous_user_id = user_service.get_anonymous_user_id(username, self.course_id)
-        # 2. Obtain block_type for question
+        # 1. Obtain block_type for question
         question_type = question.scope_ids.block_type
-        # 3. Obtain latest submission for question
+        # 2. Obtain latest submission for question
         student_dict = {
-            'student_id': anonymous_user_id,
-            'course_id': course_key_str,
+            'student_id': self.runtime.anonymous_student_id,
+            'course_id': self.course_key_str,
             'item_id': question_id,
             'item_type': question_type,
         }
         submissions = sub_api.get_submissions(student_dict, limit=1)
-        # 4. Extract response from latest submission for question
+        # 3. Extract response from latest submission for question
         answer_cache = {}
         for submission in submissions:
             answer = _get_answer(question, submission, answer_cache)
             return int(answer)
 
-    def _get_average_response(self, course_key_str, question, question_id):
+    def _get_average_response(self, question, question_id):
         from .tasks import _get_answer  # Import here to avoid circular dependency
         # 1. Obtain block_type for question
         question_type = question.scope_ids.block_type
         # 2. Obtain latest submissions for question
-        submissions = sub_api.get_all_submissions(course_key_str, question_id, question_type)
+        submissions = sub_api.get_all_submissions(self.course_key_str, question_id, question_type)
         # 3. Extract responses from latest submissions for question and sum them up
         answer_cache = {}
         response_total = 0
