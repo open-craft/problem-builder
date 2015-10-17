@@ -1,5 +1,5 @@
 <div class="xblock-pb-slider">
-  {% if not hide_header %}<h3 class="question-title">{{ self.display_name_with_default }}</h3>{% endif %}
+  {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
   {% if question %}
     <p><label for="{{slider_id}}">{{ question|safe }} <span class="sr">({{instructions_string}})</span></label></p>
   {% endif %}

@@ -94,6 +94,7 @@ class SliderBlock(
         context['initial_value'] = int(self.student_value*100) if self.student_value is not None else 50
         context['min_label'] = self.min_label
         context['max_label'] = self.max_label
+        context['title'] = self.display_name_with_default
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
         context['instructions_string'] = self._("Select a value from {min_label} to {max_label}").format(
             min_label=self.min_label, max_label=self.max_label
