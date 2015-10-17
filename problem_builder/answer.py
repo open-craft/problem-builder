@@ -152,13 +152,6 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         default="",
         multiline_editor=True,
     )
-    weight = Float(
-        display_name=_("Weight"),
-        help=_("Defines the maximum total grade of the answer block."),
-        default=1,
-        scope=Scope.settings,
-        enforce_type=True
-    )
 
     editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from', 'display_name', 'show_title')
 

@@ -1,5 +1,5 @@
 from lazy import lazy
-from xblock.fields import String, Boolean, Scope
+from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 
@@ -125,11 +125,25 @@ class QuestionMixin(EnumerableChildMixin):
     has_author_view = True
 
     # Fields:
+    name = String(
+        # This doesn't need to be a field but is kept for backwards compatibility with v1 student data
+        display_name=_("Question ID (name)"),
+        help=_("The ID of this question (required). Should be unique within this mentoring component."),
+        default=UNIQUE_ID,
+        scope=Scope.settings,  # Must be scope.settings, or the unique ID will change every time this block is edited
+    )
     display_name = String(
         display_name=_("Question title"),
         help=_('Leave blank to use the default ("Question 1", "Question 2", etc.)'),
         default="",  # Blank will use 'Question x' - see display_name_with_default
         scope=Scope.content
+    )
+    weight = Float(
+        display_name=_("Weight"),
+        help=_("Defines the maximum total grade of this question."),
+        default=1,
+        scope=Scope.content,
+        enforce_type=True
     )
 
     @lazy

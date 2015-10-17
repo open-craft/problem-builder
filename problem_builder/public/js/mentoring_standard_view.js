@@ -7,6 +7,7 @@ function MentoringStandardView(runtime, element, mentoring) {
     function handleSubmitResults(response, disable_submit) {
         messagesDOM.empty().hide();
 
+        var all_have_results = response.results.length > 0;
         $.each(response.results || [], function(index, result_spec) {
             var input = result_spec[0];
             var result = result_spec[1];
@@ -16,6 +17,7 @@ function MentoringStandardView(runtime, element, mentoring) {
                 num_attempts: response.num_attempts
             };
             callIfExists(child, 'handleSubmit', result, options);
+            all_have_results = all_have_results && !$.isEmptyObject(result);
         });
 
         $('.attempts', element).data('max_attempts', response.max_attempts);
@@ -29,10 +31,10 @@ function MentoringStandardView(runtime, element, mentoring) {
             messagesDOM.show();
         }
 
-        // this method is called on successful submission and on page load
-        // results will be empty only for initial load if no submissions was made
-        // in such case we must allow submission to support submitting empty read-only long answer recaps
-        if (disable_submit || response.results.length > 0) {
+        // Disable the submit button if we have just submitted new answers,
+        // or if we have just [re]loaded the page and are showing a complete set
+        // of old answers.
+        if (disable_submit || all_have_results) {
             submitDOM.attr('disabled', 'disabled');
         }
     }

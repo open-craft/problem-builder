@@ -64,6 +64,32 @@
     margin-bottom: 0;
 }
 
+.mentoring .xblock-pb-slider p label {
+    font-size: inherit;
+}
+
+.mentoring .pb-slider-box {
+    max-width: 400px;
+}
+
+.mentoring .pb-slider-range {
+    width: 100%;
+}
+
+.mentoring .pb-slider-min-label {
+    float: left;
+}
+
+.mentoring .pb-slider-max-label {
+    float: right;
+}
+
+.mentoring .clearfix::after {
+    clear: both;
+    display: block;
+    content: " ";
+}
+
 .mentoring .attempts {
     margin-left: 10px;
     display: inline-block;

@@ -49,3 +49,7 @@
 	margin-top: 1em;
 	padding-top: 0.3em;
 }
+
+.xblock-author_view-pb-slider .url-name-footer {
+    margin: 0 -20px -20px -20px; /* Counteract spacing from xblock-render wrapper. */
+}
