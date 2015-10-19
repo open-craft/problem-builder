@@ -15,11 +15,11 @@ function SliderBlock(runtime, element) {
         },
 
         submit: function() {
-            return this.value();
+            return this.value() / 100.0;
         },
 
         handleReview: function(result){
-            $slider.val(result.submission);
+            $slider.val(result.submission * 100.0);
             $slider.prop('disabled', true);
         },
 

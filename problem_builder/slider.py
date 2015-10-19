@@ -140,7 +140,6 @@ class SliderBlock(
 
     def submit(self, value):
         log.debug(u'Received Slider submission: "%s"', value)
-        value = value / 100.0
         if value < 0 or value > 1:
             return {}  # Invalid
         self.student_value = value
