@@ -127,11 +127,27 @@ class MentoringStepBlock(
         NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
         instances
         """
+        additional_blocks = []
+        try:
+            from xmodule.video_module.video_module import VideoDescriptor
+            additional_blocks.append(NestedXBlockSpec(
+                VideoDescriptor, category='video', label=_(u"Video")
+            ))
+        except ImportError:
+            pass
+        try:
+            from imagemodal import ImageModal
+            additional_blocks.append(NestedXBlockSpec(
+                ImageModal, category='imagemodal', label=_(u"Image Modal")
+            ))
+        except ImportError:
+            pass
+
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
             MCQBlock, RatingBlock, MRQBlock, HtmlBlockShim,
             AnswerRecapBlock, MentoringTableBlock,
-        ]
+        ] + additional_blocks
 
     @property
     def has_question(self):
