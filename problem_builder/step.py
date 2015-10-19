@@ -133,6 +133,10 @@ class MentoringStepBlock(
             AnswerRecapBlock, MentoringTableBlock,
         ]
 
+    @property
+    def has_question(self):
+        return any(getattr(child, 'answerable', False) for child in self.steps)
+
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
         log.info(u'Received submissions: {}'.format(submissions))

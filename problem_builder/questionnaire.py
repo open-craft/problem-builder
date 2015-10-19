@@ -90,6 +90,7 @@ class QuestionnaireAbstractBlock(
     )
     editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
     has_children = True
+    answerable = True
 
     @lazy
     def html_id(self):

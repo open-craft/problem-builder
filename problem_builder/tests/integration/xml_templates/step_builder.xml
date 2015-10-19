@@ -36,6 +36,10 @@
     </pb-rating>
   </sb-step>
 
+    <sb-step display_name="Fourth Step">
+        <html_demo>Test test test</html_demo>
+    </sb-step>
+
   <sb-step display_name="Last step">
     <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices='["gracefulness","elegance","beauty"]' message="Question Feedback Message">
       <pb-choice value="elegance">Its elegance</pb-choice>
