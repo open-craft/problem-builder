@@ -5,6 +5,8 @@
 /workbench.*
 /dist
 /templates
+/var
 *.iml
 .idea/*
+dump.rdb
 problem_builder.tests.*
