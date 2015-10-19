@@ -186,7 +186,6 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         return claims
 
     def _get_default_response(self, question, question_id):
-        from .tasks import _get_answer  # Import here to avoid circular dependency
         # 1. Obtain block_type for question
         question_type = question.scope_ids.block_type
         # 2. Obtain latest submission for question
@@ -200,11 +199,10 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         # 3. Extract response from latest submission for question
         answer_cache = {}
         for submission in submissions:
-            answer = _get_answer(question, submission, answer_cache)
+            answer = self._get_answer(question, submission, answer_cache)
             return int(answer)
 
     def _get_average_response(self, question, question_id):
-        from .tasks import _get_answer  # Import here to avoid circular dependency
         # 1. Obtain block_type for question
         question_type = question.scope_ids.block_type
         # 2. Obtain latest submissions for question
@@ -214,12 +212,24 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         response_total = 0
         num_submissions = 0  # Can't use len(submissions) because submissions is a generator
         for submission in submissions:
-            answer = _get_answer(question, submission, answer_cache)
+            answer = self._get_answer(question, submission, answer_cache)
             response_total += int(answer)
             num_submissions += 1
         # 4. Calculate average response for question
         if num_submissions:
             return response_total / float(num_submissions)
+
+    def _get_answer(self, block, submission, answer_cache):
+        """
+        Return answer associated with `submission` to `block`.
+
+        `answer_cache` is a dict that is reset for each block.
+        """
+        answer = submission['answer']
+        # Convert from answer ID to answer label
+        if answer not in answer_cache:
+            answer_cache[answer] = block.get_submission_display(answer)
+        return answer_cache[answer]
 
     def default_claims_json(self):
         return json.dumps(self.default_claims)

@@ -38,7 +38,7 @@
              q2_label="Custom Q2 label"
              q3_label="Custom Q3 label"
              q4_label="Custom Q4 label"
-             claims="2 + 2 = 5, rating_1_1, rating_1_2\nThe answer to everything is 42, rating_2_1, rating_2_2">
+             claims="2 + 2 = 5, rating_1_1, rating_1_2&#10;The answer to everything is 42, rating_2_1, rating_2_2">
     </sb-plot>
   </sb-step>
 
