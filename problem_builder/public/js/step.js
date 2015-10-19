@@ -2,7 +2,7 @@ function MentoringStepBlock(runtime, element) {
 
     var children = runtime.children(element);
     var plots = [];
-    for (var i = 0; i < children.length; i++) {
+    for (var i in children) {
         var child = children[i];
         var blockType = $(child.element).data('block-type');
         if (blockType === 'sb-plot') {
@@ -102,7 +102,7 @@ function MentoringStepBlock(runtime, element) {
 
         updatePlots: function() {
             if (plots) {
-                for (var i = 0; i < plots.length; i++) {
+                for (var i in plots) {
                     var plot = plots[i];
                     plot.update();
                 }

@@ -6,12 +6,12 @@ function PlotBlock(runtime, element) {
     var margins = {top: 20, right: 20, bottom: 20, left: 20};
 
     // Define width and height of SVG viewport
-    var width = 440;
-    var height = 440;
+    var width = 440,
+        height = 440;
 
     // Define dimensions of plot area
-    var plotWidth = width - margins.left - margins.right;
-    var plotHeight = height - margins.top - margins.bottom;
+    var plotWidth = width - margins.left - margins.right,
+        plotHeight = height - margins.top - margins.bottom;
 
     // Preselect target DOM element for plot.
     // This is necessary because when using a CSS selector,
@@ -56,32 +56,32 @@ function PlotBlock(runtime, element) {
 
     // Buttons
 
-    var defaultButton = $('.plot-default', element);
-    var averageButton = $('.plot-average', element);
-    var quadrantsButton = $('.plot-quadrants', element);
+    var defaultButton = $('.plot-default', element),
+        averageButton = $('.plot-average', element),
+        quadrantsButton = $('.plot-quadrants', element);
 
     // Claims
 
-    var defaultClaims = defaultButton.data('claims');
-    var averageClaims = averageButton.data('claims');
+    var defaultClaims = defaultButton.data('claims'),
+        averageClaims = averageButton.data('claims');
 
     // Colors
 
-    var defaultColor = defaultButton.data('point-color');
-    var averageColor = averageButton.data('point-color');
+    var defaultColor = defaultButton.data('point-color'),
+        averageColor = averageButton.data('point-color');
 
     // Quadrant labels
 
-    var q1Label = quadrantsButton.data('q1-label');
-    var q2Label = quadrantsButton.data('q2-label');
-    var q3Label = quadrantsButton.data('q3-label');
-    var q4Label = quadrantsButton.data('q4-label');
+    var q1Label = quadrantsButton.data('q1-label'),
+        q2Label = quadrantsButton.data('q2-label'),
+        q3Label = quadrantsButton.data('q3-label'),
+        q4Label = quadrantsButton.data('q4-label');
 
     // Event handlers
 
     function toggleOverlay(claims, color, klass, refresh) {
-        var selector = "." + klass;
-        var selection = svgContainer.selectAll(selector);
+        var selector = "." + klass,
+            selection = svgContainer.selectAll(selector);
         if (selection.empty()) {
             showOverlay(selection, claims, color, klass);
         } else {
@@ -116,8 +116,8 @@ function PlotBlock(runtime, element) {
     }
 
     function toggleBorderColor(button, color, refresh) {
-        var $button = $(button);
-        var overlayOn = $button.data("overlay-on");
+        var $button = $(button),
+            overlayOn = $button.data("overlay-on");
         if (overlayOn && !refresh) {
             $button.css("border-color", "rgb(237, 237, 237)");  // Default color: grey
             $button.data("overlay-on", false);
@@ -128,8 +128,8 @@ function PlotBlock(runtime, element) {
     }
 
     function toggleQuadrantLabels() {
-        var selection = svgContainer.selectAll(".quadrant-label");
-        var quadrantLabelsOn = quadrantsButton.val() === 'On';
+        var selection = svgContainer.selectAll(".quadrant-label"),
+            quadrantLabelsOn = quadrantsButton.val() === 'On';
         if (quadrantLabelsOn) {
             selection.remove();
             quadrantsButton.val("Off");

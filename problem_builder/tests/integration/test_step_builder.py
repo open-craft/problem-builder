@@ -544,7 +544,6 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             controls.quadrants_button.value_of_css_property('border-bottom-color'),
             controls.quadrants_button.value_of_css_property('border-left-color'),
         ]
-        print(quadrants_button_border_colors)
         if hidden:
             self.assertEquals(quadrant_labels, [])
             # rgba(255, 0, 0, 1): "red"
