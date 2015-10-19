@@ -124,7 +124,7 @@ class SliderStepBlockTest(SliderBlockTestMixins, MentoringAssessmentBaseTest):
         self.assertTrue(controls.submit.is_enabled())
         self.assert_hidden(controls.try_again)
 
-        self.set_slider_value(99)
+        self.set_slider_value(0)
         controls.submit.click()
         self.do_submit_wait(controls, last=False)
         self.wait_until_clickable(controls.next_question)

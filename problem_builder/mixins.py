@@ -126,7 +126,6 @@ class QuestionMixin(EnumerableChildMixin):
 
     # Fields:
     name = String(
-        # This doesn't need to be a field but is kept for backwards compatibility with v1 student data
         display_name=_("Question ID (name)"),
         help=_("The ID of this question (required). Should be unique within this mentoring component."),
         default=UNIQUE_ID,

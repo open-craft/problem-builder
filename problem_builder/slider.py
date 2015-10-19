@@ -115,6 +115,7 @@ class SliderBlock(
         Add some HTML to the author view that allows authors to see the ID of the block, so they
         can refer to it in other blocks such as Plot blocks.
         """
+        context['hide_header'] = True  # Header is already shown in the Studio wrapper
         fragment = self.student_view(context)
         fragment.add_content(loader.render_template('templates/html/slider_edit_footer.html', {
             "url_name": self.url_name
@@ -123,7 +124,7 @@ class SliderBlock(
 
     def get_last_result(self):
         """ Return the current/last result in the required format """
-        if not self.student_value:
+        if self.student_value is None:
             return {}
         return {
             'submission': self.student_value,
@@ -132,6 +133,10 @@ class SliderBlock(
             'weight': self.weight,
             'score': 1,
         }
+
+    def get_results(self, _previous_result_unused=None):
+        """ Alias for get_last_result() """
+        return self.get_last_result()
 
     def submit(self, value):
         log.debug(u'Received Slider submission: "%s"', value)
@@ -145,15 +150,6 @@ class SliderBlock(
         result = self.get_last_result()
         log.debug(u'Slider submission result: %s', result)
         return result
-
-    def get_author_edit_view_fragment(self, context):
-        """
-        The options for the 1-5 values of the Likert scale aren't child blocks but we want to
-        show them in the author edit view, for clarity.
-        """
-        fragment = Fragment(u"<p>{}</p>".format(self.question))
-        self.render_children(context, fragment, can_reorder=True, can_add=False)
-        return fragment
 
     def validate_field_data(self, validation, data):
         """
