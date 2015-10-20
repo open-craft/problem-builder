@@ -566,10 +566,14 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         )
         choices.select(choice_name)
 
-    def submit_and_go_to_next_step(self, controls):
+    def submit_and_go_to_next_step(self, controls, last=False):
         controls.submit.click()
         self.wait_until_clickable(controls.next_question)
         controls.next_question.click()
+        if last:
+            self.wait_until_hidden(controls.next_question)
+        else:
+            self.wait_until_disabled(controls.next_question)
 
     def plot_controls(self, step_builder):
         class Namespace(object):
@@ -644,7 +648,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         # Provide second rating
         self.answer_rating_question(1, 2, step_builder, "How important do you think this is?", "5 - Very important")
         # Advance
-        self.submit_and_go_to_next_step(controls)
+        self.submit_and_go_to_next_step(controls, last=True)
 
         # Step 2: Plot
         # Check if plot is empty initially (default overlay on, average overlay off)
@@ -709,7 +713,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         # Provide second rating
         self.answer_rating_question(2, 2, step_builder, "How important do you think this is?", "1 - Not important")
         # Advance
-        self.submit_and_go_to_next_step(controls)
+        self.submit_and_go_to_next_step(controls, last=True)
 
         # Step 2: Plot
         # Obtain references to plot controls
