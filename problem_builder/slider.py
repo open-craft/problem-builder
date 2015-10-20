@@ -106,9 +106,8 @@ class SliderBlock(
         fragment.initialize_js('SliderBlock')
         return fragment
 
-    def student_view(self, context=None):
-        """ Normal view of this XBlock, identical to mentoring_view """
-        return self.mentoring_view(context)
+    student_view = mentoring_view
+    preview_view = mentoring_view
 
     def author_view(self, context):
         """
