@@ -108,7 +108,7 @@ class TestMentoringStep(unittest.TestCase):
         block = MentoringStepBlock(Mock(), DictFieldData({}), Mock())
         self.assertEqual(
             self.get_allowed_blocks(block),
-            ['pb-answer', 'pb-mcq', 'pb-rating', 'pb-mrq', 'html', 'pb-answer-recap', 'pb-table']
+            ['pb-answer', 'pb-mcq', 'pb-rating', 'pb-mrq', 'html', 'pb-answer-recap', 'pb-table', 'sb-plot']
         )
         from sys import modules
         xmodule_mock = Mock()
@@ -122,6 +122,6 @@ class TestMentoringStep(unittest.TestCase):
             self.assertEqual(
                 self.get_allowed_blocks(block), [
                     'pb-answer', 'pb-mcq', 'pb-rating', 'pb-mrq', 'html', 'pb-answer-recap',
-                    'pb-table', 'video', 'imagemodal'
+                    'pb-table', 'sb-plot', 'video', 'imagemodal'
                 ]
             )
