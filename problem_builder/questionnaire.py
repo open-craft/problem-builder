@@ -24,7 +24,7 @@ from django.utils.safestring import mark_safe
 from lazy import lazy
 import uuid
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Float
+from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance

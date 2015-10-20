@@ -20,7 +20,7 @@
 
 # Imports ###########################################################
 
-from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest, CORRECT, GetChoices
+from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest, GetChoices
 
 
 # Classes ###########################################################
@@ -81,8 +81,7 @@ class SliderBlockTest(SliderBlockTestMixins, ProblemBuilderBaseTest):
         self.assertEqual(self.get_slider_value(), 15)
         self.assertFalse(self.submit_button.is_enabled())
         # Choose a choice:
-        mcq_choices = pb_wrapper.find_elements_by_css_selector('.choices .choice input')
-        mcq_choices[0].click()
+        GetChoices(pb_wrapper).select('Yes')
         self.assertTrue(self.submit_button.is_enabled())
         self.click_submit(pb_wrapper)
         # Now, we expect submit to be disabled and the checkmark to be visible:

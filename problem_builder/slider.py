@@ -26,7 +26,6 @@ import uuid
 from xblock.core import XBlock
 from xblock.fields import Scope, String, Float
 from xblock.fragment import Fragment
-from xblock.validation import ValidationMessage
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.resources import ResourceLoader
 
@@ -52,7 +51,8 @@ class SliderBlock(
     SubmittingXBlockMixin, QuestionMixin, StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBlock,
 ):
     """
-    An XBlock used to ask multiple-choice questions
+    An XBlock used by students to indicate a numeric value on a sliding scale.
+    The student's answer is always considered "correct".
     """
     CATEGORY = 'pb-slider'
     STUDIO_LABEL = _(u"Ranged Value Slider")
@@ -145,7 +145,7 @@ class SliderBlock(
         self.student_value = value
         if sub_api:
             # Also send to the submissions API:
-            sub_api.create_submission(self.student_item_key, {'value': value, })
+            sub_api.create_submission(self.student_item_key, {'value': value})
         result = self.get_last_result()
         log.debug(u'Slider submission result: %s', result)
         return result

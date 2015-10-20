@@ -1,4 +1,4 @@
-<step-builder display_name="Step Builder" max_attempts="90">
+<step-builder display_name="Step Builder">
 
   <sb-step display_name="Slider step">
     <pb-slider name="slider_1" display_name="Information Reliability" question="How reliable is this information?" min_label="0%" max_label="100%" />
