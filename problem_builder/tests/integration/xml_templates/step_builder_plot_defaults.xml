@@ -1,0 +1,24 @@
+<step-builder url_name="step-builder" display_name="Step Builder">
+
+  <sb-step display_name="First step">
+    <pb-rating name="rating_1_1"
+               low="Disagree"
+               high="Agree"
+               question="How much do you agree?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+    <pb-rating name="rating_1_2"
+               low="Not important"
+               high="Very important"
+               question="How important do you think this is?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+  </sb-step>
+
+  <sb-step display_name="Last step">
+    <sb-plot></sb-plot>
+  </sb-step>
+
+  <sb-review-step></sb-review-step>
+
+</step-builder>

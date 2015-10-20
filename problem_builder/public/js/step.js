@@ -1,6 +1,15 @@
 function MentoringStepBlock(runtime, element) {
 
     var children = runtime.children(element);
+    var plots = [];
+    for (var i in children) {
+        var child = children[i];
+        var blockType = $(child.element).data('block-type');
+        if (blockType === 'sb-plot') {
+            plots.push(child);
+        }
+    }
+
     var submitXHR, resultsXHR;
 
     function callIfExists(obj, fn) {
@@ -89,6 +98,15 @@ function MentoringStepBlock(runtime, element) {
 
         hasQuestion: function() {
             return $('.sb-step', element).data('has-question')
+        },
+
+        updatePlots: function() {
+            if (plots) {
+                for (var i in plots) {
+                    var plot = plots[i];
+                    plot.update();
+                }
+            }
         }
 
     };

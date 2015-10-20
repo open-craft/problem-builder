@@ -37,6 +37,7 @@ from .message import (
 )
 from problem_builder.mixins import EnumerableChildMixin, MessageParentMixin, StepParentMixin
 from problem_builder.mrq import MRQBlock
+from problem_builder.plot import PlotBlock
 from problem_builder.table import MentoringTableBlock
 
 
@@ -146,7 +147,7 @@ class MentoringStepBlock(
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
             MCQBlock, RatingBlock, MRQBlock, HtmlBlockShim,
-            AnswerRecapBlock, MentoringTableBlock,
+            AnswerRecapBlock, MentoringTableBlock, PlotBlock
         ] + additional_blocks
 
     @property
@@ -224,16 +225,16 @@ class MentoringStepBlock(
         fragment.initialize_js('StepEdit')
         return fragment
 
-    def student_view(self, context=None):
-        """ Student View """
-        return self._render_view(context, 'student_view')
-
     def mentoring_view(self, context=None):
         """ Mentoring View """
         return self._render_view(context, 'mentoring_view')
 
     def _render_view(self, context, view):
         """ Actually renders a view """
+        rendering_for_studio = False
+        if context:  # Workbench does not provide context
+            rendering_for_studio = context.get('author_preview_view')
+
         fragment = Fragment()
         child_contents = []
 
@@ -242,10 +243,18 @@ class MentoringStepBlock(
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
                 child_contents.append(u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component.")))
             else:
-                child_fragment = self._render_child_fragment(child, context, view)
-
-                fragment.add_frag_resources(child_fragment)
-                child_contents.append(child_fragment.content)
+                if rendering_for_studio and isinstance(child, PlotBlock):
+                    # Don't use view to render plot blocks in Studio.
+                    # This is necessary because:
+                    # - student_view of plot block uses submissions API to retrieve results,
+                    #   which causes "SubmissionRequestError" in Studio.
+                    # - author_preview_view does not supply JS code for plot that JS code for step depends on
+                    #   (step calls "update" on plot to get latest data during rendering).
+                    child_contents.append(u"<p>{}</p>".format(child.display_name))
+                else:
+                    child_fragment = self._render_child_fragment(child, context, view)
+                    fragment.add_frag_resources(child_fragment)
+                    child_contents.append(child_fragment.content)
 
         fragment.add_content(loader.render_template('templates/html/step.html', {
             'self': self,

@@ -3,10 +3,61 @@ from ddt import ddt, data
 
 from workbench.runtime import WorkbenchRuntime
 from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
+from .test_dashboard import MockSubmissionsAPI
+
+
+class ExtendedMockSubmissionsAPI(MockSubmissionsAPI):
+    def get_all_submissions(self, course_key_str, block_id, block_type):
+        return (
+            submission for submission in self.submissions.values() if
+            submission['student_item']['item_id'] == block_id
+        )
 
 
 @ddt
 class StepBuilderTest(MentoringAssessmentBaseTest):
+
+    def setUp(self):
+        super(StepBuilderTest, self).setUp()
+
+        mock_submissions_api = ExtendedMockSubmissionsAPI()
+        patches = (
+            (
+                "problem_builder.plot.PlotBlock.course_key_str",
+                property(lambda block: "course_id")
+            ),
+            (
+                "problem_builder.plot.sub_api",
+                mock_submissions_api
+            ),
+            (
+                "problem_builder.mcq.sub_api",
+                mock_submissions_api
+            ),
+            (
+                "problem_builder.sub_api.SubmittingXBlockMixin.student_item_key",
+                property(
+                    lambda block: dict(
+                        student_id="student_id",
+                        course_id="course_id",
+                        item_id=block.scope_ids.usage_id,
+                        item_type="pb-rating"
+                    )
+                )
+            ),
+        )
+        for p in patches:
+            patcher = patch(*p)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+        runtime_patcher = patch(
+            'workbench.runtime.WorkbenchRuntime.anonymous_student_id',
+            property(lambda runtime: "student_id"),
+            create=True
+        )
+        runtime_patcher.start()
+        self.addCleanup(runtime_patcher.stop)
 
     def freeform_answer(self, number, step_builder, controls, text_input, result, saved_value="", last=False):
         self.expect_question_visible(number, step_builder)
@@ -505,3 +556,212 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         # Should show default message for review
         self.assert_message_text(step_builder, "Note: you have used all attempts. Continue to the next unit.")
+
+    def answer_rating_question(self, step_number, question_number, step_builder, question, choice_name):
+        question_text = self.question_text(question_number)
+        self.wait_until_text_in(question_text, step_builder)
+        self.assertIn(question, step_builder.text)
+        choices = GetChoices(
+            step_builder, 'div[data-name="rating_{}_{}"] > .rating'.format(step_number, question_number)
+        )
+        choices.select(choice_name)
+
+    def submit_and_go_to_next_step(self, controls, last=False):
+        controls.submit.click()
+        self.wait_until_clickable(controls.next_question)
+        controls.next_question.click()
+        if last:
+            self.wait_until_hidden(controls.next_question)
+        else:
+            self.wait_until_disabled(controls.next_question)
+
+    def plot_controls(self, step_builder):
+        class Namespace(object):
+            pass
+
+        plot_controls = Namespace()
+
+        plot_controls.default_button = step_builder.find_element_by_css_selector(".plot-default")
+        plot_controls.average_button = step_builder.find_element_by_css_selector(".plot-average")
+        plot_controls.quadrants_button = step_builder.find_element_by_css_selector(".plot-quadrants")
+
+        return plot_controls
+
+    def plot_empty(self, step_builder):
+        points = step_builder.find_elements_by_css_selector("circle")
+        self.assertEquals(points, [])
+
+    def check_quadrant_labels(self, step_builder, plot_controls, hidden, labels=['Q1', 'Q2', 'Q3', 'Q4']):
+        quadrant_labels = step_builder.find_elements_by_css_selector(".quadrant-label")
+        quadrants_button_border_colors = [
+            plot_controls.quadrants_button.value_of_css_property('border-top-color'),
+            plot_controls.quadrants_button.value_of_css_property('border-right-color'),
+            plot_controls.quadrants_button.value_of_css_property('border-bottom-color'),
+            plot_controls.quadrants_button.value_of_css_property('border-left-color'),
+        ]
+        if hidden:
+            self.assertEquals(quadrant_labels, [])
+            # rgba(255, 0, 0, 1): "red"
+            self.assertTrue(all(bc == 'rgba(255, 0, 0, 1)' for bc in quadrants_button_border_colors))
+        else:
+            self.assertEquals(len(quadrant_labels), 4)
+            self.assertEquals(set(label.text for label in quadrant_labels), set(labels))
+            # rgba(0, 128, 0, 1): "green"
+            self.assertTrue(all(bc == 'rgba(0, 128, 0, 1)' for bc in quadrants_button_border_colors))
+
+    def click_default_button(
+        self, plot_controls, overlay_on, color_on='rgba(0, 128, 0, 1)', color_off='rgba(237, 237, 237, 1)'
+    ):
+        plot_controls.default_button.click()
+        default_button_border_colors = [
+            plot_controls.default_button.value_of_css_property('border-top-color'),
+            plot_controls.default_button.value_of_css_property('border-right-color'),
+            plot_controls.default_button.value_of_css_property('border-bottom-color'),
+            plot_controls.default_button.value_of_css_property('border-left-color'),
+        ]
+        if overlay_on:
+            self.assertTrue(all(bc == color_on for bc in default_button_border_colors))
+        else:
+            self.assertTrue(all(bc == color_off for bc in default_button_border_colors))
+
+    def click_average_button(
+        self, plot_controls, overlay_on, color_on='rgba(0, 0, 255, 1)', color_off='rgba(237, 237, 237, 1)'
+    ):
+        plot_controls.average_button.click()
+        average_button_border_colors = [
+            plot_controls.average_button.value_of_css_property('border-top-color'),
+            plot_controls.average_button.value_of_css_property('border-right-color'),
+            plot_controls.average_button.value_of_css_property('border-bottom-color'),
+            plot_controls.average_button.value_of_css_property('border-left-color'),
+        ]
+        if overlay_on:
+            self.assertTrue(all(bc == color_on for bc in average_button_border_colors))
+        else:
+            self.assertTrue(all(bc == color_off for bc in average_button_border_colors))
+
+    def test_empty_plot(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_plot_defaults.xml", {})
+
+        # Step 1: Questions
+        # Provide first rating
+        self.answer_rating_question(1, 1, step_builder, "How much do you agree?", "1 - Disagree")
+        # Provide second rating
+        self.answer_rating_question(1, 2, step_builder, "How important do you think this is?", "5 - Very important")
+        # Advance
+        self.submit_and_go_to_next_step(controls, last=True)
+
+        # Step 2: Plot
+        # Check if plot is empty initially (default overlay on, average overlay off)
+        self.plot_empty(step_builder)
+        # Obtain references to plot controls
+        plot_controls = self.plot_controls(step_builder)
+        # Check if plot is empty (default overlay off, average overlay off)
+        self.click_default_button(plot_controls, overlay_on=False)
+        self.plot_empty(step_builder)
+        # Check if plot is empty (default overlay off, average overlay on)
+        self.click_average_button(plot_controls, overlay_on=True)
+        self.plot_empty(step_builder)
+        # Check if plot is empty (default overlay on, average overlay on)
+        self.click_default_button(plot_controls, overlay_on=True)
+        self.plot_empty(step_builder)
+        # Check if plot is empty (default overlay on, average overlay off)
+        self.click_average_button(plot_controls, overlay_on=False)
+        self.plot_empty(step_builder)
+        # Check quadrant labels
+        self.check_quadrant_labels(step_builder, plot_controls, hidden=True)
+        plot_controls.quadrants_button.click()
+        self.check_quadrant_labels(step_builder, plot_controls, hidden=False)
+
+    def check_overlays(self, step_builder, total_num_points, overlays):
+        points = step_builder.find_elements_by_css_selector("circle")
+        self.assertEquals(len(points), total_num_points)
+
+        for overlay in overlays:
+            # Check if correct number of points is present
+            points = step_builder.find_elements_by_css_selector(overlay['selector'])
+            self.assertEquals(len(points), overlay['num_points'])
+            # Check point colors
+            point_colors = [
+                point.value_of_css_property('fill') for point in points
+            ]
+            self.assertTrue(all(pc == overlay['point_color'] for pc in point_colors))
+            # Check point titles
+            point_titles = set([
+                point.get_attribute('title') for point in points
+            ])
+            self.assertEquals(point_titles, set(overlay['titles']))
+            # Check positions
+            point_positions = set([
+                (point.get_attribute('cx'), point.get_attribute('cy')) for point in points
+            ])
+            self.assertEquals(point_positions, set(overlay['positions']))
+
+    def test_plot(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_plot.xml", {})
+
+        # Step 1: Questions
+        # Provide first rating
+        self.answer_rating_question(1, 1, step_builder, "How much do you agree?", "1 - Disagree")
+        # Provide second rating
+        self.answer_rating_question(1, 2, step_builder, "How important do you think this is?", "5 - Very important")
+        # Advance
+        self.submit_and_go_to_next_step(controls)
+
+        # Step 2: Questions
+        # Provide first rating
+        self.answer_rating_question(2, 1, step_builder, "How much do you agree?", "5 - Agree")
+        # Provide second rating
+        self.answer_rating_question(2, 2, step_builder, "How important do you think this is?", "1 - Not important")
+        # Advance
+        self.submit_and_go_to_next_step(controls, last=True)
+
+        # Step 2: Plot
+        # Obtain references to plot controls
+        plot_controls = self.plot_controls(step_builder)
+        # Overlay data
+        default_overlay = {
+            'selector': '.claim-default',
+            'num_points': 2,
+            'point_color': 'rgb(255, 165, 0)',  # orange
+            'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
+            'positions': [
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+        }
+        average_overlay = {
+            'selector': '.claim-average',
+            'num_points': 2,
+            'point_color': 'rgb(128, 0, 128)',  # purple
+            'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
+            'positions': [
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+        }
+        # Check if plot shows correct overlay(s) initially (default overlay on, average overlay off)
+        self.check_overlays(step_builder, total_num_points=2, overlays=[default_overlay])
+
+        # Check if plot shows correct overlay(s) (default overlay on, average overlay on)
+        self.click_average_button(plot_controls, overlay_on=True, color_on='rgba(128, 0, 128, 1)')  # purple
+        self.check_overlays(step_builder, 4, overlays=[default_overlay, average_overlay])
+
+        # Check if plot shows correct overlay(s) (default overlay off, average overlay on)
+        self.click_default_button(plot_controls, overlay_on=False)
+        self.check_overlays(step_builder, 2, overlays=[average_overlay])
+
+        # Check if plot shows correct overlay(s) (default overlay off, average overlay off)
+        self.click_average_button(plot_controls, overlay_on=False)
+        self.plot_empty(step_builder)
+
+        # Check if plot shows correct overlay(s) (default overlay on, average overlay off)
+        self.click_default_button(plot_controls, overlay_on=True, color_on='rgba(255, 165, 0, 1)')  # orange
+        self.check_overlays(step_builder, 2, overlays=[default_overlay])
+
+        # Check quadrant labels
+        self.check_quadrant_labels(step_builder, plot_controls, hidden=True)
+        plot_controls.quadrants_button.click()
+        self.check_quadrant_labels(
+            step_builder, plot_controls, hidden=False,
+            labels=['Custom Q1 label', 'Custom Q2 label', 'Custom Q3 label', 'Custom Q4 label']
+        )
