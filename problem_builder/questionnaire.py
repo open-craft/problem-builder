@@ -24,7 +24,7 @@ from django.utils.safestring import mark_safe
 from lazy import lazy
 import uuid
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Float, UNIQUE_ID
+from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
@@ -61,13 +61,6 @@ class QuestionnaireAbstractBlock(
     values entered by the student, and supports multiple types of multiple-choice
     set, with preset choices and author-defined values.
     """
-    name = String(
-        # This doesn't need to be a field but is kept for backwards compatibility with v1 student data
-        display_name=_("Question ID (name)"),
-        help=_("The ID of this question (required). Should be unique within this mentoring component."),
-        default=UNIQUE_ID,
-        scope=Scope.settings,  # Must be scope.settings, or the unique ID will change every time this block is edited
-    )
     question = String(
         display_name=_("Question"),
         help=_("Question to ask the student"),
@@ -80,13 +73,6 @@ class QuestionnaireAbstractBlock(
         help=_("General feedback provided when submiting"),
         scope=Scope.content,
         default=""
-    )
-    weight = Float(
-        display_name=_("Weight"),
-        help=_("Defines the maximum total grade of this question."),
-        default=1,
-        scope=Scope.content,
-        enforce_type=True
     )
     editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
     has_children = True
