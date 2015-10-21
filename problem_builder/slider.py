@@ -56,6 +56,7 @@ class SliderBlock(
     """
     CATEGORY = 'pb-slider'
     STUDIO_LABEL = _(u"Ranged Value Slider")
+    answerable = True
 
     min_label = String(
         display_name=_("Low"),
