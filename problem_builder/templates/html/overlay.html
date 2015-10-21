@@ -1,0 +1,30 @@
+{% load i18n %}
+<div class="sb-plot-overlay">
+  {% if self.plot_label and self.point_color %}
+    <h3 style="color: {{ self.point_color }};">{{ self.plot_label }} {% trans "Overlay" %}</h3>
+  {% endif %}
+  <p>
+    <strong>{% trans "Description:" %}</strong>
+    {% if self.description %}
+      {{ self.description }}
+    {% else %}
+      <span class="italic">{% trans "No description provided" %}</span>
+    {% endif %}
+  </p>
+  <p>
+    <strong>{% trans "Source:" %}</strong>
+    {% if self.citation %}
+      {{ self.citation }}
+    {% else %}
+      <span class="italic">{% trans "No citation provided" %}</span>
+    {% endif %}
+  </p>
+  <p>
+    <strong>{% trans "Data:" %}</strong>
+    {% if self.claim_data %}
+      {{ self.claim_data }}
+    {% else %}
+      <span class="italic">{% trans "No data provided" %}</span>
+    {% endif %}
+  </p>
+</div>

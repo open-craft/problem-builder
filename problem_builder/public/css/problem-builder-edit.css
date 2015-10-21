@@ -15,6 +15,7 @@
 }
 
 /* Custom appearance for our "Add" buttons */
+.xblock[data-block-type=sb-plot] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=sb-review-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=sb-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=step-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
@@ -25,6 +26,8 @@
   line-height: 30px;
 }
 
+.xblock[data-block-type=sb-plot] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
+.xblock[data-block-type=sb-plot] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=sb-review-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
 .xblock[data-block-type=sb-review-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled:hover,
 .xblock[data-block-type=sb-step] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,

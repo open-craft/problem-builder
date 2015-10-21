@@ -1,5 +1,23 @@
 function PlotBlock(runtime, element) {
 
+    // jQuery helpers
+
+    jQuery.fn.isEmpty = function() {
+        return !$.trim($(this).html());
+    };
+
+    jQuery.fn.isHidden = function() {
+        // Don't use jQuery :hidden selector here;
+        // this is necessary to ensure that result is independent of parent visibility
+        return $(this).css('display') === 'none';
+    };
+
+    jQuery.fn.isVisible = function() {
+        // Don't use jQuery :visible selector here;
+        // this is necessary to ensure that result is independent of parent visibility
+        return $(this).css('display') !== 'none';
+    };
+
     // Plot
 
     // Define margins
@@ -58,7 +76,8 @@ function PlotBlock(runtime, element) {
 
     var defaultButton = $('.plot-default', element),
         averageButton = $('.plot-average', element),
-        quadrantsButton = $('.plot-quadrants', element);
+        quadrantsButton = $('.plot-quadrants', element),
+        overlayButtons = $('input.plot-overlay', element);
 
     // Claims
 
@@ -80,7 +99,7 @@ function PlotBlock(runtime, element) {
     // Event handlers
 
     function toggleOverlay(claims, color, klass, refresh) {
-        var selector = "." + klass,
+        var selector = buildSelector(klass),
             selection = svgContainer.selectAll(selector);
         if (selection.empty()) {
             showOverlay(selection, claims, color, klass);
@@ -90,6 +109,14 @@ function PlotBlock(runtime, element) {
                 toggleOverlay(claims, color, klass);
             }
         }
+    }
+
+    function buildSelector(klass) {
+        var classes = klass.split(' ');
+        if (classes.length === 1) {
+            return "." + klass;
+        }
+        return '.' + classes.join('.');
     }
 
     function showOverlay(selection, claims, color, klass) {
@@ -124,6 +151,29 @@ function PlotBlock(runtime, element) {
         } else {
             $button.css("border-color", color);
             $button.data("overlay-on", true);
+        }
+    }
+
+    function toggleOverlayInfo(klass, hide) {
+        var plotInfo = $('.plot-info', element),
+            selector = buildSelector(klass),
+            overlayInfo = plotInfo.children(selector);
+        if (hide || overlayInfo.isVisible()) {
+            overlayInfo.hide();
+            var overlayInfos = plotInfo.children('.plot-overlay'),
+                hidePlotInfo = true;
+            overlayInfos.each(function() {
+                var overlayInfo = $(this);
+                hidePlotInfo = hidePlotInfo && (overlayInfo.isHidden() || overlayInfo.isEmpty());
+            });
+            if (hidePlotInfo) {
+                plotInfo.hide();
+            }
+        } else {
+            overlayInfo.show();
+            if (!overlayInfo.isEmpty() && !plotInfo.is(':visible')) {
+                plotInfo.show();
+            }
         }
     }
 
@@ -168,7 +218,7 @@ function PlotBlock(runtime, element) {
         toggleBorderColor(this, defaultColor, refresh);
     });
 
-    averageButton.on('click', function(event) {
+    averageButton.on('click', function() {
         toggleOverlay(averageClaims, averageColor, 'claim-average');
         toggleBorderColor(this, averageColor);
     });
@@ -177,8 +227,30 @@ function PlotBlock(runtime, element) {
         toggleQuadrantLabels();
     });
 
+    overlayButtons.each(function(index) {
+
+        var overlayButton = $(this),
+            claims = overlayButton.data('claims'),
+            color = overlayButton.data('point-color'),
+            klass = overlayButton.attr('class');
+
+        overlayButton.on('click', function() {
+            toggleOverlay(claims, color, klass);
+            toggleBorderColor(this, color);
+            toggleOverlayInfo(klass);
+        });
+
+        // Hide overlay info initially
+
+        toggleOverlayInfo(klass, 'hide');
+
+    });
+
     // Quadrant labels are off initially; color of button for toggling them should reflect this
     quadrantsButton.css("border-color", "red");
+
+    // Hide plot info initially
+    $('.plot-info', element).hide();
 
     // API
 

@@ -30,6 +30,40 @@
            data-overlay-on="false"
            value="Average"
            />
+
+    {% for overlay in self.overlay_data %}
+
+      <input type="button"
+             class="plot-overlay plot-overlay-{{ overlay.position }}"
+             data-claims="{{ overlay.claims_json }}"
+             data-point-color="{{ overlay.point_color }}"
+             data-overlay-on="false"
+             value="{{ overlay.plot_label }}"
+             />
+
+    {% endfor %}
+
+    <div class="plot-info">
+      <p class="plot-info-header">Plot info</p>
+      {% for overlay in self.overlay_data %}
+        <div class="plot-overlay plot-overlay-{{ overlay.position }}">
+          {% if overlay.description or overlay.citation %}
+            <p style="color: {{ overlay.point_color }};">{{ overlay.plot_label }}</p>
+            {% if overlay.description %}
+              <p>
+                <strong>Description:</strong> {{ overlay.description }}
+              </p>
+            {% endif %}
+            {% if overlay.citation %}
+              <p>
+                <strong>Source:</strong> {{ overlay.citation }}
+              </p>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
   </div>
 
 </div>
