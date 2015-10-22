@@ -171,7 +171,7 @@ function PlotBlock(runtime, element) {
             }
         } else {
             overlayInfo.show();
-            if (!overlayInfo.isEmpty() && !plotInfo.is(':visible')) {
+            if (!overlayInfo.isEmpty() && !plotInfo.isVisible()) {
                 plotInfo.show();
             }
         }

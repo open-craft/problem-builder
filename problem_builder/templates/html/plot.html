@@ -48,14 +48,14 @@
       {% for overlay in self.overlay_data %}
         <div class="plot-overlay plot-overlay-{{ overlay.position }}">
           {% if overlay.description or overlay.citation %}
-            <p style="color: {{ overlay.point_color }};">{{ overlay.plot_label }}</p>
+            <p class="overlay-plot-label" style="color: {{ overlay.point_color }};">{{ overlay.plot_label }}</p>
             {% if overlay.description %}
-              <p>
+              <p class="overlay-description">
                 <strong>Description:</strong> {{ overlay.description }}
               </p>
             {% endif %}
             {% if overlay.citation %}
-              <p>
+              <p class="overlay-citation">
                 <strong>Source:</strong> {{ overlay.citation }}
               </p>
             {% endif %}
