@@ -55,6 +55,9 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.find_elements_by_xpath('./*'))
 
+    def _click_result_icon(self, choice):
+        choice.find_element_by_css_selector(".choice-result").click()
+
     def test_mcq_choices_rating(self):
         """
         Mentoring MCQ should display tips according to user choice
@@ -69,13 +72,17 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assert_messages_empty(messages)
         self.assertFalse(submit.is_enabled())
 
-        mcq1_legend = mcq1.find_element_by_css_selector('legend')
-        mcq2_legend = mcq2.find_element_by_css_selector('legend')
-        self.assertEqual(mcq1_legend.text, 'Question 1\nDo you like this MCQ?')
-        self.assertEqual(mcq2_legend.text, 'Question 2\nHow do you rate this MCQ?')
+        self.assertEqual(mcq1.find_element_by_css_selector('legend').text, 'Question 1\nDo you like this MCQ?')
+        self.assertEqual(mcq2.find_element_by_css_selector('legend').text, 'Question 2\nHow do you rate this MCQ?')
+
+        mcq1_feedback = mcq1.find_element_by_css_selector('.feedback')
+        mcq2_feedback = mcq2.find_element_by_css_selector('.feedback')
 
         mcq1_choices = mcq1.find_elements_by_css_selector('.choices .choice')
         mcq2_choices = mcq2.find_elements_by_css_selector('.rating .choice')
+
+        mcq1_choices_input = self._get_inputs(mcq1_choices)
+        mcq2_choices_input = self._get_inputs(mcq2_choices)
 
         self.assertListEqual(
             [self._get_choice_label_text(choice) for choice in mcq1_choices],
@@ -86,18 +93,41 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             ['1 - Not good at all', '2', '3', '4', '5 - Extremely good', "I don't want to rate it"]
         )
 
-        mcq1_choices_input = self._get_inputs(mcq1_choices)
-        mcq2_choices_input = self._get_inputs(mcq2_choices)
+        self.assertListEqual(
+            [choice_input.get_attribute('value') for choice_input in mcq1_choices_input],
+            ['yes', 'maybenot', 'understand']
+        )
 
-        self.assertEqual(mcq1_choices_input[0].get_attribute('value'), 'yes')
-        self.assertEqual(mcq1_choices_input[1].get_attribute('value'), 'maybenot')
-        self.assertEqual(mcq1_choices_input[2].get_attribute('value'), 'understand')
-        self.assertEqual(mcq2_choices_input[0].get_attribute('value'), '1')
-        self.assertEqual(mcq2_choices_input[1].get_attribute('value'), '2')
-        self.assertEqual(mcq2_choices_input[2].get_attribute('value'), '3')
-        self.assertEqual(mcq2_choices_input[3].get_attribute('value'), '4')
-        self.assertEqual(mcq2_choices_input[4].get_attribute('value'), '5')
-        self.assertEqual(mcq2_choices_input[5].get_attribute('value'), 'notwant')
+        self.assertListEqual(
+            [choice_input.get_attribute('value') for choice_input in mcq2_choices_input],
+            ['1', '2', '3', '4', '5', 'notwant']
+        )
+
+        def submit_answer_and_assert_messages(mcq1_answer, mcq2_answer, item_feedback1, item_feedback2):
+            self._selenium_bug_workaround_scroll_to(mcq1)
+
+            mcq1_choices_input[mcq1_answer].click()
+            mcq2_choices_input[mcq2_answer].click()
+            self.assertTrue(submit.is_enabled())
+            submit.click()
+            self.wait_until_disabled(submit)
+
+            mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
+            mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
+
+            self.assertTrue(mcq1_feedback.is_displayed())
+            self.assertEqual(mcq1_feedback.text, "Feedback message 1")
+            self.assertTrue(mcq2_feedback.is_displayed())
+            self.assertEqual(mcq2_feedback.text, "Feedback message 2")
+            self.assertFalse(mcq1_tips.is_displayed())
+            self.assertFalse(mcq2_tips.is_displayed())
+
+            self._click_result_icon(mcq1_choices[mcq1_answer])
+            self.assertEqual(mcq1_tips.text, item_feedback1)
+            self.assertTrue(mcq1_tips.is_displayed())
+            self._click_result_icon(mcq2_choices[mcq2_answer])
+            self.assertEqual(mcq2_tips.text, item_feedback2)
+            self.assertTrue(mcq2_tips.is_displayed())
 
         # Submit button disabled without selecting anything
         self.assertFalse(submit.is_enabled())
@@ -108,38 +138,12 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertFalse(submit.is_enabled())
 
         # Should not show full completion message when wrong answers are selected
-        self._selenium_bug_workaround_scroll_to(mcq1)
-        mcq1_choices_input[0].click()
-        mcq2_choices_input[2].click()
-        self.assertTrue(submit.is_enabled())
-        submit.click()
-        self.wait_until_disabled(submit)
-
-        mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
-        mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
-
-        self.assertEqual(mcq1_tips.text, 'Great!')
-        self.assertTrue(mcq1_tips.is_displayed())
-        self.assertEqual(mcq2_tips.text, 'Will do better next time...')
-        self.assertTrue(mcq2_tips.is_displayed())
+        submit_answer_and_assert_messages(0, 2, 'Great!', 'Will do better next time...')
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.is_displayed())
 
         # Should show full completion when the right answers are selected
-        self._selenium_bug_workaround_scroll_to(mcq1)
-        mcq1_choices_input[0].click()
-        mcq2_choices_input[3].click()
-        self.assertTrue(submit.is_enabled())
-        submit.click()
-        self.wait_until_disabled(submit)
-
-        mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
-        mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
-
-        self.assertEqual(mcq1_tips.text, 'Great!')
-        self.assertTrue(mcq1_tips.is_displayed())
-        self.assertEqual(mcq2_tips.text, 'I love good grades.')
-        self.assertTrue(mcq2_tips.is_displayed())
+        submit_answer_and_assert_messages(0, 3, 'Great!', 'I love good grades.')
         self.assertIn('All is good now...\nCongratulations!', messages.text)
         self.assertTrue(messages.is_displayed())
 
@@ -150,6 +154,8 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertEqual(len(mcq2_tip_containers), 6)
 
         # Clicking outside the tips should hide the tips and clear the with-tips class.
+        mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
+        mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
         mcq1.find_element_by_css_selector('.mentoring .question-title').click()
         mcq2.find_element_by_css_selector('.mentoring .question-title').click()
         mcq1_tip_containers = mcq1.find_elements_by_css_selector('.choice-tips-container.with-tips')
@@ -274,15 +280,11 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         submit.click()
         self.wait_until_disabled(submit)
 
+        self._click_result_icon(choice_wrapper)
         item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
         self.assertTrue(item_feedback_popup.is_displayed())
         feedback_height = self._get_inner_height(item_feedback_popup)
         self.assertEqual(feedback_height, expected_height)
-
-        choice_wrapper.find_element_by_css_selector(".choice-result").click()
-        item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
-        item_feedback_height = self._get_inner_height(item_feedback_popup)
-        self.assertEqual(item_feedback_height, expected_height)
 
 
 @patch.object(MentoringBlock, 'get_theme', Mock(return_value={'package': 'problem_builder',

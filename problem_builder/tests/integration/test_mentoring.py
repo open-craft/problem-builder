@@ -149,7 +149,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
     def _standard_checks(self, answer, mcq, mrq, rating, messages):
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
-        self._assert_feedback_showed(mcq, 0, "Great!")
+        self._assert_feedback_showed(mcq, 0, "Great!", click_choice_result=True)
         self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
@@ -234,7 +234,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
         # precondition - verifying 100% score achieved
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
-        self._assert_feedback_showed(mcq, 0, "Great!")
+        self._assert_feedback_showed(mcq, 0, "Great!", click_choice_result=True)
         self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
@@ -275,7 +275,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
         def assert_state(answer, mcq, mrq, rating, messages):
             self.assertEqual(answer.get_attribute('value'), 'This is the answer')
-            self._assert_feedback_showed(mcq, 0, "Great!")
+            self._assert_feedback_showed(mcq, 0, "Great!", click_choice_result=True)
             self._assert_feedback_showed(
                 mrq, 0, "This is something everyone has to like about this MRQ",
                 click_choice_result=True
