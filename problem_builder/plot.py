@@ -175,10 +175,17 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             claim, q1, q2 = line.split(', ')
             r1, r2 = None, None
             for question_id, question in zip(question_ids, questions):
-                if question.name == q1:
-                    r1 = response_function(question, question_id)
-                if question.name == q2:
-                    r2 = response_function(question, question_id)
+                question_type = question.scope_ids.block_type
+                if question_type == 'pb-slider':
+                    if question.url_name == q1:
+                        r1 = response_function(question, question_id)
+                    if question.url_name == q2:
+                        r2 = response_function(question, question_id)
+                else:
+                    if question.name == q1:
+                        r1 = response_function(question, question_id)
+                    if question.name == q2:
+                        r2 = response_function(question, question_id)
                 if r1 is not None and r2 is not None:
                     break
             claims.append([claim, r1, r2])
