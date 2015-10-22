@@ -221,6 +221,10 @@ class MentoringBlock(XBlock, StepParentMixin, StudioEditableXBlockMixin, StudioC
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
+    def max_score(self):
+        """ Maximum score. We scale all scores to a maximum of 1.0 so this is always 1.0 """
+        return 1.0
+
     def include_theme_files(self, fragment):
         theme = self.get_theme()
         theme_package, theme_files = theme['package'], theme['locations']
