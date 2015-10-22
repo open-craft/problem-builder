@@ -377,6 +377,10 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
+    def max_score(self):
+        """ Maximum score. We scale all scores to a maximum of 1.0 so this is always 1.0 """
+        return 1.0
+
     def student_view(self, context):
         # Migrate stored data if necessary
         self.migrate_fields()
