@@ -1,8 +1,9 @@
+{% load i18n %}
 <div class="sb-plot">
 
   <div class="quadrants">
     <label>
-      Quadrant labels
+      {% trans "Quadrant labels" %}
       <input type="button"
              class="plot-quadrants"
              data-q1-label="{{ self.q1_label }}"
@@ -14,7 +15,7 @@
   </div>
 
   <div class="overlays">
-    <h3>Compare your plot to others!</h3>
+    <h3>{% trans "Compare your plot to others!" %}</h3>
 
     <input type="button"
            class="plot-default"
@@ -44,19 +45,19 @@
     {% endfor %}
 
     <div class="plot-info">
-      <p class="plot-info-header">Plot info</p>
+      <p class="plot-info-header">{% trans "Plot info" %}</p>
       {% for overlay in self.overlay_data %}
         <div class="plot-overlay plot-overlay-{{ overlay.position }}">
           {% if overlay.description or overlay.citation %}
             <p class="overlay-plot-label" style="color: {{ overlay.point_color }};">{{ overlay.plot_label }}</p>
             {% if overlay.description %}
               <p class="overlay-description">
-                <strong>Description:</strong> {{ overlay.description }}
+                <strong>{% trans "Description:" %}</strong> {{ overlay.description }}
               </p>
             {% endif %}
             {% if overlay.citation %}
               <p class="overlay-citation">
-                <strong>Source:</strong> {{ overlay.citation }}
+                <strong>{% trans "Source:" %}</strong> {{ overlay.citation }}
               </p>
             {% endif %}
           {% endif %}

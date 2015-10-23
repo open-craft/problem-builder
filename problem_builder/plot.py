@@ -411,8 +411,8 @@ class PlotOverlayBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlock
         help=_(
             'Claim data to include in this overlay. '
             'Each line defines a tuple of the form "q1, q2", '
-            'where "q1" is the value associated with the first scale question, '
-            'and "q2" is the value associated with the second scale question. '
+            'where "q1" is the value associated with the first scale or rating question, '
+            'and "q2" is the value associated with the second scale or rating question. '
             'Note that data will be associated with claims in the order that they are defined in the parent plot.'
         ),
         default="",

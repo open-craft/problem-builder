@@ -241,7 +241,6 @@ function PlotBlock(runtime, element) {
         });
 
         // Hide overlay info initially
-
         toggleOverlayInfo(klass, 'hide');
 
     });

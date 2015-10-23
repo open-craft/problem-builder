@@ -877,8 +877,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             'point_color': PointColors.ORANGE,
             'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
-                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
             ],
         }
         teacher_overlay = {
