@@ -87,6 +87,17 @@ class SliderBlock(
 
     editable_fields = ('min_label', 'max_label', 'display_name', 'question', 'show_title')
 
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the name.
+        """
+        try:
+            return super(SliderBlock, self).url_name
+        except AttributeError:
+            return self.name
+
     def mentoring_view(self, context):
         """ Main view of this block """
         context = context.copy() if context else {}
