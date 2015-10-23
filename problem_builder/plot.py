@@ -26,6 +26,8 @@ from lazy.lazy import lazy
 from xblock.core import XBlock
 from xblock.fields import String, Scope
 from xblock.fragment import Fragment
+from xblock.validation import ValidationMessage
+from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
     StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
@@ -244,12 +246,89 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             'average_claims': self.average_claims,
         }
 
+    @property
+    def allowed_nested_blocks(self):
+        """
+        Returns a list of allowed nested XBlocks. Each item can be either
+
+        * An XBlock class
+        * A NestedXBlockSpec
+
+        If XBlock class is used it is assumed that this XBlock is enabled and allows multiple instances.
+        NestedXBlockSpec allows explicitly setting disabled/enabled state,
+        disabled reason (if any) and single/multiple instances.
+        """
+        return [PlotOverlayBlock]
+
+    @lazy
+    def overlay_ids(self):
+        """
+        Get the usage_ids of all of this XBlock's children that are overlays.
+        """
+        return [
+            _normalize_id(child_id) for child_id in self.children if
+            child_isinstance(self, child_id, PlotOverlayBlock)
+        ]
+
+    @lazy
+    def overlays(self):
+        """
+        Get the overlay children of this block.
+        """
+        return [self.runtime.get_block(overlay_id) for overlay_id in self.overlay_ids]
+
+    @lazy
+    def overlay_data(self):
+        if not self.claims:
+            return []
+
+        overlay_data = []
+        claims = self.claims.split('\n')
+        for index, overlay in enumerate(self.overlays):
+            claims_json = []
+            if overlay.claim_data:
+                claim_data = overlay.claim_data.split('\n')
+                for claim, data in zip(claims, claim_data):
+                    claim = claim.split(', ')[0]
+                    r1, r2 = data.split(', ')
+                    claims_json.append([claim, int(r1), int(r2)])
+            claims_json = json.dumps(claims_json)
+            overlay_data.append({
+                'plot_label': overlay.plot_label,
+                'point_color': overlay.point_color,
+                'description': overlay.description,
+                'citation': overlay.citation,
+                'claims_json': claims_json,
+                'position': index,
+            })
+        return overlay_data
+
+    @lazy
+    def claims_display(self):
+        if not self.claims:
+            return []
+
+        claims = []
+        for claim in self.claims.split('\n'):
+            claim, q1, q2 = claim.split(', ')
+            claims.append([claim, q1, q2])
+        return claims
+
     def author_preview_view(self, context):
-        return Fragment(
-            u"<p>{}</p>".format(
-                _(u"This block displays a plot that summarizes answers to scale questions.")
-            )
-        )
+        context['self'] = self
+        fragment = Fragment()
+        fragment.add_content(loader.render_template('templates/html/plot_preview.html', context))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/plot-preview.css'))
+        if self.overlay_ids:
+            fragment.add_content(
+                u"<p>{}</p>".format(
+                    _(u"In addition to the default and average overlays the plot includes the following overlays:")
+                ))
+            for overlay in self.overlays:
+                overlay_fragment = self._render_child_fragment(overlay, context, view='mentoring_view')
+                fragment.add_frag_resources(overlay_fragment)
+                fragment.add_content(overlay_fragment.content)
+        return fragment
 
     def mentoring_view(self, context):
         return self.student_view(context)
@@ -265,4 +344,116 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/d3.min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/plot.js'))
         fragment.initialize_js('PlotBlock')
+        return fragment
+
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add child blocks.
+        """
+        context['wrap_children'] = {
+            'head': u'<div class="mentoring">',
+            'tail': u'</div>'
+        }
+        fragment = super(PlotBlock, self).author_edit_view(context)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/plot_edit.js'))
+        fragment.initialize_js('PlotEdit')
+        return fragment
+
+
+@XBlock.needs('i18n')
+class PlotOverlayBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlock):
+    """
+    XBlock that represents a user-defined overlay for a plot block.
+    """
+
+    CATEGORY = 'sb-plot-overlay'
+    STUDIO_LABEL = _(u"Plot Overlay")
+
+    # Settings
+    display_name = String(
+        display_name=_("Overlay title"),
+        default="Overlay",
+        scope=Scope.content
+    )
+
+    plot_label = String(
+        display_name=_("Plot label"),
+        help=_("Label for button that allows to toggle visibility of this overlay"),
+        default="",
+        scope=Scope.content
+    )
+
+    point_color = String(
+        display_name=_("Point color"),
+        help=_("Point color to use for this overlay"),
+        default="",
+        scope=Scope.content
+    )
+
+    description = String(
+        display_name=_("Description"),
+        help=_("Description of this overlay (optional)"),
+        default="",
+        scope=Scope.content
+    )
+
+    citation = String(
+        display_name=_("Citation"),
+        help=_("Source of data belonging to this overlay (optional)"),
+        default="",
+        scope=Scope.content
+    )
+
+    claim_data = String(
+        display_name=_("Claim data"),
+        help=_(
+            'Claim data to include in this overlay. '
+            'Each line defines a tuple of the form "q1, q2", '
+            'where "q1" is the value associated with the first scale or rating question, '
+            'and "q2" is the value associated with the second scale or rating question. '
+            'Note that data will be associated with claims in the order that they are defined in the parent plot.'
+        ),
+        default="",
+        multiline_editor=True,
+        resettable_editor=False
+    )
+
+    editable_fields = (
+        "plot_label", "point_color", "description", "citation", "claim_data"
+    )
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data.
+        """
+        super(PlotOverlayBlock, self).validate_field_data(validation, data)
+
+        def add_error(msg):
+            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
+
+        if not data.plot_label.strip():
+            add_error(_(u"No plot label set. Button for toggling visibility of this overlay will not have a label."))
+        if not data.point_color.strip():
+            add_error(_(u"No point color set. This overlay will not work correctly."))
+
+        # If parent plot is associated with one or more claims, prompt user to add claim data
+        parent = self.get_parent()
+        if parent.claims.strip() and not data.claim_data.strip():
+            add_error(_(u"No claim data provided. This overlay will not work correctly."))
+
+    def author_preview_view(self, context):
+        return self.student_view(context)
+
+    def mentoring_view(self, context):
+        context = context.copy() if context else {}
+        context['hide_header'] = True
+        return self.author_preview_view(context)
+
+    def student_view(self, context):
+        context['self'] = self
+        fragment = Fragment()
+        fragment.add_content(loader.render_template('templates/html/overlay.html', context))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/overlay.css'))
         return fragment

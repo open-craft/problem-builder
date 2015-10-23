@@ -6,6 +6,28 @@ from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest,
 from .test_dashboard import MockSubmissionsAPI
 
 
+class HTMLColors(object):
+    GREEN = 'rgba(0, 128, 0, 1)'
+    BLUE = 'rgba(0, 0, 255, 1)'
+    RED = 'rgba(255, 0, 0, 1)'
+    GREY = 'rgba(237, 237, 237, 1)'
+    PURPLE = 'rgba(128, 0, 128, 1)'
+    ORANGE = 'rgba(255, 165, 0, 1)'
+    CORAL = 'rgba(255, 127, 80, 1)'
+    CORNFLOWERBLUE = 'rgba(100, 149, 237, 1)'
+    OLIVE = 'rgba(128, 128, 0, 1)'
+    CRIMSON = 'rgba(220, 20, 60, 1)'
+
+
+class PointColors(object):
+    ORANGE = 'rgb(255, 165, 0)'
+    PURPLE = 'rgb(128, 0, 128)'
+    CORAL = 'rgb(255, 127, 80)'
+    CORNFLOWERBLUE = 'rgb(100, 149, 237)'
+    OLIVE = 'rgb(128, 128, 0)'
+    CRIMSON = 'rgb(220, 20, 60)'
+
+
 class ExtendedMockSubmissionsAPI(MockSubmissionsAPI):
     def get_all_submissions(self, course_key_str, block_id, block_type):
         return (
@@ -587,6 +609,27 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         return plot_controls
 
+    def additional_plot_controls(self, step_builder):
+        class Namespace(object):
+            pass
+
+        additional_plot_controls = Namespace()
+
+        additional_plot_controls.teacher_button = step_builder.find_element_by_css_selector(
+            "input.plot-overlay.plot-overlay-0"
+        )
+        additional_plot_controls.researchers_button = step_builder.find_element_by_css_selector(
+            "input.plot-overlay.plot-overlay-1"
+        )
+        additional_plot_controls.sheldon_button = step_builder.find_element_by_css_selector(
+            "input.plot-overlay.plot-overlay-2"
+        )
+        additional_plot_controls.yoda_button = step_builder.find_element_by_css_selector(
+            "input.plot-overlay.plot-overlay-3"
+        )
+
+        return additional_plot_controls
+
     def plot_empty(self, step_builder):
         points = step_builder.find_elements_by_css_selector("circle")
         self.assertEquals(points, [])
@@ -601,43 +644,33 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         ]
         if hidden:
             self.assertEquals(quadrant_labels, [])
-            # rgba(255, 0, 0, 1): "red"
-            self.assertTrue(all(bc == 'rgba(255, 0, 0, 1)' for bc in quadrants_button_border_colors))
+            self.assertTrue(all(bc == HTMLColors.RED for bc in quadrants_button_border_colors))
         else:
             self.assertEquals(len(quadrant_labels), 4)
             self.assertEquals(set(label.text for label in quadrant_labels), set(labels))
-            # rgba(0, 128, 0, 1): "green"
-            self.assertTrue(all(bc == 'rgba(0, 128, 0, 1)' for bc in quadrants_button_border_colors))
+            self.assertTrue(all(bc == HTMLColors.GREEN for bc in quadrants_button_border_colors))
 
-    def click_default_button(
-        self, plot_controls, overlay_on, color_on='rgba(0, 128, 0, 1)', color_off='rgba(237, 237, 237, 1)'
-    ):
-        plot_controls.default_button.click()
-        default_button_border_colors = [
-            plot_controls.default_button.value_of_css_property('border-top-color'),
-            plot_controls.default_button.value_of_css_property('border-right-color'),
-            plot_controls.default_button.value_of_css_property('border-bottom-color'),
-            plot_controls.default_button.value_of_css_property('border-left-color'),
+    def click_overlay_button(self, overlay_button, overlay_on, color_on=None, color_off=HTMLColors.GREY):
+        overlay_button.click()
+        button_border_colors = [
+            overlay_button.value_of_css_property('border-top-color'),
+            overlay_button.value_of_css_property('border-right-color'),
+            overlay_button.value_of_css_property('border-bottom-color'),
+            overlay_button.value_of_css_property('border-left-color'),
         ]
         if overlay_on:
-            self.assertTrue(all(bc == color_on for bc in default_button_border_colors))
+            self.assertTrue(all(bc == color_on for bc in button_border_colors))
         else:
-            self.assertTrue(all(bc == color_off for bc in default_button_border_colors))
+            self.assertTrue(all(bc == color_off for bc in button_border_colors))
 
-    def click_average_button(
-        self, plot_controls, overlay_on, color_on='rgba(0, 0, 255, 1)', color_off='rgba(237, 237, 237, 1)'
-    ):
-        plot_controls.average_button.click()
-        average_button_border_colors = [
-            plot_controls.average_button.value_of_css_property('border-top-color'),
-            plot_controls.average_button.value_of_css_property('border-right-color'),
-            plot_controls.average_button.value_of_css_property('border-bottom-color'),
-            plot_controls.average_button.value_of_css_property('border-left-color'),
-        ]
-        if overlay_on:
-            self.assertTrue(all(bc == color_on for bc in average_button_border_colors))
-        else:
-            self.assertTrue(all(bc == color_off for bc in average_button_border_colors))
+    def click_default_button(self, plot_controls, overlay_on, color_on=HTMLColors.GREEN):
+        self.click_overlay_button(plot_controls.default_button, overlay_on, color_on)
+
+    def click_average_button(self, plot_controls, overlay_on, color_on=HTMLColors.BLUE):
+        self.click_overlay_button(plot_controls.average_button, overlay_on, color_on)
+
+    def check_button_label(self, button, expected_value):
+        self.assertEquals(button.get_attribute('value'), expected_value)
 
     def test_empty_plot(self):
         step_builder, controls = self.load_assessment_scenario("step_builder_plot_defaults.xml", {})
@@ -655,6 +688,9 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.plot_empty(step_builder)
         # Obtain references to plot controls
         plot_controls = self.plot_controls(step_builder)
+        # Check button labels
+        self.check_button_label(plot_controls.default_button, "yours")
+        self.check_button_label(plot_controls.average_button, "Average")
         # Check if plot is empty (default overlay off, average overlay off)
         self.click_default_button(plot_controls, overlay_on=False)
         self.plot_empty(step_builder)
@@ -678,7 +714,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
 
         for overlay in overlays:
             # Check if correct number of points is present
-            points = step_builder.find_elements_by_css_selector(overlay['selector'])
+            selector = 'circle' + overlay['selector']
+            points = step_builder.find_elements_by_css_selector(selector)
             self.assertEquals(len(points), overlay['num_points'])
             # Check point colors
             point_colors = [
@@ -718,11 +755,14 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         # Step 2: Plot
         # Obtain references to plot controls
         plot_controls = self.plot_controls(step_builder)
+        # Check button labels
+        self.check_button_label(plot_controls.default_button, "Custom plot label")
+        self.check_button_label(plot_controls.average_button, "Average")
         # Overlay data
         default_overlay = {
             'selector': '.claim-default',
             'num_points': 2,
-            'point_color': 'rgb(255, 165, 0)',  # orange
+            'point_color': PointColors.ORANGE,
             'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -732,7 +772,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         average_overlay = {
             'selector': '.claim-average',
             'num_points': 2,
-            'point_color': 'rgb(128, 0, 128)',  # purple
+            'point_color': PointColors.PURPLE,
             'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -743,7 +783,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.check_overlays(step_builder, total_num_points=2, overlays=[default_overlay])
 
         # Check if plot shows correct overlay(s) (default overlay on, average overlay on)
-        self.click_average_button(plot_controls, overlay_on=True, color_on='rgba(128, 0, 128, 1)')  # purple
+        self.click_average_button(plot_controls, overlay_on=True, color_on=HTMLColors.PURPLE)
         self.check_overlays(step_builder, 4, overlays=[default_overlay, average_overlay])
 
         # Check if plot shows correct overlay(s) (default overlay off, average overlay on)
@@ -755,7 +795,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.plot_empty(step_builder)
 
         # Check if plot shows correct overlay(s) (default overlay on, average overlay off)
-        self.click_default_button(plot_controls, overlay_on=True, color_on='rgba(255, 165, 0, 1)')  # orange
+        self.click_default_button(plot_controls, overlay_on=True, color_on=HTMLColors.ORANGE)
         self.check_overlays(step_builder, 2, overlays=[default_overlay])
 
         # Check quadrant labels
@@ -764,4 +804,320 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
         self.check_quadrant_labels(
             step_builder, plot_controls, hidden=False,
             labels=['Custom Q1 label', 'Custom Q2 label', 'Custom Q3 label', 'Custom Q4 label']
+        )
+
+    def check_display_status(self, element, hidden):
+        if hidden:
+            display_status = element.value_of_css_property('display')
+            self.assertEquals(display_status, 'none')
+        else:
+            # self.wait_until_visible(element)
+            display_status = element.value_of_css_property('display')
+            self.assertEquals(display_status, 'block')
+
+    def check_plot_info(self, step_builder, hidden, visible_overlays=[], hidden_overlays=[]):
+        # Check if plot info is present and visible
+        plot_info = step_builder.find_element_by_css_selector(".plot-info")
+        self.check_display_status(plot_info, hidden)
+
+        # Check if info about visible overlays is present and visible
+        for overlay in visible_overlays:
+            overlay_info = plot_info.find_element_by_css_selector(overlay['selector'])
+            self.check_display_status(overlay_info, hidden=False)
+            description = overlay['description']
+            citation = overlay['citation']
+            if description is not None or citation is not None:
+                overlay_plot_label = overlay_info.find_element_by_css_selector('.overlay-plot-label')
+                self.assertEquals(overlay_plot_label.text, overlay['plot_label'])
+                text_color = overlay_plot_label.value_of_css_property('color')
+                self.assertEquals(text_color, overlay['plot_label_color'])
+                if description is not None:
+                    overlay_description = overlay_info.find_element_by_css_selector('.overlay-description')
+                    self.assertEquals(overlay_description.text, 'Description: ' + description)
+                if citation is not None:
+                    overlay_citation = overlay_info.find_element_by_css_selector('.overlay-citation')
+                    self.assertEquals(overlay_citation.text, 'Source: ' + citation)
+
+        # Check if info about hidden overlays is hidden
+        for overlay in hidden_overlays:
+            overlay_info = plot_info.find_element_by_css_selector(overlay['selector'])
+            self.check_display_status(overlay_info, hidden=True)
+
+    def test_plot_overlays(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_plot_overlays.xml", {})
+
+        # Step 1: Questions
+        # Provide first rating
+        self.answer_rating_question(1, 1, step_builder, "How much do you agree?", "1 - Disagree")
+        # Provide second rating
+        self.answer_rating_question(1, 2, step_builder, "How important do you think this is?", "5 - Very important")
+        # Advance
+        self.submit_and_go_to_next_step(controls)
+
+        # Step 2: Questions
+        # Provide first rating
+        self.answer_rating_question(2, 1, step_builder, "How much do you agree?", "5 - Agree")
+        # Provide second rating
+        self.answer_rating_question(2, 2, step_builder, "How important do you think this is?", "1 - Not important")
+        # Advance
+        self.submit_and_go_to_next_step(controls, last=True)
+
+        # Step 2: Plot
+        # Obtain references to plot controls
+        additional_plot_controls = self.additional_plot_controls(step_builder)
+        # Check button labels
+        self.check_button_label(additional_plot_controls.teacher_button, "Teacher")
+        self.check_button_label(additional_plot_controls.researchers_button, "Researchers")
+        self.check_button_label(additional_plot_controls.sheldon_button, "Sheldon Cooper")
+        self.check_button_label(additional_plot_controls.yoda_button, "Yoda")
+        # Overlay data
+        default_overlay = {
+            'selector': '.claim-default',
+            'num_points': 2,
+            'point_color': PointColors.ORANGE,
+            'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
+            'positions': [
+                ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+        }
+        teacher_overlay = {
+            'selector': '.plot-overlay.plot-overlay-0',
+            'num_points': 2,
+            'point_color': PointColors.CORAL,
+            'titles': ['2 + 2 = 5: 2, 3', 'The answer to everything is 42: 4, 2'],
+            'positions': [
+                ('8', '388'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('16', '392'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+            'plot_label': 'Teacher',
+            'plot_label_color': HTMLColors.CORAL,
+            'description': None,
+            'citation': None,
+        }
+        researchers_overlay = {
+            'selector': '.plot-overlay.plot-overlay-1',
+            'num_points': 2,
+            'point_color': PointColors.CORNFLOWERBLUE,
+            'titles': ['2 + 2 = 5: 4, 4', 'The answer to everything is 42: 1, 5'],
+            'positions': [
+                ('16', '384'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+            'plot_label': 'Researchers',
+            'plot_label_color': HTMLColors.CORNFLOWERBLUE,
+            'description': 'Responses of leading researchers in the field',
+            'citation': None,
+        }
+        sheldon_overlay = {
+            'selector': '.plot-overlay.plot-overlay-2',
+            'num_points': 2,
+            'point_color': PointColors.OLIVE,
+            'titles': ['2 + 2 = 5: 3, 5', 'The answer to everything is 42: 2, 4'],
+            'positions': [
+                ('12', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('8', '384'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+            'plot_label': 'Sheldon Cooper',
+            'plot_label_color': HTMLColors.OLIVE,
+            'description': None,
+            'citation': 'The Big Bang Theory',
+        }
+        yoda_overlay = {
+            'selector': '.plot-overlay.plot-overlay-3',
+            'num_points': 2,
+            'point_color': PointColors.CRIMSON,
+            'titles': ['2 + 2 = 5: 1, 2', 'The answer to everything is 42: 3, 3'],
+            'positions': [
+                ('4', '392'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('12', '388'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+            'plot_label': 'Yoda',
+            'plot_label_color': HTMLColors.CRIMSON,
+            'description': 'Powerful you have become, the dark side I sense in you.',
+            'citation': 'Star Wars',
+        }
+
+        # Check if plot shows correct overlay(s) initially (default overlay on, additional overlays off)
+        self.check_overlays(
+            step_builder, 2, overlays=[default_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=True,
+            visible_overlays=[],
+            hidden_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay, yoda_overlay]
+        )
+
+        # Turn on additional overlays one by one.
+        # - Check if plot shows correct overlay(s)
+        # - Check if block displays correct info about plot
+
+        # "Teacher" on
+        self.click_overlay_button(
+            additional_plot_controls.teacher_button, overlay_on=True, color_on=HTMLColors.CORAL
+        )
+        self.check_overlays(
+            step_builder, 4, overlays=[default_overlay, teacher_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=True,  # "Teacher" overlay has no description/citation,
+                          # so plot info as a whole should stay hidden
+            visible_overlays=[teacher_overlay],
+            hidden_overlays=[researchers_overlay, sheldon_overlay, yoda_overlay]
+        )
+
+        # "Researchers" on
+        self.click_overlay_button(
+            additional_plot_controls.researchers_button, overlay_on=True, color_on=HTMLColors.CORNFLOWERBLUE
+        )
+        self.check_overlays(
+            step_builder, 6, overlays=[default_overlay, teacher_overlay, researchers_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,
+            visible_overlays=[teacher_overlay, researchers_overlay],
+            hidden_overlays=[sheldon_overlay, yoda_overlay]
+        )
+
+        # "Sheldon Cooper" on
+        self.click_overlay_button(
+            additional_plot_controls.sheldon_button, overlay_on=True, color_on=HTMLColors.OLIVE
+        )
+        self.check_overlays(
+            step_builder, 8, overlays=[default_overlay, teacher_overlay, researchers_overlay, sheldon_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,
+            visible_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay],
+            hidden_overlays=[yoda_overlay]
+        )
+
+        # "Yoda" on
+        self.click_overlay_button(
+            additional_plot_controls.yoda_button, overlay_on=True, color_on=HTMLColors.CRIMSON
+        )
+        self.check_overlays(
+            step_builder,
+            10,
+            overlays=[default_overlay, teacher_overlay, researchers_overlay, sheldon_overlay, yoda_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,
+            visible_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay, yoda_overlay],
+            hidden_overlays=[]
+        )
+
+        # Turn off additional overlays one by one.
+        # - Check if plot shows correct overlay(s)
+        # - Check if block displays correct info about plot
+
+        # "Yoda" off
+        self.click_overlay_button(additional_plot_controls.yoda_button, overlay_on=False)
+        self.check_overlays(
+            step_builder, 8, overlays=[default_overlay, teacher_overlay, researchers_overlay, sheldon_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,
+            visible_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay],
+            hidden_overlays=[yoda_overlay]
+        )
+
+        # "Sheldon Cooper" off
+        self.click_overlay_button(additional_plot_controls.sheldon_button, overlay_on=False)
+        self.check_overlays(
+            step_builder, 6, overlays=[default_overlay, teacher_overlay, researchers_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,
+            visible_overlays=[teacher_overlay, researchers_overlay],
+            hidden_overlays=[sheldon_overlay, yoda_overlay]
+        )
+
+        # "Researchers" off
+        self.click_overlay_button(additional_plot_controls.researchers_button, overlay_on=False)
+        self.check_overlays(
+            step_builder, 4, overlays=[default_overlay, teacher_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=True,  # "Teacher" overlay has no description/citation,
+                          # so plot info should be hidden at this point
+            visible_overlays=[teacher_overlay],
+            hidden_overlays=[researchers_overlay, sheldon_overlay, yoda_overlay]
+        )
+
+        # "Teacher" off
+        self.click_overlay_button(additional_plot_controls.teacher_button, overlay_on=False)
+        self.check_overlays(
+            step_builder, 2, overlays=[default_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=True,
+            visible_overlays=[],
+            hidden_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay, yoda_overlay]
+        )
+
+        # When deactivating an overlay that has no description/citation,
+        # visibility of information about remaining overlays that are currently active
+        # should not be affected:
+
+        # "Yoda" on:
+        self.click_overlay_button(
+            additional_plot_controls.yoda_button, overlay_on=True, color_on=HTMLColors.CRIMSON
+        )
+        self.check_overlays(
+            step_builder, 4, overlays=[default_overlay, yoda_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,  # Plot info becomes visible
+            visible_overlays=[yoda_overlay],
+            hidden_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay]
+        )
+
+        # "Teacher" on:
+        self.click_overlay_button(
+            additional_plot_controls.teacher_button, overlay_on=True, color_on=HTMLColors.CORAL
+        )
+        self.check_overlays(
+            step_builder, 6, overlays=[default_overlay, yoda_overlay, teacher_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,
+            visible_overlays=[yoda_overlay, teacher_overlay],
+            hidden_overlays=[researchers_overlay, sheldon_overlay]
+        )
+
+        # "Teacher" off:
+        self.click_overlay_button(additional_plot_controls.teacher_button, overlay_on=False)
+        self.check_overlays(
+            step_builder, 4, overlays=[default_overlay, yoda_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=False,  # Plot info stays visible
+            visible_overlays=[yoda_overlay],
+            hidden_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay],
+        )
+
+        # "Yoda" off:
+        self.click_overlay_button(additional_plot_controls.yoda_button, overlay_on=False)
+        self.check_overlays(
+            step_builder, 2, overlays=[default_overlay]
+        )
+        self.check_plot_info(
+            step_builder,
+            hidden=True,  # Last remaining overlay with description/citation deactivated;
+                          # plot info now hidden
+            visible_overlays=[],
+            hidden_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay, yoda_overlay]
         )
