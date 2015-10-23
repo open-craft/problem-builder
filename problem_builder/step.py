@@ -107,7 +107,12 @@ class MentoringStepBlock(
         default=_("Next Step")
     )
 
-    editable_fields = ('display_name', 'show_title', 'next_button_label')
+    message = String(
+        display_name=_("Message"),
+        help=_("Feedback or instructional message which pops up after submitting."),
+    )
+
+    editable_fields = ('display_name', 'show_title', 'next_button_label', 'message')
 
     @lazy
     def siblings(self):

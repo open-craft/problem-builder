@@ -14,4 +14,9 @@
   {% for child_content in child_contents %}
     {{ child_content|safe }}
   {% endfor %}
+  {% if self.message %}
+      <div class="sb-step-message" style="display:none;">
+        <div class="sb-step-message-text">{{ self.message }}</div>
+      </div>
+  {% endif %}
 </div>
