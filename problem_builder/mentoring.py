@@ -99,6 +99,13 @@ class BaseMentoringBlock(
         scope=Scope.content,
         enforce_type=True
     )
+    weight = Float(
+        display_name=_("Weight"),
+        help=_("Defines the maximum total grade of the block."),
+        default=1,
+        scope=Scope.settings,
+        enforce_type=True
+    )
 
     # User state
     num_attempts = Integer(
@@ -109,6 +116,7 @@ class BaseMentoringBlock(
     )
 
     has_children = True
+    has_score = True  # The Problem/Step Builder XBlocks produce scores. (Their children do not send scores to the LMS.)
 
     icon_class = 'problem'
     block_settings_key = 'mentoring'
@@ -197,8 +205,11 @@ class BaseMentoringBlock(
         Publish data for analytics purposes
         """
         event_type = data.pop('event_type')
-        self.runtime.publish(self, event_type, data)
+        if (event_type == 'grade'):
+            # This handler can be called from the browser. Don't allow the browser to submit arbitrary grades ;-)
+            raise JsonHandlerError(403, "Posting grade events from the browser is forbidden.")
 
+        self.runtime.publish(self, event_type, data)
         return {'result': 'ok'}
 
     def author_preview_view(self, context):
@@ -213,6 +224,10 @@ class BaseMentoringBlock(
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         self.include_theme_files(fragment)
         return fragment
+
+    def max_score(self):
+        """ Maximum score. We scale all scores to a maximum of 1.0 so this is always 1.0 """
+        return 1.0
 
 
 class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentMixin):
@@ -262,13 +277,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     )
 
     # Settings
-    weight = Float(
-        display_name=_("Weight"),
-        help=_("Defines the maximum total grade of the block."),
-        default=1,
-        scope=Scope.settings,
-        enforce_type=True
-    )
     display_name = String(
         display_name=_("Title (Display name)"),
         help=_("Title to display"),
@@ -323,8 +331,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         'display_submit', 'feedback_label', 'weight', 'extended_feedback'
     )
 
-    has_score = True
-
     @property
     def is_assessment(self):
         """ Checks if mentoring XBlock is in assessment mode """
@@ -376,10 +382,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         partially_correct = self.answer_mapper(PARTIAL)
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
-
-    def max_score(self):
-        """ Maximum score. We scale all scores to a maximum of 1.0 so this is always 1.0 """
-        return 1.0
 
     def student_view(self, context):
         # Migrate stored data if necessary
@@ -848,7 +850,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         enforce_type=True
     )
 
-    editable_fields = ('display_name', 'max_attempts', 'extended_feedback')
+    editable_fields = ('display_name', 'max_attempts', 'extended_feedback', 'weight')
 
     @lazy
     def question_ids(self):
