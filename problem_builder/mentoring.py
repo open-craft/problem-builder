@@ -958,6 +958,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment = Fragment()
         children_contents = []
 
+        context = context or {}
+        context['hide_prev_answer'] = True  # For Step Builder, we don't show the users' old answers when they try again
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues

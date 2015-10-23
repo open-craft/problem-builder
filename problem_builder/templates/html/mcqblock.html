@@ -10,7 +10,7 @@
       <div class="choice-selector">
         <input id="choice-{{ self.html_id }}-{{ forloop.counter }}" type="radio"
           name="{{ self.name }}" value="{{ choice.value }}"
-          {% if self.student_choice == choice.value %} checked{% endif %}
+          {% if self.student_choice == choice.value and not hide_prev_answer %} checked{% endif %}
         />
       </div>
       <label class="choice-label" for="choice-{{ self.html_id }}-{{ forloop.counter }}">

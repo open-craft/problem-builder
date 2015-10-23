@@ -425,6 +425,9 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             None, step_builder, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
         )
         # Step 2
+        # Reload the page, which should have no effect
+        self.browser.execute_script("$(document).html(' ');")
+        step_builder, controls = self.go_to_assessment()
         # Submit MCQ, go to next step
         self.single_choice_question(None, step_builder, controls, 'Yes', CORRECT)
         # Step 3
