@@ -41,7 +41,7 @@
     </sb-step>
 
   <sb-step display_name="Last step">
-    <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices='["gracefulness","elegance","beauty"]' message="Question Feedback Message">
+    <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices='["gracefulness","elegance","beauty"]' message="Question Feedback Message REPLACE-ME">
       <pb-choice value="elegance">Its elegance</pb-choice>
       <pb-choice value="beauty">Its beauty</pb-choice>
       <pb-choice value="gracefulness">Its gracefulness</pb-choice>

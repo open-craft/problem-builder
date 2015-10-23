@@ -100,6 +100,16 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         runtime_patcher.start()
         self.addCleanup(runtime_patcher.stop)
 
+        # Mock replace_urls so that we can check that message HTML gets processed with any
+        # transforms that the runtime needs.
+        runtime_patcher2 = patch(
+            'workbench.runtime.WorkbenchRuntime.replace_urls',
+            lambda _runtime, html: html.replace('REPLACE-ME', ''),
+            create=True
+        )
+        runtime_patcher2.start()
+        self.addCleanup(runtime_patcher2.stop)
+
     def freeform_answer(
             self, number, step_builder, controls, text_input, result, saved_value="", hold=False, last=False
     ):

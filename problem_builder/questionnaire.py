@@ -221,3 +221,14 @@ class QuestionnaireAbstractBlock(
                 child = self.runtime.get_block(child_id)
                 if child.type == "on-assessment-review-question":
                     return child.content
+
+    @property
+    def message_formatted(self):
+        """ Get the feedback message HTML, if any, formatted by the runtime """
+        if self.message:
+            # For any HTML that we aren't 'rendering' through an XBlock view such as
+            # student_view the runtime may need to rewrite URLs
+            # e.g. converting '/static/x.png' to '/c4x/.../x.png'
+            format_html = getattr(self.runtime, 'replace_urls', lambda html: html)
+            return format_html(self.message)
+        return ""

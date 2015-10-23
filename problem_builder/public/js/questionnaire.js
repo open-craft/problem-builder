@@ -122,7 +122,12 @@ function MCQBlock(runtime, element) {
             var mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
-            messageView.clearResult();
+            
+            if (result.message) {
+                var msg = '<div class="message-content">' + result.message + '</div>' +
+                          '<div class="close icon-remove-sign fa-times-circle"></div>';
+                messageView.showMessage(msg);
+            } else { messageView.clearResult(); }
 
             display_message(result.message, messageView, options.checkmark);
 
