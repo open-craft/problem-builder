@@ -866,6 +866,27 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         return [self.runtime.get_block(question_id) for question_id in self.question_ids]
 
+    @property
+    def active_step_safe(self):
+        """
+        Get self.active_step and double-check that it is a valid value.
+        The stored value could be invalid if this block has been edited and new steps were
+        added/deleted.
+        """
+        active_step = self.active_step
+        if active_step >= 0 and active_step < len(self.step_ids):
+            return active_step
+        if active_step == -1 and self.has_review_step:
+            return active_step  # -1 indicates the review step
+        return 0
+
+    def get_active_step(self):
+        """ Get the active step as an instantiated XBlock """
+        block = self.runtime.get_block(self.step_ids[self.active_step_safe])
+        if block is None:
+            log.error("Unable to load step builder step child %s", self.step_ids[self.active_step_safe])
+        return block
+
     @lazy
     def step_ids(self):
         """
@@ -1007,36 +1028,45 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         ]
 
     @XBlock.json_handler
-    def update_active_step(self, new_value, suffix=''):
+    def submit(self, data, suffix=None):
+        """
+        Called this when the user has submitted the answer[s] for the current step.
+        """
+        # First verify that active_step is correct:
+        if data.get("active_step") != self.active_step_safe:
+            raise JsonHandlerError(400, "Invalid Step. Refresh the page and try again.")
+
+        # The step child will process the data:
+        step_block = self.get_active_step()
+        if not step_block:
+            raise JsonHandlerError(500, "Unable to load the current step block.")
+        response_data = step_block.submit(data)
+
+        # Update the active step:
+        new_value = self.active_step_safe + 1
         if new_value < len(self.step_ids):
             self.active_step = new_value
         elif new_value == len(self.step_ids):
+            # The user just completed the final step.
             if self.has_review_step:
                 self.active_step = -1
-        return {
-            'active_step': self.active_step
-        }
+            # Update the number of attempts, if necessary:
+            if self.num_attempts < self.max_attempts:
+                self.num_attempts += 1
+            response_data['num_attempts'] = self.num_attempts
+            # And publish the score:
+            score = self.score
+            grade_data = {
+                'value': score.raw,
+                'max_value': 1,
+            }
+            self.runtime.publish(self, 'grade', grade_data)
+            response_data['grade_data'] = self.get_grade()
 
-    @XBlock.json_handler
-    def update_num_attempts(self, data, suffix=''):
-        if self.num_attempts < self.max_attempts:
-            self.num_attempts += 1
-        return {
-            'num_attempts': self.num_attempts
-        }
+        response_data['active_step'] = self.active_step
+        return response_data
 
-    @XBlock.json_handler
-    def publish_attempt(self, data, suffix):
-        score = self.score
-        grade_data = {
-            'value': score.raw,
-            'max_value': 1,
-        }
-        self.runtime.publish(self, 'grade', grade_data)
-        return {}
-
-    @XBlock.json_handler
-    def get_grade(self, data, suffix):
+    def get_grade(self, data=None, suffix=None):
         score = self.score
         return {
             'score': score.percentage,

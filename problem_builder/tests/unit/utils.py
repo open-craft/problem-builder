@@ -1,8 +1,7 @@
 """
 Helper methods for testing Problem Builder / Step Builder blocks
 """
-from contextlib import contextmanager
-from mock import MagicMock, Mock, patch
+from mock import MagicMock, Mock
 from xblock.field_data import DictFieldData
 
 
@@ -19,16 +18,6 @@ class ScoresTestMixin(object):
         self.assertTrue(type(block).has_score)
         self.assertEqual(block.weight, 1.0)  # Default weight should be 1
         self.assertIsInstance(block.max_score(), (int, float))
-
-    @contextmanager
-    def expect_score_event(self, block, score, max_score):
-        """
-        Context manager. Expect that the given block instance will publish the given score.
-        """
-        with patch.object(block.runtime, 'publish') as mocked_publish:
-            yield
-
-            mocked_publish.assert_called_once_with(block, 'grade', {'value': score, 'max_value': max_score})
 
 
 def instantiate_block(cls, fields=None):
