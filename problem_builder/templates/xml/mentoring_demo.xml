@@ -22,7 +22,7 @@
             <p>And here is an example of a Multiple Choice Question (MCQ):</p>
         </html_demo>
 
-        <pb-mcq name="plain_mcq" question="Which book includes the line &quot;But I have one want which I have never yet been able to satisfy, and the absence of the object of which I now feel as a most severe evil. I have no friend.&quot;?" correct_choices="frankenstein">
+        <pb-mcq name="plain_mcq" question="Which book includes the line &quot;But I have one want which I have never yet been able to satisfy, and the absence of the object of which I now feel as a most severe evil. I have no friend.&quot;?" correct_choices='["frankenstein"]'>
             <pb-choice value="frankenstein"><em>Frankenstein</em></pb-choice>
             <pb-choice value="moby"><em>Moby-Dick; or, The Whale</em></pb-choice>
             <pb-choice value="twist"><em>Oliver Twist</em></pb-choice>
@@ -40,19 +40,19 @@
             <p>How did you like <em>To Kill a Mockingbird</em>?</p>
         </html_demo>
 
-        <pb-rating name="rate_mockingbird" low="I really disliked it" high="I loved it" correct_choices="1,2,3,4,5" />
+        <pb-rating name="rate_mockingbird" low="I really disliked it" high="I loved it" correct_choices='["1","2","3","4","5"]' />
     </problem-builder>
 
     <problem-builder display_name="Multiple Response Question (and introducing tips)" weight="1" mode="standard">
         <html_demo><p>A fourth type of question is the Multiple Response Question (MRQ), which allows student to select multiple answers. Each answer can be marked as required, not required, or acceptable either way. The following question contains examples of each possibility. Try getting it wrong and see how it provides feedback to guide you to a correct answer.</p></html_demo>
-        <pb-mrq name="future_movies" question="Which of these films are set in the future?" required_choices="apes" ignored_choices="2001">
+        <pb-mrq name="future_movies" question="Which of these films are set in the future?" required_choices='["apes"]' ignored_choices='["2001"]'>
             <pb-choice value="starwars">Star Wars Episode V: The Empire Strikes Back</pb-choice>
             <pb-choice value="2001">2001: A Space Odyssey</pb-choice>
             <pb-choice value="apes">Planet of the Apes (1968)</pb-choice>
 
-            <pb-tip values="starwars">Star Wars takes place "A long time ago in a galaxy far, far away"</pb-tip>
-            <pb-tip values="2001">You could argue this one either way. When the film was released in 1968, it was set in the future. However, 2001 is now in the past.</pb-tip>
-            <pb-tip values="apes">The majority of the film takes place in the year 3978.</pb-tip>
+            <pb-tip values='["starwars"]'>Star Wars takes place "A long time ago in a galaxy far, far away"</pb-tip>
+            <pb-tip values='["2001"]'>You could argue this one either way. When the film was released in 1968, it was set in the future. However, 2001 is now in the past.</pb-tip>
+            <pb-tip values='["apes"]'>The majority of the film takes place in the year 3978.</pb-tip>
         </pb-mrq>
 
         <pb-message type="incomplete">
@@ -69,14 +69,14 @@
             <p>Like the MRQ above, multiple choice and rating questions can also provide feedback based on which answer was selected and whether the answer is correct or not. Here's an example:</p>
         </html_demo>
 
-        <pb-mcq name="subjunctive" question="Which sentence correctly uses the subjunctive case?" correct_choices="d">
+        <pb-mcq name="subjunctive" question="Which sentence correctly uses the subjunctive case?" correct_choices='["d"]'>
             <pb-choice value="a">To buy or not to buy, that is the question.</pb-choice>
             <pb-choice value="b">Renting gives you more flexibility.</pb-choice>
             <pb-choice value="c">If I was you, I'd buy the house.</pb-choice>
             <pb-choice value="d">If I were you, I'd rent the house.</pb-choice>
-            <pb-tip values="a,b">This sentence is not discussing hypotheticals or impossibilities.</pb-tip>
-            <pb-tip values="c">This sentence should be using the subjunctive case since it's dicsussing a hypothetical, but "was" is the wrong case.</pb-tip>
-            <pb-tip values="d">Correct. "was" has become "were" to indicate the subjunctive case.</pb-tip>
+            <pb-tip values='["a","b"]'>This sentence is not discussing hypotheticals or impossibilities.</pb-tip>
+            <pb-tip values='["c"]'>This sentence should be using the subjunctive case since it's dicsussing a hypothetical, but "was" is the wrong case.</pb-tip>
+            <pb-tip values='["d"]'>Correct. "was" has become "were" to indicate the subjunctive case.</pb-tip>
         </pb-mcq>
 
         <pb-message type="incomplete">
@@ -111,20 +111,20 @@
     </problem-builder>
     <problem-builder display_name="Assessment Example" mode="assessment">
         <html_demo><p>Mentoring questions can also be asked in "Assessment" mode, where each question is asked one at a time, and a final score is shown at the end. The author can set how many attempts each student is given to go through the assessment.</p></html_demo>
-        <pb-mcq name="aq1" question="What is 7+3?" correct_choices="ten">
+        <pb-mcq name="aq1" question="What is 7+3?" correct_choices='["ten"]'>
             <pb-choice value="ten">10</pb-choice>
             <pb-choice value="prime">104,297</pb-choice>
             <pb-choice value="infinity">Infinity</pb-choice>
             <pb-choice value="undefined">Undefined</pb-choice>
         </pb-mcq>
-        <pb-mcq name="aq2" question="What is the square root of nine?" correct_choices="three">
+        <pb-mcq name="aq2" question="What is the square root of nine?" correct_choices='["three"]'>
             <pb-choice value="zero">1</pb-choice>
             <pb-choice value="three">3</pb-choice>
             <pb-choice value="nine">9</pb-choice>
             <pb-choice value="infinity">Infinity</pb-choice>
             <pb-choice value="undefined">Undefined</pb-choice>
         </pb-mcq>
-        <pb-mcq name="aq3" question="What is 10&#247;0?" correct_choices="infinity,undefined">
+        <pb-mcq name="aq3" question="What is 10&#247;0?" correct_choices='["infinity","undefined"]'>
             <pb-choice value="zero">0</pb-choice>
             <pb-choice value="ten">10</pb-choice>
             <pb-choice value="negten">-10</pb-choice>
