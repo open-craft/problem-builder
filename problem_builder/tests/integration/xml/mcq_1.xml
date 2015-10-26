@@ -1,6 +1,6 @@
 <vertical_demo>
     <problem-builder url_name="mcq_1" enforce_dependency="false">
-        <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]' message="Feedback message 1">
             <pb-choice value="yes">Yes</pb-choice>
             <pb-choice value="maybenot">Maybe not</pb-choice>
             <pb-choice value="understand">I don't understand</pb-choice>
@@ -10,7 +10,9 @@
             <pb-tip values='["understand"]'><div id="test-custom-html">Really?</div></pb-tip>
         </pb-mcq>
 
-        <pb-rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How do you rate this MCQ?" correct_choices='["4","5"]'>
+        <pb-rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How do you rate this MCQ?"
+                   correct_choices='["4","5"]' message="Feedback message 2"
+            >
             <pb-choice value="notwant">I don't want to rate it</pb-choice>
 
             <pb-tip values='["4","5"]'>I love good grades.</pb-tip>

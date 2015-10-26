@@ -99,6 +99,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
 
         return {
             'submission': submission,
+            'message': self.message,
             'status': 'correct' if correct else 'incorrect',
             'tips': formatted_tips,
             'weight': self.weight,

@@ -17,6 +17,7 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
+import mock
 
 from xblock.fields import String
 from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
@@ -98,6 +99,22 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
 class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
     module_name = __name__
     default_css_selector = 'div.mentoring'
+
+    __asides_patch = None
+
+    @classmethod
+    def setUpClass(cls):
+        super(MentoringBaseTest, cls).setUpClass()
+        cls.__asides_patch = mock.patch(
+            "workbench.runtime.WorkbenchRuntime.applicable_aside_types",
+            mock.Mock(return_value=[])
+        )
+        cls.__asides_patch.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.__asides_patch.stop()
+        super(MentoringBaseTest, cls).tearDownClass()
 
 
 class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):

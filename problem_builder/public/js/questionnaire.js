@@ -1,5 +1,20 @@
 // TODO: Split in two files
 
+function display_message(message, messageView, checkmark){
+    if (message) {
+        var msg = '<div class="message-content">' + message + '</div>' +
+                  '<div class="close icon-remove-sign fa-times-circle"></div>';
+        messageView.showMessage(msg);
+        if (checkmark) {
+            checkmark.addClass('checkmark-clickable');
+            checkmark.on('click', function(ev) {
+                ev.stopPropagation();
+                messageView.showMessage(msg);
+            })
+        }
+    }
+}
+
 function MessageView(element, mentoring) {
     return {
         messageDOM: $('.feedback', element),
@@ -102,12 +117,14 @@ function MCQBlock(runtime, element) {
             $('.choice input', element).prop('disabled', true);
         },
 
-        handleSubmit: function(result) {
+        handleSubmit: function(result, options) {
 
-            mentoring = this.mentoring;
+            var mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
             messageView.clearResult();
+
+            display_message(result.message, messageView, options.checkmark);
 
             var choiceInputs = $('.choice-selector input', element);
             $.each(choiceInputs, function(index, choiceInput) {
@@ -127,7 +144,6 @@ function MCQBlock(runtime, element) {
 
                 if (result.tips && choiceInputDOM.val() === result.submission) {
                     mentoring.setContent(choiceTipsDOM, result.tips);
-                    messageView.showMessage(choiceTipsDOM);
                 }
 
                 choiceResultDOM.off('click').on('click', function() {
@@ -187,22 +203,11 @@ function MRQBlock(runtime, element) {
 
         handleSubmit: function(result, options) {
 
-            mentoring = this.mentoring;
+            var mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
 
-            if (result.message) {
-                var msg = '<div class="message-content">' + result.message + '</div>' +
-                          '<div class="close icon-remove-sign fa-times-circle"></div>';
-                messageView.showMessage(msg);
-                if (options.checkmark) {
-                    options.checkmark.addClass('checkmark-clickable');
-                    options.checkmark.on('click', function(ev) {
-                        ev.stopPropagation();
-                        messageView.showMessage(msg);
-                    })
-                }
-            }
+            display_message(result.message, messageView, options.checkmark);
 
             var questionnaireDOM = $('fieldset.questionnaire', element);
             var data = questionnaireDOM.data();
