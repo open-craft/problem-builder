@@ -10,7 +10,8 @@ function MentoringStepBlock(runtime, element) {
         }
     }
 
-    var submitXHR, resultsXHR;
+    var submitXHR, resultsXHR,
+        message = $(element).find('.sb-step-message');
 
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
@@ -59,6 +60,12 @@ function MentoringStepBlock(runtime, element) {
             submitXHR = $.post(handlerUrl, JSON.stringify(data))
                 .success(function(response) {
                     resultHandler(response);
+                    if (message.length) {
+                        message.fadeIn();
+                        $(document).click(function() {
+                            message.fadeOut();
+                        });
+                    }
                 });
         },
 

@@ -22,6 +22,7 @@ function MentoringWithStepsBlock(runtime, element) {
     var activeStep = $('.mentoring', element).data('active-step');
     var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
+    var message = $('.sb-step-message', element);
     var checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
         gradeDOM, attemptsDOM, reviewTipsDOM, reviewLinkDOM, submitXHR;
 
@@ -183,6 +184,7 @@ function MentoringWithStepsBlock(runtime, element) {
         hideReviewStep();
         attemptsDOM.html('');
         reviewTipsDOM.empty().hide();
+        message.hide();
     }
 
     function updateNextLabel() {

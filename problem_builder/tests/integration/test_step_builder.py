@@ -100,7 +100,9 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         runtime_patcher.start()
         self.addCleanup(runtime_patcher.stop)
 
-    def freeform_answer(self, number, step_builder, controls, text_input, result, saved_value="", last=False):
+    def freeform_answer(
+            self, number, step_builder, controls, text_input, result, saved_value="", hold=False, last=False
+    ):
         self.expect_question_visible(number, step_builder)
 
         answer = step_builder.find_element_by_css_selector("textarea.answer.editable")
@@ -111,7 +113,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.assertEquals(saved_value, answer.get_attribute("value"))
         if not saved_value:
             self.assert_disabled(controls.submit)
-        self.assert_disabled(controls.next_question)
+
+        if last:
+            self.assert_disabled(controls.review)
+        else:
+            self.assert_disabled(controls.next_question)
 
         answer.clear()
         answer.send_keys(text_input)
@@ -119,14 +125,17 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         self.assert_clickable(controls.submit)
         self.ending_controls(controls, last)
-        self.assert_hidden(controls.review)
+        if not last:
+            self.assert_hidden(controls.review)
+
         self.assert_hidden(controls.try_again)
 
         controls.submit.click()
 
         self.do_submit_wait(controls, last)
         self._assert_checkmark(step_builder, result)
-        self.do_post(controls, last)
+        if not hold:
+            self.do_post(controls, last)
 
     def single_choice_question(self, number, step_builder, controls, choice_name, result, last=False):
         question = self.expect_question_visible(number, step_builder)
@@ -1217,3 +1226,15 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             visible_overlays=[],
             hidden_overlays=[teacher_overlay, researchers_overlay, sheldon_overlay, yoda_overlay]
         )
+
+    def test_instruction_message(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_instruction.xml", {})
+        # Step 1
+        # Submit free-form answer, go to next step
+        self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT, hold=True, last=True)
+        message = step_builder.find_element_by_css_selector('.sb-step-message')
+        self.wait_until_visible(message)
+        self.assertEqual(message.text, 'Hello!')
+        # Clicking in general should dismiss this message.
+        self.browser.execute_script("$(document).trigger('click')")
+        self.wait_until_hidden(message)

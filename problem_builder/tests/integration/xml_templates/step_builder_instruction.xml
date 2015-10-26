@@ -1,0 +1,10 @@
+<step-builder url_name="step-builder" display_name="Step Builder"
+              max_attempts="1" extended_feedback="True">
+
+  <sb-step display_name="First step" next_button_label="Next Challenge" message="Hello!">
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-review-step />
+
+</step-builder>
