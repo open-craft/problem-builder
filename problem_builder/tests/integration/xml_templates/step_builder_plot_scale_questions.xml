@@ -1,0 +1,43 @@
+<step-builder url_name="step-builder" display_name="Step Builder">
+
+  <sb-step display_name="First step">
+    <pb-slider name="slider_1_1"
+               question="How much do you agree?">
+    </pb-slider>
+    <pb-slider name="slider_1_2"
+               question="How important do you think this is?"
+               min_label="Not important"
+               max_label="Very important">
+    </pb-slider>
+  </sb-step>
+
+  <sb-step display_name="Second step">
+    <pb-rating name="rating_2_1"
+               low="Disagree"
+               high="Agree"
+               question="How much do you agree?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+    <pb-rating name="rating_2_2"
+               low="Not important"
+               high="Very important"
+               question="How important do you think this is?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+  </sb-step>
+
+  <sb-step display_name="Last step">
+    <sb-plot plot_label="Custom plot label"
+             point_color_default="orange"
+             point_color_average="purple"
+             q1_label="Custom Q1 label"
+             q2_label="Custom Q2 label"
+             q3_label="Custom Q3 label"
+             q4_label="Custom Q4 label"
+             claims="2 + 2 = 5, slider_1_1, slider_1_2&#10;The answer to everything is 42, rating_2_1, rating_2_2">
+    </sb-plot>
+  </sb-step>
+
+  <sb-review-step></sb-review-step>
+
+</step-builder>

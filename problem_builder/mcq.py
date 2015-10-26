@@ -185,7 +185,7 @@ class RatingBlock(MCQBlock):
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
     )
-    editable_fields = MCQBlock.editable_fields + ('low', 'high', 'name')
+    editable_fields = MCQBlock.editable_fields + ('low', 'high')
 
     @property
     def all_choice_values(self):
@@ -211,4 +211,26 @@ class RatingBlock(MCQBlock):
             'accepted_statuses': [None] + [self.describe_choice_correctness(c) for c in "12345"],
         }))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
+        return fragment
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the name.
+        """
+        try:
+            return super(RatingBlock, self).url_name
+        except AttributeError:
+            return self.name
+
+    def student_view(self, context):
+        fragment = super(RatingBlock, self).student_view(context)
+        rendering_for_studio = None
+        if context:  # Workbench does not provide context
+            rendering_for_studio = context.get('author_edit_view')
+        if rendering_for_studio:
+            fragment.add_content(loader.render_template('templates/html/rating_edit_footer.html', {
+                "url_name": self.url_name
+            }))
         return fragment

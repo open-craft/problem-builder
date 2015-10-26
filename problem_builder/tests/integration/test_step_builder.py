@@ -36,8 +36,23 @@ class ExtendedMockSubmissionsAPI(MockSubmissionsAPI):
         )
 
 
+class MultipleSliderBlocksTestMixins():
+    """ Mixins for testing slider blocks. Allows multiple slider blocks on the page. """
+
+    def get_slider_value(self, slider_number):
+        print('SLIDER NUMBER: {}'.format(slider_number))
+        return int(
+            self.browser.execute_script("return $('.pb-slider-range').eq(arguments[0]).val()", slider_number-1)
+        )
+
+    def set_slider_value(self, slider_number, val):
+        self.browser.execute_script(
+            "$('.pb-slider-range').eq(arguments[0]).val(arguments[1]).change()", slider_number-1, val
+        )
+
+
 @ddt
-class StepBuilderTest(MentoringAssessmentBaseTest):
+class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixins):
 
     def setUp(self):
         super(StepBuilderTest, self).setUp()
@@ -57,13 +72,17 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
                 mock_submissions_api
             ),
             (
+                "problem_builder.slider.sub_api",
+                mock_submissions_api
+            ),
+            (
                 "problem_builder.sub_api.SubmittingXBlockMixin.student_item_key",
                 property(
                     lambda block: dict(
                         student_id="student_id",
                         course_id="course_id",
                         item_id=block.scope_ids.usage_id,
-                        item_type="pb-rating"
+                        item_type=block.scope_ids.block_type
                     )
                 )
             ),
@@ -765,8 +784,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             'point_color': PointColors.ORANGE,
             'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
-                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
             ],
         }
         average_overlay = {
@@ -775,8 +794,85 @@ class StepBuilderTest(MentoringAssessmentBaseTest):
             'point_color': PointColors.PURPLE,
             'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
-                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+        }
+        # Check if plot shows correct overlay(s) initially (default overlay on, average overlay off)
+        self.check_overlays(step_builder, total_num_points=2, overlays=[default_overlay])
+
+        # Check if plot shows correct overlay(s) (default overlay on, average overlay on)
+        self.click_average_button(plot_controls, overlay_on=True, color_on='rgba(128, 0, 128, 1)')  # purple
+        self.check_overlays(step_builder, 4, overlays=[default_overlay, average_overlay])
+
+        # Check if plot shows correct overlay(s) (default overlay off, average overlay on)
+        self.click_default_button(plot_controls, overlay_on=False)
+        self.check_overlays(step_builder, 2, overlays=[average_overlay])
+
+        # Check if plot shows correct overlay(s) (default overlay off, average overlay off)
+        self.click_average_button(plot_controls, overlay_on=False)
+        self.plot_empty(step_builder)
+
+        # Check if plot shows correct overlay(s) (default overlay on, average overlay off)
+        self.click_default_button(plot_controls, overlay_on=True, color_on='rgba(255, 165, 0, 1)')  # orange
+        self.check_overlays(step_builder, 2, overlays=[default_overlay])
+
+        # Check quadrant labels
+        self.check_quadrant_labels(step_builder, plot_controls, hidden=True)
+        plot_controls.quadrants_button.click()
+        self.check_quadrant_labels(
+            step_builder, plot_controls, hidden=False,
+            labels=['Custom Q1 label', 'Custom Q2 label', 'Custom Q3 label', 'Custom Q4 label']
+        )
+
+    def answer_scale_question(self, question_number, step_builder, question, value):
+        self.assertEqual(self.get_slider_value(question_number), 50)
+        question_text = self.question_text(question_number)
+        self.wait_until_text_in(question_text, step_builder)
+        self.assertIn(question, step_builder.text)
+        self.set_slider_value(question_number, value)
+
+    def test_plot_with_scale_questions(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_plot_scale_questions.xml", {})
+
+        # Step 1: Questions
+        # Provide first rating
+        self.answer_scale_question(1, step_builder, "How much do you agree?", 17)
+        # Provide second rating
+        self.answer_scale_question(2, step_builder, "How important do you think this is?", 83)
+        # Advance
+        self.submit_and_go_to_next_step(controls)
+
+        # Step 2: Questions
+        # Provide first rating
+        self.answer_rating_question(2, 1, step_builder, "How much do you agree?", "5 - Agree")
+        # Provide second rating
+        self.answer_rating_question(2, 2, step_builder, "How important do you think this is?", "1 - Not important")
+        # Advance
+        self.submit_and_go_to_next_step(controls, last=True)
+
+        # Step 2: Plot
+        # Obtain references to plot controls
+        plot_controls = self.plot_controls(step_builder)
+        # Overlay data
+        default_overlay = {
+            'selector': '.claim-default',
+            'num_points': 2,
+            'point_color': 'rgb(255, 165, 0)',  # orange
+            'titles': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
+            'positions': [
+                ('68', '68'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
+            ],
+        }
+        average_overlay = {
+            'selector': '.claim-average',
+            'num_points': 2,
+            'point_color': 'rgb(128, 0, 128)',  # purple
+            'titles': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
+            'positions': [
+                ('68', '68'),  # Values computed according to xScale and yScale (cf. plot.js)
+                ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
             ],
         }
         # Check if plot shows correct overlay(s) initially (default overlay on, average overlay off)

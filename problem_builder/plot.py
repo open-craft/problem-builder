@@ -61,7 +61,7 @@ def _normalize_id(key):
 @XBlock.wants('user')
 class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin, XBlock):
     """
-    XBlock that displays plot that summarizes answers to scale questions.
+    XBlock that displays plot that summarizes answers to scale and/or rating questions.
     """
 
     CATEGORY = 'sb-plot'
@@ -141,7 +141,7 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             'Claims and questions that should be included in the plot. '
             'Each line defines a triple of the form "claim, q1, q2", '
             'where "claim" is arbitrary text that represents a claim, '
-            'and "q1" and "q2" are IDs of scale questions. '
+            'and "q1" and "q2" are IDs of scale or rating questions. '
         ),
         default="",
         multiline_editor=True,
@@ -177,9 +177,9 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             claim, q1, q2 = line.split(', ')
             r1, r2 = None, None
             for question_id, question in zip(question_ids, questions):
-                if question.name == q1:
+                if question.url_name == q1:
                     r1 = response_function(question, question_id)
-                if question.name == q2:
+                if question.url_name == q2:
                     r2 = response_function(question, question_id)
                 if r1 is not None and r2 is not None:
                     break

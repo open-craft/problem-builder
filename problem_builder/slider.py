@@ -87,6 +87,17 @@ class SliderBlock(
 
     editable_fields = ('min_label', 'max_label', 'display_name', 'question', 'show_title')
 
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the name.
+        """
+        try:
+            return super(SliderBlock, self).url_name
+        except AttributeError:
+            return self.name
+
     def mentoring_view(self, context):
         """ Main view of this block """
         context = context.copy() if context else {}
@@ -145,10 +156,16 @@ class SliderBlock(
         self.student_value = value
         if sub_api:
             # Also send to the submissions API:
-            sub_api.create_submission(self.student_item_key, {'value': value})
+            sub_api.create_submission(self.student_item_key, value)
         result = self.get_last_result()
         log.debug(u'Slider submission result: %s', result)
         return result
+
+    def get_submission_display(self, submission):
+        """
+        Get the human-readable version of a submission value
+        """
+        return submission * 100
 
     def validate_field_data(self, validation, data):
         """

@@ -217,6 +217,7 @@ class MentoringStepBlock(
             'head': u'<div class="mentoring">',
             'tail': u'</div>'
         }
+        local_context['author_edit_view'] = True
         fragment = super(MentoringStepBlock, self).author_edit_view(local_context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
