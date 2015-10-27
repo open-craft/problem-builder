@@ -647,7 +647,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             # Save the user's latest score
             self.runtime.publish(self, 'grade', {
                 'value': self.score.raw,
-                'max_value': 1,
+                'max_value': self.max_score(),
             })
 
             # Mark this as having used an attempt:
@@ -714,7 +714,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             self.runtime.publish(self, 'grade', {
                 'value': score.raw,
-                'max_value': 1,
+                'max_value': self.max_score(),
                 'score_type': 'proficiency',
             })
             event_data['final_grade'] = score.raw
@@ -1030,7 +1030,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     @XBlock.json_handler
     def submit(self, data, suffix=None):
         """
-        Called this when the user has submitted the answer[s] for the current step.
+        Called when the user has submitted the answer[s] for the current step.
         """
         # First verify that active_step is correct:
         if data.get("active_step") != self.active_step_safe:
@@ -1058,7 +1058,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             score = self.score
             grade_data = {
                 'value': score.raw,
-                'max_value': 1,
+                'max_value': self.max_score(),
             }
             self.runtime.publish(self, 'grade', grade_data)
             response_data['grade_data'] = self.get_grade()
