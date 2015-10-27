@@ -99,6 +99,13 @@ class BaseMentoringBlock(
         scope=Scope.content,
         enforce_type=True
     )
+    weight = Float(
+        display_name=_("Weight"),
+        help=_("Defines the maximum total grade of the block."),
+        default=1,
+        scope=Scope.settings,
+        enforce_type=True
+    )
 
     # User state
     num_attempts = Integer(
@@ -109,6 +116,7 @@ class BaseMentoringBlock(
     )
 
     has_children = True
+    has_score = True  # The Problem/Step Builder XBlocks produce scores. (Their children do not send scores to the LMS.)
 
     icon_class = 'problem'
     block_settings_key = 'mentoring'
@@ -197,8 +205,11 @@ class BaseMentoringBlock(
         Publish data for analytics purposes
         """
         event_type = data.pop('event_type')
-        self.runtime.publish(self, event_type, data)
+        if (event_type == 'grade'):
+            # This handler can be called from the browser. Don't allow the browser to submit arbitrary grades ;-)
+            raise JsonHandlerError(403, "Posting grade events from the browser is forbidden.")
 
+        self.runtime.publish(self, event_type, data)
         return {'result': 'ok'}
 
     def author_preview_view(self, context):
@@ -213,6 +224,10 @@ class BaseMentoringBlock(
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         self.include_theme_files(fragment)
         return fragment
+
+    def max_score(self):
+        """ Maximum score. We scale all scores to a maximum of 1.0 so this is always 1.0 """
+        return 1.0
 
 
 class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentMixin):
@@ -262,13 +277,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
     )
 
     # Settings
-    weight = Float(
-        display_name=_("Weight"),
-        help=_("Defines the maximum total grade of the block."),
-        default=1,
-        scope=Scope.settings,
-        enforce_type=True
-    )
     display_name = String(
         display_name=_("Title (Display name)"),
         help=_("Title to display"),
@@ -323,8 +331,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         'display_submit', 'feedback_label', 'weight', 'extended_feedback'
     )
 
-    has_score = True
-
     @property
     def is_assessment(self):
         """ Checks if mentoring XBlock is in assessment mode """
@@ -376,10 +382,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         partially_correct = self.answer_mapper(PARTIAL)
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
-
-    def max_score(self):
-        """ Maximum score. We scale all scores to a maximum of 1.0 so this is always 1.0 """
-        return 1.0
 
     def student_view(self, context):
         # Migrate stored data if necessary
@@ -645,7 +647,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             # Save the user's latest score
             self.runtime.publish(self, 'grade', {
                 'value': self.score.raw,
-                'max_value': 1,
+                'max_value': self.max_score(),
             })
 
             # Mark this as having used an attempt:
@@ -712,7 +714,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             log.info(u'Last assessment step submitted: {}'.format(submissions))
             self.runtime.publish(self, 'grade', {
                 'value': score.raw,
-                'max_value': 1,
+                'max_value': self.max_score(),
                 'score_type': 'proficiency',
             })
             event_data['final_grade'] = score.raw
@@ -848,7 +850,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         enforce_type=True
     )
 
-    editable_fields = ('display_name', 'max_attempts', 'extended_feedback')
+    editable_fields = ('display_name', 'max_attempts', 'extended_feedback', 'weight')
 
     @lazy
     def question_ids(self):
@@ -863,6 +865,27 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         Get all questions associated with this block.
         """
         return [self.runtime.get_block(question_id) for question_id in self.question_ids]
+
+    @property
+    def active_step_safe(self):
+        """
+        Get self.active_step and double-check that it is a valid value.
+        The stored value could be invalid if this block has been edited and new steps were
+        added/deleted.
+        """
+        active_step = self.active_step
+        if active_step >= 0 and active_step < len(self.step_ids):
+            return active_step
+        if active_step == -1 and self.has_review_step:
+            return active_step  # -1 indicates the review step
+        return 0
+
+    def get_active_step(self):
+        """ Get the active step as an instantiated XBlock """
+        block = self.runtime.get_block(self.step_ids[self.active_step_safe])
+        if block is None:
+            log.error("Unable to load step builder step child %s", self.step_ids[self.active_step_safe])
+        return block
 
     @lazy
     def step_ids(self):
@@ -956,6 +979,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment = Fragment()
         children_contents = []
 
+        context = context or {}
+        context['hide_prev_answer'] = True  # For Step Builder, we don't show the users' old answers when they try again
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
@@ -1003,36 +1028,45 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         ]
 
     @XBlock.json_handler
-    def update_active_step(self, new_value, suffix=''):
+    def submit(self, data, suffix=None):
+        """
+        Called when the user has submitted the answer[s] for the current step.
+        """
+        # First verify that active_step is correct:
+        if data.get("active_step") != self.active_step_safe:
+            raise JsonHandlerError(400, "Invalid Step. Refresh the page and try again.")
+
+        # The step child will process the data:
+        step_block = self.get_active_step()
+        if not step_block:
+            raise JsonHandlerError(500, "Unable to load the current step block.")
+        response_data = step_block.submit(data)
+
+        # Update the active step:
+        new_value = self.active_step_safe + 1
         if new_value < len(self.step_ids):
             self.active_step = new_value
         elif new_value == len(self.step_ids):
+            # The user just completed the final step.
             if self.has_review_step:
                 self.active_step = -1
-        return {
-            'active_step': self.active_step
-        }
+            # Update the number of attempts, if necessary:
+            if self.num_attempts < self.max_attempts:
+                self.num_attempts += 1
+            response_data['num_attempts'] = self.num_attempts
+            # And publish the score:
+            score = self.score
+            grade_data = {
+                'value': score.raw,
+                'max_value': self.max_score(),
+            }
+            self.runtime.publish(self, 'grade', grade_data)
+            response_data['grade_data'] = self.get_grade()
 
-    @XBlock.json_handler
-    def update_num_attempts(self, data, suffix=''):
-        if self.num_attempts < self.max_attempts:
-            self.num_attempts += 1
-        return {
-            'num_attempts': self.num_attempts
-        }
+        response_data['active_step'] = self.active_step
+        return response_data
 
-    @XBlock.json_handler
-    def publish_attempt(self, data, suffix):
-        score = self.score
-        grade_data = {
-            'value': score.raw,
-            'max_value': 1,
-        }
-        self.runtime.publish(self, 'grade', grade_data)
-        return {}
-
-    @XBlock.json_handler
-    def get_grade(self, data, suffix):
+    def get_grade(self, data=None, suffix=None):
         score = self.score
         return {
             'score': score.percentage,

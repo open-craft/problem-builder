@@ -10,7 +10,7 @@
       <div class="choice-selector">
         <input id="choice-{{ self.html_id }}-{{ forloop.counter }}" type="checkbox"
          name="{{ self.name }}" value="{{ choice.value }}"
-         {% if choice.value in self.student_choices %} checked{% endif %}
+         {% if choice.value in self.student_choices and not hide_prev_answer %} checked{% endif %}
         />
       </div>
       <label class="choice-label" for="choice-{{ self.html_id }}-{{ forloop.counter }}">

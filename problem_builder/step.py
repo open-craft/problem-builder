@@ -160,8 +160,8 @@ class MentoringStepBlock(
     def has_question(self):
         return any(getattr(child, 'answerable', False) for child in self.steps)
 
-    @XBlock.json_handler
-    def submit(self, submissions, suffix=''):
+    def submit(self, submissions):
+        """ Handle a student submission. This is called by the parent XBlock. """
         log.info(u'Received submissions: {}'.format(submissions))
 
         # Submit child blocks (questions) and gather results
@@ -177,6 +177,7 @@ class MentoringStepBlock(
         self.reset()
         for result in submit_results:
             self.student_results.append(result)
+        self.save()
 
         return {
             'message': 'Success!',

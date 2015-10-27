@@ -100,6 +100,16 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         runtime_patcher.start()
         self.addCleanup(runtime_patcher.stop)
 
+        # Mock replace_urls so that we can check that message HTML gets processed with any
+        # transforms that the runtime needs.
+        runtime_patcher2 = patch(
+            'workbench.runtime.WorkbenchRuntime.replace_urls',
+            lambda _runtime, html: html.replace('REPLACE-ME', ''),
+            create=True
+        )
+        runtime_patcher2.start()
+        self.addCleanup(runtime_patcher2.stop)
+
     def freeform_answer(
             self, number, step_builder, controls, text_input, result, saved_value="", hold=False, last=False
     ):
@@ -425,6 +435,9 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             None, step_builder, controls, 'This is a different answer', CORRECT, saved_value='This is the answer'
         )
         # Step 2
+        # Reload the page, which should have no effect
+        self.browser.execute_script("$(document).html(' ');")
+        step_builder, controls = self.go_to_assessment()
         # Submit MCQ, go to next step
         self.single_choice_question(None, step_builder, controls, 'Yes', CORRECT)
         # Step 3

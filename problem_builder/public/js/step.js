@@ -44,29 +44,25 @@ function MentoringStepBlock(runtime, element) {
             return is_valid;
         },
 
-        submit: function(resultHandler) {
-            var handler_name = 'submit';
+        getSubmitData: function() {
             var data = {};
             for (var i = 0; i < children.length; i++) {
                 var child = children[i];
                 if (child && child.name !== undefined) {
-                    data[child.name.toString()] = callIfExists(child, handler_name);
+                    data[child.name.toString()] = callIfExists(child, "submit");
                 }
             }
-            var handlerUrl = runtime.handlerUrl(element, handler_name);
-            if (submitXHR) {
-                submitXHR.abort();
-            }
-            submitXHR = $.post(handlerUrl, JSON.stringify(data))
-                .success(function(response) {
-                    resultHandler(response);
-                    if (message.length) {
-                        message.fadeIn();
-                        $(document).click(function() {
-                            message.fadeOut();
-                        });
-                    }
+            return data;
+        },
+
+        showFeedback: function(response) {
+            // Called when user has just submitted an answer or is reviewing their answer durign extended feedback.
+            if (message.length) {
+                message.fadeIn();
+                $(document).click(function() {
+                    message.fadeOut();
                 });
+            }
         },
 
         getResults: function(resultHandler) {

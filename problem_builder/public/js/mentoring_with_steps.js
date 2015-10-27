@@ -55,60 +55,22 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
         }
-    }
-
-    function postUpdateStep(response) {
-        activeStep = response.active_step;
-        if (activeStep === -1) {
-            updateNumAttempts();
-        } else {
-            updateControls();
+        var step = steps[activeStep];
+        if (typeof step.showFeedback == 'function') {
+            step.showFeedback(response);
         }
     }
 
-    function handleResults(response) {
-        showFeedback(response);
-
-        // Update active step:
-        // If we end up at the review step, proceed with updating the number of attempts used.
-        // Otherwise, get UI ready for showing next step.
-        var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
-        $.post(handlerUrl, JSON.stringify(activeStep+1))
-            .success(postUpdateStep);
-    }
-
-    function updateNumAttempts() {
-        var handlerUrl = runtime.handlerUrl(element, 'update_num_attempts');
-        $.post(handlerUrl, JSON.stringify({}))
-            .success(function(response) {
-                attemptsDOM.data('num_attempts', response.num_attempts);
-                publishAttempt();
-            });
-    }
-
-    function publishAttempt() {
-        var handlerUrl = runtime.handlerUrl(element, 'publish_attempt');
-        $.post(handlerUrl, JSON.stringify({}))
-            .success(function(response) {
-                // Now that relevant info is up-to-date and attempt has been published, get the latest grade
-                updateGrade();
-            });
-    }
-
-    function updateGrade() {
-        var handlerUrl = runtime.handlerUrl(element, 'get_grade');
-        $.post(handlerUrl, JSON.stringify({}))
-            .success(function(response) {
-                gradeDOM.data('score', response.score);
-                gradeDOM.data('correct_answer', response.correct_answers);
-                gradeDOM.data('incorrect_answer', response.incorrect_answers);
-                gradeDOM.data('partially_correct_answer', response.partially_correct_answers);
-                gradeDOM.data('correct', response.correct);
-                gradeDOM.data('incorrect', response.incorrect);
-                gradeDOM.data('partial', response.partial);
-                gradeDOM.data('assessment_review_tips', response.assessment_review_tips);
-                updateReviewStep(response);
-            });
+    function updateGrade(grade_data) {
+        gradeDOM.data('score', grade_data.score);
+        gradeDOM.data('correct_answer', grade_data.correct_answers);
+        gradeDOM.data('incorrect_answer', grade_data.incorrect_answers);
+        gradeDOM.data('partially_correct_answer', grade_data.partially_correct_answers);
+        gradeDOM.data('correct', grade_data.correct);
+        gradeDOM.data('incorrect', grade_data.incorrect);
+        gradeDOM.data('partial', grade_data.partial);
+        gradeDOM.data('assessment_review_tips', grade_data.assessment_review_tips);
+        updateReviewStep(grade_data);
     }
 
     function updateReviewStep(response) {
@@ -136,16 +98,27 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function submit() {
-        // We do not handle submissions at this level, so just forward to "submit" method of active step
-        var step = steps[activeStep];
-        step.submit(handleResults);
-    }
+        submitDOM.attr('disabled', 'disabled'); // Disable the button until the results load.
+        var submitUrl = runtime.handlerUrl(element, 'submit');
 
-    function markRead() {
-        var handlerUrl = runtime.handlerUrl(element, 'update_active_step');
-        $.post(handlerUrl, JSON.stringify(activeStep+1)).success(function (response) {
-            postUpdateStep(response);
-            updateDisplay();
+        var hasQuestion = steps[activeStep].hasQuestion();
+        var data = steps[activeStep].getSubmitData();
+        data["active_step"] = activeStep;
+        $.post(submitUrl, JSON.stringify(data)).success(function(response) {
+            showFeedback(response);
+            activeStep = response.active_step;
+            if (activeStep === -1) {
+                // We are now showing the review step / end
+                // Update the number of attempts.
+                attemptsDOM.data('num_attempts', response.num_attempts);
+                updateGrade(response.grade_data);
+            } else if (!hasQuestion) {
+                // This was a step with no questions, so proceed to the next step / review:
+                updateDisplay();
+            } else {
+                // Enable the Next button so users can proceed.
+                updateControls();
+            }
         });
     }
 
@@ -332,11 +305,11 @@ function MentoringWithStepsBlock(runtime, element) {
         if (isLastStep() && step.hasQuestion()) {
             nextDOM.hide();
         } else if (isLastStep()) {
-            reviewDOM.one('click', markRead);
+            reviewDOM.one('click', submit);
             reviewDOM.removeAttr('disabled');
             nextDOM.hide()
         } else if (!step.hasQuestion()) {
-            nextDOM.one('click', markRead);
+            nextDOM.one('click', submit);
         }
         if (step.hasQuestion()) {
             submitDOM.show();

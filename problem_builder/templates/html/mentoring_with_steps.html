@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="mentoring themed-xblock" data-active-step="{{ self.active_step }}">
+<div class="mentoring themed-xblock" data-active-step="{{ self.active_step_safe }}">
 
   {% if show_title and title %}
   <div class="title">

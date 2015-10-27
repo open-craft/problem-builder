@@ -148,7 +148,7 @@ class MRQBlock(QuestionnaireAbstractBlock):
             'submissions': submissions,
             'status': status,
             'choices': results,
-            'message': self.message,
+            'message': self.message_formatted,
             'weight': self.weight,
             'score': (float(score) / len(results)) if results else 0,
         }
