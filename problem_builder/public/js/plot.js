@@ -125,7 +125,7 @@ function PlotBlock(runtime, element) {
             .enter()
             .append("circle")
             .attr("class", klass)
-            .attr("title", function(d) {
+            .attr("data-tooltip", function(d) {
                 return d[0] + ": " + d[1] + ", " + d[2];
             })
             .attr("cx", function(d) {

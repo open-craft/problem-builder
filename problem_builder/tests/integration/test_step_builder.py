@@ -763,11 +763,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
                 point.value_of_css_property('fill') for point in points
             ]
             self.assertTrue(all(pc == overlay['point_color'] for pc in point_colors))
-            # Check point titles
-            point_titles = set([
-                point.get_attribute('title') for point in points
+            # Check tooltips for points
+            tooltips = set([
+                point.get_attribute('data-tooltip') for point in points
             ])
-            self.assertEquals(point_titles, set(overlay['titles']))
+            self.assertEquals(tooltips, set(overlay['tooltips']))
             # Check positions
             point_positions = set([
                 (point.get_attribute('cx'), point.get_attribute('cy')) for point in points
@@ -804,7 +804,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.claim-default',
             'num_points': 2,
             'point_color': PointColors.ORANGE,
-            'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
+            'tooltips': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -814,7 +814,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.claim-average',
             'num_points': 2,
             'point_color': PointColors.PURPLE,
-            'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
+            'tooltips': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -881,7 +881,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.claim-default',
             'num_points': 2,
             'point_color': 'rgb(255, 165, 0)',  # orange
-            'titles': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
+            'tooltips': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('68', '68'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -891,7 +891,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.claim-average',
             'num_points': 2,
             'point_color': 'rgb(128, 0, 128)',  # purple
-            'titles': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
+            'tooltips': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('68', '68'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -993,7 +993,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.claim-default',
             'num_points': 2,
             'point_color': PointColors.ORANGE,
-            'titles': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
+            'tooltips': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('20', '396'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1003,7 +1003,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.plot-overlay.plot-overlay-0',
             'num_points': 2,
             'point_color': PointColors.CORAL,
-            'titles': ['2 + 2 = 5: 2, 3', 'The answer to everything is 42: 4, 2'],
+            'tooltips': ['2 + 2 = 5: 2, 3', 'The answer to everything is 42: 4, 2'],
             'positions': [
                 ('8', '388'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('16', '392'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1017,7 +1017,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.plot-overlay.plot-overlay-1',
             'num_points': 2,
             'point_color': PointColors.CORNFLOWERBLUE,
-            'titles': ['2 + 2 = 5: 4, 4', 'The answer to everything is 42: 1, 5'],
+            'tooltips': ['2 + 2 = 5: 4, 4', 'The answer to everything is 42: 1, 5'],
             'positions': [
                 ('16', '384'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1031,7 +1031,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.plot-overlay.plot-overlay-2',
             'num_points': 2,
             'point_color': PointColors.OLIVE,
-            'titles': ['2 + 2 = 5: 3, 5', 'The answer to everything is 42: 2, 4'],
+            'tooltips': ['2 + 2 = 5: 3, 5', 'The answer to everything is 42: 2, 4'],
             'positions': [
                 ('12', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('8', '384'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1045,7 +1045,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             'selector': '.plot-overlay.plot-overlay-3',
             'num_points': 2,
             'point_color': PointColors.CRIMSON,
-            'titles': ['2 + 2 = 5: 1, 2', 'The answer to everything is 42: 3, 3'],
+            'tooltips': ['2 + 2 = 5: 1, 2', 'The answer to everything is 42: 3, 3'],
             'positions': [
                 ('4', '392'),  # Values computed according to xScale and yScale (cf. plot.js)
                 ('12', '388'),  # Values computed according to xScale and yScale (cf. plot.js)
