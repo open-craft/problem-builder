@@ -230,8 +230,10 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function hideReviewStep() {
-        reviewStep.hideAssessmentMessage();
-        gradeDOM.html('');
+        if (reviewStep) {
+            reviewStep.hideAssessmentMessage();
+            reviewStep.clearGrade(gradeDOM);
+        }
     }
 
     function getStepToReview(event) {

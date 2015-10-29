@@ -1251,3 +1251,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         # Clicking in general should dismiss this message.
         self.browser.execute_script("$(document).trigger('click')")
         self.wait_until_hidden(message)
+
+    def test_no_review_step(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_no_review_step.xml", {})
+        # If client-side code tries to call a method on reviewStep
+        # even if Step Builder block does not contain a review step,
+        # the current step will fail to render.
+        # In that case, submitting an answer and will fail,
+        # as it requires the corresponding question to be visible:
+        self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)

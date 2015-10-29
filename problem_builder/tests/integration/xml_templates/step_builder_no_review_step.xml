@@ -1,0 +1,11 @@
+<step-builder url_name="step-builder" display_name="Step Builder">
+
+  <sb-step display_name="First Step">
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-step display_name="Second Step">
+    <pb-answer name="hobbies" question="What do you like to do for fun?" />
+  </sb-step>
+
+</step-builder>

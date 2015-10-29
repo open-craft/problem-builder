@@ -42,6 +42,10 @@ function ReviewStepBlock(runtime, element) {
 
             gradeDOM.html(gradeTemplate(data));
 
+        },
+
+        'clearGrade': function(gradeDOM) {
+            gradeDOM.html('');
         }
 
     };
