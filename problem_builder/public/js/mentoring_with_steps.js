@@ -1,4 +1,4 @@
-function MentoringWithStepsBlock(runtime, element) {
+function MentoringWithStepsBlock(runtime, element, params) {
 
     // Set up gettext in case it isn't available in the client runtime:
     if (typeof gettext == "undefined") {
@@ -8,23 +8,22 @@ function MentoringWithStepsBlock(runtime, element) {
 
     var children = runtime.children(element);
     var steps = [];
-    var reviewStep;
+
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
         var blockType = $(child.element).data('block-type');
         if (blockType === 'sb-step') {
             steps.push(child);
-        } else if (blockType === 'sb-review-step') {
-            reviewStep = child;
         }
     }
 
     var activeStep = $('.mentoring', element).data('active-step');
-    var reviewTipsTemplate = _.template($('#xblock-review-tips-template').html()); // Tips about specific questions the user got wrong
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var message = $('.sb-step-message', element);
-    var checkmark, submitDOM, nextDOM, reviewDOM, tryAgainDOM,
-        gradeDOM, attemptsDOM, reviewTipsDOM, reviewLinkDOM, submitXHR;
+    var checkmark, submitDOM, nextDOM, reviewButtonDOM, tryAgainDOM,
+        gradeDOM, attemptsDOM, reviewLinkDOM, submitXHR;
+    var reviewStepDOM = $("[data-block-type=sb-review-step]", element);
+    var hasAReviewStep = reviewStepDOM.length == 1;
 
     function isLastStep() {
         return (activeStep === steps.length-1);
@@ -43,8 +42,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function extendedFeedbackEnabled() {
-        var data = gradeDOM.data();
-        return data.extended_feedback === "True";
+        return !!(params.extended_feedback); // Show extended feedback when all attempts are used up?
     }
 
     function showFeedback(response) {
@@ -61,22 +59,6 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
-    function updateGrade(grade_data) {
-        gradeDOM.data('score', grade_data.score);
-        gradeDOM.data('correct_answer', grade_data.correct_answers);
-        gradeDOM.data('incorrect_answer', grade_data.incorrect_answers);
-        gradeDOM.data('partially_correct_answer', grade_data.partially_correct_answers);
-        gradeDOM.data('correct', grade_data.correct);
-        gradeDOM.data('incorrect', grade_data.incorrect);
-        gradeDOM.data('partial', grade_data.partial);
-        gradeDOM.data('assessment_review_tips', grade_data.assessment_review_tips);
-        updateReviewStep(grade_data);
-    }
-
-    function updateReviewStep(response) {
-        reviewStep.updateAssessmentMessage(response, updateControls);
-    }
-
     function updateControls() {
         submitDOM.attr('disabled', 'disabled');
 
@@ -84,8 +66,8 @@ function MentoringWithStepsBlock(runtime, element) {
         if (nextDOM.is(':visible')) { nextDOM.focus(); }
 
         if (atReviewStep()) {
-            if (reviewStep) {
-                reviewDOM.removeAttr('disabled');
+            if (hasAReviewStep) {
+                reviewButtonDOM.removeAttr('disabled');
             } else {
                 if (someAttemptsLeft()) {
                     tryAgainDOM.removeAttr('disabled');
@@ -111,7 +93,8 @@ function MentoringWithStepsBlock(runtime, element) {
                 // We are now showing the review step / end
                 // Update the number of attempts.
                 attemptsDOM.data('num_attempts', response.num_attempts);
-                updateGrade(response.grade_data);
+                reviewStepDOM.html($(response.review_html).html());
+                updateControls();
             } else if (!hasQuestion) {
                 // This was a step with no questions, so proceed to the next step / review:
                 updateDisplay();
@@ -156,7 +139,6 @@ function MentoringWithStepsBlock(runtime, element) {
         hideAllSteps();
         hideReviewStep();
         attemptsDOM.html('');
-        reviewTipsDOM.empty().hide();
         message.hide();
     }
 
@@ -186,54 +168,32 @@ function MentoringWithStepsBlock(runtime, element) {
             } else {
                 nextDOM.removeAttr('disabled');
             }
-            if (isLastStep() && reviewStep) {
+            if (isLastStep() && hasAReviewStep) {
                 if (step.hasQuestion()) {
-                    reviewDOM.attr('disabled', 'disabled');
+                    reviewButtonDOM.attr('disabled', 'disabled');
                 } else {
-                    reviewDOM.removeAttr('disabled')
+                    reviewButtonDOM.removeAttr('disabled')
                 }
-                reviewDOM.show();
+                reviewButtonDOM.show();
             }
         }
     }
 
     function showReviewStep() {
-        // Forward to review step to show assessment message
-        reviewStep.showAssessmentMessage();
-
-        // Forward to review step to render grade data
-        var showExtendedFeedback = (!someAttemptsLeft() && extendedFeedbackEnabled());
-        reviewStep.renderGrade(gradeDOM, showExtendedFeedback);
-
-        // Add click handler that takes care of showing associated step to step links
-        $('a.step-link', element).on('click', getStepToReview);
-
         if (someAttemptsLeft()) {
-
             tryAgainDOM.removeAttr('disabled');
-
-            // Review tips
-            var data = gradeDOM.data();
-            if (data.assessment_review_tips.length > 0) {
-                // on-assessment-review-question messages specific to questions the student got wrong:
-                reviewTipsDOM.html(reviewTipsTemplate({
-                    tips: data.assessment_review_tips
-                }));
-                reviewTipsDOM.show();
-            }
         }
 
         submitDOM.hide();
         nextDOM.hide();
-        reviewDOM.hide();
+        reviewButtonDOM.hide();
         tryAgainDOM.show();
+
+        reviewStepDOM.show();
     }
 
     function hideReviewStep() {
-        if (reviewStep) {
-            reviewStep.hideAssessmentMessage();
-            reviewStep.clearGrade(gradeDOM);
-        }
+        reviewStepDOM.hide()
     }
 
     function getStepToReview(event) {
@@ -249,8 +209,8 @@ function MentoringWithStepsBlock(runtime, element) {
         updateNextLabel();
 
         if (isLastStep()) {
-            reviewDOM.show();
-            reviewDOM.removeAttr('disabled');
+            reviewButtonDOM.show();
+            reviewButtonDOM.removeAttr('disabled');
             nextDOM.hide();
             nextDOM.attr('disabled', 'disabled');
         } else {
@@ -307,8 +267,8 @@ function MentoringWithStepsBlock(runtime, element) {
         if (isLastStep() && step.hasQuestion()) {
             nextDOM.hide();
         } else if (isLastStep()) {
-            reviewDOM.one('click', submit);
-            reviewDOM.removeAttr('disabled');
+            reviewButtonDOM.one('click', submit);
+            reviewButtonDOM.removeAttr('disabled');
             nextDOM.hide()
         } else if (!step.hasQuestion()) {
             nextDOM.one('click', submit);
@@ -388,7 +348,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.off();
             nextDOM.on('click', updateDisplay);
             nextDOM.show();
-            reviewDOM.hide();
+            reviewButtonDOM.hide();
         }
     }
 
@@ -434,7 +394,7 @@ function MentoringWithStepsBlock(runtime, element) {
         hideAllSteps();
 
         // Initialize references to relevant DOM elements and set up event handlers
-        checkmark = $('.assessment-checkmark', element);
+        checkmark = $('.step-overall-checkmark', element);
 
         submitDOM = $(element).find('.submit .input-main');
         submitDOM.on('click', submit);
@@ -446,18 +406,20 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.on('click', updateDisplay);
         }
 
-        reviewDOM = $(element).find('.submit .input-review');
-        reviewDOM.on('click', showGrade);
+        reviewButtonDOM = $(element).find('.submit .input-review');
+        reviewButtonDOM.on('click', showGrade);
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
         tryAgainDOM.on('click', tryAgain);
 
         gradeDOM = $('.grade', element);
         attemptsDOM = $('.attempts', element);
-        reviewTipsDOM = $('.assessment-review-tips', element);
 
         reviewLinkDOM = $(element).find('.review-link');
         reviewLinkDOM.on('click', showGrade);
+
+        // Add click handler that takes care of links to steps on the extended review:
+        $('a.step-link', element).on('click', getStepToReview);
 
         // Initialize individual steps
         // (sets up click handlers for questions and makes sure answer data is up-to-date)

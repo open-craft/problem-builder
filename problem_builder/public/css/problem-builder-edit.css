@@ -6,6 +6,13 @@
   font-style: italic;
 }
 
+.xblock[data-block-type=sb-step] .author-preview-view,
+.xblock[data-block-type=step-builder] .author-preview-view,
+.xblock[data-block-type=problem-builder] .author-preview-view,
+.xblock[data-block-type=mentoring] .author-preview-view {
+  margin: 10px;
+}
+
 .xblock[data-block-type=sb-step] .url-name-footer .url-name,
 .xblock[data-block-type=step-builder] .url-name-footer .url-name,
 .xblock[data-block-type=problem-builder] .url-name-footer .url-name,

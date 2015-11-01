@@ -100,18 +100,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
                 "used up all of their allowed attempts."
             ),
         },
-        "on-review": {
-            "display_name": _(u"Message shown when no attempts left"),
-            "long_display_name": _(u"Message shown during review when no attempts remain"),
-            "default": _(
-                u"Note: you have used all attempts. Continue to the next unit."
-            ),
-            "description": _(
-                u"This message will be shown when the student is reviewing their answers to the assessment, "
-                "if the student has used up all of their allowed attempts. "
-                "It is not shown if the student is allowed to try again."
-            ),
-        },
     }
 
     content = String(
@@ -203,8 +191,3 @@ class CompletedMentoringMessageShim(object):
 class IncompleteMentoringMessageShim(object):
     CATEGORY = 'pb-message'
     STUDIO_LABEL = _("Message (Incomplete)")
-
-
-class OnReviewMentoringMessageShim(object):
-    CATEGORY = 'pb-message'
-    STUDIO_LABEL = _("Message (Review)")

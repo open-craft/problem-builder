@@ -35,15 +35,15 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
 from .message import MentoringMessageBlock
-
 from .mixins import (
     _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
 )
+from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
-    StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin
+    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin,
 )
 
 
@@ -925,8 +925,14 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
     @property
     def has_review_step(self):
-        from .step import ReviewStepBlock
         return any(child_isinstance(self, child_id, ReviewStepBlock) for child_id in self.children)
+
+    @property
+    def review_step(self):
+        """ Get the Review Step XBlock child, if any. Otherwise returns None """
+        for step_id in self.children:
+            if child_isinstance(self, step_id, ReviewStepBlock):
+                return self.runtime.get_block(step_id)
 
     @property
     def score(self):
@@ -981,11 +987,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
         context = context or {}
         context['hide_prev_answer'] = True  # For Step Builder, we don't show the users' old answers when they try again
+        context['score_summary'] = self.get_score_summary()
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
                 child_content = u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
-            elif not isinstance(child, MentoringMessageBlock):
+            else:
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
                 fragment.add_frag_resources(child_fragment)
                 child_content = child_fragment.content
@@ -1002,11 +1009,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_review_templates.html'), "text/html")
 
         self.include_theme_files(fragment)
 
-        fragment.initialize_js('MentoringWithStepsBlock')
+        fragment.initialize_js('MentoringWithStepsBlock', {
+            'show_extended_feedback': self.show_extended_feedback(),
+        })
 
         return fragment
 
@@ -1021,10 +1029,11 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
         instances
         """
-        from .step import MentoringStepBlock, ReviewStepBlock  # Import here to avoid circular dependency
+        # Import here to avoid circular dependency
+        from .step import MentoringStepBlock
         return [
             MentoringStepBlock,
-            ReviewStepBlock,
+            NestedXBlockSpec(ReviewStepBlock, single_instance=True),
         ]
 
     @XBlock.json_handler
@@ -1048,11 +1057,15 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             self.active_step = new_value
         elif new_value == len(self.step_ids):
             # The user just completed the final step.
-            if self.has_review_step:
-                self.active_step = -1
             # Update the number of attempts, if necessary:
             if self.num_attempts < self.max_attempts:
                 self.num_attempts += 1
+            # Do we need to render a review (summary of the user's score):
+            if self.has_review_step:
+                self.active_step = -1
+                response_data['review_html'] = self.runtime.render(self.review_step, "mentoring_view", {
+                    'score_summary': self.get_score_summary(),
+                }).content
             response_data['num_attempts'] = self.num_attempts
             # And publish the score:
             score = self.score
@@ -1061,12 +1074,13 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                 'max_value': self.max_score(),
             }
             self.runtime.publish(self, 'grade', grade_data)
-            response_data['grade_data'] = self.get_grade()
 
         response_data['active_step'] = self.active_step
         return response_data
 
-    def get_grade(self, data=None, suffix=None):
+    def get_score_summary(self):
+        if self.num_attempts == 0:
+            return {}
         score = self.score
         return {
             'score': score.percentage,
@@ -1078,7 +1092,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'partial': self.partial_json(stringify=False),
             'complete': self.complete,
             'max_attempts_reached': self.max_attempts_reached,
-            'assessment_review_tips': self.review_tips,
+            'review_tips': self.review_tips,
         }
 
     @XBlock.json_handler
@@ -1101,9 +1115,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         }
 
     def author_preview_view(self, context):
-        context = context.copy() if context else {}
-        context['author_preview_view'] = True
-        return super(MentoringWithExplicitStepsBlock, self).author_preview_view(context)
+        return self.student_view(context)
 
     def author_edit_view(self, context):
         """
@@ -1121,6 +1133,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps_edit.js'))
-        fragment.initialize_js('MentoringWithStepsEdit')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
+        fragment.initialize_js('ProblemBuilderContainerEdit')
         return fragment
