@@ -28,7 +28,7 @@ from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
 )
 
-from .mixins import XBlockWithTranslationServiceMixin
+from .mixins import XBlockWithTranslationServiceMixin, NoSettingsMixin
 
 
 log = logging.getLogger(__name__)
@@ -133,7 +133,7 @@ class ConditionalMessageBlock(
 
 
 @XBlock.needs("i18n")
-class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, XBlock):
+class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, NoSettingsMixin, XBlock):
     """
     Summarize the score that the student earned.
     """
@@ -174,7 +174,7 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
 
 
 @XBlock.needs("i18n")
-class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, XBlock):
+class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, NoSettingsMixin, XBlock):
     """
     Summaryize the score that the student earned.
     """
@@ -210,7 +210,11 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
 
 @XBlock.needs("i18n")
 class ReviewStepBlock(
-    StudioContainerWithNestedXBlocksMixin, XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, XBlock
+    StudioContainerWithNestedXBlocksMixin,
+    XBlockWithTranslationServiceMixin,
+    XBlockWithPreviewMixin,
+    NoSettingsMixin,
+    XBlock
 ):
     """
     A dedicated step for reviewing results as the last step of a Step Builder sequence.
@@ -274,10 +278,6 @@ class ReviewStepBlock(
         return fragment
 
     mentoring_view = student_view
-
-    def studio_view(self, _context=None):
-        """ Studio View """
-        return Fragment(u'<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
 
     def author_edit_view(self, context):
         """

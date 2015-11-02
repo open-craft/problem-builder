@@ -1,5 +1,6 @@
 from lazy import lazy
 from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
+from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 
@@ -167,3 +168,11 @@ class QuestionMixin(EnumerableChildMixin):
         decorative elements/instructions.
         """
         return self.mentoring_view(context)
+
+
+class NoSettingsMixin(object):
+    """ Mixin for an XBlock that has no settings """
+
+    def studio_view(self, _context=None):
+        """ Studio View """
+        return Fragment(u'<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
