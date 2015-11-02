@@ -22,7 +22,7 @@ function MentoringWithStepsBlock(runtime, element, params) {
     var message = $('.sb-step-message', element);
     var checkmark, submitDOM, nextDOM, reviewButtonDOM, tryAgainDOM,
         gradeDOM, attemptsDOM, reviewLinkDOM, submitXHR;
-    var reviewStepDOM = $("[data-block-type=sb-review-step]", element);
+    var reviewStepDOM = $("div.xblock[data-block-type=sb-review-step], div.xblock-v1[data-block-type=sb-review-step]", element);
     var hasAReviewStep = reviewStepDOM.length == 1;
 
     function isLastStep() {

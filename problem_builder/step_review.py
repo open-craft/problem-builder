@@ -100,7 +100,7 @@ class ConditionalMessageBlock(
         ):
             return False
 
-        perfect_score = (score_summary['incorrect'] == 0 and score_summary['partial'] == 0)
+        perfect_score = (score_summary['incorrect_answers'] == 0 and score_summary['partially_correct_answers'] == 0)
         if (
             (self.score_condition == self.SCORE_PERFECT and not perfect_score) or
             (self.score_condition == self.SCORE_IMPERFECT and perfect_score)
@@ -109,7 +109,7 @@ class ConditionalMessageBlock(
 
         return True
 
-    def student_view(self, context=None):
+    def student_view(self, _context=None):
         """ Render this message. """
         html = u'<div class="review-conditional-message">{content}</div>'.format(
             content=self.content
@@ -136,7 +136,7 @@ class ConditionalMessageBlock(
 @XBlock.needs("i18n")
 class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, XBlock):
     """
-    Summaryize the score that the student earned.
+    Summarize the score that the student earned.
     """
     CATEGORY = 'sb-review-score'
     STUDIO_LABEL = _("Score Summary")
@@ -148,12 +148,14 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
 
     def student_view(self, context=None):
         """ Render the score summary message. """
+        context = context or {}
         html = loader.render_template("templates/html/sb-review-score.html", context.get("score_summary", {}))
         return Fragment(html)
 
     mentoring_view = student_view  # Same as student_view but Studio won't wrap it with the editing header/buttons
 
     def author_view(self, context=None):
+        context = context or {}
         if not context.get("score_summary"):
             context["score_summary"] = {
                 'score': 75,
@@ -199,6 +201,7 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
 
     def author_view(self, context=None):
         """ Show example content in Studio """
+        context = context or {}
         if not context.get("per_question_review_tips"):
             example = self._("(Example tip:) Since you got Question 1 wrong, review Chapter 12 of your textbook.")
             context["score_summary"] = {"review_tips": [example]}
@@ -270,7 +273,7 @@ class ReviewStepBlock(
 
     mentoring_view = student_view
 
-    def studio_view(self, context=None):
+    def studio_view(self, _context=None):
         """ Studio View """
         return Fragment(u'<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
 
