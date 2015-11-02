@@ -21,7 +21,7 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import String, Scope, Integer
+from xblock.fields import String, Scope
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
@@ -59,25 +59,25 @@ class ConditionalMessageBlock(
         resettable_editor=False,
     )
 
-    SCORE_PERFECT, SCORE_IMPERFECT, SCORE_ANY = 1, 2, 0
+    SCORE_PERFECT, SCORE_IMPERFECT, SCORE_ANY = "perfect", "imperfect", "any"
     SCORE_CONDITIONS_DESCRIPTIONS = {
         SCORE_PERFECT: _("Show only if student got a perfect score"),
         SCORE_IMPERFECT: _("Show only if student got at least one question wrong"),
         SCORE_ANY: _("Show for any score"),
     }
-    score_condition = Integer(
+    score_condition = String(
         display_name=_("Score condition"),
         default=SCORE_ANY,
         values=[{"display_name": val, "value": key} for key, val in SCORE_CONDITIONS_DESCRIPTIONS.items()],
     )
 
-    IF_ATTEMPTS_REMAIN, IF_NO_ATTEMPTS_REMAIN, ATTEMPTS_ANY = 1, 2, 0
+    IF_ATTEMPTS_REMAIN, IF_NO_ATTEMPTS_REMAIN, ATTEMPTS_ANY = "can_try_again", "cannot_try_again", "any"
     NUM_ATTEMPTS_COND_DESCRIPTIONS = {
         IF_ATTEMPTS_REMAIN: _("Show only if student can try again"),
         IF_NO_ATTEMPTS_REMAIN: _("Show only if student has used up all attempts"),
         ATTEMPTS_ANY: _("Show whether student can try again or not"),
     }
-    num_attempts_condition = Integer(
+    num_attempts_condition = String(
         display_name=_("Try again condition"),
         default=ATTEMPTS_ANY,
         values=[{"display_name": val, "value": key} for key, val in NUM_ATTEMPTS_COND_DESCRIPTIONS.items()],
@@ -116,8 +116,7 @@ class ConditionalMessageBlock(
         )
         return Fragment(html)
 
-    preview_view = student_view
-    mentoring_view = student_view  # Same as student_view but Studio won't wrap it with the editing header/buttons
+    embedded_student_view = student_view
 
     def author_view(self, context=None):
         fragment = self.student_view(context)
@@ -152,7 +151,7 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
         html = loader.render_template("templates/html/sb-review-score.html", context.get("score_summary", {}))
         return Fragment(html)
 
-    mentoring_view = student_view  # Same as student_view but Studio won't wrap it with the editing header/buttons
+    embedded_student_view = student_view
 
     def author_view(self, context=None):
         context = context or {}
@@ -197,7 +196,7 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
             html = u""
         return Fragment(html)
 
-    mentoring_view = student_view  # Same as student_view but Studio won't wrap it with the editing header/buttons
+    embedded_student_view = student_view
 
     def author_view(self, context=None):
         """ Show example content in Studio """
@@ -264,8 +263,10 @@ class ReviewStepBlock(
                     if hasattr(child, 'is_applicable'):
                         if not child.is_applicable(context):
                             continue  # Hide conditional messages that don't meet their criteria
-                    context["is_pages_view"] = True  # This is a hack so Studio doesn't wrap our component blocks.
-                    child_fragment = child.render('student_view', context)
+                    # Render children as "embedded_student_view" rather than "student_view" so
+                    # that Studio doesn't wrap with with unwanted controls and the XBlock SDK
+                    # workbench doesn't add the acid-aside to the fragment.
+                    child_fragment = self._render_child_fragment(child, context, view="embedded_student_view")
                     fragment.add_frag_resources(child_fragment)
                     fragment.add_content(child_fragment.content)
 
