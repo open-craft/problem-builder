@@ -128,7 +128,7 @@ class ConditionalMessageBlock(
                 desc += self.SCORE_CONDITIONS_DESCRIPTIONS[self.score_condition] + "<br>"
             if self.num_attempts_condition != self.ATTEMPTS_ANY:
                 desc += self.NUM_ATTEMPTS_COND_DESCRIPTIONS[self.num_attempts_condition]
-        fragment.content += u'<div class="submission-message-help"><p>{}</p></div>'.format(desc)
+        fragment.content = u'<div class="conditional-message-help"><p>{}</p></div>'.format(desc) + fragment.content
         return fragment
 
 
@@ -176,7 +176,9 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
 @XBlock.needs("i18n")
 class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, NoSettingsMixin, XBlock):
     """
-    Summaryize the score that the student earned.
+    Display any on-assessment-review-question messages.
+    These messages are defined within individual questions and are only displayed if the student
+    got that particular question wrong.
     """
     CATEGORY = 'sb-review-per-question-feedback'
     STUDIO_LABEL = _("Per-Question Feedback")

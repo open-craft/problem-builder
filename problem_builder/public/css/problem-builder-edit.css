@@ -50,7 +50,6 @@
   cursor: default;
 }
 
-.xblock[data-block-type=sb-review-step] .submission-message-help p,
 .xblock[data-block-type=step-builder] .submission-message-help p,
 .xblock[data-block-type=problem-builder] .submission-message-help p {
 	border-top: 1px solid #ddd;
@@ -58,6 +57,18 @@
 	font-style: italic;
 	margin-top: 1em;
 	padding-top: 0.3em;
+}
+
+.xblock[data-block-type=sb-review-step] .conditional-message-help p {
+  font-size: 0.8em;
+  font-style: italic;
+  margin-bottom: 0.4em;
+}
+
+.xblock-preview_view-sb-conditional-message {
+  border-top: 1px solid #ddd;
+  margin-top: 1.3em;
+  padding-top: 0.2em;
 }
 
 .xblock-author_view-pb-slider .url-name-footer {
