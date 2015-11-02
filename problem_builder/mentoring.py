@@ -175,22 +175,6 @@ class BaseMentoringBlock(
         for theme_file in theme_files:
             fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
 
-    def feedback_dispatch(self, target_data, stringify):
-        if self.show_extended_feedback():
-            if stringify:
-                return json.dumps(target_data)
-            else:
-                return target_data
-
-    def correct_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.correct, stringify)
-
-    def incorrect_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.incorrect, stringify)
-
-    def partial_json(self, stringify=True):
-        return self.feedback_dispatch(self.score.partially_correct, stringify)
-
     @XBlock.json_handler
     def view(self, data, suffix=''):
         """
@@ -675,6 +659,22 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
             'num_attempts': self.num_attempts,
         }
 
+    def feedback_dispatch(self, target_data, stringify):
+        if self.show_extended_feedback():
+            if stringify:
+                return json.dumps(target_data)
+            else:
+                return target_data
+
+    def correct_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.correct, stringify)
+
+    def incorrect_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.incorrect, stringify)
+
+    def partial_json(self, stringify=True):
+        return self.feedback_dispatch(self.score.partially_correct, stringify)
+
     def handle_assessment_submit(self, submissions, suffix):
         completed = False
         current_child = None
@@ -979,7 +979,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return review_tips
 
     def show_extended_feedback(self):
-        return self.extended_feedback
+        return self.extended_feedback and self.max_attempts_reached
 
     def student_view(self, context):
         fragment = Fragment()
@@ -1087,11 +1087,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'correct_answers': len(score.correct),
             'incorrect_answers': len(score.incorrect),
             'partially_correct_answers': len(score.partially_correct),
-            'correct': self.correct_json(stringify=False),
-            'incorrect': self.incorrect_json(stringify=False),
-            'partial': self.partial_json(stringify=False),
+            'correct': score.correct,
+            'incorrect': score.incorrect,
+            'partial': score.partially_correct,
             'complete': self.complete,
             'max_attempts_reached': self.max_attempts_reached,
+            'show_extended_review': self.show_extended_feedback(),
             'review_tips': self.review_tips,
         }
 

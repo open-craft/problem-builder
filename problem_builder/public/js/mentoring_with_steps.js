@@ -1,4 +1,4 @@
-function MentoringWithStepsBlock(runtime, element, params) {
+function MentoringWithStepsBlock(runtime, element) {
 
     // Set up gettext in case it isn't available in the client runtime:
     if (typeof gettext == "undefined") {
@@ -39,10 +39,6 @@ function MentoringWithStepsBlock(runtime, element, params) {
             return true;
         }
         return (data.num_attempts < data.max_attempts);
-    }
-
-    function extendedFeedbackEnabled() {
-        return !!(params.extended_feedback); // Show extended feedback when all attempts are used up?
     }
 
     function showFeedback(response) {
@@ -419,7 +415,7 @@ function MentoringWithStepsBlock(runtime, element, params) {
         reviewLinkDOM.on('click', showGrade);
 
         // Add click handler that takes care of links to steps on the extended review:
-        $('a.step-link', element).on('click', getStepToReview);
+        $(element).on('click', 'a.step-link', getStepToReview);
 
         // Initialize individual steps
         // (sets up click handlers for questions and makes sure answer data is up-to-date)

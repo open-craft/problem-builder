@@ -23,7 +23,7 @@
           {% for question in correct %}
             <li>
               {% if forloop.last and not forloop.first %} {% trans "and" %} {% endif %}
-              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans %}Question {{question.number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and correct|length > 2 %},{%endif%}
+              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans with number=question.number %}Question {{number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and correct|length > 2 %},{%endif%}
             </li>
           {% endfor %}
         </ul>
@@ -46,7 +46,7 @@
           {% for question in partial %}
             <li>
               {% if forloop.last and not forloop.first %} {% trans "and" %} {% endif %}
-              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans %}Question {{question.number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and partial|length > 2 %},{%endif%}
+              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans with number=question.number %}Question {{number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and partial|length > 2 %},{%endif%}
             </li>
           {% endfor %}
         </ul>
@@ -69,7 +69,7 @@
           {% for question in incorrect %}
             <li>
               {% if forloop.last and not forloop.first %} {% trans "and" %} {% endif %}
-              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans %}Question {{question.number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and incorrect|length > 2 %},{%endif%}
+              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans  with number=question.number %}Question {{number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and incorrect|length > 2 %},{%endif%}
             </li>
           {% endfor %}
         </ul>

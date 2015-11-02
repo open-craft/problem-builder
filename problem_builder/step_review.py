@@ -166,6 +166,7 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
                 'partial': [],
                 'complete': True,
                 'max_attempts_reached': False,
+                'show_extended_review': False,
 
                 'is_example': True,
             }
