@@ -30,7 +30,7 @@
       <pb-tip values='["notwant"]'>Your loss!</pb-tip>
       {% if include_review_tips %}
       <pb-message type="on-assessment-review-question">
-        <html>Take another look at <a href="#">Lesson 2</a></html>
+        Take another look at <a href="#">Lesson 2</a>
       </pb-message>
       {% endif %}
     </pb-rating>
@@ -52,24 +52,21 @@
       <pb-tip values='["bugs"]'>Nah, there aren't any!</pb-tip>
       {% if include_review_tips %}
       <pb-message type="on-assessment-review-question">
-        <html>Take another look at <a href="#">Lesson 3</a></html>
+        Take another look at <a href="#">Lesson 3</a>
       </pb-message>
       {% endif %}
     </pb-mrq>
   </sb-step>
 
   <sb-review-step>
-    <pb-message type="completed">
-      <html>Block completed message text</html>
-    </pb-message>
-
-    <pb-message type="incomplete">
-      <html>Block incomplete message text</html>
-    </pb-message>
-
-    <pb-message type="on-review">
-      <html>On review message text</html>
-    </pb-message>
+    <sb-conditional-message score_condition="imperfect" num_attempts_condition="can_try_again">Not quite! You can try again, though.</sb-conditional-message>
+    <sb-conditional-message score_condition="imperfect" num_attempts_condition="cannot_try_again">Not quite!</sb-conditional-message>
+    <sb-conditional-message score_condition="perfect">Great job!</sb-conditional-message>
+    <sb-conditional-message num_attempts_condition="cannot_try_again">This message is shown when you run out of attempts.</sb-conditional-message>
+    <sb-review-score/>
+    {% if include_review_tips %}
+    <sb-review-per-question-feedback/>
+    {% endif %}
   </sb-review-step>
 
 </step-builder>

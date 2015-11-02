@@ -13,6 +13,14 @@
     </pb-mcq>
   </sb-step>
 
-  <sb-review-step></sb-review-step>
+  <sb-review-step>
+    {% if include_messages %}
+      <sb-conditional-message score_condition="imperfect" num_attempts_condition="can_try_again">Not quite! You can try again, though.</sb-conditional-message>
+      <sb-conditional-message score_condition="perfect">Great job!</sb-conditional-message>
+      <sb-conditional-message num_attempts_condition="cannot_try_again">Note: you have used all attempts. Continue to the next unit.</sb-conditional-message>
+    {% endif %}
+    <sb-review-score/>
+    <sb-review-per-question-feedback/>
+  </sb-review-step>
 
 </step-builder>

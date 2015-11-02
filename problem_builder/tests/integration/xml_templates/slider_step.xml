@@ -11,6 +11,8 @@
     </pb-mcq>
   </sb-step>
 
-  <sb-review-step/>
+  <sb-review-step>
+    <sb-review-score/>
+  </sb-review-step>
 
 </step-builder>

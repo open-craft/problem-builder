@@ -962,6 +962,9 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     @property
     def review_tips(self):
         """ Get review tips, shown for wrong answers. """
+        if self.max_attempts > 0 and self.num_attempts >= self.max_attempts:
+            # Review tips are only shown if the student is allowed to try again.
+            return []
         review_tips = []
         status_cache = dict()
         steps = self.steps
@@ -973,7 +976,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                 # The student got this wrong. Check if there is a review tip to show.
                 tip_html = question.get_review_tip()
                 if tip_html:
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                    if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
                         tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
                     review_tips.append(tip_html)
         return review_tips
@@ -1057,9 +1060,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             self.active_step = new_value
         elif new_value == len(self.step_ids):
             # The user just completed the final step.
-            # Update the number of attempts, if necessary:
-            if self.num_attempts < self.max_attempts:
-                self.num_attempts += 1
+            # Update the number of attempts:
+            self.num_attempts += 1
             # Do we need to render a review (summary of the user's score):
             if self.has_review_step:
                 self.active_step = -1

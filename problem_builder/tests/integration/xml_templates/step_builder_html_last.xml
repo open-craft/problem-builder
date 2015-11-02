@@ -21,6 +21,8 @@
     <html_demo>Bla bla bla</html_demo>
   </sb-step>
 
-  <sb-review-step />
+  <sb-review-step>
+    <html_demo>This is the review step.</html_demo>
+  </sb-review-step>
 
 </step-builder>
