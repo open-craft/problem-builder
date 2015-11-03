@@ -45,24 +45,6 @@ root folder:
 $ pip install -r requirements.txt
 ```
 
-Enabling in Studio
-------------------
-
-You can enable the Problem Builder and Step Builder XBlocks in Studio
-by modifying the advanced settings for your course:
-
-1. From the main page of a specific course, navigate to **Settings** ->
-   **Advanced Settings** from the top menu.
-2. Find the **Advanced Module List** setting.
-3. To enable Problem Builder for your course, add `"problem-builder"`
-   to the modules listed there.
-4. To enable Step Builder for your course, add `"step-builder"` to the
-   modules listed there.
-5. Click the **Save changes** button.
-
-Note that it is perfectly fine to enable both Problem Builder and Step
-Builder for your course -- the blocks do not interfere with each other.
-
 Usage
 -----
 
