@@ -216,6 +216,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
                 self.assert_clickable(controls.review_link)
                 self.assert_hidden(controls.try_again)
 
+    def assert_review_conditional_messages_equal(self, step_builder, messages_expected):
+        """ Test that the Conditional Messages seen on the review match messages_expected. """
+        messages = step_builder.find_elements_by_css_selector('.review-conditional-message')
+        self.assertListEqual([msg.text for msg in messages], messages_expected)
+
     def peek_at_review(self, step_builder, controls, expected, extended_feedback=False):
         self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), step_builder)
 
@@ -302,10 +307,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         )
 
         # Step should display 5 checkmarks (4 correct items for MRQ, plus step-level feedback about correctness)
-        correct_marks = step_builder.find_elements_by_css_selector('.checkmark-correct')
-        incorrect_marks = step_builder.find_elements_by_css_selector('.checkmark-incorrect')
-        self.assertEqual(len(correct_marks), 5)
+        correct_marks = step_builder.find_elements_by_css_selector('.sb-step .checkmark-correct')
+        incorrect_marks = step_builder.find_elements_by_css_selector('.sb-step .checkmark-incorrect')
+        overall_mark = step_builder.find_elements_by_css_selector('.submit .checkmark-correct')
+        self.assertEqual(len(correct_marks), 4)
         self.assertEqual(len(incorrect_marks), 0)
+        self.assertEqual(len(overall_mark), 1)
 
         item_feedbacks = [
             "This is something everyone has to like about this MRQ",
@@ -416,18 +423,20 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             self.assertIn("Question 1 and Question 3", step_builder.find_element_by_css_selector('.correct-list').text)
 
         if max_attempts == 1:
-            self.assert_message_text(step_builder, "On review message text")
+            self.assert_review_conditional_messages_equal(
+                step_builder,
+                ["Not quite!", "This message is shown when you run out of attempts."]
+            )
             self.assert_disabled(controls.try_again)
             return
 
-        self.assert_message_text(step_builder, "Block incomplete message text")
+        self.assert_review_conditional_messages_equal(step_builder, ["Not quite! You can try again, though."])
         self.assert_clickable(controls.try_again)
 
         # Try again
         controls.try_again.click()
 
         self.wait_until_hidden(controls.try_again)
-        self.assert_no_message_text(step_builder)
 
         # Step 1
         # Submit free-form answer, go to next step
@@ -464,14 +473,14 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             )
 
         if max_attempts == 2:
+            self.assert_review_conditional_messages_equal(
+                step_builder,
+                ["Not quite!", "This message is shown when you run out of attempts."]
+            )
             self.assert_disabled(controls.try_again)
         else:
+            self.assert_review_conditional_messages_equal(step_builder, ["Not quite! You can try again, though."])
             self.assert_clickable(controls.try_again)
-
-        if 1 <= max_attempts <= 2:
-            self.assert_message_text(step_builder, "On review message text")
-        else:
-            self.assert_message_text(step_builder, "Block incomplete message text")
 
         if extended_feedback:
             self.extended_feedback_checks(step_builder, controls, expected_results)
@@ -492,15 +501,21 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
 
         # The review tips for MCQ 2 and the MRQ should be shown:
-        review_tips = step_builder.find_element_by_css_selector('.assessment-review-tips')
+        review_tips_intro = step_builder.find_element_by_css_selector('.review-tips-intro')
+        self.assertEqual(
+            review_tips_intro.text,
+            "You might consider reviewing the following items before your next assessment attempt:"
+        )
+        review_tips = step_builder.find_element_by_css_selector('.review-tips-list')
         self.assertTrue(review_tips.is_displayed())
-        self.assertIn('You might consider reviewing the following items', review_tips.text)
-        self.assertIn('Take another look at', review_tips.text)
-        self.assertIn('Lesson 1', review_tips.text)
+        self.assertIn('Take another look at Lesson 1', review_tips.text)
         self.assertNotIn('Lesson 2', review_tips.text)  # This MCQ was correct
-        self.assertIn('Lesson 3', review_tips.text)
+        self.assertIn('Take another look at Lesson 3', review_tips.text)
         # If attempts remain and student got some answers wrong, show "incomplete" message
-        self.assert_message_text(step_builder, "Block incomplete message text")
+        self.assert_review_conditional_messages_equal(
+            step_builder,
+            ["Not quite! You can try again, though."]
+        )
 
         # Try again
         self.assert_clickable(controls.try_again)
@@ -516,9 +531,10 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.html_section(step_builder, controls)
         self.multiple_response_question(None, step_builder, controls, user_selection, CORRECT, last=True)
 
-        # If attempts remain and student got all answers right, show "complete" message
-        self.assert_message_text(step_builder, "Block completed message text")
-        self.assertFalse(review_tips.is_displayed())
+        # We expect to see this congratulatory message now:
+        self.assert_review_conditional_messages_equal(step_builder, ["Great job!"])
+        # And no review tips should be shown:
+        self.assertEqual(len(step_builder.find_elements_by_css_selector('.review-tips-intro')), 0)
 
         # Try again
         self.assert_clickable(controls.try_again)
@@ -534,16 +550,21 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
 
         # The review tips will not be shown because no attempts remain:
-        self.assertFalse(review_tips.is_displayed())
+        self.assertEqual(len(step_builder.find_elements_by_css_selector('.review-tips-intro')), 0)
 
-    def test_default_messages(self):
+    @data(True, False)
+    def test_conditional_messages(self, include_messages):
+        """
+        Test that conditional messages in the review step are visible or not, as appropriate.
+        """
         max_attempts = 3
         extended_feedback = False
         params = {
             "max_attempts": max_attempts,
             "extended_feedback": extended_feedback,
+            "include_messages": include_messages,
         }
-        step_builder, controls = self.load_assessment_scenario("step_builder_default_messages.xml", params)
+        step_builder, controls = self.load_assessment_scenario("step_builder_conditional_messages.xml", params)
 
         # First attempt: incomplete (second question wrong)
 
@@ -562,14 +583,16 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         }
         self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
 
-        # Should show default message for incomplete submission
-        self.assert_message_text(step_builder, "Not quite! You can try again, though.")
+        # Should show the following message for incomplete submission
+        self.assert_review_conditional_messages_equal(
+            step_builder,
+            ["Not quite! You can try again, though."] if include_messages else []
+        )
 
         # Try again
         controls.try_again.click()
 
         self.wait_until_hidden(controls.try_again)
-        self.assert_no_message_text(step_builder)
 
         # Second attempt: complete (both questions correct)
 
@@ -589,14 +612,16 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         }
         self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
 
-        # Should show default message for complete submission
-        self.assert_message_text(step_builder, "Great job!")
+        # Should show the following message for perfect ("complete") submission
+        self.assert_review_conditional_messages_equal(
+            step_builder,
+            ["Great job!"] if include_messages else []
+        )
 
         # Try again
         controls.try_again.click()
 
         self.wait_until_hidden(controls.try_again)
-        self.assert_no_message_text(step_builder)
 
         # Last attempt: complete (both questions correct)
 
@@ -617,8 +642,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         }
         self.peek_at_review(step_builder, controls, expected_results, extended_feedback=extended_feedback)
 
-        # Should show default message for review
-        self.assert_message_text(step_builder, "Note: you have used all attempts. Continue to the next unit.")
+        # Should show the following messages:
+        self.assert_review_conditional_messages_equal(
+            step_builder,
+            ["Great job!", "Note: you have used all attempts. Continue to the next unit."] if include_messages else []
+        )
 
     def answer_rating_question(self, step_number, question_number, step_builder, question, choice_name):
         question_text = self.question_text(question_number)

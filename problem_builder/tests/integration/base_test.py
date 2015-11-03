@@ -270,7 +270,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         states[result] += 1
 
         for name, count in states.items():
-            self.assertEqual(len(mentoring.find_elements_by_css_selector(".checkmark-{}".format(name))), count)
+            self.assertEqual(len(mentoring.find_elements_by_css_selector(".submit .checkmark-{}".format(name))), count)
 
 
 class GetChoices(object):

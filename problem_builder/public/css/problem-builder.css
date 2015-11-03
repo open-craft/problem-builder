@@ -234,6 +234,11 @@
     position: relative;
 }
 
+.assessment-question-block div[data-block-type=sb-step],
+.assessment-question-block div[data-block-type=sb-review-step] {
+    display: none; /* Hidden until revealed by JS */
+}
+
 .mentoring .sb-step .sb-step-message {
     position: absolute;
     top: 50%;

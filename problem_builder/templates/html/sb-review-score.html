@@ -1,0 +1,83 @@
+{% load i18n %}
+
+<div class="sb-review-score">
+  <div class="grade-result">
+    <h2>{% blocktrans %}You scored {{score}}% on this assessment. {% endblocktrans %}</h2>
+    {% if is_example %}
+      <p><em>{% trans "Note: This is an example score, to show how the review step will look." %}</em></p>
+    {% endif %}
+    <hr/>
+
+
+    <span class="assessment-checkmark icon-2x checkmark-correct icon-ok fa fa-check"></span>
+    <div class="results-section">
+      <p>
+        {% blocktrans count correct_answers=correct_answers %}
+          You answered 1 question correctly.
+        {% plural %}
+          You answered {{correct_answers}} questions correctly.
+        {% endblocktrans %}
+      </p>
+      {% if show_extended_review %}
+        <ul class="review-list correct-list">
+          {% for question in correct %}
+            <li>
+              {% if forloop.last and not forloop.first %} {% trans "and" %} {% endif %}
+              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans with number=question.number %}Question {{number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and correct|length > 2 %},{%endif%}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="clear"></div>
+
+
+    <span class="assessment-checkmark icon-2x checkmark-partially-correct icon-ok fa fa-check"></span>
+    <div class="results-section">
+      <p>
+        {% blocktrans count partially_correct_answers=partially_correct_answers %}
+          You answered 1 question partially correctly.
+        {% plural %}
+          You answered {{partially_correct_answers}} questions partially correctly.
+        {% endblocktrans %}
+      </p>
+      {% if show_extended_review %}
+        <ul class="review-list partial-list">
+          {% for question in partial %}
+            <li>
+              {% if forloop.last and not forloop.first %} {% trans "and" %} {% endif %}
+              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans with number=question.number %}Question {{number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and partial|length > 2 %},{%endif%}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="clear"></div>
+
+
+    <span class="assessment-checkmark icon-2x checkmark-incorrect icon-exclamation fa fa-exclamation"></span>
+    <div class="results-section">
+      <p>
+        {% blocktrans count incorrect_answers=incorrect_answers %}
+          You answered 1 question incorrectly.
+        {% plural %}
+          You answered {{incorrect_answers}} questions incorrectly.
+        {% endblocktrans %}
+      </p>
+      {% if show_extended_review %}
+        <ul class="review-list incorrect-list">
+          {% for question in incorrect %}
+            <li>
+              {% if forloop.last and not forloop.first %} {% trans "and" %} {% endif %}
+              <a href="#" class="step-link" data-step="{{ question.step }}">{% blocktrans  with number=question.number %}Question {{number}}{% endblocktrans %}</a>{% if forloop.revcounter > 1 and incorrect|length > 2 %},{%endif%}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+    <div class="clear"></div>
+
+
+    <hr/>
+  </div>
+</div>

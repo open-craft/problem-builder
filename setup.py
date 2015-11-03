@@ -43,7 +43,10 @@ BLOCKS = [
     'problem-builder = problem_builder.mentoring:MentoringBlock',
     'step-builder = problem_builder.mentoring:MentoringWithExplicitStepsBlock',
     'sb-step = problem_builder.step:MentoringStepBlock',
-    'sb-review-step = problem_builder.step:ReviewStepBlock',
+    'sb-review-step = problem_builder.step_review:ReviewStepBlock',
+    'sb-conditional-message = problem_builder.step_review:ConditionalMessageBlock',
+    'sb-review-score = problem_builder.step_review:ScoreSummaryBlock',
+    'sb-review-per-question-feedback = problem_builder.step_review:PerQuestionFeedbackBlock',
 
     'sb-plot = problem_builder.plot:PlotBlock',
     'sb-plot-overlay = problem_builder.plot:PlotOverlayBlock',

@@ -143,4 +143,4 @@ class SliderStepBlockTest(SliderBlockTestMixins, MentoringAssessmentBaseTest):
 
     def wait_for_init(self):
         """ Wait for the scenario to initialize """
-        self.wait_until_hidden(self.browser.find_element_by_css_selector('.assessment-review-tips'))
+        self.wait_until_visible(self.browser.find_elements_by_css_selector('.sb-step')[0])

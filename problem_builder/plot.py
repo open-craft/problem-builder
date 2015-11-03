@@ -357,8 +357,8 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         fragment = super(PlotBlock, self).author_edit_view(context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/plot_edit.js'))
-        fragment.initialize_js('PlotEdit')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
+        fragment.initialize_js('ProblemBuilderContainerEdit')
         return fragment
 
 

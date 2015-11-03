@@ -1,0 +1,9 @@
+{% load i18n %}
+
+{# Tips about specific questions the student got wrong. From pb-message[type=on-assessment-review-question] blocks #}
+<p class="review-tips-intro">{% trans "You might consider reviewing the following items before your next assessment attempt:" %}</p>
+<ul class="review-tips-list">
+    {% for tip in tips %}
+        <li>{{tip|safe}}</li>
+    {% endfor %}
+</ul>
