@@ -285,10 +285,6 @@ class ReviewStepBlock(
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        context['wrap_children'] = {
-            'head': u'<div class="mentoring">',
-            'tail': u'</div>'
-        }
         fragment = super(ReviewStepBlock, self).author_edit_view(context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))

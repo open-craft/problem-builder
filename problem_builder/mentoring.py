@@ -1124,10 +1124,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        context['wrap_children'] = {
-            'head': u'<div class="mentoring">',
-            'tail': u'</div>'
-        }
         fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
         fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
