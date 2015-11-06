@@ -501,7 +501,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
                 # The student got this wrong. Check if there is a review tip to show.
                 tip_html = child.get_review_tip()
                 if tip_html:
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                    if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
                         tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
                     review_tips.append(tip_html)
         return review_tips
