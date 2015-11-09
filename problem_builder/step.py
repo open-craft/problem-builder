@@ -212,10 +212,6 @@ class MentoringStepBlock(
         Add some HTML to the author view that allows authors to add child blocks.
         """
         local_context = dict(context)
-        local_context['wrap_children'] = {
-            'head': u'<div class="mentoring">',
-            'tail': u'</div>'
-        }
         local_context['author_edit_view'] = True
         fragment = super(MentoringStepBlock, self).author_edit_view(local_context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))

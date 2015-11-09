@@ -350,10 +350,6 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        context['wrap_children'] = {
-            'head': u'<div class="mentoring">',
-            'tail': u'</div>'
-        }
         fragment = super(PlotBlock, self).author_edit_view(context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))

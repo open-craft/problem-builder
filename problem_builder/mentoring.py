@@ -501,7 +501,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
                 # The student got this wrong. Check if there is a review tip to show.
                 tip_html = child.get_review_tip()
                 if tip_html:
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                    if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
                         tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
                     review_tips.append(tip_html)
         return review_tips
@@ -1124,10 +1124,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        context['wrap_children'] = {
-            'head': u'<div class="mentoring">',
-            'tail': u'</div>'
-        }
         fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
         fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name

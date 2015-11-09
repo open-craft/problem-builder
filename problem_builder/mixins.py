@@ -106,7 +106,7 @@ class MessageParentMixin(object):
                 child = self.runtime.get_block(child_id)
                 if child.type == message_type:
                     content = child.content
-                    if hasattr(self.runtime, 'replace_jump_to_id_urls'):
+                    if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
                         content = self.runtime.replace_jump_to_id_urls(content)
                     return content
         if or_default:

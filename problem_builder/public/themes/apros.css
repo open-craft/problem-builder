@@ -17,7 +17,12 @@
     text-transform: uppercase;
 }
 
-.themed-xblock.mentoring .assessment-review-tips .review-tips-list li {
+.themed-xblock.mentoring .sb-review-score {
+    margin-left: 40px;
+    margin-top: 15px;
+}
+
+.themed-xblock.mentoring .review-tips-list li {
     margin-left: 1.8em;
     padding-left: 0;
 }
