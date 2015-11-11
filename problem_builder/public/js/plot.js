@@ -57,11 +57,13 @@ function PlotBlock(runtime, element) {
     // Create axes
     var xAxis = d3.svg.axis()
         .scale(xScale)
-        .orient("bottom");
+        .orient("bottom")
+        .tickValues([]);
 
     var yAxis = d3.svg.axis()
         .scale(yScale)
-        .orient("left");
+        .orient("left")
+        .tickValues([]);
 
     // Create SVG group elements for axes and call the xAxis and yAxis functions
     var xAxisGroup = svgContainer.append("g")
