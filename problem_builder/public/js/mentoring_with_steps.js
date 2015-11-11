@@ -168,11 +168,14 @@ function MentoringWithStepsBlock(runtime, element) {
                 if (step.hasQuestion()) {
                     reviewButtonDOM.attr('disabled', 'disabled');
                 } else {
-                    reviewButtonDOM.removeAttr('disabled')
+                    reviewButtonDOM.removeAttr('disabled');
                 }
                 reviewButtonDOM.show();
             }
         }
+
+        // Scroll to top of this block
+        scrollIntoView();
     }
 
     function showReviewStep() {
@@ -189,7 +192,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function hideReviewStep() {
-        reviewStepDOM.hide()
+        reviewStepDOM.hide();
     }
 
     function getStepToReview(event) {
@@ -225,6 +228,9 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewLinkDOM.show();
 
         getResults();
+
+        // Scroll to top of this block
+        scrollIntoView();
     }
 
     function showAttempts() {
@@ -323,6 +329,9 @@ function MentoringWithStepsBlock(runtime, element) {
         nextDOM.off();
         nextDOM.on('click', reviewNextStep);
         reviewLinkDOM.hide();
+
+        // Scroll to top of this block
+        scrollIntoView();
     }
 
     function reviewNextStep() {
@@ -361,6 +370,12 @@ function MentoringWithStepsBlock(runtime, element) {
         if (runtime.notify) {
             runtime.notify(name, data);
         }
+    }
+
+    function scrollIntoView() {
+        var rootBlock = $(element),
+            rootBlockOffset = rootBlock.offset().top;
+        $('html, body').animate({ scrollTop: rootBlockOffset }, 500);
     }
 
     function initClickHandlers() {
