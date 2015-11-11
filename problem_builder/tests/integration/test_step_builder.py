@@ -659,14 +659,17 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         )
         choices.select(choice_name)
 
-    def submit_and_go_to_next_step(self, controls, last=False):
+    def submit_and_go_to_next_step(self, controls, last=False, no_questions=False):
         controls.submit.click()
         self.wait_until_clickable(controls.next_question)
         controls.next_question.click()
         if last:
             self.wait_until_hidden(controls.next_question)
         else:
-            self.wait_until_disabled(controls.next_question)
+            if no_questions:
+                self.wait_until_hidden(controls.submit)
+            else:
+                self.wait_until_disabled(controls.next_question)
 
     def plot_controls(self, step_builder):
         class Namespace(object):
@@ -779,9 +782,19 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         plot_controls.quadrants_button.click()
         self.check_quadrant_labels(step_builder, plot_controls, hidden=False)
 
+    def wait_for_multiple_elements(self, step_builder, selector, expected_number_of_elements):
+        for second in range(self.timeout):  # pylint: disable=unused-variable
+            elements = step_builder.find_elements_by_css_selector(selector)
+            if not len(elements) == expected_number_of_elements:
+                time.sleep(1)
+            else:
+                return
+        self.fail("{} elements not present after {} seconds. Selector: '{}'".format(
+            expected_number_of_elements, self.timeout, selector
+        ))
+
     def check_overlays(self, step_builder, total_num_points, overlays):
-        points = step_builder.find_elements_by_css_selector("circle")
-        self.assertEquals(len(points), total_num_points)
+        self.wait_for_multiple_elements(step_builder, "circle", total_num_points)
 
         for overlay in overlays:
             # Check if correct number of points is present
@@ -1322,6 +1335,10 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         )
         self.assertAlmostEqual(scroll_top, step_builder_offset, delta=1)
 
+    def scroll_down(self):
+        self.browser.execute_script("$(window).scrollTop(50)")
+        time.sleep(1)
+
     def test_scroll_into_view(self):
         step_builder, controls = self.load_assessment_scenario("step_builder_long_steps.xml", {})
         # First step
@@ -1333,15 +1350,19 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.provide_freeform_answer(1, 4, step_builder, "This is the answer")
         self.provide_freeform_answer(1, 5, step_builder, "This is the answer")
         # - Submit and go to next step
-        self.submit_and_go_to_next_step(controls, last=True)
+        self.submit_and_go_to_next_step(controls, no_questions=True)
+        # Second step
+        self.check_viewport()
+        self.scroll_down()
+        self.html_section(step_builder, controls)
         # Last step
         self.check_viewport()
         # - Answer questions
-        self.provide_freeform_answer(2, 1, step_builder, "This is the answer")
-        self.provide_freeform_answer(2, 2, step_builder, "This is the answer")
-        self.provide_freeform_answer(2, 3, step_builder, "This is the answer")
-        self.provide_freeform_answer(2, 4, step_builder, "This is the answer")
-        self.provide_freeform_answer(2, 5, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 1, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 2, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 3, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 4, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 5, step_builder, "This is the answer")
         # - Submit and go to review step
         self.submit_and_go_to_review_step(step_builder, controls, result=CORRECT)
         # Review step
@@ -1350,21 +1371,31 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         # - Review questions belonging to first step
         question_links[2].click()
         self.check_viewport()
+        self.scroll_down()
         # - Jump to review step
         controls.review_link.click()
         self.check_viewport()
+        self.scroll_down()
         # - Review questions belonging to last step
         question_links[7].click()
         self.check_viewport()
+        self.scroll_down()
         # - Jump to review step
         controls.review_link.click()
         self.check_viewport()
+        self.scroll_down()
         # - Review questions belonging to first step
         question_links[2].click()
         self.check_viewport()
+        self.scroll_down()
+        # - Navigate to second step
+        controls.next_question.click()
+        self.check_viewport()
+        self.scroll_down()
         # - Review questions belonging to last step
         controls.next_question.click()
         self.check_viewport()
+        self.scroll_down()
         # - Navigate to review step
         controls.review.click()
         self.check_viewport()

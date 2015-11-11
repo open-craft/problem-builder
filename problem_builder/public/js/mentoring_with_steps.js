@@ -158,19 +158,47 @@ function MentoringWithStepsBlock(runtime, element) {
             showActiveStep();
             validateXBlock();
             updateNextLabel();
+
+            // Reinstate default event handlers
+            nextDOM.on('click', updateDisplay);
+            reviewButtonDOM.on('click', showGrade);
+
             var step = steps[activeStep];
-            if (step.hasQuestion()) {
+            if (step.hasQuestion()) {  // Step includes one or more questions
                 nextDOM.attr('disabled', 'disabled');
-            } else {
-                nextDOM.removeAttr('disabled');
-            }
-            if (isLastStep() && hasAReviewStep) {
-                if (step.hasQuestion()) {
-                    reviewButtonDOM.attr('disabled', 'disabled');
-                } else {
-                    reviewButtonDOM.removeAttr('disabled');
+                submitDOM.show();
+                if (isLastStep()) {  // Step is last step
+                    nextDOM.hide();
+                    if (hasAReviewStep) {  // Step Builder includes review step
+                        reviewButtonDOM.attr('disabled', 'disabled');
+                        reviewButtonDOM.show();
+                    }
                 }
-                reviewButtonDOM.show();
+            } else {  // Step does not include any questions
+                nextDOM.removeAttr('disabled');
+                submitDOM.hide();
+                if (isLastStep()) {  // Step is last step
+                    // Remove default event handler from button that displays review.
+                    // This is necessary to make sure updateDisplay is not called twice
+                    // when user clicks this button next;
+                    // "submit" already does the right thing w/r/t updating the display,
+                    // and calling updateDisplay twice causes issues with scrolling behavior:
+                    reviewButtonDOM.off();
+                    reviewButtonDOM.one('click', submit);
+                    reviewButtonDOM.removeAttr('disabled');
+                    nextDOM.hide();
+                    if (hasAReviewStep) {  // Step Builder includes review step
+                        reviewButtonDOM.show();
+                    }
+                } else {  // Step is not last step
+                    // Remove default event handler from button that displays next step.
+                    // This is necessary to make sure updateDisplay is not called twice
+                    // when user clicks this button next;
+                    // "submit" already does the right thing w/r/t updating the display,
+                    // and calling updateDisplay twice causes issues with scrolling behavior:
+                    nextDOM.off();
+                    nextDOM.one('click', submit);
+                }
             }
         }
 
@@ -265,20 +293,6 @@ function MentoringWithStepsBlock(runtime, element) {
             submitDOM.attr('disabled', 'disabled');
         } else {
             submitDOM.removeAttr('disabled');
-        }
-        if (isLastStep() && step.hasQuestion()) {
-            nextDOM.hide();
-        } else if (isLastStep()) {
-            reviewButtonDOM.one('click', submit);
-            reviewButtonDOM.removeAttr('disabled');
-            nextDOM.hide()
-        } else if (!step.hasQuestion()) {
-            nextDOM.one('click', submit);
-        }
-        if (step.hasQuestion()) {
-            submitDOM.show();
-        } else {
-            submitDOM.hide();
         }
     }
 
