@@ -1,3 +1,5 @@
+import time
+
 from mock import patch
 from ddt import ddt, data
 
@@ -1288,3 +1290,81 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         # In that case, submitting an answer and will fail,
         # as it requires the corresponding question to be visible:
         self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
+
+    def provide_freeform_answer(self, step_number, question_number, step_builder, text_input):
+        steps = step_builder.find_elements_by_css_selector('div[data-block-type="sb-step"]')
+        current_step = steps[step_number-1]
+        freeform_questions = current_step.find_elements_by_css_selector('div[data-block-type="pb-answer"]')
+        current_question = freeform_questions[question_number-1]
+
+        question_text = self.question_text(question_number)
+        self.wait_until_text_in(question_text, current_question)
+        self.assertIn("What is your goal?", current_question.text)
+
+        textarea = current_question.find_element_by_css_selector("textarea")
+        textarea.clear()
+        textarea.send_keys(text_input)
+        self.assertEquals(textarea.get_attribute("value"), text_input)
+
+    def submit_and_go_to_review_step(self, step_builder, controls, result):
+        controls.submit.click()
+
+        self.do_submit_wait(controls, last=True)
+        self._assert_checkmark(step_builder, result)
+
+        self.do_post(controls, last=True)
+
+    def check_viewport(self):
+        time.sleep(2)
+        scroll_top = int(self.browser.execute_script("return $(window).scrollTop()"))
+        step_builder_offset = int(self.browser.execute_script(
+            "return $('div[data-block-type=\"step-builder\"]').offset().top")
+        )
+        self.assertAlmostEqual(scroll_top, step_builder_offset, delta=1)
+
+    def test_scroll_into_view(self):
+        step_builder, controls = self.load_assessment_scenario("step_builder_long_steps.xml", {})
+        # First step
+        self.check_viewport()
+        # - Answer questions
+        self.provide_freeform_answer(1, 1, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 2, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 3, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 4, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 5, step_builder, "This is the answer")
+        # - Submit and go to next step
+        self.submit_and_go_to_next_step(controls, last=True)
+        # Last step
+        self.check_viewport()
+        # - Answer questions
+        self.provide_freeform_answer(2, 1, step_builder, "This is the answer")
+        self.provide_freeform_answer(2, 2, step_builder, "This is the answer")
+        self.provide_freeform_answer(2, 3, step_builder, "This is the answer")
+        self.provide_freeform_answer(2, 4, step_builder, "This is the answer")
+        self.provide_freeform_answer(2, 5, step_builder, "This is the answer")
+        # - Submit and go to review step
+        self.submit_and_go_to_review_step(step_builder, controls, result=CORRECT)
+        # Review step
+        self.check_viewport()
+        question_links = step_builder.find_elements_by_css_selector('.correct-list li a')
+        # - Review questions belonging to first step
+        question_links[2].click()
+        self.check_viewport()
+        # - Jump to review step
+        controls.review_link.click()
+        self.check_viewport()
+        # - Review questions belonging to last step
+        question_links[7].click()
+        self.check_viewport()
+        # - Jump to review step
+        controls.review_link.click()
+        self.check_viewport()
+        # - Review questions belonging to first step
+        question_links[2].click()
+        self.check_viewport()
+        # - Review questions belonging to last step
+        controls.next_question.click()
+        self.check_viewport()
+        # - Navigate to review step
+        controls.review.click()
+        self.check_viewport()
