@@ -249,3 +249,14 @@
     background-color: white;
     box-shadow: 0 10px 20px #5C5C5C;
 }
+
+.mentoring .copyright {
+    color: #AAA;
+    clear: both;
+    font-size: 10px;
+    margin: 3em 0;
+}
+
+.mentoring .copyright a {
+    color: #69C0E8;
+}

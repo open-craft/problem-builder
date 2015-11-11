@@ -26,3 +26,7 @@
     margin-left: 1.8em;
     padding-left: 0;
 }
+
+.themed-xblock.mentoring .copyright {
+    display: none;
+}
