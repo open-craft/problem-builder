@@ -270,8 +270,8 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showActiveStep() {
         var step = steps[activeStep];
-        step.updatePlots();
         $(step.element).show();
+        step.updateChildren();
     }
 
     function onChange() {
