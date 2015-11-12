@@ -387,9 +387,16 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function scrollIntoView() {
+        // This function can be called multiple times per step initialization.
+        // We must make sure that only one animation is queued or running at any given time,
+        // that's why we use a special animation queue and make sure to .stop() any running/queued
+        // animations before enqueueing a new one.
         var rootBlock = $(element),
-            rootBlockOffset = rootBlock.offset().top;
-        $('html, body').animate({ scrollTop: rootBlockOffset }, 500);
+            rootBlockOffset = rootBlock.offset().top,
+            queue = 'sb-scroll',
+            props = {scrollTop: rootBlockOffset},
+            opts = {duration: 500, queue: queue};
+        $('html, body').stop(queue, true).animate(props, opts).dequeue(queue);
     }
 
     function initClickHandlers() {
