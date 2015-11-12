@@ -181,7 +181,7 @@ function MentoringWithStepsBlock(runtime, element) {
                     // Remove default event handler from button that displays review.
                     // This is necessary to make sure updateDisplay is not called twice
                     // when user clicks this button next;
-                    // "submit" already does the right thing w/r/t updating the display,
+                    // "submit" already does the right thing with respect to updating the display,
                     // and calling updateDisplay twice causes issues with scrolling behavior:
                     reviewButtonDOM.off();
                     reviewButtonDOM.one('click', submit);
@@ -194,7 +194,7 @@ function MentoringWithStepsBlock(runtime, element) {
                     // Remove default event handler from button that displays next step.
                     // This is necessary to make sure updateDisplay is not called twice
                     // when user clicks this button next;
-                    // "submit" already does the right thing w/r/t updating the display,
+                    // "submit" already does the right thing with respect to updating the display,
                     // and calling updateDisplay twice causes issues with scrolling behavior:
                     nextDOM.off();
                     nextDOM.one('click', submit);
