@@ -2,6 +2,7 @@ import time
 
 from mock import patch
 from ddt import ddt, data
+from selenium.webdriver.support.ui import WebDriverWait
 
 from workbench.runtime import WorkbenchRuntime
 from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
@@ -783,15 +784,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.check_quadrant_labels(step_builder, plot_controls, hidden=False)
 
     def wait_for_multiple_elements(self, step_builder, selector, expected_number_of_elements):
-        for second in range(self.timeout):  # pylint: disable=unused-variable
-            elements = step_builder.find_elements_by_css_selector(selector)
-            if not len(elements) == expected_number_of_elements:
-                time.sleep(1)
-            else:
-                return
-        self.fail("{} elements not present after {} seconds. Selector: '{}'".format(
-            expected_number_of_elements, self.timeout, selector
-        ))
+        def wait_for_elements(container):
+            elements = container.find_elements_by_css_selector(selector)
+            return len(elements) == expected_number_of_elements
+
+        wait = WebDriverWait(step_builder, self.timeout)
+        wait.until(wait_for_elements)
 
     def check_overlays(self, step_builder, total_num_points, overlays):
         self.wait_for_multiple_elements(step_builder, "circle", total_num_points)
@@ -1328,18 +1326,23 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.do_post(controls, last=True)
 
     def check_viewport(self):
-        time.sleep(2)
-        scroll_top = int(self.browser.execute_script("return $(window).scrollTop()"))
         step_builder_offset = int(self.browser.execute_script(
             "return $('div[data-block-type=\"step-builder\"]').offset().top")
         )
-        self.assertAlmostEqual(scroll_top, step_builder_offset, delta=1)
+
+        def is_scrolled_to_top(driver):
+            scroll_top = int(driver.execute_script("return $(window).scrollTop()"))
+            return abs(scroll_top - step_builder_offset) < 1
+
+        wait = WebDriverWait(self.browser, 5)
+        wait.until(is_scrolled_to_top)
 
     def scroll_down(self):
         self.browser.execute_script("$(window).scrollTop(50)")
-        time.sleep(1)
 
     def test_scroll_into_view(self):
+        # Make window small, so that we have to scroll.
+        self.browser.set_window_size(400, 400)
         step_builder, controls = self.load_assessment_scenario("step_builder_long_steps.xml", {})
         # First step
         self.check_viewport()
