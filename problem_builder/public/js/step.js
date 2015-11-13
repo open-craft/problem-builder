@@ -1,14 +1,6 @@
 function MentoringStepBlock(runtime, element) {
 
     var children = runtime.children(element);
-    var plots = [];
-    for (var i in children) {
-        var child = children[i];
-        var blockType = $(child.element).data('block-type');
-        if (blockType === 'sb-plot') {
-            plots.push(child);
-        }
-    }
 
     var submitXHR, resultsXHR,
         message = $(element).find('.sb-step-message');
@@ -19,6 +11,14 @@ function MentoringStepBlock(runtime, element) {
         } else {
             return null;
         }
+    }
+
+    function updateVideo(video) {
+        video.resizer.align();
+    }
+
+    function updatePlot(plot) {
+        plot.update();
     }
 
     return {
@@ -103,13 +103,18 @@ function MentoringStepBlock(runtime, element) {
             return $('.sb-step', element).data('has-question')
         },
 
-        updatePlots: function() {
-            if (plots) {
-                for (var i in plots) {
-                    var plot = plots[i];
-                    plot.update();
+        updateChildren: function() {
+            children.forEach(function(child) {
+                var type = $(child.element).data('block-type');
+                switch (type) {
+                case 'video':
+                    updateVideo(child);
+                    break;
+                case 'sb-plot':
+                    updatePlot(child);
+                    break;
                 }
-            }
+            });
         }
 
     };

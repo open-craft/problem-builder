@@ -1,5 +1,8 @@
+import time
+
 from mock import patch
 from ddt import ddt, data
+from selenium.webdriver.support.ui import WebDriverWait
 
 from workbench.runtime import WorkbenchRuntime
 from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
@@ -657,14 +660,17 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         )
         choices.select(choice_name)
 
-    def submit_and_go_to_next_step(self, controls, last=False):
+    def submit_and_go_to_next_step(self, controls, last=False, no_questions=False):
         controls.submit.click()
         self.wait_until_clickable(controls.next_question)
         controls.next_question.click()
         if last:
             self.wait_until_hidden(controls.next_question)
         else:
-            self.wait_until_disabled(controls.next_question)
+            if no_questions:
+                self.wait_until_hidden(controls.submit)
+            else:
+                self.wait_until_disabled(controls.next_question)
 
     def plot_controls(self, step_builder):
         class Namespace(object):
@@ -777,9 +783,16 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         plot_controls.quadrants_button.click()
         self.check_quadrant_labels(step_builder, plot_controls, hidden=False)
 
+    def wait_for_multiple_elements(self, step_builder, selector, expected_number_of_elements):
+        def wait_for_elements(container):
+            elements = container.find_elements_by_css_selector(selector)
+            return len(elements) == expected_number_of_elements
+
+        wait = WebDriverWait(step_builder, self.timeout)
+        wait.until(wait_for_elements)
+
     def check_overlays(self, step_builder, total_num_points, overlays):
-        points = step_builder.find_elements_by_css_selector("circle")
-        self.assertEquals(len(points), total_num_points)
+        self.wait_for_multiple_elements(step_builder, "circle", total_num_points)
 
         for overlay in overlays:
             # Check if correct number of points is present
@@ -1288,3 +1301,104 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         # In that case, submitting an answer and will fail,
         # as it requires the corresponding question to be visible:
         self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
+
+    def provide_freeform_answer(self, step_number, question_number, step_builder, text_input):
+        steps = step_builder.find_elements_by_css_selector('div[data-block-type="sb-step"]')
+        current_step = steps[step_number-1]
+        freeform_questions = current_step.find_elements_by_css_selector('div[data-block-type="pb-answer"]')
+        current_question = freeform_questions[question_number-1]
+
+        question_text = self.question_text(question_number)
+        self.wait_until_text_in(question_text, current_question)
+        self.assertIn("What is your goal?", current_question.text)
+
+        textarea = current_question.find_element_by_css_selector("textarea")
+        textarea.clear()
+        textarea.send_keys(text_input)
+        self.assertEquals(textarea.get_attribute("value"), text_input)
+
+    def submit_and_go_to_review_step(self, step_builder, controls, result):
+        controls.submit.click()
+
+        self.do_submit_wait(controls, last=True)
+        self._assert_checkmark(step_builder, result)
+
+        self.do_post(controls, last=True)
+
+    def check_viewport(self):
+        step_builder_offset = int(self.browser.execute_script(
+            "return $('div[data-block-type=\"step-builder\"]').offset().top")
+        )
+
+        def is_scrolled_to_top(driver):
+            scroll_top = int(driver.execute_script("return $(window).scrollTop()"))
+            return abs(scroll_top - step_builder_offset) < 1
+
+        wait = WebDriverWait(self.browser, 5)
+        wait.until(is_scrolled_to_top)
+
+    def scroll_down(self):
+        self.browser.execute_script("$(window).scrollTop(50)")
+
+    def test_scroll_into_view(self):
+        # Make window small, so that we have to scroll.
+        self.browser.set_window_size(400, 400)
+        step_builder, controls = self.load_assessment_scenario("step_builder_long_steps.xml", {})
+        # First step
+        self.check_viewport()
+        # - Answer questions
+        self.provide_freeform_answer(1, 1, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 2, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 3, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 4, step_builder, "This is the answer")
+        self.provide_freeform_answer(1, 5, step_builder, "This is the answer")
+        # - Submit and go to next step
+        self.submit_and_go_to_next_step(controls, no_questions=True)
+        # Second step
+        self.check_viewport()
+        self.scroll_down()
+        self.html_section(step_builder, controls)
+        # Last step
+        self.check_viewport()
+        # - Answer questions
+        self.provide_freeform_answer(3, 1, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 2, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 3, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 4, step_builder, "This is the answer")
+        self.provide_freeform_answer(3, 5, step_builder, "This is the answer")
+        # - Submit and go to review step
+        self.submit_and_go_to_review_step(step_builder, controls, result=CORRECT)
+        # Review step
+        self.check_viewport()
+        question_links = step_builder.find_elements_by_css_selector('.correct-list li a')
+        # - Review questions belonging to first step
+        question_links[2].click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Jump to review step
+        controls.review_link.click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Review questions belonging to last step
+        question_links[7].click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Jump to review step
+        controls.review_link.click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Review questions belonging to first step
+        question_links[2].click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Navigate to second step
+        controls.next_question.click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Review questions belonging to last step
+        controls.next_question.click()
+        self.check_viewport()
+        self.scroll_down()
+        # - Navigate to review step
+        controls.review.click()
+        self.check_viewport()
