@@ -1,5 +1,3 @@
-import time
-
 from mock import patch
 from ddt import ddt, data
 from selenium.webdriver.support.ui import WebDriverWait
@@ -1332,7 +1330,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         def is_scrolled_to_top(driver):
             scroll_top = int(driver.execute_script("return $(window).scrollTop()"))
-            return abs(scroll_top - step_builder_offset) < 1
+            tolerance = 2
+            return abs(scroll_top - step_builder_offset) <= tolerance
 
         wait = WebDriverWait(self.browser, 5)
         wait.until(is_scrolled_to_top)
@@ -1342,7 +1341,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def test_scroll_into_view(self):
         # Make window small, so that we have to scroll.
-        self.browser.set_window_size(400, 400)
+        self.browser.set_window_size(600, 400)
         step_builder, controls = self.load_assessment_scenario("step_builder_long_steps.xml", {})
         # First step
         self.check_viewport()
