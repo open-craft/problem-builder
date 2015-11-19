@@ -2,6 +2,7 @@
 If an author makes changes to the block after students have started using it, will bad things
 happen?
 """
+import time
 from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest
 import re
 
@@ -20,6 +21,12 @@ class AuthorChangesTest(ProblemBuilderBaseTest):
         [Re]load the page with our scenario
         """
         self.pb_block_dom = self.go_to_view("student_view")
+        # At this point the ajax request that initializes the Mentoring block
+        # might be still in progres. Race conditions resulting in duplicate field data
+        # can occur if we try to reload the block at the same time.
+        # Sleep 200ms to wait for the ajax request to finish, unfortunately I wasn't
+        # able to find a better way.
+        time.sleep(0.2)
         self.reload_pb_block()
 
     def reload_pb_block(self):
