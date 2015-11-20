@@ -1,0 +1,24 @@
+machine:
+  python:
+    version: 2.7.10
+dependencies:
+  override:
+    - "pip install -U pip wheel setuptools"
+    - "pip install -e git://github.com/edx/xblock-sdk.git@22c1b2f173919bef22f2d9d9295ec5396d02dffd#egg=xblock-sdk"
+    - "pip install -r requirements.txt"
+    - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/base.txt"
+    - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/test.txt"
+    - "pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-2.0.tar.gz"
+    - "pip install -r test_requirements.txt"
+    - "mkdir var"
+test:
+  override:
+    - "if [ $CIRCLE_NODE_INDEX = '0' ]; then pep8 problem_builder --max-line-length=120; fi":
+        parallel: true
+    - "if [ $CIRCLE_NODE_INDEX = '1' ]; then pylint problem_builder --disable=all --enable=function-redefined,undefined-variable,unused-variable; fi":
+        parallel: true
+    - "python run_tests.py":
+        parallel: true
+        files:
+          - "problem_builder/v1/tests/**/*.py"
+          - "problem_builder/tests/**/*.py"

@@ -1,7 +1,7 @@
 Problem Builder and Step Builder
 --------------------------------
 
-[![Build Status](https://travis-ci.org/open-craft/problem-builder.svg?branch=master)](https://travis-ci.org/open-craft/problem-builder)
+[![Circle CI](https://circleci.com/gh/open-craft/problem-builder.svg?style=svg)](https://circleci.com/gh/open-craft/problem-builder)
 
 This repository provides two XBlocks: Problem Builder and Step Builder.
 
