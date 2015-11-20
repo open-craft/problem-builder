@@ -23,6 +23,7 @@ def patch_broken_pipe_error():
     removed once the workbench upgrades to Django >= 1.8.
     http://stackoverflow.com/a/22618740/51397"""
 
+    import socket
     from SocketServer import BaseServer
     from wsgiref import handlers
 
@@ -30,8 +31,10 @@ def patch_broken_pipe_error():
     log_exception = handlers.BaseHandler.log_exception
 
     def is_broken_pipe_error():
-        type, err, tb = sys.exc_info()
-        return repr(err) == "error(32, 'Broken pipe')"
+        exc_type, exc_value = sys.exc_info()[:2]
+        if issubclass(exc_type, socket.error) and exc_value.args[0] == 32:
+            return True
+        return False
 
     def my_handle_error(self, request, client_address):
         if not is_broken_pipe_error():
