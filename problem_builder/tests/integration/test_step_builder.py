@@ -1,5 +1,6 @@
 from mock import patch
 from ddt import ddt, data
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
 from workbench.runtime import WorkbenchRuntime
@@ -242,27 +243,37 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             self.assertIn("You answered {incorrect} questions incorrectly.".format(**expected), step_builder.text)
 
         # Check presence of review links
-        # - If unlimited attempts: no review links
+        # - If unlimited attempts: no review links, no explanation
         # - If limited attempts:
-        #   - If not max attempts reached: no review links
+        #   - If not max attempts reached: no review links, no explanation
         #   - If max attempts reached:
-        #     - If extended feedback: review links available
-        #     - If not extended feedback: review links
+        #     - If extended feedback: review links, explanation
+        #     - If not extended feedback: no review links, no explanation
 
         review_list = step_builder.find_elements_by_css_selector('.review-list')
+        try:
+            step_builder.find_element_by_css_selector('.review-links-explanation')
+        except NoSuchElementException:
+            review_links_explained = False
+        else:
+            review_links_explained = True
 
         if expected["max_attempts"] == 0:
             self.assertFalse(review_list)
+            self.assertFalse(review_links_explained)
         else:
             if expected["num_attempts"] < expected["max_attempts"]:
                 self.assertFalse(review_list)
+                self.assertFalse(review_links_explained)
             elif expected["num_attempts"] == expected["max_attempts"]:
                 if extended_feedback:
                     for correctness in ['correct', 'incorrect', 'partial']:
                         review_items = step_builder.find_elements_by_css_selector('.%s-list li' % correctness)
                         self.assertEqual(len(review_items), expected[correctness])
+                    self.assertTrue(review_links_explained)
                 else:
                     self.assertFalse(review_list)
+                    self.assertFalse(review_links_explained)
 
         # Check if info about number of attempts used is correct
         if expected["max_attempts"] == 1:
