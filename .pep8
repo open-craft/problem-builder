@@ -1,0 +1,2 @@
+[pep8]
+exclude=problem_builder/migrations

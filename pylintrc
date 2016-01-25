@@ -1,6 +1,8 @@
+[MASTER]
+ignore=problem_builder/migrations
+
 [REPORTS]
 reports=no
-include-ids=yes
 
 [FORMAT]
 max-line-length=120
