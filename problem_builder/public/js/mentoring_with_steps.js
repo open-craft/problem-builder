@@ -160,6 +160,7 @@ function MentoringWithStepsBlock(runtime, element) {
             updateNextLabel();
 
             // Reinstate default event handlers
+            nextDOM.off('click');
             nextDOM.on('click', updateDisplay);
             reviewButtonDOM.on('click', showGrade);
 
