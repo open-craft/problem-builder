@@ -131,35 +131,27 @@ function MCQBlock(runtime, element) {
 
             display_message(result.message, messageView, options.checkmark);
 
-            var choiceInputs = $('.choice-selector input', element);
-            $.each(choiceInputs, function(index, choiceInput) {
-                var choiceInputDOM = $(choiceInput);
-                var choiceDOM = choiceInputDOM.closest('.choice');
-                var choiceResultDOM = $('.choice-result', choiceDOM);
-                var choiceTipsDOM = $('.choice-tips', choiceDOM);
+            var choiceInputDOM = $('.choice-selector input[value="'+ result.submission +'"]');
+            var choiceDOM = choiceInputDOM.closest('.choice');
+            var choiceResultDOM = $('.choice-result', choiceDOM);
+            var choiceTipsDOM = $('.choice-tips', choiceDOM);
 
-                if (choiceInputDOM.prop('checked')) {  // We're showing previous answers,
-                                                       // so go ahead and display results as well
-                    if (result.status === "correct" && choiceInputDOM.val() === result.submission) {
-                        choiceDOM.addClass('correct');
-                        choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
-                    }
-                    else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {
-                        choiceDOM.addClass('incorrect');
-                        choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
-                    }
-
-                    if (result.tips && choiceInputDOM.val() === result.submission) {
-                        mentoring.setContent(choiceTipsDOM, result.tips);
-                    }
-
-                    choiceResultDOM.off('click').on('click', function() {
-                        if (choiceTipsDOM.html() !== '') {
-                            messageView.showMessage(choiceTipsDOM);
-                        }
-                    });
+            // We're showing previous answers, so go ahead and display results as well
+            if (choiceInputDOM.prop('checked')) {
+                if (result.status === "correct") {
+                    choiceInputDOM.addClass('correct');
+                    choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
+                } else {
+                    choiceDOM.addClass('incorrect');
+                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
-            });
+
+                if (result.tips) {
+                    mentoring.setContent(choiceTipsDOM, result.tips);
+                    messageView.showMessage(choiceTipsDOM);
+                }
+            }
+
 
             if (_.isNull(result.submission)) {
                 messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
