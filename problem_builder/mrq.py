@@ -22,7 +22,7 @@
 
 import logging
 
-from xblock.fields import List, Scope, Boolean
+from xblock.fields import List, Scope, Boolean, String
 from xblock.validation import ValidationMessage
 from .questionnaire import QuestionnaireAbstractBlock
 from xblockutils.resources import ResourceLoader
@@ -70,6 +70,12 @@ class MRQBlock(QuestionnaireAbstractBlock):
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
         default=[],
+    )
+    message = String(
+        display_name=_("Message"),
+        help=_("General feedback provided when submitting"),
+        scope=Scope.content,
+        default=""
     )
     hide_results = Boolean(display_name="Hide results", scope=Scope.content, default=False)
     editable_fields = (

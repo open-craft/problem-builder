@@ -6,7 +6,6 @@
             <pb-choice value="understand">I don't understand</pb-choice>
 
             <pb-tip values='["yes"]'>Great!</pb-tip>
-            <pb-tip values='["maybenot"]'>Ah, damn.</pb-tip>
             <pb-tip values='["understand"]'><div id="test-custom-html">Really?</div></pb-tip>
         </pb-mcq>
 
@@ -17,7 +16,6 @@
 
             <pb-tip values='["4","5"]'>I love good grades.</pb-tip>
             <pb-tip values='["1","2","3"]'>Will do better next time...</pb-tip>
-            <pb-tip values='["notwant"]'>Your loss!</pb-tip>
         </pb-rating>
 
         <pb-message type="completed">
