@@ -8,7 +8,9 @@ function MentoringBlock(runtime, element) {
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var data = $('.mentoring', element).data();
     var children = runtime.children(element);
-    var steps = runtime.children(element).filter(function(c) { return c.element.className.indexOf('assessment_step_view') > -1; });
+    var steps = runtime.children(element).filter(function(c) {
+        return $(c.element).attr("class").indexOf('assessment_step_view') > -1;
+    });
     var step = data.step;
 
     var mentoring = {
