@@ -1,9 +1,15 @@
-import unittest
 import ddt
+import unittest
+
 from mock import MagicMock, Mock, patch
+from random import random
+
 from xblock.field_data import DictFieldData
+
 from problem_builder.mcq import MCQBlock
-from problem_builder.mentoring import MentoringBlock, MentoringMessageBlock, _default_theme_config
+from problem_builder.mentoring import (
+    MentoringBlock, MentoringMessageBlock, _default_theme_config, _default_options_config
+)
 
 
 @ddt.ddt
@@ -64,45 +70,79 @@ class TestMentoringBlock(unittest.TestCase):
 
 
 @ddt.ddt
-class TestMentoringBlockTheming(unittest.TestCase):
+class TestMentoringBlockSettings(unittest.TestCase):
+
+    DEFAULT_SETTINGS = {
+        'get_theme': _default_theme_config,
+        'get_options': _default_options_config,
+    }
+
+    SETTINGS_KEYS = {
+        'get_theme': MentoringBlock.theme_key,
+        'get_options': MentoringBlock.options_key,
+    }
+
     def setUp(self):
         self.service_mock = Mock()
         self.runtime_mock = Mock()
         self.runtime_mock.service = Mock(return_value=self.service_mock)
         self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
 
-    def test_theme_uses_default_theme_if_settings_service_is_not_available(self):
-        self.runtime_mock.service = Mock(return_value=None)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
+    def test_settings_method_returns_default_if_settings_service_is_not_available(self):
+        for settings_method, default_config in self.DEFAULT_SETTINGS.items():
+            self.runtime_mock.service = Mock(return_value=None)
+            self.assertEqual(getattr(self.block, settings_method)(), default_config)
 
-    def test_theme_uses_default_theme_if_no_theme_is_set(self):
-        self.service_mock.get_settings_bucket = Mock(return_value=None)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
+    def test_settings_method_returns_default_if_settings_not_customized(self):
+        for settings_method, default_config in self.DEFAULT_SETTINGS.items():
+            self.service_mock.get_settings_bucket = Mock(return_value=None)
+            self.assertEqual(getattr(self.block, settings_method)(), default_config)
+            self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
 
     @ddt.data(123, object())
-    def test_theme_raises_if_theme_object_is_not_iterable(self, theme_config):
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with self.assertRaises(TypeError):
-            self.block.get_theme()
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
+    def test_settings_method_raises_if_settings_not_iterable(self, config):
+        for settings_method in self.DEFAULT_SETTINGS:
+            self.service_mock.get_settings_bucket = Mock(return_value=config)
+            with self.assertRaises(TypeError):
+                getattr(self.block, settings_method)()
+            self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
 
     @ddt.data(
         {}, {'mass': 123}, {'spin': {}}, {'parity': "1"}
     )
-    def test_theme_uses_default_theme_if_no_mentoring_theme_is_set_up(self, theme_config):
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
+    def test_settings_method_returns_default_if_target_setting_not_customized(self, config):
+        for settings_method, default_config in self.DEFAULT_SETTINGS.items():
+            self.service_mock.get_settings_bucket = Mock(return_value=config)
+            self.assertEqual(getattr(self.block, settings_method)(), default_config)
+            self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
 
     @ddt.data(
-        {MentoringBlock.theme_key: 123},
-        {MentoringBlock.theme_key: [1, 2, 3]},
-        {MentoringBlock.theme_key: {'package': 'qwerty', 'locations': ['something_else.css']}},
+        {
+            MentoringBlock.theme_key: 123,
+            MentoringBlock.options_key: 123,
+        },
+        {
+            MentoringBlock.theme_key: [1, 2, 3],
+            MentoringBlock.options_key: [1, 2, 3],
+        },
+        {
+            MentoringBlock.theme_key: {'package': 'qwerty', 'locations': ['something_else.css']},
+            MentoringBlock.options_key: {'pb_mcq_hide_previous_answer': False},
+        },
     )
-    def test_theme_correctly_returns_configured_theme(self, theme_config):
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        self.assertEqual(self.block.get_theme(), theme_config[MentoringBlock.theme_key])
+    def test_settings_method_correctly_returns_customized_settings(self, config):
+        for settings_method, settings_key in self.SETTINGS_KEYS.items():
+            self.service_mock.get_settings_bucket = Mock(return_value=config)
+            self.assertEqual(getattr(self.block, settings_method)(), config[settings_key])
+
+
+@ddt.ddt
+class TestMentoringBlockTheming(unittest.TestCase):
+    def setUp(self):
+        self.service_mock = Mock()
+        self.runtime_mock = Mock()
+        self.runtime_mock.service = Mock(return_value=self.service_mock)
+        self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
 
     def test_theme_files_are_loaded_from_correct_package(self):
         fragment = MagicMock()
@@ -131,14 +171,39 @@ class TestMentoringBlockTheming(unittest.TestCase):
             self.assertEqual(patched_load_unicode.call_count, len(locations))
 
     def test_student_view_calls_include_theme_files(self):
+        self.service_mock.get_settings_bucket = Mock(return_value={})
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.student_view({})
             patched_include_theme_files.assert_called_with(fragment)
 
     def test_author_preview_view_calls_include_theme_files(self):
+        self.service_mock.get_settings_bucket = Mock(return_value={})
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.author_preview_view({})
             patched_include_theme_files.assert_called_with(fragment)
+
+
+@ddt.ddt
+class TestMentoringBlockOptions(unittest.TestCase):
+    def setUp(self):
+        self.service_mock = Mock()
+        self.runtime_mock = Mock()
+        self.runtime_mock.service = Mock(return_value=self.service_mock)
+        self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
+
+    def test_get_option(self):
+        random_key, random_value = random(), random()
+        with patch.object(self.block, 'get_options') as patched_get_options:
+            patched_get_options.return_value = {random_key: random_value}
+            option = self.block.get_option(random_key)
+            patched_get_options.assert_called_once_with()
+            self.assertEqual(option, random_value)
+
+    def test_student_view_calls_get_option(self):
+        self.service_mock.get_settings_bucket = Mock(return_value={})
+        with patch.object(self.block, 'get_option') as patched_get_option:
+            self.block.student_view({})
+            patched_get_option.assert_called_with('pb_mcq_hide_previous_answer')
 
 
 class TestMentoringBlockJumpToIds(unittest.TestCase):
