@@ -131,6 +131,11 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.assertNotIn('checkmark-correct', choice_result_classes)
         self.assertNotIn('checkmark-incorrect', choice_result_classes)
 
+    def _assert_not_checked(self, questionnaire, choice_index):
+        choice = self._get_choice(questionnaire, choice_index)
+        choice_input = choice.find_element_by_css_selector('input')
+        self.assertFalse(choice_input.is_selected())
+
     def _standard_filling(self, answer, mcq, mrq, rating):
         answer.send_keys('This is the answer')
         self.click_choice(mcq, "Yes")
@@ -161,6 +166,32 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
         self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
         self._assert_feedback_showed(rating, 3, "I love good grades.", click_choice_result=True)
+        self.assertTrue(messages.is_displayed())
+        self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
+
+    def _feedback_customized_checks(self, answer, mcq, mrq, rating, messages):
+        # Long answer: Previous answer and feedback visible
+        self.assertEqual(answer.get_attribute('value'), 'This is the answer')
+        # MCQ: Previous answer and feedback hidden
+        for i in range(3):
+            self._assert_feedback_hidden(mcq, i)
+            self._assert_not_checked(mcq, i)
+        # MRQ: Previous answer and feedback visible
+        self._assert_feedback_showed(
+            mrq, 0, "This is something everyone has to like about this MRQ",
+            click_choice_result=True
+        )
+        self._assert_feedback_showed(
+            mrq, 1, "This is something everyone has to like about beauty",
+            click_choice_result=True, success=False
+        )
+        self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
+        self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
+        # Rating: Previous answer and feedback hidden
+        for i in range(5):
+            self._assert_feedback_hidden(rating, i)
+            self._assert_not_checked(rating, i)
+        # Messages
         self.assertTrue(messages.is_displayed())
         self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
 
@@ -217,6 +248,32 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         # ...until some changes are done
         self.click_choice(mrq, "Its elegance")
         self.assertTrue(submit.is_enabled())
+
+    def test_does_not_persist_mcq_feedback_on_page_reload_if_disabled(self):
+        with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
+            patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
+            mentoring = self.load_scenario("feedback_persistence.xml")
+            answer, mcq, mrq, rating = self._get_controls(mentoring)
+            messages = self._get_messages_element(mentoring)
+
+            self._standard_filling(answer, mcq, mrq, rating)
+            self.click_submit(mentoring)
+            self._standard_checks(answer, mcq, mrq, rating, messages)
+
+            # now, reload the page and see if previous answers and results for MCQs are hidden
+            mentoring = self.reload_student_view()
+            answer, mcq, mrq, rating = self._get_controls(mentoring)
+            messages = self._get_messages_element(mentoring)
+            submit = mentoring.find_element_by_css_selector('.submit input.input-main')
+
+            self._feedback_customized_checks(answer, mcq, mrq, rating, messages)
+            # after reloading submit is disabled...
+            self.assertFalse(submit.is_enabled())
+
+            # ... until student answers MCQs again
+            self.click_choice(mcq, "Maybe not")
+            self.click_choice(rating, "2")
+            self.assertTrue(submit.is_enabled())
 
     def test_given_perfect_score_in_past_loads_current_result(self):
         mentoring = self.load_scenario("feedback_persistence.xml")

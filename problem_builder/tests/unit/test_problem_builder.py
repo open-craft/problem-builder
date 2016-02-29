@@ -1,9 +1,15 @@
-import unittest
 import ddt
+import unittest
+
 from mock import MagicMock, Mock, patch
+from random import random
+
 from xblock.field_data import DictFieldData
+
 from problem_builder.mcq import MCQBlock
-from problem_builder.mentoring import MentoringBlock, MentoringMessageBlock, _default_theme_config
+from problem_builder.mentoring import (
+    MentoringBlock, MentoringMessageBlock, _default_theme_config, _default_options_config
+)
 
 
 @ddt.ddt
@@ -63,7 +69,6 @@ class TestMentoringBlock(unittest.TestCase):
             self.assertIn('Unable to load child component', fragment.content)
 
 
-@ddt.ddt
 class TestMentoringBlockTheming(unittest.TestCase):
     def setUp(self):
         self.service_mock = Mock()
@@ -71,74 +76,63 @@ class TestMentoringBlockTheming(unittest.TestCase):
         self.runtime_mock.service = Mock(return_value=self.service_mock)
         self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
 
-    def test_theme_uses_default_theme_if_settings_service_is_not_available(self):
-        self.runtime_mock.service = Mock(return_value=None)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-
-    def test_theme_uses_default_theme_if_no_theme_is_set(self):
-        self.service_mock.get_settings_bucket = Mock(return_value=None)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
-
-    @ddt.data(123, object())
-    def test_theme_raises_if_theme_object_is_not_iterable(self, theme_config):
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with self.assertRaises(TypeError):
-            self.block.get_theme()
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
-
-    @ddt.data(
-        {}, {'mass': 123}, {'spin': {}}, {'parity': "1"}
-    )
-    def test_theme_uses_default_theme_if_no_mentoring_theme_is_set_up(self, theme_config):
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        self.assertEqual(self.block.get_theme(), _default_theme_config)
-        self.service_mock.get_settings_bucket.assert_called_once_with(self.block)
-
-    @ddt.data(
-        {MentoringBlock.theme_key: 123},
-        {MentoringBlock.theme_key: [1, 2, 3]},
-        {MentoringBlock.theme_key: {'package': 'qwerty', 'locations': ['something_else.css']}},
-    )
-    def test_theme_correctly_returns_configured_theme(self, theme_config):
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        self.assertEqual(self.block.get_theme(), theme_config[MentoringBlock.theme_key])
-
-    def test_theme_files_are_loaded_from_correct_package(self):
-        fragment = MagicMock()
-        package_name = 'some_package'
-        theme_config = {MentoringBlock.theme_key: {'package': package_name, 'locations': ['lms.css']}}
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with patch("problem_builder.mentoring.ResourceLoader") as patched_resource_loader:
-            self.block.include_theme_files(fragment)
-            patched_resource_loader.assert_called_with(package_name)
-
-    @ddt.data(
-        ('problem_builder', ['public/themes/lms.css']),
-        ('problem_builder', ['public/themes/lms.css', 'public/themes/lms.part2.css']),
-        ('my_app.my_rules', ['typography.css', 'icons.css']),
-    )
-    @ddt.unpack
-    def test_theme_files_are_added_to_fragment(self, package_name, locations):
-        fragment = MagicMock()
-        theme_config = {MentoringBlock.theme_key: {'package': package_name, 'locations': locations}}
-        self.service_mock.get_settings_bucket = Mock(return_value=theme_config)
-        with patch("problem_builder.mentoring.ResourceLoader.load_unicode") as patched_load_unicode:
-            self.block.include_theme_files(fragment)
-            for location in locations:
-                patched_load_unicode.assert_any_call(location)
-
-            self.assertEqual(patched_load_unicode.call_count, len(locations))
-
     def test_student_view_calls_include_theme_files(self):
+        self.service_mock.get_settings_bucket = Mock(return_value={})
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.student_view({})
             patched_include_theme_files.assert_called_with(fragment)
 
     def test_author_preview_view_calls_include_theme_files(self):
+        self.service_mock.get_settings_bucket = Mock(return_value={})
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.author_preview_view({})
             patched_include_theme_files.assert_called_with(fragment)
+
+
+@ddt.ddt
+class TestMentoringBlockOptions(unittest.TestCase):
+    def setUp(self):
+        self.service_mock = Mock()
+        self.runtime_mock = Mock()
+        self.runtime_mock.service = Mock(return_value=self.service_mock)
+        self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
+
+    def test_get_options_returns_default_if_xblock_settings_not_customized(self):
+        self.block.get_xblock_settings = Mock(return_value=None)
+        self.assertEqual(self.block.get_options(), _default_options_config)
+        self.block.get_xblock_settings.assert_called_once_with(_default_options_config)
+
+    @ddt.data(
+        {}, {'mass': 123}, {'spin': {}}, {'parity': "1"}
+    )
+    def test_get_options_returns_default_if_options_not_customized(self, xblock_settings):
+        self.block.get_xblock_settings = Mock(return_value=xblock_settings)
+        self.assertEqual(self.block.get_options(), _default_options_config)
+        self.block.get_xblock_settings.assert_called_once_with(_default_options_config)
+
+    @ddt.data(
+        {MentoringBlock.options_key: 123},
+        {MentoringBlock.options_key: [1, 2, 3]},
+        {MentoringBlock.options_key: {'pb_mcq_hide_previous_answer': False}},
+     )
+    def test_get_options_correctly_returns_customized_options(self, xblock_settings):
+        self.block.get_xblock_settings = Mock(return_value=xblock_settings)
+        self.assertEqual(self.block.get_options(), xblock_settings[MentoringBlock.options_key])
+        self.block.get_xblock_settings.assert_called_once_with(_default_options_config)
+
+    def test_get_option(self):
+        random_key, random_value = random(), random()
+        with patch.object(self.block, 'get_options') as patched_get_options:
+            patched_get_options.return_value = {random_key: random_value}
+            option = self.block.get_option(random_key)
+            patched_get_options.assert_called_once_with()
+            self.assertEqual(option, random_value)
+
+    def test_student_view_calls_get_option(self):
+        self.service_mock.get_settings_bucket = Mock(return_value={})
+        with patch.object(self.block, 'get_option') as patched_get_option:
+            self.block.student_view({})
+            patched_get_option.assert_called_with('pb_mcq_hide_previous_answer')
 
 
 class TestMentoringBlockJumpToIds(unittest.TestCase):

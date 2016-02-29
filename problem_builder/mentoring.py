@@ -42,6 +42,7 @@ from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
+from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
 from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin,
 )
@@ -63,6 +64,10 @@ _default_theme_config = {
     'locations': ['public/themes/lms.css']
 }
 
+_default_options_config = {
+    'pb_mcq_hide_previous_answer': False
+}
+
 
 # Make '_' a no-op so we can scrape strings
 def _(text):
@@ -80,7 +85,8 @@ PARTIAL = 'partial'
 @XBlock.needs("i18n")
 @XBlock.wants('settings')
 class BaseMentoringBlock(
-        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin, MessageParentMixin
+    XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
+    StudioEditableXBlockMixin, ThemableXBlockMixin, MessageParentMixin,
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -121,6 +127,7 @@ class BaseMentoringBlock(
     icon_class = 'problem'
     block_settings_key = 'mentoring'
     theme_key = 'theme'
+    options_key = 'options'
 
     @property
     def url_name(self):
@@ -156,24 +163,23 @@ class BaseMentoringBlock(
             return [self.display_name]
         return []
 
-    def get_theme(self):
+    def get_options(self):
         """
-        Gets theme settings from settings service. Falls back to default (LMS) theme
-        if settings service is not available, xblock theme settings are not set or does
-        contain mentoring theme settings.
-        """
-        settings_service = self.runtime.service(self, "settings")
-        if settings_service:
-            xblock_settings = settings_service.get_settings_bucket(self)
-            if xblock_settings and self.theme_key in xblock_settings:
-                return xblock_settings[self.theme_key]
-        return _default_theme_config
+        Get options settings for this block from settings service.
 
-    def include_theme_files(self, fragment):
-        theme = self.get_theme()
-        theme_package, theme_files = theme['package'], theme['locations']
-        for theme_file in theme_files:
-            fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
+        Fall back on default options if xblock settings have not been customized at all
+        or no customizations for options available.
+        """
+        xblock_settings = self.get_xblock_settings(_default_options_config)
+        if xblock_settings and self.options_key in xblock_settings:
+            return xblock_settings[self.options_key]
+        return _default_options_config
+
+    def get_option(self, option):
+        """
+        Get value of a specific instance-wide `option`.
+        """
+        return self.get_options()[option]
 
     @XBlock.json_handler
     def view(self, data, suffix=''):
@@ -368,6 +374,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
     def student_view(self, context):
+        from .mcq import MCQBlock  # Import here to avoid circular dependency
+
         # Migrate stored data if necessary
         self.migrate_fields()
 
@@ -379,6 +387,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         fragment = Fragment()
         child_content = u""
 
+        mcq_hide_previous_answer = self.get_option('pb_mcq_hide_previous_answer')
+
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
@@ -388,6 +398,10 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
                     if self.is_assessment and isinstance(child, QuestionMixin):
                         child_fragment = child.render('assessment_step_view', context)
                     else:
+                        if mcq_hide_previous_answer and isinstance(child, MCQBlock):
+                            context['hide_prev_answer'] = True
+                        else:
+                            context['hide_prev_answer'] = False
                         child_fragment = child.render('mentoring_view', context)
                 except NoSuchViewError:
                     if child.scope_ids.block_type == 'html' and getattr(self.runtime, 'is_author_mode', False):

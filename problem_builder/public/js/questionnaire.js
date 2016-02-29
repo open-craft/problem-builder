@@ -122,7 +122,7 @@ function MCQBlock(runtime, element) {
             var mentoring = this.mentoring;
 
             var messageView = MessageView(element, mentoring);
-            
+
             if (result.message) {
                 var msg = '<div class="message-content">' + result.message + '</div>' +
                           '<div class="close icon-remove-sign fa-times-circle"></div>';
@@ -138,24 +138,27 @@ function MCQBlock(runtime, element) {
                 var choiceResultDOM = $('.choice-result', choiceDOM);
                 var choiceTipsDOM = $('.choice-tips', choiceDOM);
 
-                if (result.status === "correct" && choiceInputDOM.val() === result.submission) {
-                    choiceDOM.addClass('correct');
-                    choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
-                }
-                else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {
-                    choiceDOM.addClass('incorrect');
-                    choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
-                }
-
-                if (result.tips && choiceInputDOM.val() === result.submission) {
-                    mentoring.setContent(choiceTipsDOM, result.tips);
-                }
-
-                choiceResultDOM.off('click').on('click', function() {
-                    if (choiceTipsDOM.html() !== '') {
-                        messageView.showMessage(choiceTipsDOM);
+                if (choiceInputDOM.prop('checked')) {  // We're showing previous answers,
+                                                       // so go ahead and display results as well
+                    if (result.status === "correct" && choiceInputDOM.val() === result.submission) {
+                        choiceDOM.addClass('correct');
+                        choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                     }
-                });
+                    else if (choiceInputDOM.val() === result.submission || _.isNull(result.submission)) {
+                        choiceDOM.addClass('incorrect');
+                        choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                    }
+
+                    if (result.tips && choiceInputDOM.val() === result.submission) {
+                        mentoring.setContent(choiceTipsDOM, result.tips);
+                    }
+
+                    choiceResultDOM.off('click').on('click', function() {
+                        if (choiceTipsDOM.html() !== '') {
+                            messageView.showMessage(choiceTipsDOM);
+                        }
+                    });
+                }
             });
 
             if (_.isNull(result.submission)) {
