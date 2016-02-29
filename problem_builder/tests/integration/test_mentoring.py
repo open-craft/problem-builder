@@ -267,7 +267,6 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
             self._feedback_customized_checks(answer, mcq, mrq, rating, messages)
-
             # after reloading submit is disabled...
             self.assertFalse(submit.is_enabled())
 

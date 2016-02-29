@@ -42,6 +42,7 @@ from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
+from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
 from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin,
 )
@@ -84,7 +85,8 @@ PARTIAL = 'partial'
 @XBlock.needs("i18n")
 @XBlock.wants('settings')
 class BaseMentoringBlock(
-        XBlock, XBlockWithTranslationServiceMixin, StudioEditableXBlockMixin, MessageParentMixin
+    XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
+    StudioEditableXBlockMixin, ThemableXBlockMixin, MessageParentMixin,
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -161,45 +163,22 @@ class BaseMentoringBlock(
             return [self.display_name]
         return []
 
-    def get_settings(self, settings_key, default):
-        """
-        Get settings identified by `settings_key` from settings service.
-
-        Fall back on `default` if settings service is unavailable
-        or settings have not been customized.
-        """
-        settings_service = self.runtime.service(self, "settings")
-        if settings_service:
-            xblock_settings = settings_service.get_settings_bucket(self)
-            if xblock_settings and settings_key in xblock_settings:
-                return xblock_settings[settings_key]
-        return default
-
-    def get_theme(self):
-        """
-        Get theme settings for this block from settings service.
-
-        Fall back on default (LMS) theme if settings service is not available,
-        or theme has not been customized.
-        """
-        return self.get_settings(self.theme_key, _default_theme_config)
-
-    def include_theme_files(self, fragment):
-        theme = self.get_theme()
-        theme_package, theme_files = theme['package'], theme['locations']
-        for theme_file in theme_files:
-            fragment.add_css(ResourceLoader(theme_package).load_unicode(theme_file))
-
     def get_options(self):
         """
         Get options settings for this block from settings service.
 
-        Fall back on default options if settings service is not available
-        or options have not been customized.
+        Fall back on default options if xblock settings have not been customized at all
+        or no customizations for options available.
         """
-        return self.get_settings(self.options_key, _default_options_config)
+        xblock_settings = self.get_xblock_settings(_default_options_config)
+        if xblock_settings and self.options_key in xblock_settings:
+            return xblock_settings[self.options_key]
+        return _default_options_config
 
     def get_option(self, option):
+        """
+        Get value of a specific instance-wide `option`.
+        """
         return self.get_options()[option]
 
     @XBlock.json_handler
