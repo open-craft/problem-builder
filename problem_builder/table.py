@@ -26,7 +26,7 @@ from django.contrib.auth.models import User
 
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
-from xblock.fields import Scope, String, Boolean, Dict
+from xblock.fields import Scope, String, Boolean
 from xblock.fragment import Fragment
 
 from xblockutils.resources import ResourceLoader

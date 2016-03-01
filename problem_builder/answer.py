@@ -26,7 +26,7 @@ from lazy import lazy
 from .models import Answer
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Float, Integer, String
+from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader

@@ -21,7 +21,6 @@ from textwrap import dedent
 from mock import Mock, patch
 from .base_test import ProblemBuilderBaseTest
 from selenium.common.exceptions import NoSuchElementException
-from xblockutils.resources import ResourceLoader
 
 
 class MockSubmissionsAPI(object):

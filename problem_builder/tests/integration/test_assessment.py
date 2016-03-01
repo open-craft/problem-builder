@@ -17,7 +17,7 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-from ddt import ddt, unpack, data
+from ddt import ddt, data
 from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
 
 
