@@ -263,10 +263,10 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.click_choice(mrq, "Its elegance")
         self.assertTrue(submit.is_enabled())
 
-    def test_does_not_persist_mcq_feedback_on_page_reload_if_disabled(self, scenario):
+    def test_does_not_persist_mcq_feedback_on_page_reload_if_disabled(self):
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
             patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
-            mentoring = self.load_scenario(scenario)
+            mentoring = self.load_scenario("feedback_persistence.xml")
             answer, mcq, mrq, rating = self._get_controls(mentoring)
             messages = self._get_messages_element(mentoring)
 
@@ -376,19 +376,22 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     @ddt.data(
         # MCQ with tips
         ("feedback_persistence_mcq_tips.xml", '.choice-tips'),
-        # Like feedback_persistence but instead of tips in MCQ
+        # Like the above but instead of tips in MCQ
         # has a question level feedback. This feedback should also be suppressed.
         ("feedback_persistence_mcq_no_tips.xml", '.feedback')
     )
-    def testFeedbackPersistenceTips(self, scenario, tips_selector):
-        mentoring = self.load_scenario(scenario)
-        mcq = self._get_xblock(mentoring, "feedback_mcq_2")
-        messages = mentoring.find_element_by_css_selector(tips_selector)
-        self.assertFalse(messages.is_displayed())
-        self.click_choice(mcq, "Yes")
-        self.click_submit(mentoring)
-        self.assertTrue(messages.is_displayed())
-        self.reload_student_view()
-        mentoring = self.load_scenario(scenario)
-        messages = mentoring.find_element_by_css_selector(tips_selector)
-        self.assertFalse(messages.is_displayed())
+    def test_feedback_persistence_tips(self, scenario, tips_selector):
+        # Tests whether feedback is hidden on reload.
+        with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
+            patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
+            mentoring = self.load_scenario(scenario)
+            mcq = self._get_xblock(mentoring, "feedback_mcq_2")
+            messages = mentoring.find_element_by_css_selector(tips_selector)
+            self.assertFalse(messages.is_displayed())
+            self.click_choice(mcq, "Yes")
+            self.click_submit(mentoring)
+            self.assertTrue(messages.is_displayed())
+            self.reload_student_view()
+            mentoring = self.load_scenario(scenario)
+            messages = mentoring.find_element_by_css_selector(tips_selector)
+            self.assertFalse(messages.is_displayed())
