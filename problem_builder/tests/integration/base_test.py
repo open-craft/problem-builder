@@ -63,6 +63,23 @@ class PopupCheckMixin(object):
             self.assertFalse(item_feedback_popup.is_displayed())
 
 
+class ScrollToMixin(object):
+
+    def scroll_to(self, component, offset=100):
+        """
+        Scrolls browser viewport so component is visible. In rare cases you might
+        need to provide an offset, which will change position by some amount
+        of pixels.
+        :return:
+        """
+        self.browser.execute_script(
+                "return window.scrollTo(0, arguments[0]);",
+                component.location['y']+offset)
+        self.browser.execute_script(
+                "return window.scrollTo(0, arguments[0]);",
+                component.location['y']-offset)
+
+
 class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin, ScrollToMixin):
     """
     The new base class for integration tests.
