@@ -123,13 +123,7 @@ function MCQBlock(runtime, element) {
 
             var messageView = MessageView(element, mentoring);
 
-            if (result.message) {
-                var msg = '<div class="message-content">' + result.message + '</div>' +
-                          '<div class="close icon-remove-sign fa-times-circle"></div>';
-                messageView.showMessage(msg);
-            } else { messageView.clearResult(); }
-
-            display_message(result.message, messageView, options.checkmark);
+            messageView.clearResult();
 
             var choiceInputDOM = $('.choice-selector input[value="'+ result.submission +'"]');
             var choiceDOM = choiceInputDOM.closest('.choice');
@@ -138,6 +132,7 @@ function MCQBlock(runtime, element) {
 
             // We're showing previous answers, so go ahead and display results as well
             if (choiceInputDOM.prop('checked')) {
+                display_message(result.message, messageView, options.checkmark);
                 if (result.status === "correct") {
                     choiceInputDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
