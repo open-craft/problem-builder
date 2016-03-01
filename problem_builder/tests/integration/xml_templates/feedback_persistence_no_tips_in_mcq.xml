@@ -1,0 +1,34 @@
+<vertical_demo>
+    <problem-builder url_name="feedback" enforce_dependency="false">
+        <pb-answer name="feedback_answer_1" />
+
+        <pb-mcq name="feedback_mcq_2" question="Do you like this MCQ?" correct_choices='["yes"]' message="Question level Feedback">
+            <pb-choice value="yes">Yes</pb-choice>
+            <pb-choice value="maybenot">Maybe not</pb-choice>
+            <pb-choice value="understand">I don't understand</pb-choice>
+        </pb-mcq>
+
+        <pb-mrq name="feedback_mrq_3" question="What do you like in this MRQ?" required_choices='["elegance","gracefulness","beauty"]'>
+            <pb-choice value="elegance">Its elegance</pb-choice>
+            <pb-choice value="beauty">Its beauty</pb-choice>
+            <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+            <pb-choice value="bugs">Its bugs</pb-choice>
+
+            <pb-tip values='["elegance"]'>This is something everyone has to like about this MRQ</pb-tip>
+            <pb-tip values='["beauty"]'>This is something everyone has to like about beauty</pb-tip>
+            <pb-tip values='["gracefulness"]'>This MRQ is indeed very graceful</pb-tip>
+            <pb-tip values='["bugs"]'>Nah, there aren't any!</pb-tip>
+        </pb-mrq>
+
+        <pb-rating name="feedback_rating_4" low="Not good at all" high="Extremely good" question="How do you rate this MCQ?" correct_choices='["4","5"]'>
+            <pb-choice value="notwant">I don't want to rate it</pb-choice>
+
+            <pb-tip values='["4","5"]'>I love good grades.</pb-tip>
+            <pb-tip values='["1","2","3"]'>Will do better next time...</pb-tip>
+            <pb-tip values='["notwant"]'>Your loss!</pb-tip>
+        </pb-rating>
+
+        <pb-message type="completed">All Good</pb-message>
+        <pb-message type="incomplete">Not done yet</pb-message>
+    </problem-builder>
+</vertical_demo>

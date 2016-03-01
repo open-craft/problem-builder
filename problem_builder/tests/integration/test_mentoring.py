@@ -249,10 +249,18 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.click_choice(mrq, "Its elegance")
         self.assertTrue(submit.is_enabled())
 
-    def test_does_not_persist_mcq_feedback_on_page_reload_if_disabled(self):
+    @ddt.unpack
+    @ddt.data(
+        # Standard scenario
+        ("feedback_persistence.xml", ),
+        # Like feedback_persistence but instead of tips in MCQ
+        # has a question level feedback. This feedback should also be suppressed.
+        ("feedback_persistence_no_tips_in_mcq.xml", )
+    )
+    def test_does_not_persist_mcq_feedback_on_page_reload_if_disabled(self, scenario):
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
             patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
-            mentoring = self.load_scenario("feedback_persistence.xml")
+            mentoring = self.load_scenario(scenario)
             answer, mcq, mrq, rating = self._get_controls(mentoring)
             messages = self._get_messages_element(mentoring)
 

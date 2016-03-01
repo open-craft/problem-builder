@@ -63,7 +63,7 @@ class PopupCheckMixin(object):
             self.assertFalse(item_feedback_popup.is_displayed())
 
 
-class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
+class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin, ScrollToMixin):
     """
     The new base class for integration tests.
     Scenarios can be loaded and edited on the fly.
