@@ -137,16 +137,12 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.assertFalse(choice_input.is_selected())
 
     def _standard_filling(self, answer, mcq, mrq, rating):
-        self.scroll_to(answer)
         answer.send_keys('This is the answer')
-        self.scroll_to(mcq)
         self.click_choice(mcq, "Yes")
         # 1st, 3rd and 4th options, first three are correct, i.e. two mistakes: 2nd and 4th
-        self.scroll_to(mrq, 300)
         self.click_choice(mrq, "Its elegance")
         self.click_choice(mrq, "Its gracefulness")
         self.click_choice(mrq, "Its bugs")
-        self.scroll_to(rating)
         self.click_choice(rating, "4")
 
     # mcq and rating can't be reset easily, but it's not required; listing them here to keep method signature similar
@@ -157,11 +153,8 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
                 checkbox.click()
 
     def _standard_checks(self, answer, mcq, mrq, rating, messages):
-        self.scroll_to(answer)
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
-        self.scroll_to(mcq)
         self._assert_feedback_showed(mcq, 0, "Great!", click_choice_result=True)
-        self.scroll_to(mrq, 300)
         self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
@@ -172,23 +165,18 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         )
         self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
         self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
-        self.scroll_to(rating)
         self._assert_feedback_showed(rating, 3, "I love good grades.", click_choice_result=True)
         self.assertTrue(messages.is_displayed())
-        self.scroll_to(messages)
         self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
 
     def _feedback_customized_checks(self, answer, mcq, mrq, rating, messages):
         # Long answer: Previous answer and feedback visible
-        self.scroll_to(answer)
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
         # MCQ: Previous answer and feedback hidden
-        self.scroll_to(mcq)
         for i in range(3):
             self._assert_feedback_hidden(mcq, i)
             self._assert_not_checked(mcq, i)
         # MRQ: Previous answer and feedback visible
-        self.scroll_to(mrq, 300)
         self._assert_feedback_showed(
             mrq, 0, "This is something everyone has to like about this MRQ",
             click_choice_result=True
@@ -200,13 +188,11 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_feedback_showed(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
         self._assert_feedback_showed(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
         # Rating: Previous answer and feedback hidden
-        self.scroll_to(rating)
         for i in range(5):
             self._assert_feedback_hidden(rating, i)
             self._assert_not_checked(rating, i)
         # Messages
         self.assertTrue(messages.is_displayed())
-        self.scroll_to(messages)
         self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
 
     def reload_student_view(self):
@@ -285,11 +271,8 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             self.assertFalse(submit.is_enabled())
 
             # ... until student answers MCQs again
-            self.scroll_to(mcq)
             self.click_choice(mcq, "Maybe not")
-            self.scroll_to(rating)
             self.click_choice(rating, "2")
-            self.scroll_to(submit)
             self.assertTrue(submit.is_enabled())
 
     def test_given_perfect_score_in_past_loads_current_result(self):

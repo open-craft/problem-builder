@@ -63,24 +63,7 @@ class PopupCheckMixin(object):
             self.assertFalse(item_feedback_popup.is_displayed())
 
 
-class ScrollToMixin(object):
-
-    def scroll_to(self, component, offset=100):
-        """
-        Scrolls browser viewport so component is visible. In rare cases you might
-        need to provide an offset, which will change position by some amount
-        of pixels.
-        :return:
-        """
-        self.browser.execute_script(
-                "return window.scrollTo(0, arguments[0]);",
-                component.location['y']+offset)
-        self.browser.execute_script(
-                "return window.scrollTo(0, arguments[0]);",
-                component.location['y']-offset)
-
-
-class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin, ScrollToMixin):
+class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
     """
     The new base class for integration tests.
     Scenarios can be loaded and edited on the fly.
@@ -96,6 +79,12 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin, ScrollToMixin)
         self.set_scenario_xml(scenario)
         if load_immediately:
             return self.go_to_view("student_view")
+
+    def go_to_view(self, view_name):
+        """ Eliminate errors that come from the Workbench banner overlapping elements """
+        element = super(ProblemBuilderBaseTest, self).go_to_view(view_name)
+        self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
+        return element
 
     def click_submit(self, mentoring):
         """ Click the submit button and wait for the response """
@@ -118,6 +107,12 @@ class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
     default_css_selector = 'div.mentoring'
 
     __asides_patch = None
+
+    def go_to_page(self, page_title, **kwargs):
+        """ Eliminate errors that come from the Workbench banner overlapping elements """
+        element = super(MentoringBaseTest, self).go_to_page(page_title, **kwargs)
+        self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
+        return element
 
     @classmethod
     def setUpClass(cls):

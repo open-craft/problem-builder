@@ -32,19 +32,6 @@ from .base_test import MentoringBaseTest
 
 @ddt.ddt
 class QuestionnaireBlockTest(MentoringBaseTest):
-
-    def _selenium_bug_workaround_scroll_to(self, mcq_legend):
-        """Workaround for selenium bug:
-
-        Some version of Selenium has a bug that prevents scrolling
-        to radiobuttons before being clicked. The click not taking
-        place, when it's outside the view.
-
-        Since the bug does not affect other content, asking Selenium
-        to click on the legend first, will properly scroll it.
-        """
-        mcq_legend.click()
-
     def _get_choice_label_text(self, choice):
         return choice.find_element_by_css_selector('label').text
 
@@ -104,7 +91,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
                 mcq1_answer, mcq2_answer, item_feedback1, item_feedback2,
                 feedback1_selector=".choice-tips .tip p",
                 feedback2_selector=".choice-tips .tip p"):
-            self._selenium_bug_workaround_scroll_to(mcq1)
 
             mcq1_choices_input[mcq1_answer].click()
             mcq2_choices_input[mcq2_answer].click()
@@ -125,7 +111,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertFalse(submit.is_enabled())
 
         # Submit button stays disabled when there are unfinished mcqs
-        self._selenium_bug_workaround_scroll_to(mcq1)
         mcq1_choices_input[1].click()
         self.assertFalse(submit.is_enabled())
 
@@ -244,7 +229,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertFalse(submit.is_enabled())
 
         inputs = choices_list.find_elements_by_css_selector('.choice-selector input')
-        self._selenium_bug_workaround_scroll_to(choices_list)
         inputs[0].click()
         inputs[1].click()
         inputs[2].click()
