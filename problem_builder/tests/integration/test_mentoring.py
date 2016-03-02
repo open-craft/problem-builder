@@ -391,7 +391,6 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             self.click_choice(mcq, "Yes")
             self.click_submit(mentoring)
             self.assertTrue(messages.is_displayed())
-            self.reload_student_view()
-            mentoring = self.load_scenario(scenario)
+            mentoring = self.reload_student_view()
             messages = mentoring.find_element_by_css_selector(tips_selector)
             self.assertFalse(messages.is_displayed())
