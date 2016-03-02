@@ -15,7 +15,7 @@ test:
   override:
     - "if [ $CIRCLE_NODE_INDEX = '0' ]; then pep8 problem_builder --max-line-length=120; fi":
         parallel: true
-    - "if [ $CIRCLE_NODE_INDEX = '1' ]; then pylint problem_builder --disable=all --enable=function-redefined,undefined-variable,unused-variable; fi":
+    - "if [ $CIRCLE_NODE_INDEX = '1' ]; then pylint problem_builder --disable=all --enable=function-redefined,undefined-variable,unused-import,unused-variable; fi":
         parallel: true
     - "python run_tests.py":
         parallel: true

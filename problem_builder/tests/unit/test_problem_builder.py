@@ -7,9 +7,7 @@ from random import random
 from xblock.field_data import DictFieldData
 
 from problem_builder.mcq import MCQBlock
-from problem_builder.mentoring import (
-    MentoringBlock, MentoringMessageBlock, _default_theme_config, _default_options_config
-)
+from problem_builder.mentoring import MentoringBlock, MentoringMessageBlock, _default_options_config
 
 
 @ddt.ddt
@@ -69,12 +67,77 @@ class TestMentoringBlock(unittest.TestCase):
             self.assertIn('Unable to load child component', fragment.content)
 
 
+@ddt.ddt
 class TestMentoringBlockTheming(unittest.TestCase):
     def setUp(self):
         self.service_mock = Mock()
         self.runtime_mock = Mock()
         self.runtime_mock.service = Mock(return_value=self.service_mock)
         self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
+
+    def test_get_theme_returns_default_if_settings_service_is_not_available(self):
+        self.runtime_mock.service = Mock(return_value=None)
+        theme = self.block.get_theme()
+        # Ensure MentoringBlock overrides "default_theme_config" from ThemableXBlockMixin with meaningful value:
+        self.assertIsNotNone(theme)
+        self.assertEqual(theme, MentoringBlock.default_theme_config)
+
+    def test_get_theme_returns_default_if_xblock_settings_not_customized(self):
+        self.block.get_xblock_settings = Mock(return_value=None)
+        theme = self.block.get_theme()
+        # Ensure MentoringBlock overrides "default_theme_config" from ThemableXBlockMixin with meaningful value:
+        self.assertIsNotNone(theme)
+        self.assertEqual(theme, MentoringBlock.default_theme_config)
+        self.block.get_xblock_settings.assert_called_once_with(default={})
+
+    @ddt.data(
+        {}, {'mass': 123}, {'spin': {}}, {'parity': "1"}
+    )
+    def test_get_theme_returns_default_if_theme_not_customized(self, xblock_settings):
+        self.block.get_xblock_settings = Mock(return_value=xblock_settings)
+        theme = self.block.get_theme()
+        # Ensure MentoringBlock overrides "default_theme_config" from ThemableXBlockMixin with meaningful value:
+        self.assertIsNotNone(theme)
+        self.assertEqual(theme, MentoringBlock.default_theme_config)
+        self.block.get_xblock_settings.assert_called_once_with(default={})
+
+    @ddt.data(
+        {MentoringBlock.theme_key: 123},
+        {MentoringBlock.theme_key: [1, 2, 3]},
+        {MentoringBlock.theme_key: {'package': 'qwerty', 'locations': ['something_else.css']}},
+    )
+    def test_get_theme_correctly_returns_customized_theme(self, xblock_settings):
+        self.block.get_xblock_settings = Mock(return_value=xblock_settings)
+        theme = self.block.get_theme()
+        # Ensure MentoringBlock overrides "default_theme_config" from ThemableXBlockMixin with meaningful value:
+        self.assertIsNotNone(theme)
+        self.assertEqual(theme, xblock_settings[MentoringBlock.theme_key])
+        self.block.get_xblock_settings.assert_called_once_with(default={})
+
+    def test_theme_files_are_loaded_from_correct_package(self):
+        fragment = MagicMock()
+        package_name = 'some_package'
+        xblock_settings = {MentoringBlock.theme_key: {'package': package_name, 'locations': ['lms.css']}}
+        self.block.get_xblock_settings = Mock(return_value=xblock_settings)
+        with patch("xblockutils.settings.ResourceLoader") as patched_resource_loader:
+            self.block.include_theme_files(fragment)
+            patched_resource_loader.assert_called_with(package_name)
+
+    @ddt.data(
+        ('problem_builder', ['public/themes/lms.css']),
+        ('problem_builder', ['public/themes/lms.css', 'public/themes/lms.part2.css']),
+        ('my_app.my_rules', ['typography.css', 'icons.css']),
+    )
+    @ddt.unpack
+    def test_theme_files_are_added_to_fragment(self, package_name, locations):
+        fragment = MagicMock()
+        xblock_settings = {MentoringBlock.theme_key: {'package': package_name, 'locations': locations}}
+        self.block.get_xblock_settings = Mock(return_value=xblock_settings)
+        with patch("xblockutils.settings.ResourceLoader.load_unicode") as patched_load_unicode:
+            self.block.include_theme_files(fragment)
+            for location in locations:
+                patched_load_unicode.assert_any_call(location)
+            self.assertEqual(patched_load_unicode.call_count, len(locations))
 
     def test_student_view_calls_include_theme_files(self):
         self.service_mock.get_settings_bucket = Mock(return_value={})
@@ -97,10 +160,14 @@ class TestMentoringBlockOptions(unittest.TestCase):
         self.runtime_mock.service = Mock(return_value=self.service_mock)
         self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
 
+    def test_get_options_returns_default_if_settings_service_is_not_available(self):
+        self.runtime_mock.service = Mock(return_value=None)
+        self.assertEqual(self.block.get_options(), _default_options_config)
+
     def test_get_options_returns_default_if_xblock_settings_not_customized(self):
         self.block.get_xblock_settings = Mock(return_value=None)
         self.assertEqual(self.block.get_options(), _default_options_config)
-        self.block.get_xblock_settings.assert_called_once_with(_default_options_config)
+        self.block.get_xblock_settings.assert_called_once_with(default={})
 
     @ddt.data(
         {}, {'mass': 123}, {'spin': {}}, {'parity': "1"}
@@ -108,7 +175,7 @@ class TestMentoringBlockOptions(unittest.TestCase):
     def test_get_options_returns_default_if_options_not_customized(self, xblock_settings):
         self.block.get_xblock_settings = Mock(return_value=xblock_settings)
         self.assertEqual(self.block.get_options(), _default_options_config)
-        self.block.get_xblock_settings.assert_called_once_with(_default_options_config)
+        self.block.get_xblock_settings.assert_called_once_with(default={})
 
     @ddt.data(
         {MentoringBlock.options_key: 123},
@@ -118,7 +185,7 @@ class TestMentoringBlockOptions(unittest.TestCase):
     def test_get_options_correctly_returns_customized_options(self, xblock_settings):
         self.block.get_xblock_settings = Mock(return_value=xblock_settings)
         self.assertEqual(self.block.get_options(), xblock_settings[MentoringBlock.options_key])
-        self.block.get_xblock_settings.assert_called_once_with(_default_options_config)
+        self.block.get_xblock_settings.assert_called_once_with(default={})
 
     def test_get_option(self):
         random_key, random_value = random(), random()

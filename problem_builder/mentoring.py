@@ -59,11 +59,6 @@ except ImportError:
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
-_default_theme_config = {
-    'package': 'problem_builder',
-    'locations': ['public/themes/lms.css']
-}
-
 _default_options_config = {
     'pb_mcq_hide_previous_answer': False
 }
@@ -126,8 +121,12 @@ class BaseMentoringBlock(
 
     icon_class = 'problem'
     block_settings_key = 'mentoring'
-    theme_key = 'theme'
     options_key = 'options'
+
+    default_theme_config = {
+        'package': 'problem_builder',
+        'locations': ['public/themes/lms.css']
+    }
 
     @property
     def url_name(self):
@@ -170,7 +169,7 @@ class BaseMentoringBlock(
         Fall back on default options if xblock settings have not been customized at all
         or no customizations for options available.
         """
-        xblock_settings = self.get_xblock_settings(_default_options_config)
+        xblock_settings = self.get_xblock_settings(default={})
         if xblock_settings and self.options_key in xblock_settings:
             return xblock_settings[self.options_key]
         return _default_options_config

@@ -3,8 +3,8 @@ If an author makes changes to the block after students have started using it, wi
 happen?
 """
 import time
+
 from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest
-import re
 
 
 class AuthorChangesTest(ProblemBuilderBaseTest):

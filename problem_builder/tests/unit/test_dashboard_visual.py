@@ -1,10 +1,9 @@
 """
 Unit tests for DashboardVisualData
 """
-from problem_builder.dashboard_visual import DashboardVisualData
-from mock import MagicMock, Mock
 import unittest
-from xblock.field_data import DictFieldData
+
+from problem_builder.dashboard_visual import DashboardVisualData
 
 
 class TestDashboardVisualData(unittest.TestCase):
