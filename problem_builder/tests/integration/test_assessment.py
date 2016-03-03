@@ -23,28 +23,6 @@ from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest,
 
 @ddt
 class MentoringAssessmentTest(MentoringAssessmentBaseTest):
-    def _selenium_bug_workaround_scroll_to(self, mentoring, question):
-        """Workaround for selenium bug:
-
-        Some version of Selenium has a bug that prevents scrolling
-        to radiobuttons before being clicked. The click not taking
-        place, when it's outside the view.
-
-        Since the bug does not affect other content, asking Selenium
-        to click on the legend first, will properly scroll it.
-
-        It also have it's fair share of issues with the workbench header.
-
-        For this reason we click on the bottom-most element, scrolling to it.
-        Then, click on the title of the question (also scrolling to it)
-        hopefully, this gives us enough room for the full step with the
-        control buttons to fit.
-        """
-        controls = mentoring.find_element_by_css_selector("div.submit")
-        title = question.find_element_by_css_selector("h3.question-title")
-        controls.click()
-        title.click()
-
     def assert_persistent_elements_present(self, mentoring):
         self.assertIn("A Simple Assessment", mentoring.text)
         self.assertIn("This paragraph is shared between all questions.", mentoring.text)
@@ -53,9 +31,8 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.browser.get(self.live_server_url)
 
     def freeform_answer(self, number, mentoring, controls, text_input, result, saved_value="", last=False):
-        question = self.expect_question_visible(number, mentoring)
+        self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring, question)
 
         answer = mentoring.find_element_by_css_selector("textarea.answer.editable")
 
@@ -112,9 +89,8 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.do_post(controls, last)
 
     def rating_question(self, number, mentoring, controls, choice_name, result, last=False):
-        question = self.expect_question_visible(number, mentoring)
+        self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
-        self._selenium_bug_workaround_scroll_to(mentoring, question)
         self.assertIn("How much do you rate this MCQ?", mentoring.text)
 
         self.assert_disabled(controls.submit)

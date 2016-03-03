@@ -51,6 +51,16 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
     CATEGORY = 'pb-mcq'
     STUDIO_LABEL = _(u"Multiple Choice Question")
 
+    message = String(
+        display_name=_("Message"),
+        help=_(
+            "General feedback provided when submitting. "
+            "(This is not shown if there is a more specific feedback tip for the choice selected by the learner.)"
+        ),
+        scope=Scope.content,
+        default=""
+    )
+
     student_choice = String(
         # {Last input submitted by the student
         default="",
@@ -64,7 +74,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
     )
-    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('correct_choices', )
+    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('message', 'correct_choices', )
 
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.correct_choices:

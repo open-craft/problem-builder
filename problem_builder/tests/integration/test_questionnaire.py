@@ -32,19 +32,6 @@ from .base_test import MentoringBaseTest
 
 @ddt.ddt
 class QuestionnaireBlockTest(MentoringBaseTest):
-
-    def _selenium_bug_workaround_scroll_to(self, mcq_legend):
-        """Workaround for selenium bug:
-
-        Some version of Selenium has a bug that prevents scrolling
-        to radiobuttons before being clicked. The click not taking
-        place, when it's outside the view.
-
-        Since the bug does not affect other content, asking Selenium
-        to click on the legend first, will properly scroll it.
-        """
-        mcq_legend.click()
-
     def _get_choice_label_text(self, choice):
         return choice.find_element_by_css_selector('label').text
 
@@ -75,9 +62,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertEqual(mcq1.find_element_by_css_selector('legend').text, 'Question 1\nDo you like this MCQ?')
         self.assertEqual(mcq2.find_element_by_css_selector('legend').text, 'Question 2\nHow do you rate this MCQ?')
 
-        mcq1_feedback = mcq1.find_element_by_css_selector('.feedback')
-        mcq2_feedback = mcq2.find_element_by_css_selector('.feedback')
-
         mcq1_choices = mcq1.find_elements_by_css_selector('.choices .choice')
         mcq2_choices = mcq2.find_elements_by_css_selector('.rating .choice')
 
@@ -103,8 +87,10 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             ['1', '2', '3', '4', '5', 'notwant']
         )
 
-        def submit_answer_and_assert_messages(mcq1_answer, mcq2_answer, item_feedback1, item_feedback2):
-            self._selenium_bug_workaround_scroll_to(mcq1)
+        def submit_answer_and_assert_messages(
+                mcq1_answer, mcq2_answer, item_feedback1, item_feedback2,
+                feedback1_selector=".choice-tips .tip p",
+                feedback2_selector=".choice-tips .tip p"):
 
             mcq1_choices_input[mcq1_answer].click()
             mcq2_choices_input[mcq2_answer].click()
@@ -112,33 +98,32 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             submit.click()
             self.wait_until_disabled(submit)
 
-            mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
-            mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
+            mcq1_feedback = mcq1.find_element_by_css_selector(feedback1_selector)
+            mcq2_feedback = mcq2.find_element_by_css_selector(feedback2_selector)
 
+            self.assertEqual(mcq1_feedback.text, item_feedback1)
             self.assertTrue(mcq1_feedback.is_displayed())
-            self.assertEqual(mcq1_feedback.text, "Feedback message 1")
-            self.assertTrue(mcq2_feedback.is_displayed())
-            self.assertEqual(mcq2_feedback.text, "Feedback message 2")
-            self.assertFalse(mcq1_tips.is_displayed())
-            self.assertFalse(mcq2_tips.is_displayed())
 
-            self._click_result_icon(mcq1_choices[mcq1_answer])
-            self.assertEqual(mcq1_tips.text, item_feedback1)
-            self.assertTrue(mcq1_tips.is_displayed())
-            self._click_result_icon(mcq2_choices[mcq2_answer])
-            self.assertEqual(mcq2_tips.text, item_feedback2)
-            self.assertTrue(mcq2_tips.is_displayed())
+            self.assertEqual(mcq2_feedback.text, item_feedback2)
+            self.assertTrue(mcq2_feedback.is_displayed())
 
         # Submit button disabled without selecting anything
         self.assertFalse(submit.is_enabled())
 
         # Submit button stays disabled when there are unfinished mcqs
-        self._selenium_bug_workaround_scroll_to(mcq1)
         mcq1_choices_input[1].click()
         self.assertFalse(submit.is_enabled())
 
         # Should not show full completion message when wrong answers are selected
         submit_answer_and_assert_messages(0, 2, 'Great!', 'Will do better next time...')
+        self.assertEqual(messages.text, '')
+        self.assertFalse(messages.is_displayed())
+
+        # When selected answers have no tips display generic feedback message
+        submit_answer_and_assert_messages(
+            1, 5, 'Feedback message 1', 'Feedback message 2',
+            ".feedback .message-content", ".feedback .message-content"
+        )
         self.assertEqual(messages.text, '')
         self.assertFalse(messages.is_displayed())
 
@@ -244,7 +229,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertFalse(submit.is_enabled())
 
         inputs = choices_list.find_elements_by_css_selector('.choice-selector input')
-        self._selenium_bug_workaround_scroll_to(choices_list)
         inputs[0].click()
         inputs[1].click()
         inputs[2].click()

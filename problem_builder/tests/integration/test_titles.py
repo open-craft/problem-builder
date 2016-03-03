@@ -72,7 +72,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     )
 
     mcq_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-mcq name="mcq_1_1" question="Who was your favorite character?"
               correct_choices="[gaius,adama,starbuck,roslin,six,lee]"
               {display_name_attr} {show_title_attr}
@@ -88,7 +88,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     mrq_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-mrq name="mrq_1_1" question="What makes a great MRQ?"
               ignored_choices="[1,2,3]"
               {display_name_attr} {show_title_attr}
@@ -101,7 +101,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     rating_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-rating name="rating_1_1" question="How do you rate Battlestar Galactica?"
               correct_choices="[5,6]"
               {display_name_attr} {show_title_attr}
@@ -112,7 +112,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     long_answer_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-answer name="answer_1_1" question="What did you think of the ending?"
               {display_name_attr} {show_title_attr} />
         </problem-builder>

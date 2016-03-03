@@ -68,13 +68,8 @@ class QuestionnaireAbstractBlock(
         default="",
         multiline_editor=True,
     )
-    message = String(
-        display_name=_("Message"),
-        help=_("General feedback provided when submiting"),
-        scope=Scope.content,
-        default=""
-    )
-    editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
+
+    editable_fields = ('question', 'weight', 'display_name', 'show_title')
     has_children = True
     answerable = True
 

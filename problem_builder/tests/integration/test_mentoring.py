@@ -205,7 +205,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             return title and title.text == "XBlock scenarios"
         wait.until(did_load_homepage, u"Workbench home page should have loaded")
         mentoring = self.go_to_view("student_view")
-        self.wait_until_visible(self._get_messages_element(mentoring))
+        self.wait_until_visible(self._get_xblock(mentoring, "feedback_mcq_2"))
         return mentoring
 
     def test_feedbacks_and_messages_is_not_shown_on_first_load(self):
@@ -354,3 +354,26 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         answer, mcq, mrq, rating = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
         assert_state(answer, mcq, mrq, rating, messages)
+
+    @ddt.unpack
+    @ddt.data(
+        # MCQ with tips
+        ("feedback_persistence_mcq_tips.xml", '.choice-tips'),
+        # Like the above but instead of tips in MCQ
+        # has a question level feedback. This feedback should also be suppressed.
+        ("feedback_persistence_mcq_no_tips.xml", '.feedback')
+    )
+    def test_feedback_persistence_tips(self, scenario, tips_selector):
+        # Tests whether feedback is hidden on reload.
+        with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
+            patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
+            mentoring = self.load_scenario(scenario)
+            mcq = self._get_xblock(mentoring, "feedback_mcq_2")
+            messages = mentoring.find_element_by_css_selector(tips_selector)
+            self.assertFalse(messages.is_displayed())
+            self.click_choice(mcq, "Yes")
+            self.click_submit(mentoring)
+            self.assertTrue(messages.is_displayed())
+            mentoring = self.reload_student_view()
+            messages = mentoring.find_element_by_css_selector(tips_selector)
+            self.assertFalse(messages.is_displayed())
