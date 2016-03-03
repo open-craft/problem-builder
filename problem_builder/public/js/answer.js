@@ -2,15 +2,10 @@ function AnswerBlock(runtime, element) {
     return {
         mode: null,
         init: function(options) {
-            // register the child validator
+            // Clear results and validate block when answer changes
             $(':input', element).on('keyup', options.onChange);
 
             this.mode = options.mode;
-            var checkmark = $('.answer-checkmark', element);
-            var completed = $('.xblock-answer', element).data('completed');
-            if (completed === 'True' && this.mode === 'standard') {
-                checkmark.addClass('checkmark-correct icon-ok fa-check');
-            }
 
             // In the LMS, the HTML of multiple units can be loaded at once,
             // and the user can flip among them. If that happens, the answer in
@@ -26,15 +21,15 @@ function AnswerBlock(runtime, element) {
             $('textarea', element).prop('disabled', true);
         },
 
-        handleSubmit: function(result) {
+        handleSubmit: function(result, options) {
 
             var checkmark = $('.answer-checkmark', element);
 
             this.clearResult();
 
-            if (this.mode === 'assessment') {
-                // Display of checkmark would be redundant.
-                return
+            if (options.hide_results || this.mode === 'assessment') {
+                // In assessment mode, display of checkmark would be redundant.
+                return;
             }
             if (result.status) {
                 if (result.status === "correct") {
@@ -66,7 +61,7 @@ function AnswerBlock(runtime, element) {
             var answer_length = input_value.length;
             var data = input.data();
 
-            // an answer cannot be empty event if min_characters is 0
+            // An answer cannot be empty even if min_characters is 0
             if (_.isNumber(data.min_characters)) {
                 var min_characters = _.max([data.min_characters, 1]);
                 if (answer_length < min_characters) {

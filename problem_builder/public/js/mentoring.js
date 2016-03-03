@@ -70,10 +70,6 @@ function MentoringBlock(runtime, element) {
     function setContent(dom, content) {
         dom.html('');
         dom.append(content);
-        var template = $('#light-child-template', dom).html();
-        if (template) {
-            dom.append(template);
-        }
     }
 
     function renderAttempts() {

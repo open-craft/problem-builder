@@ -1,7 +1,7 @@
 import ddt
 import unittest
 
-from mock import MagicMock, Mock, patch
+from mock import MagicMock, Mock, PropertyMock, patch
 from random import random
 
 from xblock.field_data import DictFieldData
@@ -65,6 +65,27 @@ class TestMentoringBlock(unittest.TestCase):
             fragment = block.student_view(context={})
 
             self.assertIn('Unable to load child component', fragment.content)
+
+    @ddt.data(
+        (True, True, True),
+        (True, False, False),
+        (False, False, True),
+        (False, False, True),
+    )
+    @ddt.unpack
+    def test_correctly_decides_to_show_or_hide_feedback_message(
+            self, pb_hide_feedback_if_attempts_remain, max_attempts_reached, expected_show_message
+    ):
+        block = MentoringBlock(Mock(), DictFieldData({
+            'student_results': ['must', 'be', 'non-empty'],
+        }), Mock())
+        block.get_option = Mock(return_value=pb_hide_feedback_if_attempts_remain)
+        with patch(
+                'problem_builder.mentoring.MentoringBlock.max_attempts_reached', new_callable=PropertyMock
+        ) as patched_max_attempts_reached:
+            patched_max_attempts_reached.return_value = max_attempts_reached
+            _, _, show_message = block._get_standard_results()
+            self.assertEqual(show_message, expected_show_message)
 
 
 @ddt.ddt
@@ -140,13 +161,13 @@ class TestMentoringBlockTheming(unittest.TestCase):
             self.assertEqual(patched_load_unicode.call_count, len(locations))
 
     def test_student_view_calls_include_theme_files(self):
-        self.service_mock.get_settings_bucket = Mock(return_value={})
+        self.block.get_xblock_settings = Mock(return_value={})
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.student_view({})
             patched_include_theme_files.assert_called_with(fragment)
 
     def test_author_preview_view_calls_include_theme_files(self):
-        self.service_mock.get_settings_bucket = Mock(return_value={})
+        self.block.get_xblock_settings = Mock(return_value={})
         with patch.object(self.block, 'include_theme_files') as patched_include_theme_files:
             fragment = self.block.author_preview_view({})
             patched_include_theme_files.assert_called_with(fragment)
@@ -190,16 +211,28 @@ class TestMentoringBlockOptions(unittest.TestCase):
     def test_get_option(self):
         random_key, random_value = random(), random()
         with patch.object(self.block, 'get_options') as patched_get_options:
+            # Happy path: Customizations contain expected key
             patched_get_options.return_value = {random_key: random_value}
             option = self.block.get_option(random_key)
             patched_get_options.assert_called_once_with()
             self.assertEqual(option, random_value)
+        with patch.object(self.block, 'get_options') as patched_get_options:
+            # Sad path: Customizations do not contain expected key
+            patched_get_options.return_value = {}
+            option = self.block.get_option(random_key)
+            patched_get_options.assert_called_once_with()
+            self.assertEqual(option, False)
 
     def test_student_view_calls_get_option(self):
-        self.service_mock.get_settings_bucket = Mock(return_value={})
+        self.block.get_xblock_settings = Mock(return_value={})
         with patch.object(self.block, 'get_option') as patched_get_option:
             self.block.student_view({})
             patched_get_option.assert_called_with('pb_mcq_hide_previous_answer')
+
+    def test_get_standard_results_calls_get_option(self):
+        with patch.object(self.block, 'get_option') as patched_get_option:
+            self.block._get_standard_results()
+            patched_get_option.assert_called_with('pb_hide_feedback_if_attempts_remain')
 
 
 class TestMentoringBlockJumpToIds(unittest.TestCase):

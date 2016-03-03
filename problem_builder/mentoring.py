@@ -60,7 +60,8 @@ log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 _default_options_config = {
-    'pb_mcq_hide_previous_answer': False
+    'pb_mcq_hide_previous_answer': False,
+    'pb_hide_feedback_if_attempts_remain': False,
 }
 
 
@@ -174,11 +175,11 @@ class BaseMentoringBlock(
             return xblock_settings[self.options_key]
         return _default_options_config
 
-    def get_option(self, option):
+    def get_option(self, option, default=False):
         """
         Get value of a specific instance-wide `option`.
         """
-        return self.get_options()[option]
+        return self.get_options().get(option, default)
 
     @XBlock.json_handler
     def view(self, data, suffix=''):
@@ -563,9 +564,10 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         """
         results = []
         completed = True
-        show_message = bool(self.student_results)
+        hide_feedback = self.get_option("pb_hide_feedback_if_attempts_remain") and not self.max_attempts_reached
+        show_message = (not hide_feedback) and bool(self.student_results)
 
-        # In standard mode, all children is visible simultaneously, so need collecting responses from all of them
+        # In standard mode, all children are visible simultaneously, so need to collect results for all of them
         for child in self.steps:
             child_result = child.get_last_result()
             results.append([child.name, child_result])
