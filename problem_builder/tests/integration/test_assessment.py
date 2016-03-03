@@ -53,7 +53,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.browser.get(self.live_server_url)
 
     def freeform_answer(self, number, mentoring, controls, text_input, result, saved_value="", last=False):
-        question = self.expect_question_visible(number, mentoring)
+        self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring, question)
 
@@ -112,7 +112,7 @@ class MentoringAssessmentTest(MentoringAssessmentBaseTest):
         self.do_post(controls, last)
 
     def rating_question(self, number, mentoring, controls, choice_name, result, last=False):
-        question = self.expect_question_visible(number, mentoring)
+        self.expect_question_visible(number, mentoring)
         self.assert_persistent_elements_present(mentoring)
         self._selenium_bug_workaround_scroll_to(mentoring, question)
         self.assertIn("How much do you rate this MCQ?", mentoring.text)
