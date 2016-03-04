@@ -12,7 +12,7 @@
             <pb-tip values='["understand"]'><div id="test-custom-html">Really?</div></pb-tip>
         </pb-mcq>
 
-        <pb-mrq name="feedback_mrq_3" question="What do you like in this MRQ?" required_choices='["elegance","gracefulness","beauty"]'>
+        <pb-mrq name="feedback_mrq_3" question="What do you like in this MRQ?" required_choices='["elegance","beauty","gracefulness"]'>
             <pb-choice value="elegance">Its elegance</pb-choice>
             <pb-choice value="beauty">Its beauty</pb-choice>
             <pb-choice value="gracefulness">Its gracefulness</pb-choice>

@@ -7,6 +7,8 @@ function MentoringStandardView(runtime, element, mentoring) {
     function handleSubmitResults(response, disable_submit) {
         messagesDOM.empty().hide();
 
+        var hide_results = response.message === undefined;
+
         var all_have_results = response.results.length > 0;
         $.each(response.results || [], function(index, result_spec) {
             var input = result_spec[0];
@@ -14,7 +16,8 @@ function MentoringStandardView(runtime, element, mentoring) {
             var child = mentoring.getChildByName(input);
             var options = {
                 max_attempts: response.max_attempts,
-                num_attempts: response.num_attempts
+                num_attempts: response.num_attempts,
+                hide_results: hide_results,
             };
             callIfExists(child, 'handleSubmit', result, options);
             all_have_results = all_have_results && !$.isEmptyObject(result);
@@ -24,11 +27,12 @@ function MentoringStandardView(runtime, element, mentoring) {
         $('.attempts', element).data('num_attempts', response.num_attempts);
         mentoring.renderAttempts();
 
-        // Messages should only be displayed upon hitting 'submit', not on page reload
-        mentoring.setContent(messagesDOM, response.message);
-        if (messagesDOM.html().trim()) {
-            messagesDOM.prepend('<div class="title1">' + mentoring.data.feedback_label + '</div>');
-            messagesDOM.show();
+        if (!hide_results) {
+            mentoring.setContent(messagesDOM, response.message);
+            if (messagesDOM.html().trim()) {
+                messagesDOM.prepend('<div class="title1">' + mentoring.data.feedback_label + '</div>');
+                messagesDOM.show();
+            }
         }
 
         // Disable the submit button if we have just submitted new answers,
