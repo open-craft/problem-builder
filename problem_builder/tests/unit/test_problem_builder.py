@@ -221,7 +221,7 @@ class TestMentoringBlockOptions(unittest.TestCase):
             patched_get_options.return_value = {}
             option = self.block.get_option(random_key)
             patched_get_options.assert_called_once_with()
-            self.assertEqual(option, False)
+            self.assertEqual(option, None)
 
     def test_student_view_calls_get_option(self):
         self.block.get_xblock_settings = Mock(return_value={})

@@ -290,38 +290,35 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.assertFalse(messages.is_displayed())
         self.assertFalse(submit.is_enabled())
 
-    @ddt.data(
-        (
-            {
-                'pb_mcq_hide_previous_answer': False,
-                'pb_hide_feedback_if_attempts_remain': False
-            },
-            "_standard_checks"
-        ),
-        (
-            {
-                'pb_mcq_hide_previous_answer': False,
-                'pb_hide_feedback_if_attempts_remain': True
-            },
-            "_hide_feedback_checks"
-        ),
-        (
-            {
-                'pb_mcq_hide_previous_answer': True,
-                'pb_hide_feedback_if_attempts_remain': False
-            },
-            "_mcq_hide_previous_answer_checks"
-        ),
-        (
-            {
-                'pb_mcq_hide_previous_answer': True,
-                'pb_hide_feedback_if_attempts_remain': True
-            },
-            "_mcq_hide_previous_answer_hide_feedback_checks"
-        ),
-    )
-    @ddt.unpack
-    def test_persistence(self, options, after_reload_checks):
+    def test_persists_feedback_on_page_reload(self):
+        options = {
+            'pb_mcq_hide_previous_answer': False,
+            'pb_hide_feedback_if_attempts_remain': False
+        }
+        self._test_persistence(options, "_standard_checks")
+
+    def test_does_not_persist_feedback_on_page_reload_if_disabled(self):
+        options = {
+            'pb_mcq_hide_previous_answer': False,
+            'pb_hide_feedback_if_attempts_remain': True
+        }
+        self._test_persistence(options, "_hide_feedback_checks")
+
+    def test_does_not_persist_mcq_on_page_reload_if_disabled(self):
+        options = {
+            'pb_mcq_hide_previous_answer': True,
+            'pb_hide_feedback_if_attempts_remain': False
+        }
+        self._test_persistence(options, "_mcq_hide_previous_answer_checks")
+
+    def test_does_not_persist_mcq_and_feedback_on_page_reload_if_disabled(self):
+        options = {
+            'pb_mcq_hide_previous_answer': True,
+            'pb_hide_feedback_if_attempts_remain': True
+        }
+        self._test_persistence(options, "_mcq_hide_previous_answer_hide_feedback_checks")
+
+    def _test_persistence(self, options, after_reload_checks):
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
             patched_options.return_value = options
             mentoring = self.load_scenario("feedback_persistence.xml")

@@ -175,11 +175,11 @@ class BaseMentoringBlock(
             return xblock_settings[self.options_key]
         return _default_options_config
 
-    def get_option(self, option, default=False):
+    def get_option(self, option):
         """
         Get value of a specific instance-wide `option`.
         """
-        return self.get_options().get(option, default)
+        return self.get_options().get(option)
 
     @XBlock.json_handler
     def view(self, data, suffix=''):
