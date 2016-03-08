@@ -436,7 +436,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         ("feedback_persistence_mcq_no_tips.xml", '.feedback')
     )
     def test_feedback_persistence_tips(self, scenario, tips_selector):
-        # Tests whether feedback is hidden on reload.
+        # Tests whether feedback (global message and choice tips) is hidden on reload.
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
             patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
             mentoring = self.load_scenario(scenario)
@@ -449,3 +449,37 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             mentoring = self.reload_student_view()
             messages = mentoring.find_element_by_css_selector(tips_selector)
             self.assertFalse(messages.is_displayed())
+
+    @ddt.data(
+        (0, "Yes", "Great!"),
+        (1, "Maybe not", "Ah, damn."),
+        (2, "I don't understand", "Really?")
+    )
+    @ddt.unpack
+    def test_clicking_result_icon_shows_tips(self, choice_index, choice_text, expected_tip):
+        mentoring = self.load_scenario("feedback_persistence_mcq_tips.xml")
+        mcq = self._get_xblock(mentoring, "feedback_mcq_2")
+        question_title = mentoring.find_element_by_css_selector('.question-title')
+        choice = self._get_choice(mcq, choice_index)
+        choice_result = choice.find_element_by_css_selector('.choice-result')
+        choice_tips = choice.find_element_by_css_selector('.choice-tips')
+
+        def assert_tip():
+            self.wait_until_visible(choice_tips)
+            tip = choice_tips.find_element_by_css_selector('.tip')
+            self.assertEqual(tip.text, expected_tip)
+
+        # Answer question
+        self.click_choice(mcq, choice_text)
+        # Submit answer
+        self.click_submit(mentoring)
+        # Tip for selected choice should be visible and match expected tip
+        assert_tip()
+        # Random click to make tip disappear
+        question_title.click()
+        # Tip for selected choice should be hidden
+        self.wait_until_hidden(choice_tips)
+        # Click result icon to show tips
+        choice_result.click()
+        # Tip for selected choice should be visible and match expected tip
+        assert_tip()
