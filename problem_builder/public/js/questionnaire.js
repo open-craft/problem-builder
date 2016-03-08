@@ -10,7 +10,7 @@ function display_message(message, messageView, checkmark){
             checkmark.on('click', function(ev) {
                 ev.stopPropagation();
                 messageView.showMessage(msg);
-            })
+            });
         }
     }
 }
@@ -140,7 +140,11 @@ function MCQBlock(runtime, element) {
                     choiceDOM.addClass('incorrect');
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                 }
-
+                choiceResultDOM.off('click').on('click', function() {
+                    if (choiceTipsDOM.html() !== '') {
+                        messageView.showMessage(choiceTipsDOM);
+                    }
+                });
                 if (result.tips) {
                     mentoring.setContent(choiceTipsDOM, result.tips);
                     messageView.showMessage(choiceTipsDOM);
