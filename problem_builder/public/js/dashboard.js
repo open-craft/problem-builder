@@ -8,6 +8,18 @@ function PBDashboardBlock(runtime, element, initData) {
     var generateDataUriFromImageURL = function(imgURL) {
         // Given the URL to an image, IF the image has already been cached by the browser,
         // returns a data: URI with the contents of the image (image will be converted to PNG)
+
+        // Expand relative urls and urls without an explicit protocol into absolute urls
+        var a = document.createElement('a');
+        a.href = imgURL;
+        imgURL = a.href;
+
+        // If the image is from another domain, just return its URL. We can't
+        // create a data URL from cross-domain images:
+        // https://html.spec.whatwg.org/multipage/scripting.html#dom-canvas-todataurl
+        if (a.origin !== window.location.origin)
+            return imgURL;
+
         var img = new Image();
         img.src = imgURL;
         if (!img.complete)
