@@ -4,7 +4,7 @@ machine:
 dependencies:
   override:
     - "pip install -U pip wheel setuptools"
-    - "pip install -e git://github.com/edx/xblock-sdk.git@22c1b2f173919bef22f2d9d9295ec5396d02dffd#egg=xblock-sdk"
+    - "pip install -e git://github.com/edx/xblock-sdk.git@bddf9f4a2c6e4df28a411c8f632cc2250170ae9d#egg=xblock-sdk"
     - "pip install -r requirements.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/base.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/test.txt"
