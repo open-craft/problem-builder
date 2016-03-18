@@ -238,7 +238,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image', threshold=100)
 
     @check_dashboard_and_report(SIMPLE_DASHBOARD, visual_rules=json.dumps({
-        'background': ('//raw.githubusercontent.com/open-craft/problem-builder/omar/report-download/'
+        'background': ('//raw.githubusercontent.com/open-craft/problem-builder/master/'
                        'problem_builder/static/test/swoop-bg.png'),
     }))
     def test_dashboard_image_cross_domain(self):
