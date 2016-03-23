@@ -195,7 +195,7 @@ function MRQBlock(runtime, element) {
 
         handleReview: function(result) {
             $.each(result.submissions, function (index, value) {
-                $('input[type="checkbox"][value="' + value + '"]').prop('checked', true)
+                $('input[type="checkbox"][value="' + value + '"]').prop('checked', true);
             });
             $('input', element).prop('disabled', true);
         },

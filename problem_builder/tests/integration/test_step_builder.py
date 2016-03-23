@@ -1,5 +1,5 @@
 from mock import patch
-from ddt import ddt, data
+from ddt import ddt, data, unpack
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -496,6 +496,64 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         if extended_feedback:
             self.extended_feedback_checks(step_builder, controls, expected_results)
+
+    @data(
+        (0, "Yes", "Great!", True, CORRECT),
+        (1, "Maybe not", "Ah, damn.", False, INCORRECT),
+        (2, "I don't understand", "Really?", False, INCORRECT),
+    )
+    @unpack
+    def test_mcq_feedback(self, choice_index, choice_text, expected_feedback, correct, step_result):
+        params = {
+            "max_attempts": 1,
+            "extended_feedback": True,
+        }
+        step_builder, controls = self.load_assessment_scenario("step_builder_mcq_feedback.xml", params)
+
+        # Step 1
+        # Submit MCQ, go to review step
+        self.single_choice_question(None, step_builder, controls, choice_text, step_result, last=True)
+
+        # Check MCQ feedback
+        self.review_mcq(step_builder, choice_index, expected_feedback, correct)
+
+        # Reload page
+        self.browser.execute_script("$(document).html(' ');")
+        step_builder, controls = self.go_to_assessment()
+
+        # Check MCQ feedback
+        self.review_mcq(step_builder, choice_index, expected_feedback, correct)
+
+        # Go back to review step
+        controls.review_link.click()
+
+        # Check MCQ feedback
+        self.review_mcq(step_builder, choice_index, expected_feedback, correct)
+
+    def review_mcq(self, step_builder, choice_index, expected_feedback, correct):
+        correctness = 'correct' if correct else 'incorrect'
+        mcq_link = step_builder.find_elements_by_css_selector('.{}-list li a'.format(correctness))[0]
+        mcq_link.click()
+        mcq = step_builder.find_element_by_css_selector(".xblock-v1[data-name='mcq_1_1']")
+        self.assert_choice_feedback(mcq, choice_index, expected_feedback, correct)
+
+    def assert_choice_feedback(self, mcq, choice_index, expected_text, correct=True):
+        """
+        Asserts that feedback for given element contains particular text
+        """
+        choice = mcq.find_elements_by_css_selector(".choices-list .choice")[choice_index]
+        choice_result = choice.find_element_by_css_selector('.choice-result')
+        feedback_popup = choice.find_element_by_css_selector(".choice-tips")
+        checkmark_class = 'checkmark-correct' if correct else 'checkmark-incorrect'
+
+        self.wait_until_visible(feedback_popup)
+        self.assertEqual(feedback_popup.text, expected_text)
+        self.assert_choice_result(choice_result, checkmark_class=checkmark_class)
+
+    def assert_choice_result(self, choice_result, checkmark_class):
+        result_classes = choice_result.get_attribute('class').split()
+        self.wait_until_visible(choice_result)
+        self.assertIn(checkmark_class, result_classes)
 
     def test_review_tips(self):
         params = {
