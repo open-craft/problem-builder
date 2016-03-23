@@ -35,10 +35,13 @@ function MentoringStandardView(runtime, element, mentoring) {
             }
         }
 
+        // Data may have changed, we have to re-validate.
+        validateXBlock();
+
         // Disable the submit button if we have just submitted new answers,
         // or if we have just [re]loaded the page and are showing a complete set
         // of old answers.
-        if (disable_submit || all_have_results) {
+        if (disable_submit || (all_have_results && mentoring.data.hide_feedback !== 'True')) {
             submitDOM.attr('disabled', 'disabled');
         }
     }
@@ -110,7 +113,8 @@ function MentoringStandardView(runtime, element, mentoring) {
         submitDOM.show();
 
         var options = {
-            onChange: onChange
+            onChange: onChange,
+            validateXBlock: validateXBlock
         };
 
         mentoring.initChildren(options);

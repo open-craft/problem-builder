@@ -478,6 +478,10 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         """
         return '/jump_to_id/{}'.format(self.next_step)
 
+    @property
+    def hide_feedback(self):
+        return self.get_option("pb_hide_feedback_if_attempts_remain") and not self.max_attempts_reached
+
     def get_message(self, completed):
         """
         Get the message to display to a student following a submission in normal mode.
@@ -564,8 +568,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         """
         results = []
         completed = True
-        hide_feedback = self.get_option("pb_hide_feedback_if_attempts_remain") and not self.max_attempts_reached
-        show_message = (not hide_feedback) and bool(self.student_results)
+        show_message = (not self.hide_feedback) and bool(self.student_results)
 
         # In standard mode, all children are visible simultaneously, so need to collect results for all of them
         for child in self.steps:

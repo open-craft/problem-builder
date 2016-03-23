@@ -303,7 +303,7 @@ function MentoringWithStepsBlock(runtime, element) {
             var mentoring = {
                 setContent: setContent,
                 publish_event: publishEvent,
-                step_builder: true
+                is_step_builder: true
             };
             options.mentoring = mentoring;
             step.initChildren(options);

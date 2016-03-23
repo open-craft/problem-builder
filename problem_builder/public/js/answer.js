@@ -6,6 +6,7 @@ function AnswerBlock(runtime, element) {
             $(':input', element).on('keyup', options.onChange);
 
             this.mode = options.mode;
+            this.validateXBlock = options.validateXBlock;
 
             // In the LMS, the HTML of multiple units can be loaded at once,
             // and the user can flip among them. If that happens, the answer in
@@ -72,6 +73,7 @@ function AnswerBlock(runtime, element) {
         },
 
         refreshAnswer: function() {
+            var self = this;
             $.ajax({
                 type: 'POST',
                 url: runtime.handlerUrl(element, 'answer_value'),
@@ -85,6 +87,9 @@ function AnswerBlock(runtime, element) {
                     var origAnswer = $('.orig-student-answer', element).text();
                     if (currentAnswer == origAnswer && currentAnswer != newAnswer) {
                         $textarea.val(newAnswer);
+                    }
+                    if (self.validateXBlock) {
+                      self.validateXBlock();
                     }
                 },
             });

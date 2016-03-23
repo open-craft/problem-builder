@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="mentoring themed-xblock" data-mode="{{ self.mode }}" data-step="{{ self.step }}" data-feedback_label="{{ self.feedback_label}}">
+<div class="mentoring themed-xblock" data-mode="{{ self.mode }}" data-step="{{ self.step }}" data-feedback_label="{{ self.feedback_label }}" data-hide_feedback="{{ self.hide_feedback }}">
   <div class="missing-dependency warning" data-missing="{{ self.has_missing_dependency }}">
     {% with url=missing_dependency_url|safe %}
     {% blocktrans with link_start="<a href='"|add:url|add:"'>" link_end="</a>" %}
