@@ -164,17 +164,22 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         choice_input = choice.find_element_by_css_selector('input')
         self.assertFalse(choice_input.is_selected())
 
-    def _assert_mrq(self, mrq):
-        self._assert_feedback_shown(
-            mrq, 0, "This is something everyone has to like about this MRQ",
-            click_choice_result=True
-        )
-        self._assert_feedback_shown(
-            mrq, 1, "This is something everyone has to like about beauty",
-            click_choice_result=True, success=False
-        )
-        self._assert_feedback_shown(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
-        self._assert_feedback_shown(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
+    def _assert_mrq(self, mrq, previous_answer_shown=True):
+        if previous_answer_shown:
+            self._assert_feedback_shown(
+                mrq, 0, "This is something everyone has to like about this MRQ",
+                click_choice_result=True
+            )
+            self._assert_feedback_shown(
+                mrq, 1, "This is something everyone has to like about beauty",
+                click_choice_result=True, success=False
+            )
+            self._assert_feedback_shown(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
+            self._assert_feedback_shown(mrq, 3, "Nah, there aren't any!", click_choice_result=True, success=False)
+        else:
+            for i in range(3):
+                self._assert_feedback_hidden(mrq, i)
+                self._assert_not_checked(mrq, i)
 
     def _assert_messages(self, messages, shown=True):
         if shown:
@@ -227,8 +232,8 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_answer(answer)
         # MCQ: Previous answer and results hidden
         self._assert_mcq(mcq, previous_answer_shown=False)
-        # MRQ: Previous answer and results visible
-        self._assert_mrq(mrq)
+        # MRQ: Previous answer and results hidden
+        self._assert_mrq(mrq, previous_answer_shown=False)
         # Rating: Previous answer and results hidden
         self._assert_rating(rating, previous_answer_shown=False)
         # Messages visible
@@ -251,8 +256,8 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_answer(answer, results_shown=False)
         # MCQ: Previous answer and results hidden
         self._assert_mcq(mcq, previous_answer_shown=False)
-        # MRQ: Previous answer and results visible
-        self._assert_mrq(mrq)
+        # MRQ: Previous answer and results hidden
+        self._assert_mrq(mrq, previous_answer_shown=False)
         # Rating: Previous answer and feedback hidden
         self._assert_rating(rating, previous_answer_shown=False)
         # Messages hidden
@@ -338,11 +343,19 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             # ... and see if previous answers, results, feedback are shown/hidden correctly
             getattr(self, after_reload_checks)(answer, mcq, mrq, rating, messages)
 
-            # After reloading, submit is disabled...
-            self.assertFalse(submit.is_enabled())
+            # After reloading, submit is enabled only when:
+            #  - feedback is hidden; and
+            #  - previous MCQ/MRQ answers are visible.
+            # When feedback is visible there's no need to resubmit the same answer;
+            # and when previous MCQ/MRQ answers are hidden, submit is disabled until you select some options.
+            if options['pb_hide_feedback_if_attempts_remain'] and not options['pb_mcq_hide_previous_answer']:
+                self.assertTrue(submit.is_enabled())
+            else:
+                self.assertFalse(submit.is_enabled())
 
-            # ... until student makes changes
+            # When student makes changes, submit is enabled again.
             self.click_choice(mcq, "Maybe not")
+            self.click_choice(mrq, "Its elegance")
             self.click_choice(rating, "2")
             self.assertTrue(submit.is_enabled())
 

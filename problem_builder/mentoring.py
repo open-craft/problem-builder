@@ -374,7 +374,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
     def student_view(self, context):
-        from .mcq import MCQBlock  # Import here to avoid circular dependency
+        from .questionnaire import QuestionnaireAbstractBlock  # Import here to avoid circular dependency
 
         # Migrate stored data if necessary
         self.migrate_fields()
@@ -398,7 +398,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
                     if self.is_assessment and isinstance(child, QuestionMixin):
                         child_fragment = child.render('assessment_step_view', context)
                     else:
-                        if mcq_hide_previous_answer and isinstance(child, MCQBlock):
+                        if mcq_hide_previous_answer and isinstance(child, QuestionnaireAbstractBlock):
                             context['hide_prev_answer'] = True
                         else:
                             context['hide_prev_answer'] = False
