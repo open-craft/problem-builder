@@ -89,8 +89,15 @@ function MentoringStepBlock(runtime, element) {
                 var child = children[i];
                 if (child && child.name !== undefined) { // Check if we are dealing with a question
                     var result = results[child.name];
-                    callIfExists(child, 'handleSubmit', result, options);
+                    // Call handleReview first to ensure that choice-level feedback for MCQs is displayed:
+                    // Before displaying feedback for a given choice, handleSubmit checks if it is selected.
+                    // (If it isn't, we don't want to display feedback for it.)
+                    // handleReview is responsible for setting the "checked" property to true
+                    // for each choice that the student selected as part of their most recent submission.
+                    // If it is called after handleSubmit, the check mentioned above will fail,
+                    // and no feedback will be displayed.
                     callIfExists(child, 'handleReview', result);
+                    callIfExists(child, 'handleSubmit', result, options);
                 }
             }
         },
@@ -100,7 +107,7 @@ function MentoringStepBlock(runtime, element) {
         },
 
         hasQuestion: function() {
-            return $('.sb-step', element).data('has-question')
+            return $('.sb-step', element).data('has-question');
         },
 
         updateChildren: function() {
