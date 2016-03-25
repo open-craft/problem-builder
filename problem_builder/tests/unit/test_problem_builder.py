@@ -227,7 +227,8 @@ class TestMentoringBlockOptions(unittest.TestCase):
         self.block.get_xblock_settings = Mock(return_value={})
         with patch.object(self.block, 'get_option') as patched_get_option:
             self.block.student_view({})
-            patched_get_option.assert_called_with('pb_mcq_hide_previous_answer')
+            patched_get_option.assert_any_call('pb_mcq_hide_previous_answer')
+            patched_get_option.assert_any_call('pb_hide_feedback_if_attempts_remain')
 
     def test_get_standard_results_calls_get_option(self):
         with patch.object(self.block, 'get_option') as patched_get_option:

@@ -210,7 +210,11 @@ function MRQBlock(runtime, element) {
 
             var questionnaireDOM = $('fieldset.questionnaire', element);
             var data = questionnaireDOM.data();
-            var hide_results = (data.hide_results === 'True');
+            var hide_results = (data.hide_results === 'True' ||
+                                (data.hide_prev_answer === 'True' && !mentoring.is_step_builder));
+            // hide_prev_answer should only take effect when we initially render (previous) results,
+            // so set hide_prev_answer to False after initial render.
+            questionnaireDOM.data('hide_prev_answer', 'False');
 
             $.each(result.choices, function(index, choice) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element);
