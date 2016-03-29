@@ -624,9 +624,6 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     @data(True, False)
     def test_conditional_messages(self, include_messages):
-        """
-        Test that conditional messages in the review step are visible or not, as appropriate.
-        """
         max_attempts = 3
         extended_feedback = False
         params = {
@@ -1371,7 +1368,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def provide_freeform_answer(self, step_number, question_number, step_builder, text_input):
         steps = step_builder.find_elements_by_css_selector('div[data-block-type="sb-step"]')
-        current_step = steps[step_number-1]
+        current_step = steps[0]
         freeform_questions = current_step.find_elements_by_css_selector('div[data-block-type="pb-answer"]')
         current_question = freeform_questions[question_number-1]
 
