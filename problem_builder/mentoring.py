@@ -1027,6 +1027,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/lms_util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")

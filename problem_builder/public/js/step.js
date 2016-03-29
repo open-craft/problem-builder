@@ -4,6 +4,8 @@ function MentoringStepBlock(runtime, element) {
 
     var submitXHR, resultsXHR,
         message = $(element).find('.sb-step-message');
+    
+    var childManager = new ProblemBuilderUtilLMS.ChildManager(element, runtime);
 
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
@@ -13,13 +15,6 @@ function MentoringStepBlock(runtime, element) {
         }
     }
 
-    function updateVideo(video) {
-        video.resizer.align();
-    }
-
-    function updatePlot(plot) {
-        plot.update();
-    }
 
     return {
 
@@ -56,7 +51,7 @@ function MentoringStepBlock(runtime, element) {
         },
 
         showFeedback: function(response) {
-            // Called when user has just submitted an answer or is reviewing their answer durign extended feedback.
+            // Called when user has just submitted an answer or is reviewing their answer during extended feedback.
             if (message.length) {
                 message.fadeIn();
                 $(document).click(function() {
@@ -110,20 +105,15 @@ function MentoringStepBlock(runtime, element) {
             return $('.sb-step', element).data('has-question');
         },
 
-        updateChildren: function() {
-            children.forEach(function(child) {
-                var type = $(child.element).data('block-type');
-                switch (type) {
-                case 'video':
-                    updateVideo(child);
-                    break;
-                case 'sb-plot':
-                    updatePlot(child);
-                    break;
-                }
-            });
-        }
+        show: function () {
+            $(element).show();
+            childManager.show();
+        },
 
+        hide: function () {
+            $(element).hide();
+            childManager.hide();
+        }
     };
 
 }

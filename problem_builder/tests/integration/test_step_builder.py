@@ -624,9 +624,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     @data(True, False)
     def test_conditional_messages(self, include_messages):
-        """
-        Test that conditional messages in the review step are visible or not, as appropriate.
-        """
+        # Test that conditional messages in the review step are visible or not, as appropriate.
         max_attempts = 3
         extended_feedback = False
         params = {
