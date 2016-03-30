@@ -79,6 +79,7 @@ function MentoringWithStepsBlock(runtime, element) {
      */
     function showStep(step_wrapper) {
         step_wrapper.$element.insertAfter(step_wrapper.$anchor);
+        step_wrapper.$element.show();
         step_wrapper.xblock.updateChildren();
     }
 
