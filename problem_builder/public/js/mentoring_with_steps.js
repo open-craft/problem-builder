@@ -8,10 +8,8 @@ function MentoringWithStepsBlock(runtime, element) {
 
     var children = runtime.children(element);
 
-    var step_map = {};
-    var step_indexer = [];
+    var steps = [];
 
-    var stepCount = 0;
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
         var blockType = $(child.element).data('block-type');
@@ -30,18 +28,15 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function registerStep(step) {
         var $element = $(step.element);
-        var usage_id = $element.attr('data-usage-id');
-        var $anchor = $('<span class="xblock-sb-anchor"/>').data('anchored-xblock-id', usage_id);
+        var $anchor = $('<span class="xblock-sb-anchor"/>');
         $anchor.insertBefore($element);
-        step_indexer.push(usage_id);
-        step_map[usage_id] = {
-            id: usage_id,
-            idx: stepCount,
+        var step = {
+            idx: step.length,
             $element: $element,
             xblock: step,
             $anchor: $anchor
         };
-        stepCount+=1;
+        steps.push(step);
     }
     
     function getActiveStep() {
@@ -53,14 +48,12 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function getStepByIndex(idx){
-        return step_map[step_indexer[idx]];
+        return steps[idx];
     }
 
     function forEachStep(func){
-        for (var step_id in step_map) {
-            if (step_map.hasOwnProperty(step_id)) {
-                func(step_map[step_id]);
-            }
+        for (var idx=0; idx<steps.length; idx++) {
+            func(steps[idx]);
         }
     }
 
@@ -81,11 +74,11 @@ function MentoringWithStepsBlock(runtime, element) {
     function hideAllSteps() {
         forEachStep(function(step){
             hideStep(step);
-        })
+        });
     }
 
     function isLastStep() {
-        return (activeStepIndex === stepCount-1);
+        return (activeStepIndex === steps.length-1);
     }
 
     function atReviewStep() {
