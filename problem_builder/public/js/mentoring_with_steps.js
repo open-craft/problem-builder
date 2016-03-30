@@ -50,7 +50,7 @@ function MentoringWithStepsBlock(runtime, element) {
      * for properties)
      */
     function getWrapperForActiveStep() {
-        return steps[activeStepIndex](activeStepIndex);
+        return steps[activeStepIndex];
     }
 
     /**
