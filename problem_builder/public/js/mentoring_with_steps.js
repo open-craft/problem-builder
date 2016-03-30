@@ -64,12 +64,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function showStep(step) {
-        step.$element.insertAfter(step.$anchor);
+        // step.$element.insertAfter(step.$anchor);
         step.$element.show();
     }
 
     function hideStep(step) {
         step.$element.detach();
+        step.$element.insertAfter(step.$anchor);
+        step.$element.hide();
     }
 
     function hideAllSteps() {
