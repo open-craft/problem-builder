@@ -202,7 +202,9 @@ function MentoringWithStepsBlock(runtime, element) {
 
 
     function clearSelections() {
-        $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
+        forEachStep(function (step_wrapper) {
+            $('input[type=radio], input[type=checkbox]', step_wrapper.$element).prop('checked', false);
+        });
     }
 
     function cleanAll() {
