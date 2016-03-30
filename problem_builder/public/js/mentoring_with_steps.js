@@ -7,30 +7,120 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     var children = runtime.children(element);
+
     var steps = [];
 
     for (var i = 0; i < children.length; i++) {
         var child = children[i];
         var blockType = $(child.element).data('block-type');
         if (blockType === 'sb-step') {
-            steps.push(child);
+            registerStep(child);
         }
     }
 
-    var activeStep = $('.mentoring', element).data('active-step');
+    var activeStepIndex = $('.mentoring', element).data('active-step');
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var message = $('.sb-step-message', element);
     var checkmark, submitDOM, nextDOM, reviewButtonDOM, tryAgainDOM,
         gradeDOM, attemptsDOM, reviewLinkDOM, submitXHR;
     var reviewStepDOM = $("div.xblock[data-block-type=sb-review-step], div.xblock-v1[data-block-type=sb-review-step]", element);
     var hasAReviewStep = reviewStepDOM.length == 1;
+    
+    /**
+     * Registers step with this StepBuilder instance: Creates and stores a wrapper that contains the XBlock instance
+     * and associated DOM element, as well as some additional metadata used to safely
+     * remove and re-attach xblock to the DOM. See showStep and hideStep to see why we need to do it.
+     * @param step xblock instance to register
+     */
+    function registerStep(step) {
+        var $element = $(step.element);
+        var $anchor = $('<span class="xblock-sb-anchor"/>');
+        $anchor.insertBefore($element);
+        var step_wrapper = {
+            $element: $element,
+            xblock: step,
+            $anchor: $anchor
+        };
+        steps.push(step_wrapper);
+    }
+
+    /**
+     * Returns wrapper for the active step
+     * @returns {*}, an object containing the XBlock instance and associated DOM element for the active step, as well
+     * as additional metadata (see registerStep where this object is created for properties)
+     */
+    function getWrapperForActiveStep() {
+        return steps[activeStepIndex];
+    }
+
+    /**
+     * Returns the active step
+     * @returns {*}
+     */
+    function getActiveStep() {
+        return getWrapperForActiveStep().xblock;
+    }
+
+    /**
+     * Calls a function for each registered step. The object passed to this function is a step wrapper object
+     * (see registerStep where this object is created for a list of properties)
+     *
+     * @param func single arg function.
+     */
+    function forEachStep(func){
+        for (var idx=0; idx < steps.length; idx++) {
+            func(steps[idx]);
+        }
+    }
+
+    /**
+     * Displays a step
+     * @param step_wrapper 
+     */
+    function showStep(step_wrapper) {
+        step_wrapper.$element.show();
+        step_wrapper.xblock.updateChildren();
+    }
+
+    /**
+     * Hides a step
+     * @param step_wrapper
+     */
+    function hideStep(step_wrapper) {
+        // This is a hacky workaround, but it works. It detaches this element from DOM, and re-attaches it immediately,
+        // which has the side effect of stopping any video elements (tested with Ooyala and Youtube). 
+        // This solution was chosen as permanently detaching xblocks from DOM is not anticipated by:
+        //  * Selenium tests
+        //  * Some javascript code here
+        //  * Anything else that inspects DOM elements and makes choices         
+        step_wrapper.$element.detach();
+        step_wrapper.$element.insertAfter(step_wrapper.$anchor);
+        step_wrapper.$element.hide();
+    }
+
+    /**
+     * Displays the active step
+     */
+    function showActiveStep() {
+        var step = getWrapperForActiveStep();
+        showStep(step);
+    }
+
+    /**
+     * Hides all steps
+     */
+    function hideAllSteps() {
+        forEachStep(function(step){
+            hideStep(step);
+        });
+    }
 
     function isLastStep() {
-        return (activeStep === steps.length-1);
+        return (activeStepIndex === steps.length-1);
     }
 
     function atReviewStep() {
-        return (activeStep === -1);
+        return (activeStepIndex === -1);
     }
 
     function someAttemptsLeft() {
@@ -49,7 +139,7 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
         }
-        var step = steps[activeStep];
+        var step = getActiveStep();
         if (typeof step.showFeedback == 'function') {
             step.showFeedback(response);
         }
@@ -78,14 +168,14 @@ function MentoringWithStepsBlock(runtime, element) {
     function submit() {
         submitDOM.attr('disabled', 'disabled'); // Disable the button until the results load.
         var submitUrl = runtime.handlerUrl(element, 'submit');
-
-        var hasQuestion = steps[activeStep].hasQuestion();
-        var data = steps[activeStep].getSubmitData();
-        data["active_step"] = activeStep;
+        var activeStep = getActiveStep();
+        var hasQuestion = activeStep.hasQuestion();
+        var data = activeStep.getSubmitData();
+        data["active_step"] = activeStepIndex;
         $.post(submitUrl, JSON.stringify(data)).success(function(response) {
             showFeedback(response);
-            activeStep = response.active_step;
-            if (activeStep === -1) {
+            activeStepIndex = response.active_step;
+            if (activeStepIndex === -1) {
                 // We are now showing the review step / end
                 // Update the number of attempts.
                 attemptsDOM.data('num_attempts', response.num_attempts);
@@ -102,15 +192,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function getResults() {
-        var step = steps[activeStep];
-        step.getResults(handleReviewResults);
+        getActiveStep().getResults(handleReviewResults);
     }
 
     function handleReviewResults(response) {
         // Show step-level feedback
         showFeedback(response);
         // Forward to active step to show answer level feedback
-        var step = steps[activeStep];
+        var step = getActiveStep();
         var results = response.results;
         var options = {
             checkmark: checkmark
@@ -118,11 +207,6 @@ function MentoringWithStepsBlock(runtime, element) {
         step.handleReview(results, options);
     }
 
-    function hideAllSteps() {
-        for (var i=0; i < steps.length; i++) {
-            $(steps[i].element).hide();
-        }
-    }
 
     function clearSelections() {
         $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
@@ -139,7 +223,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function updateNextLabel() {
-        var step = steps[activeStep];
+        var step = getActiveStep();
         nextDOM.attr('value', step.getStepLabel());
     }
 
@@ -164,7 +248,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.on('click', updateDisplay);
             reviewButtonDOM.on('click', showGrade);
 
-            var step = steps[activeStep];
+            var step = getActiveStep();
             if (step.hasQuestion()) {  // Step includes one or more questions
                 nextDOM.attr('disabled', 'disabled');
                 submitDOM.show();
@@ -231,7 +315,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function jumpToReview(stepIndex) {
-        activeStep = stepIndex;
+        activeStepIndex = stepIndex;
         cleanAll();
         showActiveStep();
         updateNextLabel();
@@ -245,7 +329,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.show();
             nextDOM.removeAttr('disabled');
         }
-        var step = steps[activeStep];
+        var step = getActiveStep();
 
         tryAgainDOM.hide();
         if (step.hasQuestion()) {
@@ -269,11 +353,6 @@ function MentoringWithStepsBlock(runtime, element) {
         } // Don't show attempts if unlimited attempts available (max_attempts === 0)
     }
 
-    function showActiveStep() {
-        var step = steps[activeStep];
-        $(step.element).show();
-        step.updateChildren();
-    }
 
     function onChange() {
         // We do not allow users to modify answers belonging to a step after submitting them:
@@ -286,7 +365,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function validateXBlock() {
         var isValid = true;
-        var step = steps[activeStep];
+        var step = getActiveStep();
         if (step) {
             isValid = step.validate();
         }
@@ -298,16 +377,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function initSteps(options) {
-        for (var i=0; i < steps.length; i++) {
-            var step = steps[i];
-            var mentoring = {
+        forEachStep(function (step) {
+            options.mentoring = {
                 setContent: setContent,
                 publish_event: publishEvent,
                 is_step_builder: true
             };
-            options.mentoring = mentoring;
-            step.initChildren(options);
-        }
+            step.xblock.initChildren(options);
+        });
     }
 
     function setContent(dom, content) {
@@ -347,7 +424,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function reviewNextStep() {
-        jumpToReview(activeStep+1);
+        jumpToReview(activeStepIndex+1);
     }
 
     function handleTryAgain(result) {
@@ -356,7 +433,7 @@ function MentoringWithStepsBlock(runtime, element) {
         // and interrupting their experience with the current unit
         notify('navigation', {state: 'lock'});
 
-        activeStep = result.active_step;
+        activeStepIndex = result.active_step;
         clearSelections();
         updateDisplay();
         tryAgainDOM.hide();
