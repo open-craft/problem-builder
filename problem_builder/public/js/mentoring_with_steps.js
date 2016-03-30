@@ -60,6 +60,7 @@ function MentoringWithStepsBlock(runtime, element) {
     function showActiveStep() {
         var step = getActiveStep();
         showStep(step);
+        step.xblock.updateChildren();
     }
 
     function showStep(step) {

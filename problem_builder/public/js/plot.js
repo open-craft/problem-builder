@@ -179,6 +179,11 @@ function PlotBlock(runtime, element) {
         }
     }
 
+    function refreshDefaultButton(refresh){
+        toggleOverlay(defaultClaims, defaultColor, 'claim-default', refresh);
+        toggleBorderColor(this, defaultColor, refresh);
+    }
+
     function toggleQuadrantLabels() {
         var selection = svgContainer.selectAll(".quadrant-label"),
             quadrantLabelsOn = quadrantsButton.val() === 'On';
@@ -215,9 +220,10 @@ function PlotBlock(runtime, element) {
         }
     }
 
+
+
     defaultButton.on('click', function(event, refresh) {
-        toggleOverlay(defaultClaims, defaultColor, 'claim-default', refresh);
-        toggleBorderColor(this, defaultColor, refresh);
+        refreshDefaultButton(refresh);
     });
 
     averageButton.on('click', function() {
@@ -272,7 +278,7 @@ function PlotBlock(runtime, element) {
                     // Default overlay should be visible initially.
                     // Might still be visible from a previous attempt;
                     // in that case, we refresh it:
-                    defaultButton.trigger('click', 'refresh');
+                    refreshDefaultButton(true);
 
                     // Average overlay should be hidden initially.
                     // This is the default when (re-)loading the page from scratch.
