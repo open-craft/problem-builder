@@ -97,7 +97,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     /**
-     * Displays active step
+     * Displays the active step
      */
     function showActiveStep() {
         var step = getWrapperForActiveStep();
