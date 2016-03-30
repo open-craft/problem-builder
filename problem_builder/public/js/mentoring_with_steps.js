@@ -43,8 +43,8 @@ function MentoringWithStepsBlock(runtime, element) {
         return getStepByIndex(activeStepIndex);
     }
 
-    function getActiveStepBlock() {
-        return getActiveStep()['xblock'];
+    function getActiveBlock() {
+        return getActiveStep().xblock;
     }
 
     function getStepByIndex(idx){
@@ -64,7 +64,6 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function showStep(step) {
-        // step.$element.insertAfter(step.$anchor);
         step.$element.show();
     }
 
@@ -104,7 +103,7 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
         }
-        var step = getActiveStepBlock();
+        var step = getActiveBlock();
         if (typeof step.showFeedback == 'function') {
             step.showFeedback(response);
         }
@@ -133,7 +132,7 @@ function MentoringWithStepsBlock(runtime, element) {
     function submit() {
         submitDOM.attr('disabled', 'disabled'); // Disable the button until the results load.
         var submitUrl = runtime.handlerUrl(element, 'submit');
-        var activeStep = getActiveStepBlock();
+        var activeStep = getActiveBlock();
         var hasQuestion = activeStep.hasQuestion();
         var data = activeStep.getSubmitData();
         data["active_step"] = activeStepIndex;
@@ -157,14 +156,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function getResults() {
-        getActiveStepBlock().getResults(handleReviewResults);
+        getActiveBlock().getResults(handleReviewResults);
     }
 
     function handleReviewResults(response) {
         // Show step-level feedback
         showFeedback(response);
         // Forward to active step to show answer level feedback
-        var step = getActiveStepBlock();
+        var step = getActiveBlock();
         var results = response.results;
         var options = {
             checkmark: checkmark
@@ -188,7 +187,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function updateNextLabel() {
-        var step = getActiveStepBlock();
+        var step = getActiveBlock();
         nextDOM.attr('value', step.getStepLabel());
     }
 
@@ -213,7 +212,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.on('click', updateDisplay);
             reviewButtonDOM.on('click', showGrade);
 
-            var step = getActiveStepBlock();
+            var step = getActiveBlock();
             if (step.hasQuestion()) {  // Step includes one or more questions
                 nextDOM.attr('disabled', 'disabled');
                 submitDOM.show();
@@ -294,7 +293,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.show();
             nextDOM.removeAttr('disabled');
         }
-        var step = getActiveStepBlock();
+        var step = getActiveBlock();
 
         tryAgainDOM.hide();
         if (step.hasQuestion()) {
@@ -330,7 +329,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function validateXBlock() {
         var isValid = true;
-        var step = getActiveStepBlock();
+        var step = getActiveBlock();
         if (step) {
             isValid = step.validate();
         }
