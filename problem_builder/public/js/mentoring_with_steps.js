@@ -27,7 +27,8 @@ function MentoringWithStepsBlock(runtime, element) {
     var hasAReviewStep = reviewStepDOM.length == 1;
     
     /**
-     * Registers step to in this builder, it stores the xblock element, and some additional metadata used to safely
+     * Registers step with this StepBuilder instance: Creates and stores a wrapper that contains the XBlock instance
+     * and associated DOM element, as well as some additional metadata used to safely
      * remove and re-attach xblock to the DOM. See showStep and hideStep to see why we need to do it.
      * @param step xblock instance to register
      */
@@ -36,7 +37,6 @@ function MentoringWithStepsBlock(runtime, element) {
         var $anchor = $('<span class="xblock-sb-anchor"/>');
         $anchor.insertBefore($element);
         var step_wrapper = {
-            idx: step.length,
             $element: $element,
             xblock: step,
             $anchor: $anchor
@@ -45,16 +45,16 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     /**
-     * Returns wrapper for active step
-     * @returns {*}, an object containing xblock, and additional metadata (see registerStep where this object is created
-     * for properties)
+     * Returns wrapper for the active step
+     * @returns {*}, an object containing the XBlock instance and associated DOM element for the active step, as well
+     * as additional metadata (see registerStep where this object is created for properties)
      */
     function getWrapperForActiveStep() {
         return steps[activeStepIndex];
     }
 
     /**
-     * Returns active step)
+     * Returns the active step
      * @returns {*}
      */
     function getActiveStep() {
@@ -62,13 +62,13 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     /**
-     * Calls a function for each registered step. Object passed to this function is an step wrapper object
-     * (see registerStep where this object is created a list of properties)
+     * Calls a function for each registered step. The object passed to this function is a step wrapper object
+     * (see registerStep where this object is created for a list of properties)
      *
      * @param func single arg function.
      */
     function forEachStep(func){
-        for (var idx=0; idx<steps.length; idx++) {
+        for (var idx=0; idx < steps.length; idx++) {
             func(steps[idx]);
         }
     }
@@ -87,10 +87,12 @@ function MentoringWithStepsBlock(runtime, element) {
      * @param step_wrapper
      */
     function hideStep(step_wrapper) {
-        // This is a hacky workaround, but it works. It detaches this element from dom, and re-attaches it immediately,
+        // This is a hacky workaround, but it works. It detaches this element from DOM, and re-attaches it immediately,
         // which has the side effect of stopping any video elements (tested with Ooyala and Youtube). 
-        // This solution was chosen as permanently detaching xblocks from DOM is not anticipated by lot of software 
-        // and some code in this repository. 
+        // This solution was chosen as permanently detaching xblocks from DOM is not anticipated by:
+        //  * Selenium tests
+        //  * Some javascript code here
+        //  * Anything else that inspects DOM elements and makes choices         
         step_wrapper.$element.detach();
         step_wrapper.$element.insertAfter(step_wrapper.$anchor);
         step_wrapper.$element.hide();
