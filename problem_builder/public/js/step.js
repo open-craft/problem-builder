@@ -13,6 +13,10 @@ function MentoringStepBlock(runtime, element) {
         }
     }
 
+    function updateVideo(video) {
+        video.resizer.align();
+    }
+
     function updatePlot(plot) {
         plot.update();
     }
@@ -109,8 +113,13 @@ function MentoringStepBlock(runtime, element) {
         updateChildren: function() {
             children.forEach(function(child) {
                 var type = $(child.element).data('block-type');
-                if  (type=='sb-plot'){
+                switch (type) {
+                case 'video':
+                    updateVideo(child);
+                    break;
+                case 'sb-plot':
                     updatePlot(child);
+                    break;
                 }
             });
         }
