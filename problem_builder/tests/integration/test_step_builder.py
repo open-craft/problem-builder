@@ -379,6 +379,27 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         self.html_section(step_builder, controls, last=True)
 
+    def test_step_builder_contains_only_one_step_at_a_time(self):
+        """
+        Check step builder contains only a single step at a time.
+
+        Step builder steps are detached from the DOM shortly after they are loaded, and stored in javascript.
+        Only the currently visible step is attached to the DOM. This tests checks that when we are interacting with
+        the Step Builder filling the questions there is only a single step in the DOM.
+        """
+        step_builder, controls = self.load_assessment_scenario(
+            "step_builder.xml",
+            {"max_attempts": 0, "extended_feedback": False}
+        )
+
+        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
+        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
+        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT)
+        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+
     @data(
         {"max_attempts": 0, "extended_feedback": False},  # Unlimited attempts, no extended feedback
         {"max_attempts": 1, "extended_feedback": True},  # Limited attempts, extended feedback
