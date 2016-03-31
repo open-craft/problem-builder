@@ -392,24 +392,24 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             {"max_attempts": 0, "extended_feedback": False}
         )
 
-        def single_step_present_in_dom():
+        def assert_single_step_present_in_dom():
             self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
 
-        def no_steps_present_in_dom():
+        def assert_no_steps_present_in_dom():
             self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 0)
 
-        single_step_present_in_dom()
+        assert_single_step_present_in_dom()
         self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
-        single_step_present_in_dom()
+        assert_single_step_present_in_dom()
         self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
-        single_step_present_in_dom()
+        assert_single_step_present_in_dom()
         self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT)
-        single_step_present_in_dom()
+        assert_single_step_present_in_dom()
         self.html_section(step_builder, controls)
-        single_step_present_in_dom()
+        assert_single_step_present_in_dom()
         # After this questions we go to review, and there are no steps present.
         self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
-        no_steps_present_in_dom()
+        assert_no_steps_present_in_dom()
 
     @data(
         {"max_attempts": 0, "extended_feedback": False},  # Unlimited attempts, no extended feedback
