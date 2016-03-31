@@ -383,7 +383,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         """
         Check step builder contains only a single step at a time.
 
-        Step builder steps are detached from the DOM shortly after they are loaded, and stored in javascript.
+        Step builder steps are detached from the DOM (and stored in javascript) shortly after they are loaded,
         Only the currently visible step is attached to the DOM. This tests checks that when we are interacting with
         the Step Builder filling the questions there is only a single step in the DOM.
         """
