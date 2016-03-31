@@ -1405,7 +1405,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         # There is always only a single step in the Step Builder --- the current one
         current_step = steps[0]
         freeform_questions = current_step.find_elements_by_css_selector('div[data-block-type="pb-answer"]')
-        current_question = freeform_questions[question_number - 1]
+        current_question = freeform_questions[question_number-1]
 
         question_text = self.question_text(question_number)
         self.wait_until_text_in(question_text, current_question)
