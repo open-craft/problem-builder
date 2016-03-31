@@ -78,6 +78,7 @@ function MentoringWithStepsBlock(runtime, element) {
      * @param step_wrapper 
      */
     function showStep(step_wrapper) {
+        step_wrapper.$element.insertAfter(step_wrapper.$anchor);
         step_wrapper.$element.show();
         step_wrapper.xblock.updateChildren();
     }
@@ -87,15 +88,7 @@ function MentoringWithStepsBlock(runtime, element) {
      * @param step_wrapper
      */
     function hideStep(step_wrapper) {
-        // This is a hacky workaround, but it works. It detaches this element from DOM, and re-attaches it immediately,
-        // which has the side effect of stopping any video elements (tested with Ooyala and Youtube). 
-        // This solution was chosen as permanently detaching xblocks from DOM is not anticipated by:
-        //  * Selenium tests
-        //  * Some javascript code here
-        //  * Anything else that inspects DOM elements and makes choices         
         step_wrapper.$element.detach();
-        step_wrapper.$element.insertAfter(step_wrapper.$anchor);
-        step_wrapper.$element.hide();
     }
 
     /**
@@ -209,7 +202,9 @@ function MentoringWithStepsBlock(runtime, element) {
 
 
     function clearSelections() {
-        $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
+        forEachStep(function (step_wrapper) {
+            $('input[type=radio], input[type=checkbox]', step_wrapper.$element).prop('checked', false);
+        });
     }
 
     function cleanAll() {
