@@ -392,13 +392,24 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             {"max_attempts": 0, "extended_feedback": False}
         )
 
-        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        def single_step_present_in_dom():
+            self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+
+        def no_steps_present_in_dom():
+            self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 0)
+
+        single_step_present_in_dom()
         self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
-        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        single_step_present_in_dom()
         self.single_choice_question(None, step_builder, controls, 'Maybe not', INCORRECT)
-        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        single_step_present_in_dom()
         self.rating_question(None, step_builder, controls, "5 - Extremely good", CORRECT)
-        self.assertEqual(len(step_builder.find_elements_by_css_selector('.sb-step')), 1)
+        single_step_present_in_dom()
+        self.html_section(step_builder, controls)
+        single_step_present_in_dom()
+        # After this questions we go to review, and there are no steps present.
+        self.multiple_response_question(None, step_builder, controls, ("Its beauty",), PARTIAL, last=True)
+        no_steps_present_in_dom()
 
     @data(
         {"max_attempts": 0, "extended_feedback": False},  # Unlimited attempts, no extended feedback
@@ -645,6 +656,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     @data(True, False)
     def test_conditional_messages(self, include_messages):
+        # Test that conditional messages in the review step are visible or not, as appropriate.
         max_attempts = 3
         extended_feedback = False
         params = {
@@ -1388,10 +1400,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.freeform_answer(None, step_builder, controls, 'This is the answer', CORRECT)
 
     def provide_freeform_answer(self, step_number, question_number, step_builder, text_input):
+        # Note: step_number is unused, but left here to be consistent the rest of methods that fill questions
         steps = step_builder.find_elements_by_css_selector('div[data-block-type="sb-step"]')
+        # There is always only a single step in the Step Builder --- the current one
         current_step = steps[0]
         freeform_questions = current_step.find_elements_by_css_selector('div[data-block-type="pb-answer"]')
-        current_question = freeform_questions[question_number-1]
+        current_question = freeform_questions[question_number - 1]
 
         question_text = self.question_text(question_number)
         self.wait_until_text_in(question_text, current_question)
