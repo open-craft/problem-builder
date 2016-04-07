@@ -40,7 +40,7 @@ function MentoringWithStepsBlock(runtime, element) {
      *
      * @param func single arg function.
      */
-    function forEachStep(func){
+    function forEachStep(func) {
         for (var idx=0; idx < steps.length; idx++) {
             func(steps[idx]);
         }
@@ -51,15 +51,15 @@ function MentoringWithStepsBlock(runtime, element) {
      */
     function showActiveStep() {
         var step = getActiveStep();
-        step.show();
+        step.showStep();
     }
 
     /**
      * Hides all steps
      */
     function hideAllSteps() {
-        forEachStep(function(step){
-            step.hide();
+        forEachStep(function(step) {
+            step.hideStep();
         });
     }
 
@@ -251,17 +251,19 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewButtonDOM.hide();
         tryAgainDOM.show();
 
-        /**
-         * We detach review step from DOM, this is required to handle HTML
-         * blocks that can be added to the Review step.
-         *
-         * NOTE: This is handled differently than step js. As the html contents
-         * of review step are replaced with fresh contents in submit function.  
-         */
+        // reviewStepDOM is detached in hideReviewStep
         reviewStepDOM.insertBefore(reviewStepAnchor);
         reviewStepDOM.show();
     }
 
+    /**
+     * We detach review step from DOM, this is required to handle HTML
+     * blocks with embedded videos, that can be added to that step.
+     *
+     * NOTE: Review steps are handled differently than "normal" steps:
+     * the HTML contents of a review step are replaced with fresh 
+     * contents in submit function.
+     */
     function hideReviewStep() {
         reviewStepDOM.hide();
         reviewStepDOM.detach();
@@ -311,7 +313,6 @@ function MentoringWithStepsBlock(runtime, element) {
             attemptsDOM.html(attemptsTemplate(data));
         } // Don't show attempts if unlimited attempts available (max_attempts === 0)
     }
-
 
     function onChange() {
         // We do not allow users to modify answers belonging to a step after submitting them:
@@ -413,7 +414,7 @@ function MentoringWithStepsBlock(runtime, element) {
         submitXHR = $.post(handlerUrl, JSON.stringify({})).success(handleTryAgain);
     }
 
-    function notify(name, data){
+    function notify(name, data) {
         // Notification interface does not exist in the workbench.
         if (runtime.notify) {
             runtime.notify(name, data);
@@ -439,7 +440,7 @@ function MentoringWithStepsBlock(runtime, element) {
             var itemFeedbackParentSelector = '.choice';
             var itemFeedbackSelector = ".choice .choice-tips";
 
-            function clickedInside(selector, parent_selector){
+            function clickedInside(selector, parent_selector) {
                 return target.is(selector) || target.parents(parent_selector).length>0;
             }
 

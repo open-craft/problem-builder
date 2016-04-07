@@ -105,12 +105,18 @@ function MentoringStepBlock(runtime, element) {
             return $('.sb-step', element).data('has-question');
         },
 
-        show: function () {
+        /**
+         * Shows a step, updating all children. 
+         */
+        showStep: function () {
             $(element).show();
             childManager.show();
         },
 
-        hide: function () {
+        /**
+         * Hides a step, updating all children.
+         */
+        hideStep: function () {
             $(element).hide();
             childManager.hide();
         }
