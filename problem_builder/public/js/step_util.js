@@ -111,7 +111,7 @@
 
     }
 
-    window.ProblemBuilderUtilLMS = {
+    window.ProblemBuilderStepUtil = {
 
         ChildManager: ChildManager
 

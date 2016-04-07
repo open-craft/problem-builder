@@ -5,7 +5,7 @@ function MentoringStepBlock(runtime, element) {
     var submitXHR, resultsXHR,
         message = $(element).find('.sb-step-message');
     
-    var childManager = new ProblemBuilderUtilLMS.ChildManager(element, runtime);
+    var childManager = new ProblemBuilderStepUtil.ChildManager(element, runtime);
 
     function callIfExists(obj, fn) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
