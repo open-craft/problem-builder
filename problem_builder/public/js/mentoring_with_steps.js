@@ -7,6 +7,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     var children = runtime.children(element);
+
     var steps = [];
 
     for (var i = 0; i < children.length; i++) {
@@ -17,20 +18,57 @@ function MentoringWithStepsBlock(runtime, element) {
         }
     }
 
-    var activeStep = $('.mentoring', element).data('active-step');
+    var activeStepIndex = $('.mentoring', element).data('active-step');
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var message = $('.sb-step-message', element);
     var checkmark, submitDOM, nextDOM, reviewButtonDOM, tryAgainDOM,
         gradeDOM, attemptsDOM, reviewLinkDOM, submitXHR;
     var reviewStepDOM = $("div.xblock[data-block-type=sb-review-step], div.xblock-v1[data-block-type=sb-review-step]", element);
+    var reviewStepAnchor = $("<span>").addClass("review-anchor").insertBefore(reviewStepDOM);
     var hasAReviewStep = reviewStepDOM.length == 1;
 
+    /**
+     * Returns the active step
+     * @returns MentoringStepBlock
+     */
+    function getActiveStep() {
+        return  steps[activeStepIndex];
+    }
+
+    /**
+     * Calls a function for each registered step. The object passed to this function is a MentoringStepBlock. 
+     *
+     * @param func single arg function.
+     */
+    function forEachStep(func) {
+        for (var idx=0; idx < steps.length; idx++) {
+            func(steps[idx]);
+        }
+    }
+    
+    /**
+     * Displays the active step
+     */
+    function showActiveStep() {
+        var step = getActiveStep();
+        step.showStep();
+    }
+
+    /**
+     * Hides all steps
+     */
+    function hideAllSteps() {
+        forEachStep(function(step) {
+            step.hideStep();
+        });
+    }
+
     function isLastStep() {
-        return (activeStep === steps.length-1);
+        return (activeStepIndex === steps.length-1);
     }
 
     function atReviewStep() {
-        return (activeStep === -1);
+        return (activeStepIndex === -1);
     }
 
     function someAttemptsLeft() {
@@ -49,7 +87,7 @@ function MentoringWithStepsBlock(runtime, element) {
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
         }
-        var step = steps[activeStep];
+        var step = getActiveStep();
         if (typeof step.showFeedback == 'function') {
             step.showFeedback(response);
         }
@@ -78,14 +116,14 @@ function MentoringWithStepsBlock(runtime, element) {
     function submit() {
         submitDOM.attr('disabled', 'disabled'); // Disable the button until the results load.
         var submitUrl = runtime.handlerUrl(element, 'submit');
-
-        var hasQuestion = steps[activeStep].hasQuestion();
-        var data = steps[activeStep].getSubmitData();
-        data["active_step"] = activeStep;
+        var activeStep = getActiveStep();
+        var hasQuestion = activeStep.hasQuestion();
+        var data = activeStep.getSubmitData();
+        data["active_step"] = activeStepIndex;
         $.post(submitUrl, JSON.stringify(data)).success(function(response) {
             showFeedback(response);
-            activeStep = response.active_step;
-            if (activeStep === -1) {
+            activeStepIndex = response.active_step;
+            if (activeStepIndex === -1) {
                 // We are now showing the review step / end
                 // Update the number of attempts.
                 attemptsDOM.data('num_attempts', response.num_attempts);
@@ -102,15 +140,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function getResults() {
-        var step = steps[activeStep];
-        step.getResults(handleReviewResults);
+        getActiveStep().getResults(handleReviewResults);
     }
 
     function handleReviewResults(response) {
         // Show step-level feedback
         showFeedback(response);
         // Forward to active step to show answer level feedback
-        var step = steps[activeStep];
+        var step = getActiveStep();
         var results = response.results;
         var options = {
             checkmark: checkmark
@@ -118,14 +155,11 @@ function MentoringWithStepsBlock(runtime, element) {
         step.handleReview(results, options);
     }
 
-    function hideAllSteps() {
-        for (var i=0; i < steps.length; i++) {
-            $(steps[i].element).hide();
-        }
-    }
 
     function clearSelections() {
-        $('input[type=radio], input[type=checkbox]', element).prop('checked', false);
+        forEachStep(function (step) {
+            $('input[type=radio], input[type=checkbox]', step.element).prop('checked', false);
+        });
     }
 
     function cleanAll() {
@@ -139,7 +173,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function updateNextLabel() {
-        var step = steps[activeStep];
+        var step = getActiveStep();
         nextDOM.attr('value', step.getStepLabel());
     }
 
@@ -164,7 +198,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.on('click', updateDisplay);
             reviewButtonDOM.on('click', showGrade);
 
-            var step = steps[activeStep];
+            var step = getActiveStep();
             if (step.hasQuestion()) {  // Step includes one or more questions
                 nextDOM.attr('disabled', 'disabled');
                 submitDOM.show();
@@ -217,11 +251,22 @@ function MentoringWithStepsBlock(runtime, element) {
         reviewButtonDOM.hide();
         tryAgainDOM.show();
 
+        // reviewStepDOM is detached in hideReviewStep
+        reviewStepDOM.insertBefore(reviewStepAnchor);
         reviewStepDOM.show();
     }
 
+    /**
+     * We detach review step from DOM, this is required to handle HTML
+     * blocks with embedded videos, that can be added to that step.
+     *
+     * NOTE: Review steps are handled differently than "normal" steps:
+     * the HTML contents of a review step are replaced with fresh 
+     * contents in submit function.
+     */
     function hideReviewStep() {
         reviewStepDOM.hide();
+        reviewStepDOM.detach();
     }
 
     function getStepToReview(event) {
@@ -231,7 +276,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function jumpToReview(stepIndex) {
-        activeStep = stepIndex;
+        activeStepIndex = stepIndex;
         cleanAll();
         showActiveStep();
         updateNextLabel();
@@ -245,7 +290,7 @@ function MentoringWithStepsBlock(runtime, element) {
             nextDOM.show();
             nextDOM.removeAttr('disabled');
         }
-        var step = steps[activeStep];
+        var step = getActiveStep();
 
         tryAgainDOM.hide();
         if (step.hasQuestion()) {
@@ -269,12 +314,6 @@ function MentoringWithStepsBlock(runtime, element) {
         } // Don't show attempts if unlimited attempts available (max_attempts === 0)
     }
 
-    function showActiveStep() {
-        var step = steps[activeStep];
-        $(step.element).show();
-        step.updateChildren();
-    }
-
     function onChange() {
         // We do not allow users to modify answers belonging to a step after submitting them:
         // Once an answer has been submitted ("Next Step" button is enabled),
@@ -286,7 +325,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function validateXBlock() {
         var isValid = true;
-        var step = steps[activeStep];
+        var step = getActiveStep();
         if (step) {
             isValid = step.validate();
         }
@@ -298,16 +337,14 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function initSteps(options) {
-        for (var i=0; i < steps.length; i++) {
-            var step = steps[i];
-            var mentoring = {
+        forEachStep(function (step) {
+            options.mentoring = {
                 setContent: setContent,
                 publish_event: publishEvent,
                 is_step_builder: true
             };
-            options.mentoring = mentoring;
             step.initChildren(options);
-        }
+        });
     }
 
     function setContent(dom, content) {
@@ -347,7 +384,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function reviewNextStep() {
-        jumpToReview(activeStep+1);
+        jumpToReview(activeStepIndex+1);
     }
 
     function handleTryAgain(result) {
@@ -356,7 +393,7 @@ function MentoringWithStepsBlock(runtime, element) {
         // and interrupting their experience with the current unit
         notify('navigation', {state: 'lock'});
 
-        activeStep = result.active_step;
+        activeStepIndex = result.active_step;
         clearSelections();
         updateDisplay();
         tryAgainDOM.hide();
@@ -377,7 +414,7 @@ function MentoringWithStepsBlock(runtime, element) {
         submitXHR = $.post(handlerUrl, JSON.stringify({})).success(handleTryAgain);
     }
 
-    function notify(name, data){
+    function notify(name, data) {
         // Notification interface does not exist in the workbench.
         if (runtime.notify) {
             runtime.notify(name, data);
@@ -403,7 +440,7 @@ function MentoringWithStepsBlock(runtime, element) {
             var itemFeedbackParentSelector = '.choice';
             var itemFeedbackSelector = ".choice .choice-tips";
 
-            function clickedInside(selector, parent_selector){
+            function clickedInside(selector, parent_selector) {
                 return target.is(selector) || target.parents(parent_selector).length>0;
             }
 
