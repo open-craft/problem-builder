@@ -442,26 +442,87 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
     @ddt.unpack
     @ddt.data(
-        # MCQ with tips
-        ("feedback_persistence_mcq_tips.xml", '.choice-tips'),
-        # Like the above but instead of tips in MCQ
+        # Questionnaire with tips.
+        ("feedback_persistence_mcq_tips.xml", 'MCQ', True, False),
+        ("feedback_persistence_mrq_tips.xml", 'MRQ', True, False),
+        # Like the above but instead of tips in MCQ/MRQ
         # has a question level feedback. This feedback should also be suppressed.
-        ("feedback_persistence_mcq_no_tips.xml", '.feedback')
+        ("feedback_persistence_mcq_general_feedback.xml", 'MCQ', False, True),
+        ("feedback_persistence_mrq_general_feedback.xml", 'MRQ', False, True),
+        # These examples have both the choice tips and the general feedback.
+        ("feedback_persistence_mcq_general_feedback_and_tips.xml", 'MCQ', True, True),
+        ("feedback_persistence_mrq_general_feedback_and_tips.xml", 'MRQ', True, True),
+        # And these have neither the tips nor the general feedback.
+        ("feedback_persistence_mcq_no_feedback.xml", 'MCQ', False, False),
+        ("feedback_persistence_mrq_no_feedback.xml", 'MRQ', False, False),
     )
-    def test_feedback_persistence_tips(self, scenario, tips_selector):
+    def test_feedback_persistence_tips(self, scenario, question_type, has_tips, has_feedback):
+        tips_selector = '.choice-tips'
+        feedback_selector = '.feedback'
         # Tests whether feedback (global message and choice tips) is hidden on reload.
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
             patched_options.return_value = {'pb_mcq_hide_previous_answer': True}
             mentoring = self.load_scenario(scenario)
-            mcq = self._get_xblock(mentoring, "feedback_mcq_2")
-            messages = mentoring.find_element_by_css_selector(tips_selector)
-            self.assertFalse(messages.is_displayed())
-            self.click_choice(mcq, "Yes")
+            questionnaire = self._get_xblock(mentoring, "feedback_questionnaire")
+            choice = self._get_choice(questionnaire, 0)
+            choice_label = choice.find_element_by_css_selector('label')
+            choice_result = choice.find_element_by_css_selector('.choice-result')
+            tips = mentoring.find_element_by_css_selector(tips_selector)
+            feedback = mentoring.find_element_by_css_selector(feedback_selector)
+
+            self.assertFalse(tips.is_displayed())
+            self.assertFalse(feedback.is_displayed())
+
+            # Select choice.
+            choice_label.click()
             self.click_submit(mentoring)
-            self.assertTrue(messages.is_displayed())
+
+            # If the question has no general feedback and no tips,
+            # nothing should be displayed.
+            if not has_feedback and not has_tips:
+                self.assertFalse(feedback.is_displayed())
+                self.assertFalse(tips.is_displayed())
+            # If there is general feedback, but no choice tips,
+            # general feedback is displayed after submitting the answer.
+            if has_feedback and not has_tips:
+                self.assertTrue(feedback.is_displayed())
+                self.assertFalse(tips.is_displayed())
+            # If there are tips but no feedback, the result depends on question type:
+            # - the tip is displayed by MCQs
+            # - nothing is displayed by MRQs
+            if has_tips and not has_feedback:
+                self.assertFalse(feedback.is_displayed())
+                if question_type == 'MCQ':
+                    self.assertTrue(tips.is_displayed())
+                elif question_type == 'MRQ':
+                    self.assertFalse(tips.is_displayed())
+            # If there are both tips and general feedback,
+            # the result depends on the question type:
+            # - the tip is displayed by MCQs
+            # - general feedback is displayed by MRQs.
+            if has_feedback and has_tips:
+                if question_type == 'MCQ':
+                    self.assertTrue(tips.is_displayed())
+                    self.assertFalse(feedback.is_displayed())
+                elif question_type == 'MRQ':
+                    self.assertTrue(feedback.is_displayed())
+                    self.assertFalse(tips.is_displayed())
+
+            # Click the result icon; this hides the general feedback and displays
+            # the choice tip, if present.
+            choice_result.click()
+
+            self.assertFalse(feedback.is_displayed())
+            if has_tips:
+                self.assertTrue(tips.is_displayed())
+
+            # Reload the page.
             mentoring = self.reload_student_view()
-            messages = mentoring.find_element_by_css_selector(tips_selector)
-            self.assertFalse(messages.is_displayed())
+            tips = mentoring.find_element_by_css_selector(tips_selector)
+            feedback = mentoring.find_element_by_css_selector(feedback_selector)
+            # After reloading the page, neither the tips nor the feedback should be displayed.
+            self.assertFalse(tips.is_displayed())
+            self.assertFalse(feedback.is_displayed())
 
     @ddt.data(
         (0, "Yes", "Great!"),
@@ -471,7 +532,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     @ddt.unpack
     def test_clicking_result_icon_shows_tips(self, choice_index, choice_text, expected_tip):
         mentoring = self.load_scenario("feedback_persistence_mcq_tips.xml")
-        mcq = self._get_xblock(mentoring, "feedback_mcq_2")
+        mcq = self._get_xblock(mentoring, "feedback_questionnaire")
         question_title = mentoring.find_element_by_css_selector('.question-title')
         choice = self._get_choice(mcq, choice_index)
         choice_result = choice.find_element_by_css_selector('.choice-result')

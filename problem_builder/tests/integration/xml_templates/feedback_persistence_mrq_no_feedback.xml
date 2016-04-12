@@ -1,0 +1,12 @@
+<vertical_demo>
+    <problem-builder url_name="mrq_no_feedback">
+
+        <pb-mrq name="feedback_questionnaire" question="What do you like in this MRQ?" required_choices='["elegance","beauty","gracefulness"]'>
+            <pb-choice value="elegance">Its elegance</pb-choice>
+            <pb-choice value="beauty">Its beauty</pb-choice>
+            <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+            <pb-choice value="bugs">Its bugs</pb-choice>
+        </pb-mrq>
+
+    </problem-builder>
+</vertical_demo>
