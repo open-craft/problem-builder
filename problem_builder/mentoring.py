@@ -60,7 +60,7 @@ log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 _default_options_config = {
-    'pb_mcq_hide_previous_answer': False,
+    'pb_mcq_hide_previous_answer': False,  # this works for both MCQs and MRQs.
     'pb_hide_feedback_if_attempts_remain': False,
 }
 

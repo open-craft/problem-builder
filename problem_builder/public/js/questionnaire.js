@@ -206,8 +206,6 @@ function MRQBlock(runtime, element) {
 
             var messageView = MessageView(element, mentoring);
 
-            display_message(result.message, messageView, options.checkmark);
-
             var questionnaireDOM = $('fieldset.questionnaire', element);
             var data = questionnaireDOM.data();
             var hide_results = (data.hide_results === 'True' ||
@@ -215,6 +213,10 @@ function MRQBlock(runtime, element) {
             // hide_prev_answer should only take effect when we initially render (previous) results,
             // so set hide_prev_answer to False after initial render.
             questionnaireDOM.data('hide_prev_answer', 'False');
+
+            if (!hide_results) {
+                display_message(result.message, messageView, options.checkmark);
+            }
 
             $.each(result.choices, function(index, choice) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element);

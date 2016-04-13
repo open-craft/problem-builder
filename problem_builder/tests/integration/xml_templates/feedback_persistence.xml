@@ -1,5 +1,5 @@
 <vertical_demo>
-    <problem-builder url_name="feedback" enforce_dependency="false">
+    <problem-builder url_name="feedback">
         <pb-answer name="feedback_answer_1" />
 
         <pb-mcq name="feedback_mcq_2" question="Do you like this MCQ?" correct_choices='["yes"]'>
