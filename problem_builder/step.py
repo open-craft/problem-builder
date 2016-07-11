@@ -95,12 +95,12 @@ class StepMixin(object):
         return self._(u"Question")
 
     def author_view(self, context):
-        context = context or {}
+        context = context.copy() if context else {}
         context['hide_header'] = True
         return self.mentoring_view(context)
 
     def author_preview_view(self, context):
-        context = context or {}
+        context = context.copy() if context else {}
         context['hide_header'] = True
         return self.student_view(context)
 

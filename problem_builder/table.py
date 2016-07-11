@@ -70,7 +70,7 @@ class MentoringTableBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin,
     has_children = True
 
     def student_view(self, context):
-        context = context or {}
+        context = context.copy() if context else {}
         fragment = Fragment()
         header_values = []
         content_values = []
@@ -136,7 +136,7 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
-        context = context or {}
+        context = context.copy() if context else {}
         fragment = Fragment()
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
