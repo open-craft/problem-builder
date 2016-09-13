@@ -3,7 +3,10 @@ machine:
     version: 2.7.10
 dependencies:
   override:
-    - "pip install -U pip wheel setuptools"
+    - "pip install -U pip wheel"
+    # Temporarily pin setuptools to a specific version.
+    # See commit message of https://github.com/open-craft/problem-builder/commit/51277a34fb426724616618c1afdb893ab2de4c6b for more info:
+    - "pip install setuptools==24.3.1"
     - "pip install -e git://github.com/edx/xblock-sdk.git@bddf9f4a2c6e4df28a411c8f632cc2250170ae9d#egg=xblock-sdk"
     - "pip install -r requirements.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/base.txt"
