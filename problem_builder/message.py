@@ -45,6 +45,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
     MESSAGE_TYPES = {
         "completed": {
             "display_name": _(u"Completed"),
+            "studio_label": _(u'Message (Complete)'),
             "long_display_name": _(u"Message shown when complete"),
             "default": _(u"Great job!"),
             "description": _(
@@ -54,6 +55,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         },
         "incomplete": {
             "display_name": _(u"Incomplete"),
+            "studio_label": _(u'Message (Incomplete)'),
             "long_display_name": _(u"Message shown when incomplete"),
             "default": _(u"Not quite! You can try again, though."),
             "description": _(
@@ -64,6 +66,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         },
         "max_attempts_reached": {
             "display_name": _(u"Reached max. # of attempts"),
+            "studio_label": _(u'Message (Max # Attempts)'),
             "long_display_name": _(u"Message shown when student reaches max. # of attempts"),
             "default": _(u"Sorry, you have used up all of your allowed submissions."),
             "description": _(
@@ -74,6 +77,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         },
         "on-assessment-review": {
             "display_name": _(u"Review with attempts left"),
+            "studio_label": _(u'Message (Assessment Review)'),
             "long_display_name": _(u"Message shown during review when attempts remain"),
             "default": _(
                 u"Note: if you retake this assessment, only your final score counts. "
@@ -99,6 +103,8 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             ),
         },
     }
+
+    has_author_view = True
 
     content = String(
         display_name=_("Message"),
@@ -189,3 +195,7 @@ class CompletedMentoringMessageShim(object):
 class IncompleteMentoringMessageShim(object):
     CATEGORY = 'pb-message'
     STUDIO_LABEL = _("Message (Incomplete)")
+
+
+def get_message_label(type):
+    return MentoringMessageBlock.MESSAGE_TYPES[type]['studio_label']

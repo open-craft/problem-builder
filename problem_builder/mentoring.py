@@ -34,7 +34,7 @@ from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
-from .message import MentoringMessageBlock
+from .message import MentoringMessageBlock, get_message_label
 from .mixins import (
     _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
 )
@@ -44,8 +44,15 @@ from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
 from xblockutils.studio_editable import (
-    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerXBlockMixin, StudioContainerWithNestedXBlocksMixin,
+    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin,
 )
+
+from problem_builder.answer import AnswerBlock, AnswerRecapBlock
+from problem_builder.mcq import MCQBlock, RatingBlock
+from problem_builder.mrq import MRQBlock
+from problem_builder.plot import PlotBlock
+from problem_builder.slider import SliderBlock
+from problem_builder.table import MentoringTableBlock
 
 
 try:
@@ -220,7 +227,7 @@ class BaseMentoringBlock(
         return 1.0
 
 
-class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentMixin):
+class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin):
     """
     An XBlock providing mentoring capabilities
 
@@ -320,6 +327,64 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         'display_name', 'followed_by', 'max_attempts', 'enforce_dependency',
         'display_submit', 'feedback_label', 'weight', 'extended_feedback'
     )
+
+    @property
+    def allowed_nested_blocks(self):
+        """
+        Returns a list of allowed nested XBlocks. Each item can be either
+        * An XBlock class
+        * A NestedXBlockSpec
+
+        If XBlock class is used it is assumed that this XBlock is enabled and allows multiple instances.
+        NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
+        instances
+        """
+        additional_blocks = []
+        try:
+            from xmodule.video_module.video_module import VideoDescriptor
+            additional_blocks.append(NestedXBlockSpec(
+                VideoDescriptor, category='video', label=_(u"Video")
+            ))
+        except ImportError:
+            pass
+        try:
+            from imagemodal import ImageModal
+            additional_blocks.append(NestedXBlockSpec(
+                ImageModal, category='imagemodal', label=_(u"Image Modal")
+            ))
+        except ImportError:
+            pass
+
+        message_block_shims = [
+            NestedXBlockSpec(
+                MentoringMessageBlock,
+                category='pb-message',
+                boilerplate=message_type,
+                label=get_message_label(message_type),
+            )
+            for message_type in (
+                'completed',
+                'incomplete',
+                'max_attempts_reached',
+            )
+        ]
+
+        if self.is_assessment:
+            message_block_shims.append(
+                NestedXBlockSpec(
+                    MentoringMessageBlock,
+                    category='pb-message',
+                    boilerplate='on-assessment-review',
+                    label=get_message_label('on-assessment-review'),
+                )
+            )
+
+        return [
+            NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
+            MCQBlock, RatingBlock, MRQBlock,
+            NestedXBlockSpec(None, category="html", label=self._("HTML")),
+            AnswerRecapBlock, MentoringTableBlock, PlotBlock, SliderBlock
+        ] + additional_blocks + message_block_shims
 
     @property
     def is_assessment(self):
@@ -817,23 +882,19 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        fragment = Fragment(u'<div class="mentoring">')  # This DIV is needed for CSS to apply to the previews
-        self.render_children(context, fragment, can_reorder=True, can_add=False)
-        fragment.add_content(u'</div>')
-
-        # Show buttons to add review-related child blocks only in assessment mode.
-        fragment.add_content(loader.render_template('templates/html/mentoring_add_buttons.html', {
-            "show_review": self.is_assessment,
-        }))
+        local_context = context.copy()
+        local_context['author_edit_view'] = True
+        fragment = super(MentoringBlock, self).author_edit_view(local_context)
         fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
-            "url_name": self.url_name
+            'url_name': self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
-        fragment.initialize_js('MentoringEditComponents')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
+        fragment.initialize_js('ProblemBuilderContainerEdit')
+
         return fragment
 
     @staticmethod
