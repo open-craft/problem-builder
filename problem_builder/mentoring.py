@@ -49,7 +49,6 @@ from xblockutils.studio_editable import (
 
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
-from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
@@ -866,8 +865,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
-        fragment.initialize_js('ProblemBuilderContainerEdit')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+        fragment.initialize_js('MentoringEditComponents')
         return fragment
 
     @staticmethod
