@@ -88,16 +88,14 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         },
         "on-assessment-review-question": {
             "display_name": _(u"Study tips if this question was wrong"),
-            "long_display_name": _(u"Study tips shown during assessment review if wrong"),
+            "long_display_name": _(u"Study tips shown if question was answered incorrectly"),
             "default": _(
                 u"Review ____."
             ),
             "description": _(
-                u"In assessment mode, this message will be shown when the student is reviewing "
+                u"This message will be shown when the student is reviewing "
                 "their answers to the assessment, if the student got this specific question "
-                "wrong and is allowed to try again. "
-                "This message is ignored in standard mode and is not shown if the student has "
-                "used up all of their allowed attempts."
+                "wrong and is allowed to try again."
             ),
         },
     }

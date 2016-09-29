@@ -820,7 +820,11 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerXBlockMixin, StepParentM
         fragment = Fragment(u'<div class="mentoring">')  # This DIV is needed for CSS to apply to the previews
         self.render_children(context, fragment, can_reorder=True, can_add=False)
         fragment.add_content(u'</div>')
-        fragment.add_content(loader.render_template('templates/html/mentoring_add_buttons.html', {}))
+
+        # Show buttons to add review-related child blocks only in assessment mode.
+        fragment.add_content(loader.render_template('templates/html/mentoring_add_buttons.html', {
+            "show_review": self.is_assessment,
+        }))
         fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))

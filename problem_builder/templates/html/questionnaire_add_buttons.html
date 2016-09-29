@@ -5,7 +5,9 @@
     <ul class="new-component-type">
       <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-choice" data-boilerplate="studio_default">{% trans "Add Custom Choice" %}</a></li>
       <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-tip">{% trans "Add Tip" %}</a></li>
-      <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-message" data-boilerplate="on-assessment-review-question">{% trans "Message (Assessment Review)" %}</a></li>
+      {% if show_review %}
+      <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-message" data-boilerplate="on-assessment-review-question">{% trans "Message (Review)" %}</a></li>
+      {% endif %}
     </ul>
   </div>
 </div>

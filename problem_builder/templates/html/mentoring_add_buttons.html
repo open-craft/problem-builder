@@ -15,7 +15,9 @@
       <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-message" data-boilerplate="completed">{% trans "Message (Complete)" %}</a></li>
       <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-message" data-boilerplate="incomplete">{% trans "Message (Incomplete)" %}</a></li>
       <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-message" data-boilerplate="max_attempts_reached">{% trans "Message (Max # Attempts)" %}</a></li>
+      {% if show_review %}
       <li><a href="#" class="single-template add-xblock-component-button" data-category="pb-message" data-boilerplate="on-assessment-review">{% trans "Message (Assessment Review)" %}</a></li>
+      {% endif %}
     </ul>
   </div>
 </div>

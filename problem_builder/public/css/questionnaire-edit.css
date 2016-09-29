@@ -1,8 +1,10 @@
 /* Custom appearance for our "Add" buttons */
 .xblock .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
-  width: 200px;
-  height: 30px;
+  width: auto;
+  height: auto;
   line-height: 30px;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .xblock .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,

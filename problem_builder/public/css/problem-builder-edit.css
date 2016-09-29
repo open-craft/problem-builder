@@ -28,9 +28,11 @@
 .xblock[data-block-type=step-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=problem-builder] .add-xblock-component .new-component .new-component-type .add-xblock-component-button,
 .xblock[data-block-type=mentoring] .add-xblock-component .new-component .new-component-type .add-xblock-component-button {
-  width: 200px;
-  height: 30px;
+  width: auto;
+  height: auto;
   line-height: 30px;
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .xblock[data-block-type=sb-plot] .add-xblock-component .new-component .new-component-type .add-xblock-component-button.disabled,
