@@ -92,8 +92,14 @@ class QuestionnaireAbstractBlock(
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
         fragment = Fragment(loader.render_template(template_path, context))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire.css'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/questionnaire.js'))
+        # If we use local_resource_url(self, ...) the runtime may insert many identical copies
+        # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible
+        block_with_resources = self.get_parent()
+        from .mentoring import MentoringBlock
+        if not isinstance(block_with_resources, MentoringBlock):
+            block_with_resources = self
+        fragment.add_css_url(self.runtime.local_resource_url(block_with_resources, 'public/css/questionnaire.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(block_with_resources, 'public/js/questionnaire.js'))
         fragment.initialize_js(name)
         return fragment
 

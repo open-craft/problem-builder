@@ -34,7 +34,7 @@ from xblock.fields import Boolean, Scope, String, Integer, Float, List
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 
-from .message import MentoringMessageBlock
+from .message import MentoringMessageBlock, get_message_label
 from .mixins import (
     _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
 )
@@ -355,12 +355,27 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         except ImportError:
             pass
 
+        message_block_shims = [
+            NestedXBlockSpec(
+                MentoringMessageBlock,
+                category='pb-message',
+                boilerplate=message_type,
+                label=get_message_label(message_type),
+            )
+            for message_type in (
+                'completed',
+                'incomplete',
+                'max_attempts_reached',
+                'on-assessment-review',
+            )
+        ]
+
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
             MCQBlock, RatingBlock, MRQBlock,
             NestedXBlockSpec(None, category="html", label=self._("HTML")),
             AnswerRecapBlock, MentoringTableBlock, PlotBlock, SliderBlock
-        ] + additional_blocks
+        ] + additional_blocks + message_block_shims
 
     @property
     def is_assessment(self):
@@ -858,15 +873,18 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        local_context = dict(context)
+        local_context = context.copy()
         local_context['author_edit_view'] = True
         fragment = super(MentoringBlock, self).author_edit_view(local_context)
+        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+            'url_name': self.url_name
+        }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
         fragment.initialize_js('MentoringEditComponents')
+
         return fragment
 
     @staticmethod

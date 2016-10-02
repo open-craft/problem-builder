@@ -33,6 +33,13 @@ from problem_builder.mixins import XBlockWithTranslationServiceMixin
 def _(text):
     return text
 
+MESSAGE_TYPES = {
+    'completed': _(u'Message (Complete)'),
+    'incomplete': _(u'Message (Incomplete)'),
+    'max_attempts_reached': _(u'Message (Max # Attempts)'),
+    'on-assessment-review': _(u'Message (Assessment Review)'),
+}
+
 # Classes ###########################################################
 
 
@@ -189,3 +196,7 @@ class CompletedMentoringMessageShim(object):
 class IncompleteMentoringMessageShim(object):
     CATEGORY = 'pb-message'
     STUDIO_LABEL = _("Message (Incomplete)")
+
+
+def get_message_label(type):
+    return MESSAGE_TYPES.get(type, 'Message')
