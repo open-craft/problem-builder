@@ -366,9 +366,18 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
                 'completed',
                 'incomplete',
                 'max_attempts_reached',
-                'on-assessment-review',
             )
         ]
+
+        if self.is_assessment:
+            message_block_shims.append(
+                NestedXBlockSpec(
+                    MentoringMessageBlock,
+                    category='pb-message',
+                    boilerplate='on-assessment-review',
+                    label=get_message_label('on-assessment-review'),
+                )
+            )
 
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
@@ -883,7 +892,8 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        fragment.initialize_js('MentoringEditComponents')
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
+        fragment.initialize_js('ProblemBuilderContainerEdit')
 
         return fragment
 
