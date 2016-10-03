@@ -96,7 +96,7 @@ class QuestionnaireAbstractBlock(
         # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible.
         block_with_resources = self.get_parent()
         from .mentoring import MentoringBlock
-        # We use an inline import here to avoid a circular dependency with the .mentoring module. 
+        # We use an inline import here to avoid a circular dependency with the .mentoring module.
         if not isinstance(block_with_resources, MentoringBlock):
             block_with_resources = self
         fragment.add_css_url(self.runtime.local_resource_url(block_with_resources, 'public/css/questionnaire.css'))
