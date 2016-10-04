@@ -178,10 +178,16 @@ def _get_submissions(course_key_str, block, user_id):
 def _get_username(submission, user_id):
     """
     Return username of student who provided `submission`.
+
+    If the anonymous id of the submission can't be resolved into a username, the anonymous
+    id is returned.
     """
     # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
     student_id = submission.get('student_id', user_id)
-    return user_by_anonymous_id(student_id).username
+    user = user_by_anonymous_id(student_id)
+    if user is None:
+        return student_id
+    return user.username
 
 
 def _get_answer(block, submission, answer_cache):
