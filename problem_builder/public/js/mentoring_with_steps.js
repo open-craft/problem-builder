@@ -82,10 +82,13 @@ function MentoringWithStepsBlock(runtime, element) {
     function showFeedback(response) {
         if (response.step_status === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
+            checkmark.attr('aria-label', checkmark.data('label_correct'));
         } else if (response.step_status === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
+            checkmark.attr('aria-label', checkmark.data('label_partial'));
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+            checkmark.attr('aria-label', checkmark.data('label_incorrect'));
         }
         var step = getActiveStep();
         if (typeof step.showFeedback == 'function') {
@@ -166,6 +169,7 @@ function MentoringWithStepsBlock(runtime, element) {
         checkmark.removeClass('checkmark-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
+        checkmark.attr('aria-label', '');
         hideAllSteps();
         hideReviewStep();
         attemptsDOM.html('');

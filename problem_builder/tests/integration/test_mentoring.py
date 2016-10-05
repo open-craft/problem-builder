@@ -84,7 +84,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         return questionnaire.find_elements_by_css_selector(".choices-list .choice")[choice_index]
 
     def _get_answer_checkmark(self, answer):
-        return answer.find_element_by_xpath("parent::*").find_element_by_css_selector(".answer-checkmark")
+        return answer.find_element_by_xpath("ancestor::node()[3]").find_element_by_css_selector(".answer-checkmark")
 
     def _get_messages_element(self, mentoring):
         return mentoring.find_element_by_css_selector('.messages')
@@ -103,15 +103,25 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     def _assert_answer(self, answer, results_shown=True):
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
         answer_checkmark = self._get_answer_checkmark(answer)
-        self._assert_checkmark(answer_checkmark, shown=results_shown, checkmark_class='checkmark-correct')
+        self._assert_checkmark(answer_checkmark, shown=results_shown)
 
-    def _assert_checkmark(self, checkmark, shown=True, checkmark_class=None):
+    def _assert_checkmark(self, checkmark, correct=True, shown=True):
         result_classes = checkmark.get_attribute('class').split()
+        result_label = checkmark.get_attribute('aria-label').strip()
         if shown:
+            if correct:
+                checkmark_class = 'checkmark-correct'
+                checkmark_label = 'Correct'
+            else:
+                checkmark_class = 'checkmark-incorrect'
+                checkmark_label = 'Incorrect'
+
             self.assertTrue(checkmark.is_displayed())
             self.assertIn(checkmark_class, result_classes)
+            self.assertEquals(checkmark_label, result_label)
         else:
             self.assertFalse(checkmark.is_displayed())
+            self.assertEquals('', result_label)
 
     def _assert_mcq(self, mcq, previous_answer_shown=True):
         if previous_answer_shown:
@@ -143,8 +153,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             choice_result.click()
 
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
-        checkmark_class = 'checkmark-correct' if success else 'checkmark-incorrect'
-        self._assert_checkmark(choice_result, checkmark_class=checkmark_class)
+        self._assert_checkmark(choice_result, correct=success)
         self.assertTrue(feedback_popup.is_displayed())
         self.assertEqual(feedback_popup.text, expected_text)
 

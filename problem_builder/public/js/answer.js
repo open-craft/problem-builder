@@ -35,9 +35,11 @@ function AnswerBlock(runtime, element) {
             if (result.status) {
                 if (result.status === "correct") {
                     checkmark.addClass('checkmark-correct icon-ok fa-check');
+                    checkmark.attr('aria-label', checkmark.data('label_correct'));
                 }
                 else {
                     checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                    checkmark.attr('aria-label', checkmark.data('label_incorrect'));
                 }
             }
         },

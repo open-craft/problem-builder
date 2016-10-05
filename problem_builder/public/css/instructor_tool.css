@@ -52,7 +52,9 @@
 }
 .data-export-results thead {
     border-bottom: 2px solid #999;
+    white-space: nowrap;
 }
+.data-export-results th,
 .data-export-results td {
     border-left: 1px solid #999;
     padding: 5px;

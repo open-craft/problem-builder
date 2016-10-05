@@ -544,16 +544,24 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         choice = mcq.find_elements_by_css_selector(".choices-list .choice")[choice_index]
         choice_result = choice.find_element_by_css_selector('.choice-result')
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
-        checkmark_class = 'checkmark-correct' if correct else 'checkmark-incorrect'
 
         self.wait_until_visible(feedback_popup)
         self.assertEqual(feedback_popup.text, expected_text)
-        self.assert_choice_result(choice_result, checkmark_class=checkmark_class)
+        self.assert_choice_result(choice_result, correct)
 
-    def assert_choice_result(self, choice_result, checkmark_class):
+    def assert_choice_result(self, choice_result, correct):
+        if correct:
+            checkmark_class = 'checkmark-correct'
+            checkmark_label = 'Correct'
+        else:
+            checkmark_class = 'checkmark-incorrect'
+            checkmark_label = 'Incorrect'
+
         result_classes = choice_result.get_attribute('class').split()
+        result_label = choice_result.get_attribute('aria-label').strip()
         self.wait_until_visible(choice_result)
         self.assertIn(checkmark_class, result_classes)
+        self.assertEquals(checkmark_label, result_label)
 
     def test_review_tips(self):
         params = {

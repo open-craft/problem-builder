@@ -1,10 +1,13 @@
+{% load i18n %}
 <div class="xblock-answer" data-completed="{{ self.completed }}">
   {% if not hide_header %}<h3 class="question-title">{{ self.display_name_with_default }}</h3>{% endif %}
-  <p>{{ self.question|safe }}</p>
-  <textarea
-     class="answer editable" cols="50" rows="10" name="input"
-     data-min_characters="{{ self.min_characters }}"
-     >{{ self.student_input }}</textarea>
+  <label><p>{{ self.question|safe }}</p>
+    <textarea
+       class="answer editable" cols="50" rows="10" name="input"
+       data-min_characters="{{ self.min_characters }}"
+       >{{ self.student_input }}</textarea>
+  </label>
   <div style="display: none;" class="orig-student-answer">{{ self.student_input }}</div> <!-- To detect edits -->
-  <span class="answer-checkmark fa icon-2x"></span>
+  <span class="answer-checkmark fa icon-2x" aria-label=""
+    data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"></span>
 </div>

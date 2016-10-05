@@ -52,15 +52,19 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         # Initial MCQ status
         mentoring = self.go_to_page('Mcq 1')
         mcq1 = mentoring.find_element_by_css_selector('fieldset.choices')
+        mcq1_heading = mentoring.find_element_by_id('heading_' + mcq1.get_attribute('id'))
         mcq2 = mentoring.find_element_by_css_selector('fieldset.rating')
+        mcq2_heading = mentoring.find_element_by_id('heading_' + mcq2.get_attribute('id'))
         messages = mentoring.find_element_by_css_selector('.messages')
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
         self.assert_messages_empty(messages)
         self.assertFalse(submit.is_enabled())
 
-        self.assertEqual(mcq1.find_element_by_css_selector('legend').text, 'Question 1\nDo you like this MCQ?')
-        self.assertEqual(mcq2.find_element_by_css_selector('legend').text, 'Question 2\nHow do you rate this MCQ?')
+        self.assertEqual(mcq1_heading.text, 'Question 1')
+        self.assertEqual(mcq1.find_element_by_css_selector('legend').text, 'Do you like this MCQ?')
+        self.assertEqual(mcq2_heading.text, 'Question 2')
+        self.assertEqual(mcq2.find_element_by_css_selector('legend').text, 'How do you rate this MCQ?')
 
         mcq1_choices = mcq1.find_elements_by_css_selector('.choices .choice')
         mcq2_choices = mcq2.find_elements_by_css_selector('.rating .choice')
@@ -141,8 +145,8 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         # Clicking outside the tips should hide the tips and clear the with-tips class.
         mcq1_tips = mcq1.find_element_by_css_selector(".choice-tips .tip p")
         mcq2_tips = mcq2.find_element_by_css_selector(".choice-tips .tip p")
-        mcq1.find_element_by_css_selector('.mentoring .question-title').click()
-        mcq2.find_element_by_css_selector('.mentoring .question-title').click()
+        mcq1_heading.click()
+        mcq2_heading.click()
         mcq1_tip_containers = mcq1.find_elements_by_css_selector('.choice-tips-container.with-tips')
         mcq2_tip_containers = mcq2.find_elements_by_css_selector('.choice-tips-container.with-tips')
         self.assertEqual(len(mcq1_tip_containers), 0)
@@ -161,7 +165,10 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertFalse(submit.is_enabled())
 
         mcq_legend = mcq.find_element_by_css_selector('legend')
-        self.assertEqual(mcq_legend.text, 'Question\nWhat do you like in this MRQ?')
+        self.assertEqual(mcq_legend.text, 'What do you like in this MRQ?')
+
+        mcq_heading = mentoring.find_element_by_id('heading_' + mcq.get_attribute('id'))
+        self.assertEqual(mcq_heading.text, 'Question')
 
         mcq_choices = mcq.find_elements_by_css_selector('.choices .choice')
 
@@ -193,8 +200,7 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         # this could be a list comprehension, but a bit complicated one - hence explicit loop
         for choice_wrapper in questionnaire.find_elements_by_css_selector(".choice"):
             choice_label = choice_wrapper.find_element_by_css_selector("label")
-            result.append(choice_label.get_attribute('innerHTML').strip())
-
+            result.append(choice_label)
         return result
 
     @ddt.data(
@@ -202,9 +208,10 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         'Mcq With Html Choices'
     )
     def test_questionnaire_html_choices(self, page):
+
         mentoring = self.go_to_page(page)
 
-        question = mentoring.find_element_by_css_selector('legend p')
+        question = mentoring.find_element_by_css_selector('fieldset legend')
         self.assertIn(
             'What do <strong>you</strong> like in this ',
             question.get_attribute('innerHTML').strip()
@@ -220,8 +227,12 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             '<span style="font-color:red">Its bugs</span>'
         ]
 
-        options = self._get_questionnaire_options(choices_list)
-        self.assertEqual(expected_options, options)
+        # Ensure each questionnaire label contains the input item, and the expected option.
+        labels = self._get_questionnaire_options(choices_list)
+        self.assertEquals(len(labels), len(expected_options))
+        for idx, label in enumerate(labels):
+            self.assertEquals(len(label.find_elements_by_tag_name('input')), 1)
+            self.assertIn(expected_options[idx], label.get_attribute('innerHTML').strip())
 
         self.assert_messages_empty(messages)
 

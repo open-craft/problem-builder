@@ -1,17 +1,17 @@
+{% load i18n %}
 <div class="xblock-pb-slider">
   {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
-  {% if question %}
-    <p><label for="{{slider_id}}">{{ question|safe }} <span class="sr">({{instructions_string}})</span></label></p>
-  {% endif %}
   <div class="pb-slider-box clearfix">
-    <input type="range"
-      id="{{slider_id}}" class="pb-slider-range" min="0" max="100" step="1" value="{{initial_value}}"
-      {% if not question %}aria-label="{{instructions_string}}"{% endif %}
-    >
+    <p><label>{{ question|safe }} <span class="sr">({{instructions_string}})</span>
+      <input type="range" id="{{ slider_id }}" class="pb-slider-range"
+        min="0" max="100" step="1" value="{{initial_value}}"
+      />
+    </label></p>
     <div class="pb-slider-min-label" aria-hidden="true">{{ min_label }}</div>
     <div class="pb-slider-max-label" aria-hidden="true">{{ max_label }}</div>
   </div>
   <div class="clearfix">
-    <span class="submit-result fa icon-2x checkmark-correct icon-ok fa-check" style="visibility: hidden;"></span>
+    <span class="submit-result fa icon-2x checkmark-correct icon-ok fa-check"
+      style="visibility: hidden;" aria-label="{% trans "Complete" %}"></span>
   </div>
 </div>

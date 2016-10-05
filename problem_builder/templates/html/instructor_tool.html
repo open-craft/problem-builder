@@ -59,35 +59,37 @@
   </div>
 </div>
 
-<div id="results" class="data-export-results">
-  <table>
-    <thead>
-      <tr>
-        <td>{% trans "Section" %}</td>
-        <td>{% trans "Subsection" %}</td>
-        <td>{% trans "Unit" %}</td>
-        <td>{% trans "Type" %}</td>
-        <td>{% trans "Question" %}</td>
-        <td>{% trans "Answer" %}</td>
-        <td>{% trans "Username" %}</td>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <div class="data-export-info"></div>
-  <div class="data-export-result-actions">
-    <button id="first-page">First</button>
-    <button id="prev-page">Prev</button>
-    <span id="current-page"></span>/<span id="total-pages"></span>
-    <button id="next-page">Next</button>
-    <button id="last-page">Last</button>
+<div id="results-wrapper" aria-live="polite">
+  <div id="results" class="data-export-results">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Section" %}</th>
+          <th>{% trans "Subsection" %}</th>
+          <th>{% trans "Unit" %}</th>
+          <th>{% trans "Type" %}</th>
+          <th>{% trans "Question" %}</th>
+          <th>{% trans "Answer" %}</th>
+          <th>{% trans "Username" %}</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="data-export-info"></div>
+    <div class="data-export-result-actions">
+      <button id="first-page">First</button>
+      <button id="prev-page">Prev</button>
+      <span id="current-page"></span>/<span id="total-pages"></span>
+      <button id="next-page">Next</button>
+      <button id="last-page">Last</button>
+    </div>
   </div>
-</div>
 
-<div class="data-export-status"></div>
+  <div class="data-export-status"></div>
 
-<div class="data-export-actions">
-  <button class="data-export-download">{% trans "Download as CSV" %}</button>
-  <button class="data-export-cancel">{% trans "Cancel search" %}</button>
-  <button class="data-export-delete">{% trans "Delete results" %}</button>
+  <div class="data-export-actions">
+    <button class="data-export-download">{% trans "Download as CSV" %}</button>
+    <button class="data-export-cancel">{% trans "Cancel search" %}</button>
+    <button class="data-export-delete">{% trans "Delete results" %}</button>
+  </div>
 </div>
