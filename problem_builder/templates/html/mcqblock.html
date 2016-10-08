@@ -1,26 +1,28 @@
-<fieldset class="choices questionnaire">
-  <legend class="question">
-    {% if not hide_header %}<h3 class="question-title">{{ self.display_name_with_default }}</h3>{% endif %}
-    <p>{{ self.question|safe }}</p>
-  </legend>
+{% load i18n %}
+{% if not hide_header %}
+<h3 class="question-title" id="heading_{{ self.html_id }}">{{ self.display_name_with_default }}</h3>
+{% endif %}
+<fieldset class="choices questionnaire" id="{{ self.html_id }}">
+  <legend class="question field-group-hd">{{ self.question|safe }}</legend>
   <div class="choices-list">
     {% for choice in custom_choices %}
-    <div class="choice">
-      <div class="choice-result fa icon-2x"></div>
-      <div class="choice-selector">
-        <input id="choice-{{ self.html_id }}-{{ forloop.counter }}" type="radio"
-          name="{{ self.name }}" value="{{ choice.value }}"
-          {% if self.student_choice == choice.value and not hide_prev_answer %} checked{% endif %}
-        />
-      </div>
-      <label class="choice-label" for="choice-{{ self.html_id }}-{{ forloop.counter }}">
-          {{ choice.content|safe }}
+    <div class="choice" aria-live="polite" aria-atomic="true">
+      <label class="choice-label"
+        aria-describedby="feedback_{{ self.html_id }} choice_tips_{{ self.html_id }}-{{ forloop.counter }}">
+        <div class="choice-result fa icon-2x" aria-label=""
+          data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"></div>
+        <div class="choice-selector">
+          <input type="radio" name="{{ self.name }}" value="{{ choice.value }}"
+            {% if self.student_choice == choice.value and not hide_prev_answer %} checked{% endif %}
+          />
+        </div>
+        {{ choice.content|safe }}
       </label>
       <div class="choice-tips-container">
-        <div class="choice-tips"></div>
+        <div class="choice-tips" id="choice_tips_{{ self.html_id }}-{{ forloop.counter }}"></div>
       </div>
     </div>
     {% endfor %}
-    <div class="feedback"></div>
+    <div class="feedback" id="feedback_{{ self.html_id }}"></div>
   </div>
 </fieldset>

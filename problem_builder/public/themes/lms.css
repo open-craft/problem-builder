@@ -1,7 +1,3 @@
-.themed-xblock.mentoring .questionnaire .choice-result {
-    display: table-cell;
-}
-
 .themed-xblock.mentoring .choice-result::before {
     content: "";
     display: block;
@@ -40,8 +36,6 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
 .themed-xblock.mentoring .choice-label {
     display: table-cell;
     vertical-align: middle;
-    width: 100%;
-    padding-bottom: 10px;
 }
 
 .themed-xblock.mentoring .choice-label span.low {

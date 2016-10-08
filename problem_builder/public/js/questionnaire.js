@@ -88,6 +88,7 @@ function MessageView(element, mentoring) {
             this.allResultsDOM.removeClass(
                 'checkmark-incorrect icon-exclamation fa-exclamation checkmark-correct icon-ok fa-check'
             );
+            this.allResultsDOM.attr('aria-label', '');
         }
     };
 }
@@ -136,9 +137,11 @@ function MCQBlock(runtime, element) {
                 if (result.status === "correct") {
                     choiceInputDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
+                    choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
                 } else {
                     choiceDOM.addClass('incorrect');
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                    choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_incorrect'));
                 }
                 choiceResultDOM.off('click').on('click', function() {
                     if (choiceTipsDOM.html() !== '') {
@@ -230,9 +233,11 @@ function MRQBlock(runtime, element) {
                     if (choice.completed) {
                         choiceDOM.addClass('correct');
                         choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
+                        choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
                     } else if (!choice.completed) {
                         choiceDOM.addClass('incorrect');
                         choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                        choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_incorrect'));
                     }
 
                     mentoring.setContent(choiceTipsDOM, choice.tips);

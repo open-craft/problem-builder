@@ -15,6 +15,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-incorrect icon-exclamation fa-exclamation');
         checkmark.removeClass('checkmark-clickable');
+        checkmark.attr('aria-label', '');
         checkmark.off('click');
 
         // Clear all selections
@@ -266,10 +267,13 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
         if (response.completed === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
+            checkmark.attr('aria-label', checkmark.data('label_partial'));
         } else if (response.completed === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
+            checkmark.attr('aria-label', checkmark.data('label_correct'));
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+            checkmark.attr('aria-label', checkmark.data('label_incorrect'));
         }
 
         submitDOM.attr('disabled', 'disabled');
