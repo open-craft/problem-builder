@@ -12,7 +12,7 @@
     </select>
     {% endif %}
     <button class="mentoring-share-button">
-      <i class="fa fa-share-alt"></i> Share
+      <i class="fa fa-share-alt"></i>{% trans "Share" %}
     </button>
     <div class="mentoring-share-with" style="display: none;">
       <div class="shared-with-container"></div>
@@ -24,21 +24,15 @@
         <div class="share-errors"></div>
       </div>
       <div class="share-action-buttons">
-        <button class="do-share-button">Share</button>
+        <button class="do-share-button">{% trans "Share" %}</button>
       </div>
     </div>
     {% if share_notifications %}
     <div class="share-notification" data-shared="{{share_notifications}}">
         <a class="notification-close"><i class="fa fa-close"></i></a>
         <p><strong>{% trans "Map added!" %}</strong></p>
-        <p>
-          {% blocktrans %}
-          Another user has shared a map with you.
-        </p>
-        <p>
-          You can change the user you're currently displaying using the drop-down selector above.
-          {% endblocktrans %}
-        </p>
+        <p>{% trans "Another user has shared a map with you." %}</p>
+        <p>{% trans "You can change the user you're currently displaying using the drop-down selector above." %}</p>
     </div>
     {% endif %}
   </div>

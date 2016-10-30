@@ -10,7 +10,7 @@
       <div class="data-export-field">
         <label>
           <span>{% trans "Username[s]:" %}</span>
-          <input type="text" name="usernames" title="Enter one or more usernames, comma separated." />
+          <input type="text" name="usernames" title="{% trans "Enter one or more usernames, comma separated." %}" />
         </label>
       </div>
     </div>
@@ -45,7 +45,7 @@
         <label>
           <span>{% trans "Problem types:" %}</span>
           <select name="block_types">
-            <option value="all">All</option>
+            <option value="all">{% trans "All" %}</option>
             {% for label, value in block_choices.items %}
             <option value="{{value}}">{{label}}</option>
             {% endfor %}
@@ -54,7 +54,7 @@
       </div>
     </div>
     <div class="data-export-actions">
-      <button class="data-export-start">Search</button>
+      <button class="data-export-start">{% trans "Search" %}</button>
     </div>
   </div>
 </div>
@@ -77,11 +77,11 @@
     </table>
     <div class="data-export-info"></div>
     <div class="data-export-result-actions">
-      <button id="first-page">First</button>
-      <button id="prev-page">Prev</button>
+      <button id="first-page">{% trans "First" %}</button>
+      <button id="prev-page">{% trans "Prev" %}</button>
       <span id="current-page"></span>/<span id="total-pages"></span>
-      <button id="next-page">Next</button>
-      <button id="last-page">Last</button>
+      <button id="next-page">{% trans "Next" %}</button>
+      <button id="last-page">{% trans "Last" %}</button>
     </div>
   </div>
 

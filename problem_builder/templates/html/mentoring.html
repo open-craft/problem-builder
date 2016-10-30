@@ -41,12 +41,12 @@
       <span class="assessment-checkmark fa icon-2x"></span>
       {% endif %}
 
-      <input type="button" class="input-main" value="Submit" disabled="disabled" />
+      <input type="button" class="input-main" value="{% trans "Submit" %}" disabled="disabled" />
 
       {% if self.mode == 'assessment' %}
-      <input type="button" class="input-next" value="Next Question" disabled="disabled" />
-      <input type="button" class="input-review" value="Review grade" disabled="disabled" />
-      <input type="button" class="input-try-again" value="Try again" disabled="disabled" />
+      <input type="button" class="input-next" value="{% trans "Next Question" %}" disabled="disabled" />
+      <input type="button" class="input-review" value="{% trans "Review grade" %}" disabled="disabled" />
+      <input type="button" class="input-try-again" value="{% trans "Try again" %}" disabled="disabled" />
       {% endif %}
 
       <div class="attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>
@@ -55,10 +55,10 @@
     <div class="messages"></div>
     <div class="assessment-review-tips"></div>
   </div>
-  <div class="review-link"><a href="#">Review final grade</a></div>
+  <div class="review-link"><a href="#">{% trans "Review final grade" %}</a></div>
 
   <p class="copyright">
     Copyright &copy; 2013&ndash;2015 OpenCraft, Harvard, edX, McKinsey, and The People's Science, released under the
-    <a target="_blank" href="https://github.com/open-craft/problem-builder/blob/master/LICENSE">APGLv3 license</a>
+    <a target="_blank" href="https://github.com/open-craft/problem-builder/blob/master/LICENSE">{% trans "APGLv3 license" %}</a>
   </p>
 </div>
