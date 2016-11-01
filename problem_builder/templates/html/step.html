@@ -1,0 +1,23 @@
+<div class="sb-step" aria-live="polite"
+     data-next-button-label="{{ self.next_button_label }}" {% if self.has_question %} data-has-question="true" {% endif %}>
+  {% if show_title %}
+  <div class="title">
+    <h3>
+      {% if title %}
+        {{ title }}
+      {% else %}
+        {{ self.display_name_with_default }}
+      {% endif %}
+    </h3>
+  </div>
+  {% endif %}
+
+  {% for child_content in child_contents %}
+    {{ child_content|safe }}
+  {% endfor %}
+  {% if self.message %}
+      <div class="sb-step-message" style="display:none;">
+        <div class="sb-step-message-text">{{ self.message }}</div>
+      </div>
+  {% endif %}
+</div>

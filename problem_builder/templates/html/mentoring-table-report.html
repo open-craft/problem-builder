@@ -1,0 +1,25 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ title }}</title>
+    <style>
+    body {
+        font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+    {{css|safe}}
+    </style>
+</head>
+<body>
+<div class="mentoring">
+    <div class="identification">
+        {% if student_name %}{% trans "Student" %}: {{student_name}}<br>{% endif %}
+        {% if course_name %}{% trans "Course" %}: {{course_name}}<br>{% endif %}
+        {% trans "Date" %}: {% now "DATE_FORMAT" %}<br>
+    </div>
+    REPORT_GOES_HERE
+</div>
+</body>
+</html>

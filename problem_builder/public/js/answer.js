@@ -2,35 +2,45 @@ function AnswerBlock(runtime, element) {
     return {
         mode: null,
         init: function(options) {
-            // register the child validator
+            // Clear results and validate block when answer changes
             $(':input', element).on('keyup', options.onChange);
 
             this.mode = options.mode;
-            var checkmark = $('.answer-checkmark', element);
-            var completed = $('.xblock-answer', element).data('completed');
-            if (completed === 'True' && this.mode === 'standard') {
-                checkmark.addClass('checkmark-correct icon-ok fa-check');
-            }
+            this.validateXBlock = options.validateXBlock;
+
+            // In the LMS, the HTML of multiple units can be loaded at once,
+            // and the user can flip among them. If that happens, the answer in
+            // our HTML may be out of date.
+            this.refreshAnswer();
         },
 
         submit: function() {
             return $(':input', element).serializeArray();
         },
 
-        handleSubmit: function(result) {
-            if (this.mode === 'assessment')
-                return;
+        handleReview: function(result) {
+            $('textarea', element).prop('disabled', true);
+        },
+
+        handleSubmit: function(result, options) {
 
             var checkmark = $('.answer-checkmark', element);
-            $(element).find('.message').text((result || {}).error || '');
 
             this.clearResult();
 
-            if (result.status === "correct") {
-                checkmark.addClass('checkmark-correct icon-ok fa-check');
+            if (options.hide_results || this.mode === 'assessment') {
+                // In assessment mode, display of checkmark would be redundant.
+                return;
             }
-            else {
-                checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+            if (result.status) {
+                if (result.status === "correct") {
+                    checkmark.addClass('checkmark-correct icon-ok fa-check');
+                    checkmark.attr('aria-label', checkmark.data('label_correct'));
+                }
+                else {
+                    checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
+                    checkmark.attr('aria-label', checkmark.data('label_incorrect'));
+                }
             }
         },
 
@@ -54,7 +64,7 @@ function AnswerBlock(runtime, element) {
             var answer_length = input_value.length;
             var data = input.data();
 
-            // an answer cannot be empty event if min_characters is 0
+            // An answer cannot be empty even if min_characters is 0
             if (_.isNumber(data.min_characters)) {
                 var min_characters = _.max([data.min_characters, 1]);
                 if (answer_length < min_characters) {
@@ -62,6 +72,29 @@ function AnswerBlock(runtime, element) {
                 }
             }
             return true;
+        },
+
+        refreshAnswer: function() {
+            var self = this;
+            $.ajax({
+                type: 'POST',
+                url: runtime.handlerUrl(element, 'answer_value'),
+                data: '{}',
+                dataType: 'json',
+                success: function(data) {
+                    // Update the answer to the latest, unless the user has made an edit
+                    var newAnswer = data.value;
+                    var $textarea = $(':input', element);
+                    var currentAnswer = $textarea.val();
+                    var origAnswer = $('.orig-student-answer', element).text();
+                    if (currentAnswer == origAnswer && currentAnswer != newAnswer) {
+                        $textarea.val(newAnswer);
+                    }
+                    if (self.validateXBlock) {
+                      self.validateXBlock();
+                    }
+                },
+            });
         }
     };
 }

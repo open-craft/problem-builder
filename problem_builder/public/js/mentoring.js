@@ -8,7 +8,9 @@ function MentoringBlock(runtime, element) {
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var data = $('.mentoring', element).data();
     var children = runtime.children(element);
-    var steps = runtime.children(element).filter(function(c) { return c.element.className.indexOf('assessment_step_view') > -1; });
+    var steps = runtime.children(element).filter(function(c) {
+        return $(c.element).attr("class").indexOf('assessment_step_view') > -1;
+    });
     var step = data.step;
 
     var mentoring = {
@@ -61,17 +63,13 @@ function MentoringBlock(runtime, element) {
         if (typeof obj !== 'undefined' && typeof obj[fn] == 'function') {
             return obj[fn].apply(obj, Array.prototype.slice.call(arguments, 2));
         } else {
-            return undefined;
+            return null;
         }
     }
 
     function setContent(dom, content) {
         dom.html('');
         dom.append(content);
-        var template = $('#light-child-template', dom).html();
-        if (template) {
-            dom.append(template);
-        }
     }
 
     function renderAttempts() {
@@ -107,11 +105,13 @@ function MentoringBlock(runtime, element) {
     function getChildByName(name) {
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (child && child.name === name) {
+            if (child && typeof child.name !== 'undefined' && child.name.toString() === name) {
                 return child;
             }
         }
     }
+
+    ProblemBuilderUtil.transformClarifications(element);
 
     if (data.mode === 'standard') {
         MentoringStandardView(runtime, element, mentoring);

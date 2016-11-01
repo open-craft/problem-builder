@@ -1,0 +1,29 @@
+.sb-plot {
+    overflow: auto;
+}
+
+.quadrants label {
+    font-weight: bold;
+}
+
+.overlays {
+    float: right;
+    width: 40%;
+}
+
+.overlays input {
+    margin-top: 10px;
+    margin-right: 5px;
+}
+
+.quadrants input, .overlays input {
+    background-color: rgb(204, 204, 204);
+}
+
+.plot-info {
+    margin-top: 15px;
+}
+
+.plot-info-header {
+    font-weight: bold;
+}

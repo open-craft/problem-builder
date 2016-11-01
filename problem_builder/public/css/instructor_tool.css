@@ -1,0 +1,76 @@
+.data-export-options, .data-export-results, .data-export-status {
+    margin-top: 2em;
+}
+.data-export-options, .data-export-results table {
+    border: 2px solid #999;
+}
+.data-export-options, .data-export-results thead {
+    background-color: #ddd;
+}
+.data-export-options {
+    display: table;
+    padding: 1em;
+}
+.data-export-header, .data-export-row {
+    display: table-row;
+}
+.data-export-header h3, .data-export-results thead {
+    font-weight: bold;
+}
+.data-export-header h3 {
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+.data-export-field-container, .data-export-options .data-export-actions {
+    display: table-cell;
+    padding-left: 1em;
+}
+.data-export-field-container {
+    width: 43%;
+}
+.data-export-options .data-export-actions {
+    max-width: 10%;
+}
+.data-export-field {
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+.data-export-field label span {
+    padding-right: .5em;
+    vertical-align: middle;
+}
+.data-export-field input, .data-export-field select {
+    width: 55%;
+    float: right;
+}
+.data-export-results, .data-export-download, .data-export-cancel, .data-export-delete {
+    display: none;
+}
+.data-export-results table {
+    width: 100%;
+    margin-top: 1em;
+}
+.data-export-results thead {
+    border-bottom: 2px solid #999;
+    white-space: nowrap;
+}
+.data-export-results th,
+.data-export-results td {
+    border-left: 1px solid #999;
+    padding: 5px;
+}
+.data-export-results tr:nth-child(odd) {
+    background-color: #eee;
+}
+.data-export-info p {
+    font-size: 75%;
+}
+.data-export-status {
+    margin-bottom: 1em;
+}
+.data-export-status i {
+    font-size: 3em;
+}
+.data-export-actions {
+    text-align: right;
+}

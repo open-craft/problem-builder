@@ -1,14 +1,14 @@
 {% load i18n %}
-<p>{{ question }}</p>
+<p>{{ question|safe }}</p>
 
 <h2>{% trans "Built-in choices:" %}</h2>
 
 <ul>
-<li>Choice (1): <strong>1 - {{ low }}</strong> ({{accepted_statuses.1}})</li>
+<li>Choice (1): <strong>1 - {{ low|safe }}</strong> ({{accepted_statuses.1}})</li>
 <li>Choice (2): <strong>2</strong> ({{accepted_statuses.2}})</li>
 <li>Choice (3): <strong>3</strong> ({{accepted_statuses.3}})</li>
 <li>Choice (4): <strong>4</strong> ({{accepted_statuses.4}})</li>
-<li>Choice (5): <strong>5 - {{ high }}</strong> ({{accepted_statuses.5}})</li>
+<li>Choice (5): <strong>5 - {{ high|safe }}</strong> ({{accepted_statuses.5}})</li>
 </ul>
 
 <h2>{% trans "Additional custom choices and tips:" %}</h2>

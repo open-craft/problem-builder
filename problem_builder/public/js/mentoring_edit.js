@@ -5,7 +5,7 @@ function MentoringEditComponents(runtime, element) {
     var updateButtons = function() {
         $buttons.each(function() {
             var msg_type = $(this).data('boilerplate');
-            $(this).toggleClass('disabled', $('.xblock .message.'+msg_type).length > 0);
+            $(this).toggleClass('disabled', $('.xblock .submission-message.'+msg_type).length > 0);
         });
     };
     updateButtons();
@@ -17,5 +17,8 @@ function MentoringEditComponents(runtime, element) {
             $(this).addClass('disabled');
         }
     });
+
+    ProblemBuilderUtil.transformClarifications(element);
+
     runtime.listenTo('deleted-child', updateButtons);
 }

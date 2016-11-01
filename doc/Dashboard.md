@@ -80,3 +80,16 @@ must be in JSON format. The supported entries are:
 * **`"width"`**: (Important) The width of the images, in pixels (all images
   should be the same size).
 * **`"height"`**: (Important) The height of the images, in pixels
+
+
+Enabling in Studio
+------------------
+
+You can enable the Dashboard XBlock in Studio by modifying the advanced settings
+for your course:
+
+1. From the main page of a specific course, navigate to **Settings** ->
+   **Advanced Settings** from the top menu.
+2. Find the **Advanced Module List** setting.
+3. Add `"pb-dashboard"` to the modules listed there.
+4. Click the **Save changes** button.

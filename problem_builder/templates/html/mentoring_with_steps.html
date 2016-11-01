@@ -1,0 +1,38 @@
+{% load i18n %}
+<div class="mentoring themed-xblock" data-active-step="{{ self.active_step_safe }}">
+
+  {% if show_title and title %}
+  <div class="title">
+    <h2>{{ title }}</h2>
+  </div>
+  {% endif %}
+
+  <div class="assessment-question-block">
+
+    {% for child_content in children_contents %}
+      {{ child_content|safe }}
+    {% endfor %}
+
+    <div class="submit">
+      <span class="step-overall-checkmark fa icon-2x fa-fw" aria-label=""
+          data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"
+          data-label_partial="{% trans "Partially correct" %}"></span>
+      <input type="button" class="input-main" value="{% trans "Submit" %}" disabled="disabled" />
+      <input type="button" class="input-next" value="{% trans "Next Step" %}" disabled="disabled" />
+      <input type="button" class="input-review" value="{% trans "Review grade" %}" disabled="disabled" />
+      <input type="button" class="input-try-again" value="{% trans "Try again" %}" disabled="disabled" />
+
+      <div class="attempts"
+           data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}">
+      </div>
+    </div>
+  </div>
+
+  <div class="review-link"><a href="#">{% trans "Review final grade" %}</a></div>
+
+  <p class="copyright">
+    Copyright &copy; 2013&ndash;2015 OpenCraft, Harvard, edX, McKinsey, and The People's Science, released under the
+    <a target="_blank" href="https://github.com/open-craft/problem-builder/blob/master/LICENSE">{% trans "APGLv3 license" %}</a>
+  </p>
+
+</div>

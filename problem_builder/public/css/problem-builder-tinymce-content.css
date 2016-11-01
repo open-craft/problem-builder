@@ -1,0 +1,15 @@
+/* Some styling to make clarifications stand out a bit in
+   studio HTML edit view. */
+
+.mce-content-body .pb-clarification {
+    color: #999;
+    font-size: 0.75em;
+}
+
+.mce-content-body .pb-clarification::before {
+    content: "(?)["
+}
+
+.mce-content-body .pb-clarification::after {
+    content: "]"
+}

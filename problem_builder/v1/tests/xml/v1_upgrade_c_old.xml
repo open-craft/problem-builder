@@ -6,6 +6,7 @@ This contains a table to test migration of tables from v1 schema to v2.
     <option:xml_content>
         <![CDATA[
         <mentoring display_submit="false" enforce_dependency="false">
+            <title>Table</title>
             <mentoring-table type="table_test" url_name="table_2">
                 <column>
                     <header>Header Test 1</header>

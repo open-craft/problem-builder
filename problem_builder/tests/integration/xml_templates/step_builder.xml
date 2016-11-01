@@ -1,0 +1,72 @@
+<step-builder url_name="step-builder" display_name="Step Builder"
+              max_attempts="{{max_attempts}}" extended_feedback="{{extended_feedback}}">
+
+  <sb-step display_name="First step">
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-step display_name="Second step">
+    <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="maybenot">Maybe not</pb-choice>
+        <pb-choice value="understand">I don't understand</pb-choice>
+
+        <pb-tip values='["yes"]'>Great!</pb-tip>
+        <pb-tip values='["maybenot"]'>Ah, damn.</pb-tip>
+        <pb-tip values='["understand"]'><div id="test-custom-html">Really?</div></pb-tip>
+        {% if include_review_tips %}
+            <pb-message type="on-assessment-review-question">
+                <html>Take another look at <a href="#">Lesson 1</a></html>
+            </pb-message>
+        {% endif %}
+    </pb-mcq>
+  </sb-step>
+
+  <sb-step display_name="Third step">
+    <pb-rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How much do you rate this MCQ?" correct_choices='["4","5"]'>
+      <pb-choice value="notwant">I don't want to rate it</pb-choice>
+      <pb-tip values='["4","5"]'>I love good grades.</pb-tip>
+      <pb-tip values='["1","2", "3"]'>Will do better next time...</pb-tip>
+      <pb-tip values='["notwant"]'>Your loss!</pb-tip>
+      {% if include_review_tips %}
+      <pb-message type="on-assessment-review-question">
+        Take another look at <a href="#">Lesson 2</a>
+      </pb-message>
+      {% endif %}
+    </pb-rating>
+  </sb-step>
+
+    <sb-step display_name="Fourth Step">
+        <html_demo>Test test test</html_demo>
+    </sb-step>
+
+  <sb-step display_name="Last step">
+    <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" required_choices='["gracefulness","elegance","beauty"]' message="Question Feedback Message REPLACE-ME">
+      <pb-choice value="elegance">Its elegance</pb-choice>
+      <pb-choice value="beauty">Its beauty</pb-choice>
+      <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+      <pb-choice value="bugs">Its bugs</pb-choice>
+
+      <pb-tip values='["gracefulness"]'>This MRQ is indeed very graceful</pb-tip>
+      <pb-tip values='["elegance","beauty"]'>This is something everyone has to like about this MRQ</pb-tip>
+      <pb-tip values='["bugs"]'>Nah, there aren't any!</pb-tip>
+      {% if include_review_tips %}
+      <pb-message type="on-assessment-review-question">
+        Take another look at <a href="#">Lesson 3</a>
+      </pb-message>
+      {% endif %}
+    </pb-mrq>
+  </sb-step>
+
+  <sb-review-step>
+    <sb-conditional-message score_condition="imperfect" num_attempts_condition="can_try_again">Not quite! You can try again, though.</sb-conditional-message>
+    <sb-conditional-message score_condition="imperfect" num_attempts_condition="cannot_try_again">Not quite!</sb-conditional-message>
+    <sb-conditional-message score_condition="perfect">Great job!</sb-conditional-message>
+    <sb-conditional-message num_attempts_condition="cannot_try_again">This message is shown when you run out of attempts.</sb-conditional-message>
+    <sb-review-score/>
+    {% if include_review_tips %}
+    <sb-review-per-question-feedback/>
+    {% endif %}
+  </sb-review-step>
+
+</step-builder>

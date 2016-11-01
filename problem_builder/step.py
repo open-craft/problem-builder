@@ -18,9 +18,29 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from lazy import lazy
-from xblock.fields import String, Boolean, Scope
-from xblockutils.helpers import child_isinstance
+import logging
+
+from lazy.lazy import lazy
+
+from xblock.core import XBlock
+from xblock.fields import String, List, Scope
+from xblock.fragment import Fragment
+from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import (
+    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
+)
+
+from problem_builder.answer import AnswerBlock, AnswerRecapBlock
+from problem_builder.mcq import MCQBlock, RatingBlock
+from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
+from problem_builder.mrq import MRQBlock
+from problem_builder.plot import PlotBlock
+from problem_builder.slider import SliderBlock
+from problem_builder.table import MentoringTableBlock
+
+
+log = logging.getLogger(__name__)
+loader = ResourceLoader(__name__)
 
 
 # Make '_' a no-op so we can scrape strings
@@ -40,75 +60,207 @@ def _normalize_id(key):
     return key
 
 
-class StepParentMixin(object):
+class Correctness(object):
+    CORRECT = 'correct'
+    PARTIAL = 'partial'
+    INCORRECT = 'incorrect'
+
+
+@XBlock.needs('i18n')
+class MentoringStepBlock(
+        StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
+        EnumerableChildMixin, StepParentMixin, XBlock
+):
     """
-    An XBlock mixin for a parent block containing Step children
+    An XBlock for a step.
     """
+    CAPTION = _(u"Step")
+    STUDIO_LABEL = _(u"Mentoring Step")
+    CATEGORY = 'sb-step'
 
-    @property
-    def steps(self):
-        """
-        Get the usage_ids of all of this XBlock's children that are "Steps"
-        """
-        return [_normalize_id(child_id) for child_id in self.children if child_isinstance(self, child_id, StepMixin)]
-
-
-class StepMixin(object):
-    """
-    An XBlock mixin for a child block that is a "Step".
-
-    A step is a question that the user can answer (as opposed to a read-only child).
-    """
-    has_author_view = True
-
-    # Fields:
+    # Settings
     display_name = String(
-        display_name=_("Question title"),
-        help=_('Leave blank to use the default ("Question 1", "Question 2", etc.)'),
-        default="",  # Blank will use 'Question x' - see display_name_with_default
-        scope=Scope.content
-    )
-    show_title = Boolean(
-        display_name=_("Show title"),
-        help=_("Display the title?"),
-        default=True,
+        display_name=_("Step Title"),
+        help=_('Leave blank to use sequential numbering'),
+        default="",
         scope=Scope.content
     )
 
-    @lazy
-    def step_number(self):
-        return list(self.get_parent().steps).index(_normalize_id(self.scope_ids.usage_id)) + 1
+    # User state
+    student_results = List(
+        # Store results of student choices.
+        default=[],
+        scope=Scope.user_state
+    )
+
+    next_button_label = String(
+        display_name=_("Next Button Label"),
+        help=_("Customize the text of the 'Next' button."),
+        default=_("Next Step")
+    )
+
+    message = String(
+        display_name=_("Message"),
+        help=_("Feedback or instructional message which pops up after submitting."),
+    )
+
+    editable_fields = ('display_name', 'show_title', 'next_button_label', 'message')
 
     @lazy
-    def lonely_step(self):
-        if _normalize_id(self.scope_ids.usage_id) not in self.get_parent().steps:
-            raise ValueError("Step's parent should contain Step", self, self.get_parent().steps)
-        return len(self.get_parent().steps) == 1
+    def siblings(self):
+        return self.get_parent().step_ids
 
     @property
-    def display_name_with_default(self):
-        """ Get the title/display_name of this question. """
-        if self.display_name:
-            return self.display_name
-        if not self.lonely_step:
-            return self._(u"Question {number}").format(number=self.step_number)
-        return self._(u"Question")
+    def is_last_step(self):
+        parent = self.get_parent()
+        return self.step_number == len(parent.step_ids)
 
-    def author_view(self, context):
-        context = context.copy() if context else {}
-        context['hide_header'] = True
-        return self.mentoring_view(context)
-
-    def author_preview_view(self, context):
-        context = context.copy() if context else {}
-        context['hide_header'] = True
-        return self.student_view(context)
-
-    def assessment_step_view(self, context=None):
+    @property
+    def allowed_nested_blocks(self):
         """
-        assessment_step_view is the same as mentoring_view, except its DIV will have a different
-        class (.xblock-v1-assessment_step_view) that we use for assessments to hide all the
-        steps with CSS and to detect which children of mentoring are "Steps" and which are just
-        decorative elements/instructions.
+        Returns a list of allowed nested XBlocks. Each item can be either
+        * An XBlock class
+        * A NestedXBlockSpec
+
+        If XBlock class is used it is assumed that this XBlock is enabled and allows multiple instances.
+        NestedXBlockSpec allows explicitly setting disabled/enabled state, disabled reason (if any) and single/multiple
+        instances
         """
-        return self.mentoring_view(context)
+        additional_blocks = []
+        try:
+            from xmodule.video_module.video_module import VideoDescriptor
+            additional_blocks.append(NestedXBlockSpec(
+                VideoDescriptor, category='video', label=_(u"Video")
+            ))
+        except ImportError:
+            pass
+        try:
+            from imagemodal import ImageModal
+            additional_blocks.append(NestedXBlockSpec(
+                ImageModal, category='imagemodal', label=_(u"Image Modal")
+            ))
+        except ImportError:
+            pass
+
+        return [
+            NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
+            MCQBlock, RatingBlock, MRQBlock,
+            NestedXBlockSpec(None, category="html", label=self._("HTML")),
+            AnswerRecapBlock, MentoringTableBlock, PlotBlock, SliderBlock
+        ] + additional_blocks
+
+    @property
+    def has_question(self):
+        return any(getattr(child, 'answerable', False) for child in self.steps)
+
+    def submit(self, submissions):
+        """ Handle a student submission. This is called by the parent XBlock. """
+        log.info(u'Received submissions: {}'.format(submissions))
+
+        # Submit child blocks (questions) and gather results
+        submit_results = []
+        for child in self.steps:
+            if child.name and child.name in submissions:
+                submission = submissions[child.name]
+                child_result = child.submit(submission)
+                submit_results.append([child.name, child_result])
+                child.save()
+
+        # Update results stored for this step
+        self.reset()
+        for result in submit_results:
+            self.student_results.append(result)
+        self.save()
+
+        return {
+            'message': 'Success!',
+            'step_status': self.answer_status,
+            'results': submit_results,
+        }
+
+    @XBlock.json_handler
+    def get_results(self, queries, suffix=''):
+        results = {}
+        answers = dict(self.student_results)
+        for question in self.steps:
+            previous_results = answers[question.name]
+            result = question.get_results(previous_results)
+            results[question.name] = result
+
+        # Add 'message' to results? Looks like it's not used on the client ...
+        return {
+            'results': results,
+            'step_status': self.answer_status,
+        }
+
+    def reset(self):
+        while self.student_results:
+            self.student_results.pop()
+
+    @property
+    def answer_status(self):
+        if all(result[1]['status'] == 'correct' for result in self.student_results):
+            answer_status = Correctness.CORRECT
+        elif all(result[1]['status'] == 'incorrect' for result in self.student_results):
+            answer_status = Correctness.INCORRECT
+        else:
+            answer_status = Correctness.PARTIAL
+        return answer_status
+
+    def author_edit_view(self, context):
+        """
+        Add some HTML to the author view that allows authors to add child blocks.
+        """
+        local_context = dict(context)
+        local_context['author_edit_view'] = True
+        fragment = super(MentoringStepBlock, self).author_edit_view(local_context)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
+        fragment.initialize_js('ProblemBuilderContainerEdit')
+        return fragment
+
+    def mentoring_view(self, context=None):
+        """ Mentoring View """
+        return self._render_view(context, 'mentoring_view')
+
+    def _render_view(self, context, view):
+        """ Actually renders a view """
+        rendering_for_studio = False
+        if context:  # Workbench does not provide context
+            rendering_for_studio = context.get('author_preview_view')
+
+        fragment = Fragment()
+        child_contents = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if child is None:  # child should not be None but it can happen due to bugs or permission issues
+                child_contents.append(u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component.")))
+            else:
+                if rendering_for_studio and isinstance(child, PlotBlock):
+                    # Don't use view to render plot blocks in Studio.
+                    # This is necessary because:
+                    # - student_view of plot block uses submissions API to retrieve results,
+                    #   which causes "SubmissionRequestError" in Studio.
+                    # - author_preview_view does not supply JS code for plot that JS code for step depends on
+                    #   (step calls "update" on plot to get latest data during rendering).
+                    child_contents.append(u"<p>{}</p>".format(child.display_name))
+                else:
+                    child_fragment = self._render_child_fragment(child, context, view)
+                    fragment.add_frag_resources(child_fragment)
+                    child_contents.append(child_fragment.content)
+
+        fragment.add_content(loader.render_template('templates/html/step.html', {
+            'self': self,
+            'title': self.display_name,
+            'show_title': self.show_title,
+            'child_contents': child_contents,
+        }))
+
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step.js'))
+        fragment.initialize_js('MentoringStepBlock')
+
+        return fragment

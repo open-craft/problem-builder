@@ -1,0 +1,24 @@
+<vertical_demo>
+    <problem-builder url_name="mrq_with_comments" display_name="MRQ With Resizable popups" weight="1" enforce_dependency="false">
+        <pb-mrq name="mrq_1_1_7" question="What do you like in this MRQ?" required_choices='["elegance","gracefulness","beauty"]'>
+            <pb-choice value="elegance">Its elegance</pb-choice>
+            <pb-choice value="beauty">Its beauty</pb-choice>
+            <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+            <pb-choice value="bugs">Its bugs</pb-choice>
+
+            <pb-tip values='["gracefulness"]' width ="200" height = "200">This MRQ is indeed very graceful</pb-tip>
+            <pb-tip values='["elegance"]' width ="600" height = "800">This is something everyone has to like about this MRQ</pb-tip>
+            <pb-tip values='["beauty"]' width ="400" height = "600">This is something everyone has to like about beauty</pb-tip>
+            <pb-tip values='["bugs"]' width = "100" height = "200">Nah, there aren\'t any!</pb-tip>
+
+            <!--<pb-message type="on-submit">This is deliberately commented out to test parsing of XML comments</pb-message> -->
+        </pb-mrq>
+
+        <pb-message type="completed">
+            <p>Congratulations!</p>
+        </pb-message>
+        <pb-message type="incomplete">
+            <p>Still some work to do...</p>
+        </pb-message>
+    </problem-builder>
+</vertical_demo>

@@ -1,0 +1,11 @@
+<vertical_demo>
+    <problem-builder url_name="mcq_general_feedback">
+
+        <pb-mcq name="feedback_questionnaire" question="Do you like this MCQ?" correct_choices='["yes"]' message="Question level Feedback">
+            <pb-choice value="yes">Yes</pb-choice>
+            <pb-choice value="maybenot">Maybe not</pb-choice>
+            <pb-choice value="understand">I don't understand</pb-choice>
+        </pb-mcq>
+
+    </problem-builder>
+</vertical_demo>

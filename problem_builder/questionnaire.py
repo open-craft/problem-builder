@@ -20,18 +20,20 @@
 
 # Imports ###########################################################
 
-from lxml import etree
+from django.utils.safestring import mark_safe
+from lazy import lazy
+import uuid
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Float, List, UNIQUE_ID
+from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin
+from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlockWithPreviewMixin
 
 from .choice import ChoiceBlock
-from .mentoring import MentoringBlock
-from .step import StepMixin
+from .message import MentoringMessageBlock
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
 from .tip import TipBlock
 
 # Globals ###########################################################
@@ -47,7 +49,10 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBlockMixin, StepMixin, XBlock):
+class QuestionnaireAbstractBlock(
+    StudioEditableXBlockMixin, StudioContainerXBlockMixin, QuestionMixin, XBlock, XBlockWithPreviewMixin,
+    XBlockWithTranslationServiceMixin
+):
     """
     An abstract class used for MCQ/MRQ blocks
 
@@ -55,38 +60,26 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
     values entered by the student, and supports multiple types of multiple-choice
     set, with preset choices and author-defined values.
     """
-    name = String(
-        # This doesn't need to be a field but is kept for backwards compatibility with v1 student data
-        display_name=_("Question ID (name)"),
-        help=_("The ID of this question (required). Should be unique within this mentoring component."),
-        default=UNIQUE_ID,
-        scope=Scope.settings,  # Must be scope.settings, or the unique ID will change every time this block is edited
-    )
     question = String(
         display_name=_("Question"),
         help=_("Question to ask the student"),
         scope=Scope.content,
-        default=""
+        default="",
+        multiline_editor=True,
     )
-    message = String(
-        display_name=_("Message"),
-        help=_("General feedback provided when submiting"),
-        scope=Scope.content,
-        default=""
-    )
-    weight = Float(
-        display_name=_("Weight"),
-        help=_("Defines the maximum total grade of this question."),
-        default=1,
-        scope=Scope.content,
-        enforce_type=True
-    )
-    editable_fields = ('question', 'message', 'weight', 'display_name', 'show_title')
-    has_children = True
 
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
+    editable_fields = ('question', 'weight', 'display_name', 'show_title')
+    has_children = True
+    answerable = True
+
+    @lazy
+    def html_id(self):
+        """
+        A short, simple ID string used to uniquely identify this question.
+
+        This is only used by templates for matching <input> and <label> elements.
+        """
+        return uuid.uuid4().hex[:20]
 
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
@@ -100,8 +93,10 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
         fragment = Fragment(loader.render_template(template_path, context))
         # If we use local_resource_url(self, ...) the runtime may insert many identical copies
-        # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible
+        # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible.
         block_with_resources = self.get_parent()
+        from .mentoring import MentoringBlock
+        # We use an inline import here to avoid a circular dependency with the .mentoring module.
         if not isinstance(block_with_resources, MentoringBlock):
             block_with_resources = self
         fragment.add_css_url(self.runtime.local_resource_url(block_with_resources, 'public/css/questionnaire.css'))
@@ -126,7 +121,7 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
 
     @property
     def human_readable_choices(self):
-        return [{"display_name": c.content, "value": c.value} for c in self.custom_choices]
+        return [{"display_name": mark_safe(c.content), "value": c.value} for c in self.custom_choices]
 
     @staticmethod
     def choice_values_provider(question):
@@ -155,13 +150,28 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
                 return choice.content
         return submission
 
+    def get_author_edit_view_fragment(self, context):
+        fragment = super(QuestionnaireAbstractBlock, self).author_edit_view(context)
+        return fragment
+
     def author_edit_view(self, context):
         """
         Add some HTML to the author view that allows authors to add choices and tips.
         """
-        fragment = super(QuestionnaireAbstractBlock, self).author_edit_view(context)
-        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
+        fragment = self.get_author_edit_view_fragment(context)
+
+        # Let the parent block determine whether to display buttons to add review-related child blocks.
+        # * Problem Builder units use MentoringBlock parent components, which define an 'is_assessment' property,
+        #   indicating whether the (deprecated) assessment mode is enabled.
+        # * Step Builder units can show review components in the Review Step.
+        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {
+            'show_review': getattr(self.get_parent(), 'is_assessment', True),
+        }))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_edit.js'))
+        fragment.initialize_js('MentoringEditComponents')
         return fragment
 
     def validate_field_data(self, validation, data):
@@ -206,3 +216,22 @@ class QuestionnaireAbstractBlock(StudioEditableXBlockMixin, StudioContainerXBloc
                 break
             values_with_tips.update(values)
         return validation
+
+    def get_review_tip(self):
+        """ Get the text to show on the assessment review when the student gets this question wrong """
+        for child_id in self.children:
+            if child_isinstance(self, child_id, MentoringMessageBlock):
+                child = self.runtime.get_block(child_id)
+                if child.type == "on-assessment-review-question":
+                    return child.content
+
+    @property
+    def message_formatted(self):
+        """ Get the feedback message HTML, if any, formatted by the runtime """
+        if self.message:
+            # For any HTML that we aren't 'rendering' through an XBlock view such as
+            # student_view the runtime may need to rewrite URLs
+            # e.g. converting '/static/x.png' to '/c4x/.../x.png'
+            format_html = getattr(self.runtime, 'replace_urls', lambda html: html)
+            return format_html(self.message)
+        return ""

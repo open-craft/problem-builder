@@ -22,11 +22,38 @@ Test that the various title/display_name options for Answer and MCQ/MRQ/Ratings 
 """
 
 # Imports ###########################################################
+import ddt
 from mock import patch
 from xblockutils.base_test import SeleniumXBlockTest
 
 
 # Classes ###########################################################
+
+
+@ddt.ddt
+class TitleTest(SeleniumXBlockTest):
+    """
+    Test the various display_name/show_title options for Problem Builder
+    """
+
+    @ddt.data(
+        ('<problem-builder show_title="false"><pb-answer name="a"/></problem-builder>', None),
+        ('<problem-builder><pb-answer name="a"/></problem-builder>', "Problem Builder"),
+        ('<problem-builder mode="assessment"><pb-answer name="a"/></problem-builder>', "Problem Builder"),
+        ('<problem-builder display_name="A Question"><pb-answer name="a"/></problem-builder>', "A Question"),
+        ('<problem-builder display_name="A Question" show_title="false"><pb-answer name="a"/></problem-builder>', None),
+    )
+    @ddt.unpack
+    def test_title(self, xml, expected_title):
+        self.set_scenario_xml(xml)
+        pb_element = self.go_to_view()
+        if expected_title is not None:
+            h2 = pb_element.find_element_by_css_selector('h2')
+            self.assertEqual(h2.text, expected_title)
+        else:
+            # No <h2> element should be present:
+            all_h2s = pb_element.find_elements_by_css_selector('h2')
+            self.assertEqual(len(all_h2s), 0)
 
 
 class StepTitlesTest(SeleniumXBlockTest):
@@ -45,9 +72,9 @@ class StepTitlesTest(SeleniumXBlockTest):
     )
 
     mcq_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-mcq name="mcq_1_1" question="Who was your favorite character?"
-              correct_choices="gaius,adama,starbuck,roslin,six,lee"
+              correct_choices="[gaius,adama,starbuck,roslin,six,lee]"
               {display_name_attr} {show_title_attr}
             >
                 <pb-choice value="gaius">Gaius Baltar</pb-choice>
@@ -61,9 +88,9 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     mrq_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-mrq name="mrq_1_1" question="What makes a great MRQ?"
-              ignored_choices="1,2,3"
+              ignored_choices="[1,2,3]"
               {display_name_attr} {show_title_attr}
             >
                 <pb-choice value="1">Lots of choices</pb-choice>
@@ -74,9 +101,9 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     rating_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-rating name="rating_1_1" question="How do you rate Battlestar Galactica?"
-              correct_choices="5,6"
+              correct_choices="[5,6]"
               {display_name_attr} {show_title_attr}
             >
                 <pb-choice value="6">More than 5 stars</pb-choice>
@@ -85,7 +112,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     long_answer_template = """
-        <problem-builder mode="{{mode}}">
+        <problem-builder mode="{mode}">
             <pb-answer name="answer_1_1" question="What did you think of the ending?"
               {display_name_attr} {show_title_attr} />
         </problem-builder>

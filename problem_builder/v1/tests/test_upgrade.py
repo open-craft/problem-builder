@@ -23,7 +23,7 @@ Test that we can upgrade from mentoring v1 to problem builder (v2).
 import ddt
 from lxml import etree
 from problem_builder.mentoring import MentoringBlock
-from problem_builder.v1.xml_changes import convert_xml_v1_to_v2
+from problem_builder.v1.xml_changes import convert_xml_to_v2
 import os.path
 from StringIO import StringIO
 import unittest
@@ -52,6 +52,7 @@ class TestUpgrade(unittest.TestCase):
         "v1_upgrade_a",
         "v1_upgrade_b",
         "v1_upgrade_c",
+        "v1_upgrade_d",
     )
     @XBlock.register_temp_plugin(HtmlBlock, "html")
     @XBlock.register_temp_plugin(MentoringBlock, "mentoring")
@@ -65,7 +66,7 @@ class TestUpgrade(unittest.TestCase):
 
         parser = etree.XMLParser(remove_blank_text=True)
         xml_root = etree.parse(StringIO(old_block.xml_content), parser=parser).getroot()
-        convert_xml_v1_to_v2(xml_root)
+        convert_xml_to_v2(xml_root)
         converted_block = self.create_block_from_node(xml_root)
 
         with open("{}/{}_new.xml".format(xml_path, file_name)) as xmlfile:

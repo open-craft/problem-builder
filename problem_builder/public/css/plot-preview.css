@@ -1,0 +1,23 @@
+.sb-plot table {
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border: 2px solid #999;
+}
+
+.sb-plot thead {
+    border-bottom: 2px solid #999;
+    background-color: #ddd;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.sb-plot tr:nth-child(even) {
+    background-color: #eee;
+}
+
+.sb-plot th,
+.sb-plot td {
+    border-left: 1px solid #999;
+    padding: 5px;
+}

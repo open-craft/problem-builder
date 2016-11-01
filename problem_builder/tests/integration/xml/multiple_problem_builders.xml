@@ -1,0 +1,32 @@
+<vertical_demo>
+    <html_demo>
+        <p>This tests that multiple Problem Builder blocks can happily co-exist on a page.</p>
+    </html_demo>
+    <problem-builder url_name="a" display_name="First: An Answer Block">
+        <pb-answer name="q-a" question="What is your goal?" />
+    </problem-builder>
+    <problem-builder url_name="b" display_name="Recap" display_submit="false">
+        <html_demo>
+            <p>Your answer should now appear here:</p>
+        </html_demo>
+        <pb-answer-recap name="q-a"/>
+        <html_demo>There should be no submit button here.</html_demo>
+    </problem-builder>
+    <problem-builder url_name="c" display_name="Third: An MCQ">
+        <pb-mcq name="mcq_3_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
+            <pb-choice value="yes">Yes</pb-choice>
+            <pb-choice value="maybenot">Maybe not</pb-choice>
+            <pb-choice value="understand">I don't understand</pb-choice>
+        </pb-mcq>
+    </problem-builder>
+    <problem-builder url_name="d" display_name="Fourth: An MRQ Assessment" mode="assessment">
+        <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" 
+            required_choices='["gracefulness","elegance","beauty"]'
+        >
+            <pb-choice value="elegance">Its elegance</pb-choice>
+            <pb-choice value="beauty">Its beauty</pb-choice>
+            <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+            <pb-choice value="bugs">Its bugs</pb-choice>
+        </pb-mrq>
+    </problem-builder>
+</vertical_demo>

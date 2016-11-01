@@ -26,12 +26,13 @@ from lazy import lazy
 from .models import Answer
 
 from xblock.core import XBlock
-from xblock.fields import Scope, Float, Integer, String
+from xblock.fields import Scope, Integer, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin
-from .step import StepMixin
+from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
+from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
 import uuid
 
 
@@ -48,7 +49,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class AnswerMixin(object):
+class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
@@ -84,6 +85,23 @@ class AnswerMixin(object):
         )
         return answer_data
 
+    @property
+    def student_input(self):
+        if self.name:
+            return self.get_model_object().student_input
+        return ''
+
+    @XBlock.json_handler
+    def answer_value(self, data, suffix=''):
+        """ Current value of the answer, for refresh by client """
+        return {'value': self.student_input}
+
+    @XBlock.json_handler
+    def refresh_html(self, data, suffix=''):
+        """ Complete HTML view of the XBlock, for refresh by client """
+        frag = self.mentoring_view({})
+        return {'html': frag.content}
+
     def validate_field_data(self, validation, data):
         """
         Validate this block's field data.
@@ -96,19 +114,19 @@ class AnswerMixin(object):
         if not data.name:
             add_error(u"A Question ID is required.")
 
-    def _(self, text):
-        """ translate text """
-        return self.runtime.service(self, "i18n").ugettext(text)
-
 
 @XBlock.needs("i18n")
-class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
+class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEditableXBlockMixin, XBlock):
     """
     A field where the student enters an answer
 
     Must be included as a child of a mentoring block. Answers are persisted as django model instances
     to make them searchable and referenceable across xblocks.
     """
+    CATEGORY = 'pb-answer'
+    STUDIO_LABEL = _(u"Long Answer")
+    answerable = True
+
     name = String(
         display_name=_("Question ID (name)"),
         help=_("The ID of this block. Should be unique unless you want the answer to be used in multiple places."),
@@ -131,14 +149,8 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         display_name=_("Question"),
         help=_("Question to ask the student"),
         scope=Scope.content,
-        default=""
-    )
-    weight = Float(
-        display_name=_("Weight"),
-        help=_("Defines the maximum total grade of the answer block."),
-        default=1,
-        scope=Scope.settings,
-        enforce_type=True
+        default="",
+        multiline_editor=True,
     )
 
     editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from', 'display_name', 'show_title')
@@ -179,6 +191,18 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """ Normal view of this XBlock, identical to mentoring_view """
         return self.mentoring_view(context)
 
+    def get_results(self, previous_response=None):
+        # Previous result is actually stored in database table-- ignore.
+        return {
+            'student_input': self.student_input,
+            'status': self.status,
+            'weight': self.weight,
+            'score': 1 if self.status == 'correct' else 0,
+        }
+
+    def get_last_result(self):
+        return self.get_results(None) if self.student_input else {}
+
     def submit(self, submission):
         """
         The parent block is handling a student submission, including a new answer for this
@@ -186,13 +210,16 @@ class AnswerBlock(AnswerMixin, StepMixin, StudioEditableXBlockMixin, XBlock):
         """
         self.student_input = submission[0]['value'].strip()
         self.save()
+
+        if sub_api:
+            # Also send to the submissions API:
+            item_key = self.student_item_key
+            # Need to do this by our own ID, since an answer can be referred to multiple times.
+            item_key['item_id'] = self.name
+            sub_api.create_submission(item_key, self.student_input)
+
         log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
-        return {
-            'student_input': self.student_input,
-            'status': self.status,
-            'weight': self.weight,
-            'score': 1 if self.status == 'correct' else 0,
-        }
+        return self.get_results()
 
     @property
     def status(self):
@@ -239,6 +266,9 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
     A block that displays an answer previously entered by the student (read-only).
     """
+    CATEGORY = 'pb-answer-recap'
+    STUDIO_LABEL = _(u"Long Answer Recap")
+
     name = String(
         display_name=_("Question ID"),
         help=_("The ID of the question for which to display the student's answer."),
@@ -258,22 +288,35 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     )
     editable_fields = ('name', 'display_name', 'description')
 
-    @property
-    def student_input(self):
-        if self.name:
-            return self.get_model_object().student_input
-        return ''
+    css_path = 'public/css/answer.css'
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
         context = context.copy() if context else {}
+        student_submissions_key = context.get('student_submissions_key')
         context['title'] = self.display_name
         context['description'] = self.description
-        context['student_input'] = self.student_input
+        if student_submissions_key:
+            location = self.location.replace(branch=None, version=None)  # Standardize the key in case it isn't already
+            target_key = {
+                'student_id': student_submissions_key,
+                'course_id': unicode(location.course_key),
+                'item_id': self.name,
+                'item_type': u'pb-answer',
+            }
+            submissions = sub_api.get_submissions(target_key, limit=1)
+            try:
+                context['student_input'] = submissions[0]['answer']
+            except IndexError:
+                context['student_input'] = None
+        else:
+            context['student_input'] = self.student_input
         html = loader.render_template('templates/html/answer_read_only.html', context)
 
         fragment = Fragment(html)
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/answer_recap.js'))
+        fragment.initialize_js('AnswerRecapBlock')
         return fragment
 
     def student_view(self, context=None):

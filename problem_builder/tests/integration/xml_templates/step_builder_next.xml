@@ -1,0 +1,33 @@
+<step-builder url_name="step-builder" display_name="Step Builder"
+              max_attempts="1" extended_feedback="True">
+
+  <sb-step display_name="First step" next_button_label="Next Challenge">
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-step display_name="Second step" next_button_label="Next Item">
+    <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
+      <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="maybenot">Maybe not</pb-choice>
+        <pb-choice value="understand">I don't understand</pb-choice>
+
+        <pb-tip values='["yes"]'>Great!</pb-tip>
+        <pb-tip values='["maybenot"]'>Ah, damn.</pb-tip>
+        <pb-tip values='["understand"]'><div id="test-custom-html">Really?</div></pb-tip>
+    </pb-mcq>
+  </sb-step>
+
+  <sb-step display_name="Third step">
+    <pb-rating name="mcq_1_2" low="Not good at all" high="Extremely good" question="How much do you rate this MCQ?" correct_choices='["4","5"]'>
+        <pb-choice value="notwant">I don't want to rate it</pb-choice>
+        <pb-tip values='["4","5"]'>I love good grades.</pb-tip>
+        <pb-tip values='["1","2", "3"]'>Will do better next time...</pb-tip>
+        <pb-tip values='["notwant"]'>Your loss!</pb-tip>
+    </pb-rating>
+  </sb-step>
+
+  <sb-review-step>
+    <sb-review-score/>
+  </sb-review-step>
+
+</step-builder>

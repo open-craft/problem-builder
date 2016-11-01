@@ -1,0 +1,13 @@
+<vertical_demo>
+    <problem-builder url_name="mcq_1" enforce_dependency="false">
+        <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
+            <pb-choice value="yes">Yes</pb-choice>
+            <pb-choice value="maybenot">Maybe not</pb-choice>
+            <pb-choice value="understand">I don't understand</pb-choice>
+
+            <pb-tip values='["yes"]' height="10">Great!</pb-tip> <!--should be no less than 40 -->
+            <pb-tip values='["maybenot"]' height="60">Ah, damn.</pb-tip>
+            <pb-tip values='["understand"]' height="600">Really?</pb-tip> <!-- should override max-height -->
+        </pb-mcq>
+    </problem-builder>
+</vertical_demo>

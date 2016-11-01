@@ -1,0 +1,70 @@
+{% load i18n %}
+<div class="sb-plot">
+
+  <div class="quadrants">
+    <label>
+      {% trans "Quadrant labels" %}
+      <input type="button"
+             class="plot-quadrants"
+             data-q1-label="{{ self.q1_label }}"
+             data-q2-label="{{ self.q2_label }}"
+             data-q3-label="{{ self.q3_label }}"
+             data-q4-label="{{ self.q4_label }}"
+             value="Off">
+    </label>
+  </div>
+
+  <div class="overlays">
+    <h3>{% trans "Compare your plot to others!" %}</h3>
+
+    <input type="button"
+           class="plot-default"
+           data-claims="{{ self.default_claims_json }}"
+           data-point-color="{{ self.point_color_default }}"
+           data-overlay-on="false"
+           value="{{ self.plot_label }}"
+           />
+    <input type="button"
+           class="plot-average"
+           data-claims="{{ self.average_claims_json }}"
+           data-point-color="{{ self.point_color_average }}"
+           data-overlay-on="false"
+           value="Average"
+           />
+
+    {% for overlay in self.overlay_data %}
+
+      <input type="button"
+             class="plot-overlay plot-overlay-{{ overlay.position }}"
+             data-claims="{{ overlay.claims_json }}"
+             data-point-color="{{ overlay.point_color }}"
+             data-overlay-on="false"
+             value="{{ overlay.plot_label }}"
+             />
+
+    {% endfor %}
+
+    <div class="plot-info">
+      <p class="plot-info-header">{% trans "Plot info" %}</p>
+      {% for overlay in self.overlay_data %}
+        <div class="plot-overlay plot-overlay-{{ overlay.position }}">
+          {% if overlay.description or overlay.citation %}
+            <p class="overlay-plot-label" style="color: {{ overlay.point_color }};">{{ overlay.plot_label }}</p>
+            {% if overlay.description %}
+              <p class="overlay-description">
+                <strong>{% trans "Description:" %}</strong> {{ overlay.description }}
+              </p>
+            {% endif %}
+            {% if overlay.citation %}
+              <p class="overlay-citation">
+                <strong>{% trans "Source:" %}</strong> {{ overlay.citation }}
+              </p>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+</div>

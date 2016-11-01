@@ -1,0 +1,17 @@
+<vertical_demo>
+    <problem-builder url_name="mrq_general_feedback_and_tips">
+
+        <pb-mrq name="feedback_questionnaire" question="What do you like in this MRQ?" required_choices='["elegance","beauty","gracefulness"]' message="Question level feedback">
+            <pb-choice value="elegance">Its elegance</pb-choice>
+            <pb-choice value="beauty">Its beauty</pb-choice>
+            <pb-choice value="gracefulness">Its gracefulness</pb-choice>
+            <pb-choice value="bugs">Its bugs</pb-choice>
+
+            <pb-tip values='["elegance"]'>This is something everyone has to like about this MRQ</pb-tip>
+            <pb-tip values='["beauty"]'>This is something everyone has to like about beauty</pb-tip>
+            <pb-tip values='["gracefulness"]'>This MRQ is indeed very graceful</pb-tip>
+            <pb-tip values='["bugs"]'>Nah, there aren't any!</pb-tip>
+        </pb-mrq>
+
+    </problem-builder>
+</vertical_demo>

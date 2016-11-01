@@ -40,8 +40,6 @@ class AnswerBlockTest(MentoringBaseTest):
 
         # Another answer with the same name
         mentoring = self.go_to_page('Answer Edit 1')
-        header1 = self.browser.find_element_by_css_selector('h1')
-        self.assertEqual(header1.text, 'XBlock: Answer Edit 1')
 
         # Check <html> child
         p = mentoring.find_element_by_css_selector('p')

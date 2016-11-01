@@ -1,0 +1,12 @@
+<problem-builder url_name="pb_with_slider">
+    <pb-slider name="slider_1" question="How much do you like pizza?" min_label="A little" max_label="A lot" />
+
+    {% if include_mcq %}
+    <pb-mcq name="mcq_2" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="maybenot">Maybe not</pb-choice>
+        <pb-choice value="understand">I don't understand</pb-choice>
+    </pb-mcq>
+    {% endif %}
+
+</problem-builder>

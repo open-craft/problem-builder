@@ -1,0 +1,27 @@
+{% load i18n %}
+<div class="sb-plot">
+  <p>{{ self.display_name }}</p>
+  {% if self.claims %}
+    <p>{% trans "This block displays a plot that summarizes responses to the following claims:" %}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Claim" %}</th>
+          <th>{% trans "Question 1" %}</th>
+          <th>{% trans "Question 2" %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for claim in self.claims_display %}
+          <tr>
+            <td>{{ claim.0 }}</td>
+            <td>{{ claim.1 }}</td>
+            <td>{{ claim.2 }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{% trans "This block displays a plot that summarizes responses to a set of claims." %}</p>
+  {% endif %}
+</div>

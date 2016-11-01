@@ -1,0 +1,18 @@
+<step-builder display_name="Step Builder">
+
+  <sb-step display_name="Slider step">
+    <pb-slider name="slider_1" display_name="Information Reliability" question="How reliable is this information?" min_label="0%" max_label="100%" />
+  </sb-step>
+
+  <sb-step display_name="MCQ step">
+    <pb-mcq name="mcq" display_name="Question 2" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="no">No</pb-choice>
+    </pb-mcq>
+  </sb-step>
+
+  <sb-review-step>
+    <sb-review-score/>
+  </sb-review-step>
+
+</step-builder>

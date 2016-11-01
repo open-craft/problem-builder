@@ -16,7 +16,7 @@ This contains a typical problem taken from a live course (content changed)
             <choice value="yes">Yes</choice>
             <choice value="maybenot">Maybe not</choice>
             <choice value="understand">I don't understand</choice>
-            <tip display="yes">Great. Your frog should be happy for you.</tip>
+            <tip width="350" height="100" display="yes">Great. Your frog should be happy for you.</tip>
             <tip display="maybenot">In the end, all the feedback you have gotten from others should not lead you to choose a frog that does not also feel happy and important to you.</tip>
             <tip display="understand">
               <html>
@@ -40,7 +40,7 @@ This contains a typical problem taken from a live course (content changed)
           <quizz name="frog-important" type="rating" low="Not at all important to me" high="Very important to me">
             <question>How important is it to you?</question>
             <choice value="understand">I don't understand</choice>
-            <tip display="4,5">Great!</tip>
+            <tip display="4,5"> </tip>
             <tip display="1,2,3">The Trial of Uruk-Shan helps you uncover some of the core beliefs and assumptions you have held that are preventing you from making change.</tip>
             <tip display="understand">A frog is important if it is one that could make a big difference in helping you reach your frogs in your work life or your personal life (or both).</tip>
           </quizz>

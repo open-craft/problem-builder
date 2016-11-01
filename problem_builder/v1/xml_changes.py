@@ -66,18 +66,32 @@ class PrefixTags(Change):
         self.node.tag = "pb-" + self.node.tag
 
 
+class HideTitle(Change):
+    """
+    If no <title> element is present, set hide_title="true"
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag == "problem-builder" and node.find("title") is None
+
+    def apply(self):
+        self.node.attrib["show_title"] = "false"
+
+
 class RemoveTitle(Change):
-    """ The old <title> element is now an attribute of <mentoring> """
+    """ The old <title> element is now an attribute of <problem-builder> """
     @staticmethod
     def applies_to(node):
         return node.tag == "title" and node.getparent().tag == "problem-builder"
 
     def apply(self):
-        title = self.node.text.strip()
+        title = self.node.text.strip() if self.node.text else u''
         p = self.node.getparent()
         old_display_name = p.get("display_name")
         if old_display_name and old_display_name != title:
-            warnings.warn('Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title))
+            warnings.warn(
+                u'Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title)
+            )
         p.attrib["display_name"] = title
         p.remove(self.node)
 
@@ -185,7 +199,6 @@ class ReadOnlyAnswerToRecap(Change):
 
     def apply(self):
         self.node.tag = "pb-answer-recap"
-        self.node.attrib
         self.node.attrib.pop("read_only")
         for name in self.node.attrib:
             if name != "name":
@@ -259,28 +272,86 @@ class TipChanges(Change):
             else:
                 p.attrib[list_name] = value
 
-        if len(self.node.attrib) > 1:
-            warnings.warn("Invalid <tip> element found.")
-            return
-        mode = self.node.attrib.keys()[0]
-        value = self.node.attrib[mode]
         if p.tag == "pb-mrq":
-            if mode == "display":
+            if self.node.attrib.get("display"):
+                value = self.node.attrib.pop("display")
                 add_to_list("ignored_choices", value)
-            elif mode == "require":
+            elif self.node.attrib.get("require"):
+                value = self.node.attrib.pop("require")
                 add_to_list("required_choices", value)
-            elif mode != "reject":
-                warnings.warn("Invalid <tip> element: has {}={}".format(mode, value))
+            elif self.node.attrib.get("reject"):
+                value = self.node.attrib.pop("reject")
+            else:
+                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
                 return
         else:
             # This is an MCQ or Rating question:
-            if mode == "display":
+            if self.node.attrib.get("display"):
+                value = self.node.attrib.pop("display")
                 add_to_list("correct_choices", value)
-            elif mode != "reject":
-                warnings.warn("Invalid <tip> element: has {}={}".format(mode, value))
+            elif self.node.attrib.get("reject"):
+                value = self.node.attrib.pop("reject")
+            elif self.node.attrib.get("require"):
+                value = self.node.attrib.pop("require")
+                add_to_list("correct_choices", value)
+                warnings.warn(u"<tip> element in an MCQ/Rating used 'require' rather than 'display'")
+            else:
+                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
                 return
         self.node.attrib["values"] = value
-        self.node.attrib.pop(mode)
+        if (self.node.text is None or self.node.text.strip() == "") and not list(self.node):
+            # This tip is blank.
+            p.remove(self.node)
+
+
+class AlternatingHTMLToQuestions(Change):
+    """
+    In mentoring v1, an assessment could have XML like this:
+        <mentoring mode="assessment"...>
+            <html>Question 1 introduction text</html>
+            <mcq name="Q1" type="choices"><question>Question 1</question>...</mcq>
+            <html>Question 2 introduction text</html>
+            <mcq name="Q2" type="choices"><question>Question 2</question>...</mcq>
+            ...
+        </mentoring>
+    Notice that nearest-sibling HTML and MCQ tags are meant to be displayed together.
+    This migration changes that to:
+        <mentoring mode="assessment"...>
+            <mcq name="Q1" question="Question 1 introduction text. Question 1">...</mcq>
+            <mcq name="Q2" question="Question 2 introduction text. Question 2">...</mcq>
+            ...
+        </mentoring>
+
+    QuestionToField (<question> tag converted to attribute) must already be applied, and
+    SharedHeaderToHTML must not yet be applied.
+    """
+    @staticmethod
+    def applies_to(node):
+        return (
+            node.tag == "html" and
+            node.getparent().attrib.get("mode") == "assessment" and
+            node.getnext() is not None and
+            node.getnext().tag in ("pb-answer", "pb-mcq", "pb-mrq", "pb-rating")
+        )
+
+    def apply(self):
+        html_content = u""
+        for child in list(self.node):
+            if child.tag == "p":
+                # This HTML will ultimately be rendered inside a <p> so it can't be a <p> as well:
+                child.tag = "span"
+                tail = child.tail if child.tail else u""
+                child.tail = u""
+                html_content += etree.tostring(child) + u"<br><br>" + tail
+            else:
+                html_content += etree.tostring(child)
+
+        q = self.node.getnext()
+        existing_question = q.attrib.get('question', '')
+        q.attrib["question"] = u"{}{}".format(html_content, existing_question)
+
+        p = self.node.getparent()
+        p.remove(self.node)
 
 
 class SharedHeaderToHTML(Change):
@@ -309,10 +380,24 @@ class CommaSeparatedListToJson(Change):
                 self.node.attrib[attribute] = self._convert_value(self.node.attrib[attribute])
 
 
+class OptionalShowTitleDefaultToFalse(Change):
+    """
+    In recent versions of mentoring, show_title defaults to True. In old versions there were no
+    titles. If upgrading an old version, show_title should be set False.
+    """
+    @staticmethod
+    def applies_to(node):
+        return node.tag in ("pb-answer", "pb-mrq", "pb-mcq", "pb-rating") and ("show_title" not in node.attrib)
+
+    def apply(self):
+        self.node.attrib["show_title"] = "false"
+
+
 # An *ordered* list of all XML schema changes:
-xml_changes = (
+xml_changes = [
     RenameMentoringTag,
     PrefixTags,
+    HideTitle,
     RemoveTitle,
     UnwrapHTML,
     RenameTableTag,
@@ -323,15 +408,23 @@ xml_changes = (
     QuestionToField,
     QuestionSubmitMessageToField,
     TipChanges,
+    AlternatingHTMLToQuestions,
     SharedHeaderToHTML,
     CommaSeparatedListToJson,
-)
+]
 
 
-def convert_xml_v1_to_v2(node):
+def convert_xml_to_v2(node, from_version="v1"):
     """
     Given an XML node, re-structure it as needed to convert it from v1 style to v2 style XML.
+
+    If from_version is set to "v0", then the "show_title" attribute on each question will be set
+    to False, for compatibility with old versions of the mentoring block that didn't have
+    question titles at all.
     """
+    if from_version == "v0":
+        xml_changes.append(OptionalShowTitleDefaultToFalse)
+
     # Apply each individual type of change one at a time:
     for change in xml_changes:
         # Walk the XML tree once and figure out all the changes we will need.

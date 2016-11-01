@@ -48,6 +48,19 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
     """
+    CATEGORY = 'pb-mcq'
+    STUDIO_LABEL = _(u"Multiple Choice Question")
+
+    message = String(
+        display_name=_("Message"),
+        help=_(
+            "General feedback provided when submitting. "
+            "(This is not shown if there is a more specific feedback tip for the choice selected by the learner.)"
+        ),
+        scope=Scope.content,
+        default=""
+    )
+
     student_choice = String(
         # {Last input submitted by the student
         default="",
@@ -61,7 +74,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
     )
-    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('correct_choices', )
+    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('message', 'correct_choices', )
 
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.correct_choices:
@@ -74,14 +87,14 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
                 return self._(u"Wrong")
             return self._(u"Not Acceptable")
 
-    def submit(self, submission):
-        log.debug(u'Received MCQ submission: "%s"', submission)
-
+    def calculate_results(self, submission):
         correct = submission in self.correct_choices
         tips_html = []
         for tip in self.get_tips():
             if submission in tip.values:
                 tips_html.append(tip.render('mentoring_view').content)
+
+        formatted_tips = None
 
         if tips_html:
             formatted_tips = loader.render_template('templates/html/tip_choice_group.html', {
@@ -94,25 +107,35 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
             # Also send to the submissions API:
             sub_api.create_submission(self.student_item_key, submission)
 
-        result = {
+        return {
             'submission': submission,
+            'message': self.message_formatted,
             'status': 'correct' if correct else 'incorrect',
-            'tips': formatted_tips if tips_html else None,
+            'tips': formatted_tips,
             'weight': self.weight,
             'score': 1 if correct else 0,
         }
+
+    def get_results(self, previous_result):
+        return self.calculate_results(previous_result['submission'])
+
+    def get_last_result(self):
+        return self.get_results({'submission': self.student_choice}) if self.student_choice else {}
+
+    def submit(self, submission):
+        log.debug(u'Received MCQ submission: "%s"', submission)
+        result = self.calculate_results(submission)
+        self.student_choice = submission
         log.debug(u'MCQ submission result: %s', result)
         return result
 
-    def author_edit_view(self, context):
+    def get_author_edit_view_fragment(self, context):
         """
         The options for the 1-5 values of the Likert scale aren't child blocks but we want to
         show them in the author edit view, for clarity.
         """
         fragment = Fragment(u"<p>{}</p>".format(self.question))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
-        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         return fragment
 
     def validate_field_data(self, validation, data):
@@ -149,6 +172,9 @@ class RatingBlock(MCQBlock):
     """
     An XBlock used to rate something on a five-point scale, e.g. Likert Scale
     """
+    CATEGORY = 'pb-rating'
+    STUDIO_LABEL = _(u"Rating Question")
+
     low = String(
         display_name=_("Low"),
         help=_("Label for low ratings"),
@@ -183,7 +209,7 @@ class RatingBlock(MCQBlock):
             {"display_name": dn, "value": val} for val, dn in zip(self.FIXED_VALUES, display_names)
             ] + super(RatingBlock, self).human_readable_choices
 
-    def author_edit_view(self, context):
+    def get_author_edit_view_fragment(self, context):
         """
         The options for the 1-5 values of the Likert scale aren't child blocks but we want to
         show them in the author edit view, for clarity.
@@ -196,6 +222,26 @@ class RatingBlock(MCQBlock):
             'accepted_statuses': [None] + [self.describe_choice_correctness(c) for c in "12345"],
         }))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
-        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {}))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
+        return fragment
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the name.
+        """
+        try:
+            return super(RatingBlock, self).url_name
+        except AttributeError:
+            return self.name
+
+    def student_view(self, context):
+        fragment = super(RatingBlock, self).student_view(context)
+        rendering_for_studio = None
+        if context:  # Workbench does not provide context
+            rendering_for_studio = context.get('author_edit_view')
+        if rendering_for_studio:
+            fragment.add_content(loader.render_template('templates/html/rating_edit_footer.html', {
+                "url_name": self.url_name
+            }))
         return fragment

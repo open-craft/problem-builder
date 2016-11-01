@@ -1,7 +1,9 @@
 import unittest
+from xblock.field_data import DictFieldData
+from problem_builder.step import MentoringStepBlock
 
-from problem_builder.step import StepMixin, StepParentMixin
-from mock import Mock
+from problem_builder.mixins import QuestionMixin, StepParentMixin
+from mock import Mock, patch
 
 
 class Parent(StepParentMixin):
@@ -32,7 +34,7 @@ class BaseClass(object):
     pass
 
 
-class Step(BaseClass, StepMixin):
+class Step(BaseClass, QuestionMixin):
     def __init__(self):
         pass
 
@@ -41,13 +43,13 @@ class NotAStep(object):
     pass
 
 
-class TestStepMixin(unittest.TestCase):
+class TestQuestionMixin(unittest.TestCase):
     def test_single_step_is_returned_correctly(self):
         block = Parent()
         step = Step()
         block._children = [step]
 
-        steps = [block.runtime.get_block(cid) for cid in block.steps]
+        steps = [block.runtime.get_block(cid) for cid in block.step_ids]
         self.assertSequenceEqual(steps, [step])
 
     def test_only_steps_are_returned(self):
@@ -56,7 +58,7 @@ class TestStepMixin(unittest.TestCase):
         step2 = Step()
         block._set_children_for_test(step1, 1, "2", "Step", NotAStep(), False, step2, NotAStep())
 
-        steps = [block.runtime.get_block(cid) for cid in block.steps]
+        steps = [block.runtime.get_block(cid) for cid in block.step_ids]
         self.assertSequenceEqual(steps, [step1, step2])
 
     def test_proper_number_is_returned_for_step(self):
@@ -77,18 +79,68 @@ class TestStepMixin(unittest.TestCase):
         self.assertEquals(step1.step_number, 2)
         self.assertEquals(step2.step_number, 1)
 
-    def test_lonely_step_is_true_for_stand_alone_steps(self):
+    def test_lonely_child_is_true_for_stand_alone_steps(self):
         block = Parent()
         step1 = Step()
         block._set_children_for_test(1, "2", step1, "Step", NotAStep(), False)
 
-        self.assertTrue(step1.lonely_step)
+        self.assertTrue(step1.lonely_child)
 
-    def test_lonely_step_is_true_if_parent_have_more_steps(self):
+    def test_lonely_child_is_true_if_parent_have_more_steps(self):
         block = Parent()
         step1 = Step()
         step2 = Step()
         block._set_children_for_test(1, step2, "2", step1, "Step", NotAStep(), False)
 
-        self.assertFalse(step1.lonely_step)
-        self.assertFalse(step2.lonely_step)
+        self.assertFalse(step1.lonely_child)
+        self.assertFalse(step2.lonely_child)
+
+
+class TestMentoringStep(unittest.TestCase):
+
+    def get_allowed_blocks(self, block):
+        return [
+            getattr(allowed_block, 'category', getattr(allowed_block, 'CATEGORY', None))
+            for allowed_block in block.allowed_nested_blocks
+        ]
+
+    def test_allowed_nested_blocks(self):
+        block = MentoringStepBlock(Mock(), DictFieldData({}), Mock())
+        self.assertEqual(
+            self.get_allowed_blocks(block),
+            [
+                'pb-answer',
+                'pb-mcq',
+                'pb-rating',
+                'pb-mrq',
+                'html',
+                'pb-answer-recap',
+                'pb-table',
+                'sb-plot',
+                'pb-slider',
+            ]
+        )
+        from sys import modules
+        xmodule_mock = Mock()
+        fake_modules = {
+            'xmodule': xmodule_mock,
+            'xmodule.video_module': xmodule_mock.video_module,
+            'xmodule.video_module.video_module': xmodule_mock.video_module.video_module,
+            'imagemodal': Mock()
+        }
+        with patch.dict(modules, fake_modules):
+            self.assertEqual(
+                self.get_allowed_blocks(block), [
+                    'pb-answer',
+                    'pb-mcq',
+                    'pb-rating',
+                    'pb-mrq',
+                    'html',
+                    'pb-answer-recap',
+                    'pb-table',
+                    'sb-plot',
+                    'pb-slider',
+                    'video',
+                    'imagemodal',
+                ]
+            )

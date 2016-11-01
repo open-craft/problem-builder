@@ -1,0 +1,50 @@
+{% load i18n %}
+{% if allow_sharing %}
+<div class="share-panel-container">
+  <div class="mentoring-share-panel">
+    {% if view_options %}
+    <span>{% trans "Display Map from:" %}</span>
+    <select class="mentoring-display-dropdown">
+      <option value="{{username}}">{% blocktrans %}You ({{username}}){% endblocktrans %}</option>
+      {% for option in view_options %}
+      <option value="{{option}}">{{option}}</option>
+      {% endfor %}
+    </select>
+    {% endif %}
+    <button class="mentoring-share-button">
+      <i class="fa fa-share-alt"></i>{% trans "Share" %}
+    </button>
+    <div class="mentoring-share-with" style="display: none;">
+      <div class="shared-with-container"></div>
+      <div class="share-with-instructions">
+        {% trans "Enter the username of another student you'd like to share this with:" %}
+      </div>
+      <div class="new-share-container"><input class="add-share-username"><button class="add-share-field">+</button></div>
+      <div class="share-errors-container">
+        <div class="share-errors"></div>
+      </div>
+      <div class="share-action-buttons">
+        <button class="do-share-button">{% trans "Share" %}</button>
+      </div>
+    </div>
+    {% if share_notifications %}
+    <div class="share-notification" data-shared="{{share_notifications}}">
+        <a class="notification-close"><i class="fa fa-close"></i></a>
+        <p><strong>{% trans "Map added!" %}</strong></p>
+        <p>{% trans "Another user has shared a map with you." %}</p>
+        <p>{% trans "You can change the user you're currently displaying using the drop-down selector above." %}</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+<div class="clear"></div>
+{% endif %}
+<div class="mentoring-table-container">
+  <div class="mentoring-table {{ self.type }}" style="background-image: url({{ bg_image_url }})">
+    <div class="cont-text-sr">{{ bg_image_description }}</div>
+    <div class="mentoring-table-target"></div>
+  </div>
+</div>
+{% if allow_download %}
+<div class="report-download-container"><a class="report-download-link" href="#report_download" download="report.html">{% trans "Download report" %}</a></div>
+{% endif %}

@@ -1,0 +1,26 @@
+<step-builder url_name="step-builder" display_name="Step Builder"
+              max_attempts="{{max_attempts}}" extended_feedback="{{extended_feedback}}">
+
+  <sb-step display_name="First step">
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-step display_name="Second step">
+    <pb-mcq name="mcq_1_1" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="maybenot">Maybe not</pb-choice>
+        <pb-choice value="understand">I don't understand</pb-choice>
+    </pb-mcq>
+  </sb-step>
+
+  <sb-review-step>
+    {% if include_messages %}
+      <sb-conditional-message score_condition="imperfect" num_attempts_condition="can_try_again">Not quite! You can try again, though.</sb-conditional-message>
+      <sb-conditional-message score_condition="perfect">Great job!</sb-conditional-message>
+      <sb-conditional-message num_attempts_condition="cannot_try_again">Note: you have used all attempts. Continue to the next unit.</sb-conditional-message>
+    {% endif %}
+    <sb-review-score/>
+    <sb-review-per-question-feedback/>
+  </sb-review-step>
+
+</step-builder>

@@ -1,0 +1,28 @@
+<step-builder url_name="step-builder" display_name="Step Builder"
+              max_attempts="1" extended_feedback="true">
+
+  <sb-step display_name="First step">
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-step display_name="Second Step">
+    <html_demo>Test test test</html_demo>
+  </sb-step>
+
+  <sb-step display_name="Last step">
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+    <pb-answer name="goal" question="What is your goal?" />
+  </sb-step>
+
+  <sb-review-step>
+    <sb-review-score/>
+  </sb-review-step>
+
+</step-builder>

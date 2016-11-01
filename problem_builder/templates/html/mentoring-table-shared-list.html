@@ -1,0 +1,9 @@
+{% load i18n %}
+{% if shared_with %}
+<div class="share-header">{% trans "Shared with:" %}</div>
+{% endif %}
+<ul class="shared-list">
+    {% for username in shared_with %}
+    <li><span class="username">{{username}}</span><a class="remove-share" href="#"><i class="fa fa-trash"></i></a></li>
+    {% endfor %}
+</ul>

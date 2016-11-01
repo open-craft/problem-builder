@@ -1,0 +1,67 @@
+<step-builder url_name="step-builder" display_name="Step Builder">
+
+  <sb-step display_name="First step">
+    <pb-rating name="rating_1_1"
+               low="Disagree"
+               high="Agree"
+               question="How much do you agree?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+    <pb-rating name="rating_1_2"
+               low="Not important"
+               high="Very important"
+               question="How important do you think this is?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+  </sb-step>
+
+  <sb-step display_name="Second step">
+    <pb-rating name="rating_2_1"
+               low="Disagree"
+               high="Agree"
+               question="How much do you agree?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+    <pb-rating name="rating_2_2"
+               low="Not important"
+               high="Very important"
+               question="How important do you think this is?"
+               correct_choices='["1", "2", "3", "4","5"]'>
+    </pb-rating>
+  </sb-step>
+
+  <sb-step display_name="Last step">
+    <sb-plot plot_label="Custom plot label"
+             point_color_default="orange"
+             point_color_average="purple"
+             q1_label="Custom Q1 label"
+             q2_label="Custom Q2 label"
+             q3_label="Custom Q3 label"
+             q4_label="Custom Q4 label"
+             claims="2 + 2 = 5, rating_1_1, rating_1_2&#10;The answer to everything is 42, rating_2_1, rating_2_2">
+      <sb-plot-overlay plot_label="Teacher"
+                       point_color="coral"
+                       claim_data="2, 3&#10;4, 2">
+      </sb-plot-overlay>
+      <sb-plot-overlay plot_label="Researchers"
+                       point_color="cornflowerblue"
+                       description="Responses of leading researchers in the field"
+                       claim_data="4, 4&#10;1, 5">
+      </sb-plot-overlay>
+      <sb-plot-overlay plot_label="Sheldon Cooper"
+                       point_color="rgb(128, 128, 0)"
+                       citation="The Big Bang Theory"
+                       claim_data="3, 5&#10;2, 4">
+      </sb-plot-overlay>
+      <sb-plot-overlay plot_label="Yoda"
+                       point_color="#dc143c"
+                       description="Powerful you have become, the dark side I sense in you."
+                       citation="Star Wars"
+                       claim_data="1, 2&#10;3, 3">
+      </sb-plot-overlay>
+    </sb-plot>
+  </sb-step>
+
+  <sb-review-step></sb-review-step>
+
+</step-builder>

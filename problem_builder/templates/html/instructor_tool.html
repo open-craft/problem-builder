@@ -1,0 +1,95 @@
+{% load i18n %}
+<h2>{% trans "Instructor Tool" %}</h3>
+
+<div class="data-export-options">
+  <div class="data-export-header">
+    <h3>{% trans "Filters" %}</h3>
+  </div>
+  <div class="data-export-row">
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Username[s]:" %}</span>
+          <input type="text" name="usernames" title="{% trans "Enter one or more usernames, comma separated." %}" />
+        </label>
+      </div>
+    </div>
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Text:" %}</span>
+          <input type="text" name="match_string" />
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="data-export-row">
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Section/Question:" %}</span>
+          <select name="root_block_id">
+            {% for block in block_tree %}
+            <option value="{{ block.id }}"
+                    {% if not block.eligible %} disabled="disabled" {% endif %}>
+              {% for _ in ""|ljust:block.depth %}&nbsp;&nbsp;{% endfor %}
+              {{ block.name }}
+            </option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="data-export-field-container">
+      <div class="data-export-field">
+        <label>
+          <span>{% trans "Problem types:" %}</span>
+          <select name="block_types">
+            <option value="all">{% trans "All" %}</option>
+            {% for label, value in block_choices.items %}
+            <option value="{{value}}">{{label}}</option>
+            {% endfor %}
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="data-export-actions">
+      <button class="data-export-start">{% trans "Search" %}</button>
+    </div>
+  </div>
+</div>
+
+<div id="results-wrapper" aria-live="polite">
+  <div id="results" class="data-export-results">
+    <table>
+      <thead>
+        <tr>
+          <th>{% trans "Section" %}</th>
+          <th>{% trans "Subsection" %}</th>
+          <th>{% trans "Unit" %}</th>
+          <th>{% trans "Type" %}</th>
+          <th>{% trans "Question" %}</th>
+          <th>{% trans "Answer" %}</th>
+          <th>{% trans "Username" %}</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="data-export-info"></div>
+    <div class="data-export-result-actions">
+      <button id="first-page">{% trans "First" %}</button>
+      <button id="prev-page">{% trans "Prev" %}</button>
+      <span id="current-page"></span>/<span id="total-pages"></span>
+      <button id="next-page">{% trans "Next" %}</button>
+      <button id="last-page">{% trans "Last" %}</button>
+    </div>
+  </div>
+
+  <div class="data-export-status"></div>
+
+  <div class="data-export-actions">
+    <button class="data-export-download">{% trans "Download as CSV" %}</button>
+    <button class="data-export-cancel">{% trans "Cancel search" %}</button>
+    <button class="data-export-delete">{% trans "Delete results" %}</button>
+  </div>
+</div>

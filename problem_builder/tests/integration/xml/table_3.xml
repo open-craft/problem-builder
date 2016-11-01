@@ -1,0 +1,9 @@
+<vertical_demo>
+  <problem-builder display_submit="false" enforce_dependency="false">
+    <pb-table>
+      <pb-column header="&lt;a href='http://www.test.com'&gt;Link&lt;/a&gt; in a column header.">
+        <pb-answer-recap name="table_3_answer_1"/>
+      </pb-column>
+    </pb-table>
+  </problem-builder>
+</vertical_demo>

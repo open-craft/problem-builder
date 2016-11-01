@@ -1,7 +1,3 @@
-.themed-xblock.mentoring .questionnaire .choice-result {
-    display: table-cell;
-}
-
 .themed-xblock.mentoring .choice-result::before {
     content: "";
     display: block;
@@ -31,7 +27,7 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
     margin-bottom: 1.41575em;
 }
 
-.themed-xblock.mentoring .choices-list {
+.themed-xblock.mentoring .questionnaire .choices-list {
     display: table;
     width: 100%;
     border-spacing: 0;
@@ -40,9 +36,6 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
 .themed-xblock.mentoring .choice-label {
     display: table-cell;
     vertical-align: middle;
-    width: 100%;
-    padding-bottom: 10px;
-    padding-top: 2px;
 }
 
 .themed-xblock.mentoring .choice-label span.low {
@@ -55,7 +48,7 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
     vertical-align: top;
 }
 
-.themed-xblock.mentoring .choice-tips {
+.themed-xblock.mentoring .choice-tips-container .choice-tips {
     position: relative;
 }
 
@@ -103,4 +96,12 @@ div.course-wrapper section.course-content .themed-xblock.mentoring p:empty {
 
 .themed-xblock.mentoring .choice.incorrect .choice-tips-container.active {
     border-color: #c1373f;
+}
+
+.themed-xblock.mentoring .review-list {
+    margin-top: 0;
+}
+
+.themed-xblock.mentoring .grade .grade-result .results-section p {
+    margin-bottom: 4px; /* Override LMS rule 'div.course-wrapper section.course-content p { margin-bottom: huge; }' */
 }
