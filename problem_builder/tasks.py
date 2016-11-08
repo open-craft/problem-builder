@@ -5,7 +5,7 @@ import time
 
 from celery.task import task
 from celery.utils.log import get_task_logger
-from instructor_task.models import ReportStore
+from lms.djangoapps.instructor_task.models import ReportStore
 from opaque_keys.edx.keys import CourseKey
 from student.models import user_by_anonymous_id
 from xmodule.modulestore.django import modulestore
