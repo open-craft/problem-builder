@@ -235,3 +235,10 @@ class QuestionnaireAbstractBlock(
             format_html = getattr(self.runtime, 'replace_urls', lambda html: html)
             return format_html(self.message)
         return ""
+
+    def student_view_data(self):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {'question': self.question}
