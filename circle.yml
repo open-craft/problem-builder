@@ -11,7 +11,7 @@ dependencies:
     - "pip install -r requirements.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/base.txt"
     - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/test.txt"
-    - "pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-2.6.1.tar.gz"
+    - "pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-2.6.2.tar.gz"
     - "pip install -r test_requirements.txt"
     - "mkdir var"
 test:
