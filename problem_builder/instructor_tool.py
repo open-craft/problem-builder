@@ -34,6 +34,10 @@ loader = ResourceLoader(__name__)
 
 PAGE_SIZE = 15
 
+# URL Path to the Course Blocks REST API.
+# Note that we add a trailing slash to avoid the API's redirect hit.
+COURSE_BLOCKS_API = '/api/courses/v1/blocks/'
+
 
 # Make '_' a no-op so we can scrape strings
 def _(text):
@@ -135,12 +139,11 @@ class InstructorToolBlock(XBlock):
             _('Long Answer'): 'AnswerBlock',
         }
 
-        flat_block_tree = self._build_course_tree()
-
-        html = loader.render_template(
-            'templates/html/instructor_tool.html',
-            {'block_choices': block_choices, 'block_tree': flat_block_tree}
-        )
+        html = loader.render_template('templates/html/instructor_tool.html', {
+            'block_choices': block_choices,
+            'course_blocks_api': COURSE_BLOCKS_API,
+            'root_block_id': unicode(getattr(self.runtime, 'course_id', 'course_id')),
+        })
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/instructor_tool.js'))
@@ -149,91 +152,6 @@ class InstructorToolBlock(XBlock):
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
         fragment.initialize_js('InstructorToolBlock')
         return fragment
-
-    def _build_course_tree(self):
-        """
-        Return flat tree of blocks belonging to this block's parent course.
-        """
-        eligible_block_types = ('pb-mcq', 'pb-rating', 'pb-answer')
-        flat_block_tree = []
-
-        def get_block_id(block):
-            """
-            Return ID of `block`, taking into account needs of both LMS/CMS and workbench runtimes.
-            """
-            usage_id = block.scope_ids.usage_id
-            # Try accessing block ID. If usage_id does not have it, return usage_id itself
-            return unicode(getattr(usage_id, 'block_id', usage_id))
-
-        def get_block_name(block):
-            """
-            Return name of `block`.
-
-            Try attributes in the following order:
-              - block.question
-              - block.name (fallback for old courses)
-              - block.display_name
-              - block ID
-            """
-            for attribute in ('question', 'name', 'display_name'):
-                if getattr(block, attribute, None):
-                    return getattr(block, attribute, None)
-            return get_block_id(block)
-
-        def get_block_type(block):
-            """
-            Return type of `block`, taking into account different key styles that might be in use.
-            """
-            try:
-                block_type = block.runtime.id_reader.get_block_type(block.scope_ids.def_id)
-            except AttributeError:
-                block_type = block.runtime.id_reader.get_block_type(block.scope_ids.usage_id)
-            return block_type
-
-        def build_tree(block, ancestors):
-            """
-            Build up a tree of information about the XBlocks descending from `block`.
-            """
-            block_id = get_block_id(block)
-            block_name = get_block_name(block)
-            block_type = get_block_type(block)
-            if block_type != 'pb-choice':
-                eligible = block_type in eligible_block_types
-                if eligible:
-                    # If this block is a question whose answers we can export,
-                    # we mark all of its ancestors as exportable too
-                    if ancestors and not ancestors[-1]["eligible"]:
-                        for ancestor in ancestors:
-                            ancestor["eligible"] = True
-
-                new_entry = {
-                    "depth": len(ancestors),
-                    "id": block_id,
-                    "name": block_name,
-                    "eligible": eligible,
-                }
-                flat_block_tree.append(new_entry)
-                if block.has_children and not getattr(block, "has_dynamic_children", lambda: False)():
-                    for child_id in block.children:
-                        build_tree(block.runtime.get_block(child_id), ancestors=(ancestors + [new_entry]))
-
-        root_block = self
-        while root_block.parent:
-            root_block = root_block.get_parent()
-        root_block_id = get_block_id(root_block)
-        root_entry = {
-            "depth": 0,
-            "id": root_block_id,
-            "name": "All",
-            "eligible": False,
-        }
-        flat_block_tree.append(root_entry)
-
-        for child_id in root_block.children:
-            child_block = root_block.runtime.get_block(child_id)
-            build_tree(child_block, [root_entry])
-
-        return flat_block_tree
 
     @property
     def download_url_for_last_report(self):

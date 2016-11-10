@@ -250,6 +250,111 @@ function InstructorToolBlock(runtime, element) {
         if (statusChanged) updateView();
     }
 
+    // Block types with answers we can export
+    var questionBlockTypes = ['pb-mcq', 'pb-rating', 'pb-answer'];
+
+    // Fetch this course's blocks from the REST API, and add them to the
+    // list of blocks in the Section/Question drop-down list.
+    function getCourseBlocks() {
+        $.ajax({
+            type: 'GET',
+            url: $rootBlockId.data('course-blocks-api'),
+            data: {
+                course_id: $element.data('course-id'),
+                requested_fields: 'name,display_name,block_type,children',
+                student_view_data: questionBlockTypes.join(','),
+                all_blocks: true,
+                depth: 'all'
+            },
+            success: updateBlockOptions,
+            dataType: 'json'
+        });
+    }
+
+    // Appends the blocks returned by the Course Blocks API as options for
+    // the Section/Question drop-down list, arranged as a tree.
+    function updateBlockOptions(data) {
+
+        // Constructs an <option> element from the given block to add to the
+        // list of root blocks.
+        //
+        // Uses the block's:
+        // * question, name, or display name as the label.
+        // * depth in the course to indent the label, to make the tree
+        //   structure more visible.
+        // * 'enabled' attribute to decide whether the <option>
+        //    element is selectable, i.e. available as a download filter.
+        //
+        // Returns the <option> element so that it can be enabled later,
+        // if it's found to have a descendant that is enabled.
+        var appendBlock = function(block) {
+            var blockId = block.id.split('+block@').pop(),
+                padding = Array(2*block.depth).join('&nbsp;'),
+                disabled = (block.enabled ? undefined : 'disabled'),
+                labelAttr,
+                label,
+                $option;
+
+            // Merge any fields exposed by student_view_data, so they can be
+            // candidates for the label attribute.
+            block = _.extend(block, block['student_view_data']);
+
+            // Find the best label attribute available for the block.
+            labelAttr = _.find(
+                ['question', 'name', 'display_name'],
+                function(attr) {
+                    return block[attr];
+                }
+            );
+            label = padding + (block[labelAttr] || blockId);
+            $option = $('<option>', {value: blockId, html: label, disabled: disabled});
+
+            $rootBlockId.append($option);
+            return $option;
+        },
+
+        // Builds the tree of course blocks.
+        buildTree = function(block, ancestors) {
+
+            // Omit pb-choice blocks
+            if (block.type == 'pb-choice') return;
+
+            // Enable the exportable blocks, and their ancestors.
+            if (_.contains(questionBlockTypes, block.type)) {
+                block.enabled = true;
+
+                for (var i = ancestors.length; i > 0; --i) {
+                    var ancestor = ancestors[i-1];
+
+                    // No need to continue; these ancestors are already enabled.
+                    if (ancestor.enabled) break;
+
+                    ancestor.enabled = true;
+                    ancestor.element.removeAttr('disabled');
+                }
+            }
+
+            block.depth = ancestors.length;
+            block.element = appendBlock(block);
+
+            // Recurse over all the child blocks, including the current block as an ancestor.
+            var childAncestors = ancestors.concat([block]);
+            _.each(block.children, function(child_id) {
+                buildTree(data.blocks[child_id], childAncestors);
+            });
+        },
+        root = data.blocks[data.root];
+
+        // Label the root block as "All"
+        root.name = gettext('All');
+
+        // Remove any existing options
+        $rootBlockId.empty();
+
+        // Build the course blocks tree from the root.
+        buildTree(root, []);
+    }
+
     function disableActions() {
         $startButton.prop('disabled', true);
         $cancelButton.prop('disabled', true);
@@ -369,6 +474,7 @@ function InstructorToolBlock(runtime, element) {
 
     showSpinner();
     disableActions();
+    getCourseBlocks();
     getStatus();
 
 }
