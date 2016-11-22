@@ -59,6 +59,7 @@ BLOCKS = [
     'pb-rating = problem_builder.mcq:RatingBlock',
     'pb-mrq = problem_builder.mrq:MRQBlock',
     'pb-slider = problem_builder.slider:SliderBlock',
+    'pb-completion = problem_builder.completion:CompletionBlock',
     'pb-message = problem_builder.message:MentoringMessageBlock',
     'pb-tip = problem_builder.tip:TipBlock',
     'pb-choice = problem_builder.choice:ChoiceBlock',
