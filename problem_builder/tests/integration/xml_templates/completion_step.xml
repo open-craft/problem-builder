@@ -1,0 +1,18 @@
+<step-builder display_name="Step Builder">
+
+  <sb-step display_name="Completion step">
+    <pb-completion name="completion_1" display_name="Attendance Check" question="Did you attend the meeting?" answer="Yes, I did."/>
+  </sb-step>
+
+  <sb-step display_name="MCQ step">
+    <pb-mcq name="mcq" display_name="Question 2" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="no">No</pb-choice>
+    </pb-mcq>
+  </sb-step>
+
+  <sb-review-step>
+    <sb-review-score/>
+  </sb-review-step>
+
+</step-builder>

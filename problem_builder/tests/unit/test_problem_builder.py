@@ -9,9 +9,11 @@ from xblock.field_data import DictFieldData
 from problem_builder.mcq import MCQBlock
 from problem_builder.mentoring import MentoringBlock, MentoringMessageBlock, _default_options_config
 
+from .utils import BlockWithChildrenTestMixin
+
 
 @ddt.ddt
-class TestMentoringBlock(unittest.TestCase):
+class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
     def test_sends_progress_event_when_rendered_student_view_with_display_submit_false(self):
         block = MentoringBlock(MagicMock(), DictFieldData({
             'display_submit': False
@@ -86,6 +88,26 @@ class TestMentoringBlock(unittest.TestCase):
             patched_max_attempts_reached.return_value = max_attempts_reached
             _, _, show_message = block._get_standard_results()
             self.assertEqual(show_message, expected_show_message)
+
+    def test_allowed_nested_blocks(self):
+        block = MentoringBlock(Mock(), DictFieldData({}), Mock())
+        self.assert_allowed_nested_blocks(block, message_blocks=[
+                'pb-message',  # Message type: "completed"
+                'pb-message',  # Message type: "incomplete"
+                'pb-message',  # Message type: "max_attempts_reached"
+            ] +
+            (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
+        )
+
+    def test_allowed_nested_blocks_assessment(self):
+        block = MentoringBlock(Mock(), DictFieldData({'mode': 'assessment'}), Mock())
+        self.assert_allowed_nested_blocks(block, message_blocks=[
+                'pb-message',  # Message type: "completed"
+                'pb-message',  # Message type: "incomplete"
+                'pb-message',  # Message type: "max_attempts_reached"
+            ] +
+            (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
+        )
 
 
 @ddt.ddt

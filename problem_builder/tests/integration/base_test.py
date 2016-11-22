@@ -86,6 +86,25 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
         self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
         return element
 
+    def wait_for_init(self):
+        """ Wait for the scenario to initialize """
+        self.wait_until_hidden(self.browser.find_element_by_css_selector('.messages'))
+
+    def reload_page(self):
+        """
+        Reload current page.
+        """
+        self.browser.execute_script("$(document).html(' ');")
+        return self.go_to_view("student_view")
+
+    @property
+    def checkmark(self):
+        return self.browser.find_element_by_css_selector('.submit-result')
+
+    @property
+    def submit_button(self):
+        return self.browser.find_element_by_css_selector('.submit input.input-main')
+
     def click_submit(self, mentoring):
         """ Click the submit button and wait for the response """
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
@@ -100,6 +119,12 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
             if choice_text in label.text:
                 label.click()
                 break
+
+    def expect_checkmark_visible(self, visible):
+        self.assertEqual(self.checkmark.is_displayed(), visible)
+
+    def expect_submit_enabled(self, enabled):
+        self.assertEqual(self.submit_button.is_enabled(), enabled)
 
 
 class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
@@ -163,6 +188,10 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         controls.review_link = mentoring.find_element_by_css_selector(".review-link a")
 
         return mentoring, controls
+
+    def wait_for_init(self):
+        """ Wait for the scenario to initialize """
+        self.wait_until_visible(self.browser.find_elements_by_css_selector('.sb-step')[0])
 
     def assert_hidden(self, elem):
         self.assertFalse(elem.is_displayed())

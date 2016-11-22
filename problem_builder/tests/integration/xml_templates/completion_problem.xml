@@ -1,0 +1,12 @@
+<problem-builder url_name="pb_with_completion">
+    <pb-completion name="completion_1" question="Did you attend the meeting?" answer="Yes, I did." />
+
+    {% if include_mcq %}
+    <pb-mcq name="mcq_2" question="Do you like this MCQ?" correct_choices='["yes"]'>
+        <pb-choice value="yes">Yes</pb-choice>
+        <pb-choice value="maybenot">Maybe not</pb-choice>
+        <pb-choice value="understand">I don't understand</pb-choice>
+    </pb-mcq>
+    {% endif %}
+
+</problem-builder>
