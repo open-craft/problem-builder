@@ -1,6 +1,6 @@
 function CompletionBlock(runtime, element) {
 
-    var $completion = $('.pb-completion-value');
+    var $completion = $('.pb-completion-value', element);
 
     return {
         mode: null,

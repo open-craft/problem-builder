@@ -31,11 +31,29 @@ class CompletionBlockTestMixin(object):
     """
 
     @property
+    def checkmarks(self):
+        return self.browser.find_elements_by_css_selector('.submit-result')
+
+    @property
     def completion_checkbox(self):
         return self.browser.find_element_by_css_selector('.pb-completion-value')
 
+    @property
+    def completion_checkboxes(self):
+        return self.browser.find_elements_by_css_selector('.pb-completion-value')
+
+    def expect_checkmarks_visible(self, first_visible, second_visible):
+        first_checkmark, second_checkmark = self.checkmarks
+        self.assertEqual(first_checkmark.is_displayed(), first_visible)
+        self.assertEqual(second_checkmark.is_displayed(), second_visible)
+
     def expect_checkbox_checked(self, checked):
         self.assertEqual(bool(self.completion_checkbox.get_attribute('checked')), checked)
+
+    def expect_checkboxes_checked(self, first_checked, second_checked):
+        first_checkbox, second_checkbox = self.completion_checkboxes
+        self.assertEqual(bool(first_checkbox.get_attribute('checked')), first_checked)
+        self.assertEqual(bool(second_checkbox.get_attribute('checked')), second_checked)
 
 
 class CompletionBlockTest(CompletionBlockTestMixin, ProblemBuilderBaseTest):
@@ -118,6 +136,54 @@ class CompletionBlockTest(CompletionBlockTestMixin, ProblemBuilderBaseTest):
         self.expect_checkbox_checked(False)
         self.expect_checkmark_visible(False)
         self.expect_submit_enabled(True)
+
+    def test_multiple_completion_blocks(self):
+        """
+        Test a regular Problem Builder block containing multiple completion blocks.
+        """
+        self.pb_wrapper = self.load_scenario("completion_multiple_problem.xml")
+        self.wait_for_init()
+
+        first_checkbox, second_checkbox = self.completion_checkboxes
+
+        # Checkboxes of completion blocks should not have "checked" attribute set initially,
+        # and "Submit" should be enabled since leaving checkboxes unchecked produces a valid value:
+        self.assertIsNone(first_checkbox.get_attribute('checked'))
+        self.assertIsNone(second_checkbox.get_attribute('checked'))
+        self.expect_checkmarks_visible(False, False)
+        self.expect_submit_enabled(True)
+
+        # Confirm completion by checking first checkbox:
+        first_checkbox.click()
+
+        self.expect_checkboxes_checked(True, False)
+        self.expect_checkmarks_visible(False, False)
+        self.expect_submit_enabled(True)
+
+        # Submit answers
+        self.click_submit(self.pb_wrapper)
+        # Now, we expect "Submit" to be disabled and the checkmarks to be visible:
+        self.expect_checkboxes_checked(True, False)
+        self.expect_checkmarks_visible(True, True)
+        self.expect_submit_enabled(False)
+
+        # Uncheck first checkbox
+        first_checkbox.click()
+        # It should be possible to click "Submit" again, and the checkmarks should be hidden:
+        self.expect_checkboxes_checked(False, False)
+        self.expect_checkmarks_visible(False, False)
+        self.expect_submit_enabled(True)
+
+        # Now reload the page:
+        self.pb_wrapper = self.reload_page()
+        self.wait_for_init()
+
+        # The first checkbox should be checked, and the second checkbox should be unchecked
+        # (since these are the values we submitted earlier);
+        # "Submit" should be disabled (to discourage submitting the same answer):
+        self.expect_checkboxes_checked(True, False)
+        self.expect_checkmarks_visible(True, True)
+        self.expect_submit_enabled(False)
 
 
 class CompletionStepBlockTest(CompletionBlockTestMixin, MentoringAssessmentBaseTest):
