@@ -1,7 +1,7 @@
 """
 Helper methods for testing Problem Builder / Step Builder blocks
 """
-from mock import MagicMock, Mock
+from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
 
 
@@ -18,6 +18,58 @@ class ScoresTestMixin(object):
         self.assertTrue(type(block).has_score)
         self.assertEqual(block.weight, 1.0)  # Default weight should be 1
         self.assertIsInstance(block.max_score(), (int, float))
+
+
+class BlockWithChildrenTestMixin(object):
+    """
+    Mixin for tests targeting blocks that contain nested child blocks.
+    """
+
+    ALLOWED_NESTED_BLOCKS = [
+        'pb-answer',
+        'pb-mcq',
+        'pb-rating',
+        'pb-mrq',
+        'pb-completion',
+        'html',
+        'pb-answer-recap',
+        'pb-table',
+        'sb-plot',
+        'pb-slider',
+    ]
+
+    ADDITIONAL_BLOCKS = [
+        'video',
+        'imagemodal',
+    ]
+
+    def get_allowed_blocks(self, block):
+        """
+        Return list of categories corresponding to child blocks allowed for `block`.
+        """
+        return [
+            getattr(allowed_block, 'category', getattr(allowed_block, 'CATEGORY', None))
+            for allowed_block in block.allowed_nested_blocks
+        ]
+
+    def assert_allowed_nested_blocks(self, block, message_blocks=[]):
+        self.assertEqual(
+            self.get_allowed_blocks(block),
+            self.ALLOWED_NESTED_BLOCKS + message_blocks
+        )
+        from sys import modules
+        xmodule_mock = Mock()
+        fake_modules = {
+            'xmodule': xmodule_mock,
+            'xmodule.video_module': xmodule_mock.video_module,
+            'xmodule.video_module.video_module': xmodule_mock.video_module.video_module,
+            'imagemodal': Mock()
+        }
+        with patch.dict(modules, fake_modules):
+            self.assertEqual(
+                self.get_allowed_blocks(block),
+                self.ALLOWED_NESTED_BLOCKS + self.ADDITIONAL_BLOCKS + message_blocks
+            )
 
 
 def instantiate_block(cls, fields=None):

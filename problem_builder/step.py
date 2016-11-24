@@ -31,6 +31,7 @@ from xblockutils.studio_editable import (
 )
 
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
+from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
 from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
 from problem_builder.mrq import MRQBlock
@@ -144,7 +145,7 @@ class MentoringStepBlock(
 
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
-            MCQBlock, RatingBlock, MRQBlock,
+            MCQBlock, RatingBlock, MRQBlock, CompletionBlock,
             NestedXBlockSpec(None, category="html", label=self._("HTML")),
             AnswerRecapBlock, MentoringTableBlock, PlotBlock, SliderBlock
         ] + additional_blocks

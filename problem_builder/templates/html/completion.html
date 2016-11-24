@@ -1,0 +1,17 @@
+{% load i18n %}
+<div class="xblock-pb-completion">
+  {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
+  <div class="clearfix">
+    <p>{{ question|safe }}</p>
+    <p>
+      <label>
+        <input type="checkbox" class="pb-completion-value" {% if checked %}checked="checked"{% endif %} />
+        {{ answer|safe }}
+      </label>
+    </p>
+  </div>
+  <div class="clearfix">
+    <span class="submit-result fa icon-2x checkmark-correct icon-ok fa-check"
+          style="visibility: hidden;" aria-label="{% trans "Complete" %}"></span>
+  </div>
+</div>

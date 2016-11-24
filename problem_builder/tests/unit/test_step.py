@@ -1,9 +1,12 @@
 import unittest
+
+from mock import Mock
 from xblock.field_data import DictFieldData
-from problem_builder.step import MentoringStepBlock
 
 from problem_builder.mixins import QuestionMixin, StepParentMixin
-from mock import Mock, patch
+from problem_builder.step import MentoringStepBlock
+
+from .utils import BlockWithChildrenTestMixin
 
 
 class Parent(StepParentMixin):
@@ -96,51 +99,8 @@ class TestQuestionMixin(unittest.TestCase):
         self.assertFalse(step2.lonely_child)
 
 
-class TestMentoringStep(unittest.TestCase):
-
-    def get_allowed_blocks(self, block):
-        return [
-            getattr(allowed_block, 'category', getattr(allowed_block, 'CATEGORY', None))
-            for allowed_block in block.allowed_nested_blocks
-        ]
+class TestMentoringStep(BlockWithChildrenTestMixin, unittest.TestCase):
 
     def test_allowed_nested_blocks(self):
         block = MentoringStepBlock(Mock(), DictFieldData({}), Mock())
-        self.assertEqual(
-            self.get_allowed_blocks(block),
-            [
-                'pb-answer',
-                'pb-mcq',
-                'pb-rating',
-                'pb-mrq',
-                'html',
-                'pb-answer-recap',
-                'pb-table',
-                'sb-plot',
-                'pb-slider',
-            ]
-        )
-        from sys import modules
-        xmodule_mock = Mock()
-        fake_modules = {
-            'xmodule': xmodule_mock,
-            'xmodule.video_module': xmodule_mock.video_module,
-            'xmodule.video_module.video_module': xmodule_mock.video_module.video_module,
-            'imagemodal': Mock()
-        }
-        with patch.dict(modules, fake_modules):
-            self.assertEqual(
-                self.get_allowed_blocks(block), [
-                    'pb-answer',
-                    'pb-mcq',
-                    'pb-rating',
-                    'pb-mrq',
-                    'html',
-                    'pb-answer-recap',
-                    'pb-table',
-                    'sb-plot',
-                    'pb-slider',
-                    'video',
-                    'imagemodal',
-                ]
-            )
+        self.assert_allowed_nested_blocks(block)

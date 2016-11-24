@@ -45,28 +45,27 @@ class SliderBlockTest(SliderBlockTestMixins, ProblemBuilderBaseTest):
         pb_wrapper = self.load_scenario("slider_problem.xml", {"include_mcq": False})
         self.wait_for_init()
         # The initial value should be 50 and submit should be enabled since 50 is a valid value:
-        self.assertTrue(self.submit_button.is_enabled())
         self.assertEqual(self.get_slider_value(), 50)
         self.expect_checkmark_visible(False)
+        self.expect_submit_enabled(True)
         # Set the value to 75:
         self.set_slider_value(75)
         self.assertEqual(self.get_slider_value(), 75)
         self.click_submit(pb_wrapper)
         # Now, we expect submit to be disabled and the checkmark to be visible:
         self.expect_checkmark_visible(True)
-        self.assertFalse(self.submit_button.is_enabled())
+        self.expect_submit_enabled(False)
         # Now change the value, and the button/checkmark should reset:
         self.set_slider_value(45)
-        self.assertTrue(self.submit_button.is_enabled())
         self.expect_checkmark_visible(False)
+        self.expect_submit_enabled(True)
         # Now reload the page:
-        self.browser.execute_script("$(document).html(' ');")
-        pb_wrapper = self.go_to_view("student_view")
+        pb_wrapper = self.reload_page()
         self.wait_for_init()
         # Now the initial value should be 75 and submit should be disabled (to discourage submitting the same answer):
         self.assertEqual(self.get_slider_value(), 75)
-        self.assertFalse(self.submit_button.is_enabled())
         self.expect_checkmark_visible(True)
+        self.expect_submit_enabled(False)
 
     def test_simple_flow_with_peer(self):
         """ Test a regular Problem Builder block containing one slider and an MCQ """
@@ -74,35 +73,23 @@ class SliderBlockTest(SliderBlockTestMixins, ProblemBuilderBaseTest):
         self.wait_for_init()
         # The initial value should be 50 and submit should be disabled until an MCQ choice is selected
         self.assertEqual(self.get_slider_value(), 50)
-        self.assertFalse(self.submit_button.is_enabled())
         self.expect_checkmark_visible(False)
+        self.expect_submit_enabled(False)
         # Set the value to 15:
         self.set_slider_value(15)
         self.assertEqual(self.get_slider_value(), 15)
-        self.assertFalse(self.submit_button.is_enabled())
+        self.expect_submit_enabled(False)
         # Choose a choice:
         GetChoices(pb_wrapper).select('Yes')
-        self.assertTrue(self.submit_button.is_enabled())
+        self.expect_submit_enabled(True)
         self.click_submit(pb_wrapper)
         # Now, we expect submit to be disabled and the checkmark to be visible:
         self.expect_checkmark_visible(True)
-        self.assertFalse(self.submit_button.is_enabled())
+        self.expect_submit_enabled(False)
         # Now change the value, and the button/checkmark should reset:
         self.set_slider_value(20)
-        self.assertTrue(self.submit_button.is_enabled())
         self.expect_checkmark_visible(False)
-
-    def wait_for_init(self):
-        """ Wait for the scenario to initialize """
-        self.wait_until_hidden(self.browser.find_element_by_css_selector('.messages'))
-
-    @property
-    def submit_button(self):
-        return self.browser.find_element_by_css_selector('.submit input.input-main')
-
-    def expect_checkmark_visible(self, visible):
-        checkmark = self.browser.find_element_by_css_selector('.xblock-pb-slider .submit-result')
-        self.assertEqual(checkmark.is_displayed(), visible)
+        self.expect_submit_enabled(True)
 
 
 class SliderStepBlockTest(SliderBlockTestMixins, MentoringAssessmentBaseTest):
@@ -140,7 +127,3 @@ class SliderStepBlockTest(SliderBlockTestMixins, MentoringAssessmentBaseTest):
         self.wait_until_visible(controls.try_again)
         # You can't get a slider question wrong, but it does count as one correct point by default:
         self.assertIn("You answered 2 questions correctly", step_builder.text)
-
-    def wait_for_init(self):
-        """ Wait for the scenario to initialize """
-        self.wait_until_visible(self.browser.find_elements_by_css_selector('.sb-step')[0])

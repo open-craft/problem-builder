@@ -1,0 +1,4 @@
+<problem-builder url_name="pb_with_multiple_completion">
+    <pb-completion name="completion_1" question="Did you attend the meeting?" answer="Yes, I did." />
+    <pb-completion name="completion_2" question="Did you attend the social gathering?" answer="Yup, I was there." />
+</problem-builder>
