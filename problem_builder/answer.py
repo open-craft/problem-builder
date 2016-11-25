@@ -23,6 +23,10 @@
 import logging
 from lazy import lazy
 
+from django.core.exceptions import ValidationError
+from django.db import IntegrityError
+from django.utils.crypto import get_random_string
+
 from .models import Answer
 
 from xblock.core import XBlock
@@ -64,6 +68,40 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
         except AttributeError:
             return self.scope_ids.user_id
 
+    @staticmethod
+    def _fetch_model_object(name, student_id, course_id):
+        sql_query = '''SELECT * FROM problem_builder_answer
+                         WHERE name = %s
+                           AND student_id = %s
+                           AND (course_key = %s
+                                OR course_id = %s)'''
+        params = [name, student_id, course_id, course_id]
+        try:
+            answer = Answer.objects.raw(sql_query, params)[0]
+        except IndexError:
+            raise Answer.DoesNotExist()
+        if not answer.course_key:
+            answer.course_key = answer.course_id
+        return answer
+
+    @staticmethod
+    def _create_model_object(name, student_id, course_id):
+        # Try to store the course_id into the deprecated course_id field if it fits into
+        # the 50 character limit for compatibility with old code. If it does not fit,
+        # use a random temporary value until the column gets removed in next release.
+        # This should not create any issues with old code running alongside the new code,
+        # since Answer blocks don't work with old code when course_id is longer than 50 chars anyway.
+        if len(course_id) > 50:
+            # The deprecated course_id field cannot be blank. It also needs to be unique together with
+            # the name and student_id fields, so we cannot use a static placeholder value, we generate
+            # a random value instead, to make the database happy.
+            deprecated_course_id = get_random_string(24)
+        else:
+            deprecated_course_id = course_id
+        answer = Answer(student_id=student_id, name=name, course_key=course_id, course_id=deprecated_course_id)
+        answer.save()
+        return answer
+
     def get_model_object(self, name=None):
         """
         Fetches the Answer model object for the answer named `name`
@@ -78,11 +116,17 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
         student_id = self._get_student_id()
         course_id = self._get_course_id()
 
-        answer_data, _ = Answer.objects.get_or_create(
-            student_id=student_id,
-            course_id=course_id,
-            name=name,
-        )
+        try:
+            answer_data = self._fetch_model_object(name, student_id, course_id)
+        except Answer.DoesNotExist:
+            try:
+                # Answer object does not exist, try to create it.
+                answer_data = self._create_model_object(name, student_id, course_id)
+            except (IntegrityError, ValidationError):
+                # Integrity/validation error means the object must have been created in the meantime,
+                # so fetch the new object from the db.
+                answer_data = self._fetch_model_object(name, student_id, course_id)
+
         return answer_data
 
     @property
