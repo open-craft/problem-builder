@@ -117,6 +117,30 @@ After successfully completing the questions:
 
 ![MRQ Success](img/mrq-4.png)
 
+### Completion Questions
+
+Completion questions allow course authors to ask learners whether they completed
+an offline activity.
+
+They have these configurable settings:
+
+* **Question** - Mentions a specific activity and asks the student whether they completed it.
+* **Answer** - Represents the answer that the student can (un-)check to indicate
+  whether they completed the activity that the question mentions.
+
+Learners can not get a completion question wrong; any answer is considered correct
+once the learner submits it.
+
+**Screenshots**
+
+Before submitting answer:
+
+![Completion Initial](img/completion-1.png)
+
+After submitting answer (leaving checkbox unchecked is a valid answer):
+
+![Completion Success](img/completion-2.png)
+
 Other Components
 ================
 
