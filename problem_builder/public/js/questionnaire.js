@@ -126,7 +126,7 @@ function MCQBlock(runtime, element) {
 
             messageView.clearResult();
 
-            var choiceInputDOM = $('.choice-selector input[value="'+ result.submission +'"]');
+            var choiceInputDOM = $('.choice-selector input[value="'+ result.submission +'"]', element);
             var choiceDOM = choiceInputDOM.closest('.choice');
             var choiceResultDOM = $('.choice-result', choiceDOM);
             var choiceTipsDOM = $('.choice-tips', choiceDOM);
