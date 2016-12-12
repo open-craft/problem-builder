@@ -25,6 +25,7 @@ from lazy import lazy
 
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.db.models import Q
 from django.utils.crypto import get_random_string
 
 from .models import Answer
@@ -70,16 +71,11 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
 
     @staticmethod
     def _fetch_model_object(name, student_id, course_id):
-        sql_query = '''SELECT * FROM problem_builder_answer
-                         WHERE name = %s
-                           AND student_id = %s
-                           AND (course_key = %s
-                                OR course_id = %s)'''
-        params = [name, student_id, course_id, course_id]
-        try:
-            answer = Answer.objects.raw(sql_query, params)[0]
-        except IndexError:
-            raise Answer.DoesNotExist()
+        answer = Answer.objects.get(
+            Q(name=name),
+            Q(student_id=student_id),
+            Q(course_key=course_id) | Q(course_id=course_id)
+        )
         if not answer.course_key:
             answer.course_key = answer.course_id
         return answer
