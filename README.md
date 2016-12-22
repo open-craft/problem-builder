@@ -149,6 +149,47 @@ $ SERVICE_VARIANT=cms DJANGO_SETTINGS_MODULE="cms.envs.devstack" python -m probl
 ```
 Where "Org/Course/Run" is replaced with the ID of the course to upgrade.
 
+
+Open edX Installation
+---------------------
+
+Problem Builder releases are tagged with a version number, e.g.
+[`v2.6.0`](https://github.com/open-craft/problem-builder/tree/v2.6.0),
+[`v2.6.5`](https://github.com/open-craft/problem-builder/tree/v2.6.5).  We recommend installing the most recently tagged
+version, with the exception of the following compatibility issues:
+
+* `edx-platform` version `open-release/eucalyptus.2` and earlier must use
+  ≤[v2.6.0](https://github.com/open-craft/problem-builder/tree/v2.6.0).  See
+  [PR 128](https://github.com/open-craft/problem-builder/pull/128) for details.
+* `edx-platform` version `named-release/dogwood.3` must use
+  [v2.0.0](https://github.com/open-craft/problem-builder/tree/v2.0.0).
+* Otherwise, consult the `edx-platform/requirements/edx/edx-private.txt` file to see which revision was
+  used by [edx.org](https://edx.org) for your branch.
+
+The `edx-platform` `master` branch will generally always be compatible with the most recent Problem Builder tag.  See
+[edx-private.txt](https://github.com/edx/edx-platform/blob/master/requirements/edx/edx-private.txt) for the version
+currently installed on [edx.org](https://edx.org).
+
+To install Problem Builder on an Open edX installation, choose the tag you wish to install, and run:
+
+```bash
+$ sudo -u edxapp -Hs
+edxapp $ cd ~
+edxapp $ source edxapp_env
+edxapp $ TAG='v2.6.5'  # example revision
+edxapp $ pip install "git+https://github.com/open-craft/problem-builder.git@$TAG#egg=xblock-problem-builder==$TAG"
+edxapp $ cd edx-platform
+edxapp $ ./manage.py lms migrate --settings=aws  # or openstack, as appropriate
+```
+
+Then, restart the edxapp services:
+```bash
+$ sudo /edx/bin/supervisorctl restart edxapp:
+$ sudo /edx/bin/supervisorctl restart edxapp_workers:
+```
+
+See [Usage Instructions](doc/Usage.md) for how to enable in Studio.
+
 License
 -------
 
