@@ -43,11 +43,9 @@ class Answer(models.Model):
     name = models.CharField(max_length=50, db_index=True)
     student_id = models.CharField(max_length=32, db_index=True)
     # course_id is deprecated; it will be removed in next release.
-    course_id = models.CharField(max_length=50, db_index=True)
+    course_id = models.CharField(max_length=50, db_index=True, null=True, default=None)
     # course_key is the new course_id replacement with extended max_length.
-    # We need to allow NULL values during the transition period,
-    # but we will remove the null=True and default=None parameters in next release.
-    course_key = models.CharField(max_length=255, db_index=True, null=True, default=None)
+    course_key = models.CharField(max_length=255, db_index=True)
     student_input = models.TextField(blank=True, default='')
     created_on = models.DateTimeField('created on', auto_now_add=True)
     modified_on = models.DateTimeField('modified on', auto_now=True)
