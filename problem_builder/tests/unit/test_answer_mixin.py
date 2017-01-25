@@ -1,10 +1,9 @@
 """
-Tests temporary AnswerMixin code that helps migrate course_id column to course_key.
+Unit tests for AnswerMixin.
 """
 import unittest
 from collections import namedtuple
 from django.utils.crypto import get_random_string
-from mock import patch
 
 from problem_builder.answer import AnswerMixin
 from problem_builder.models import Answer
@@ -37,7 +36,6 @@ class TestAnswerMixin(unittest.TestCase):
         model = answer_mixin.get_model_object()
         self.assertEqual(model.name, name)
         self.assertEqual(model.student_id, self.anonymous_student_id)
-        self.assertEqual(model.course_id, self.course_id)
         self.assertEqual(model.course_key, self.course_id)
         self.assertEqual(Answer.objects.get(pk=model.pk), model)
 
@@ -47,28 +45,11 @@ class TestAnswerMixin(unittest.TestCase):
             name=name,
             student_id=self.anonymous_student_id,
             course_key=self.course_id,
-            course_id='ignored'
         )
         existing_model.save()
         answer_mixin = self.make_answer_mixin(name=name)
         model = answer_mixin.get_model_object()
         self.assertEqual(model, existing_model)
-
-    def test_finds_instance_by_course_id(self):
-        name = 'test-course-id'
-        existing_model = Answer(
-            name=name,
-            student_id=self.anonymous_student_id,
-            course_id=self.course_id,
-            course_key=None
-        )
-        # Temporarily patch full_clean to allow saving object with blank course_key to the database.
-        with patch.object(Answer, 'full_clean', return_value=None):
-            existing_model.save()
-        answer_mixin = self.make_answer_mixin(name=name)
-        model = answer_mixin.get_model_object()
-        self.assertEqual(model, existing_model)
-        self.assertEqual(model.course_key, self.course_id)
 
     def test_works_with_long_course_keys(self):
         course_id = 'course-v1:VeryLongOrganizationName+VeryLongCourseNumber+VeryLongCourseRun'
