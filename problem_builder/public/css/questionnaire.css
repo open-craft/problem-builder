@@ -2,17 +2,21 @@
     display: table;
     position: relative;
     width: 100%;
-    border-spacing: 0 6px;
+    border-spacing: 0 2px;
     padding-top: 10px;
     margin-bottom: 10px;
 }
 
 .mentoring .questionnaire .choice-result {
-    display: inline-block;
+    display: table-cell;
     width: 34px;
     vertical-align: top;
     cursor: pointer;
     float: none;
+}
+
+.mentoring div[data-block-type=pb-mrq] .questionnaire .choice-result {
+    display: inline-block;
 }
 
 .mentoring .questionnaire .choice {
@@ -78,7 +82,13 @@
 }
 
 .mentoring .choices-list .choice-selector {
-    display: inline-block;
+    display: table-cell;
+}
+
+.mentoring .choices-list .choice-label-text {
+    display: table-cell;
+    padding-left: 0.4em;
+    padding-right: 0.4em;
 }
 
 .mentoring .choice-tips-container,
