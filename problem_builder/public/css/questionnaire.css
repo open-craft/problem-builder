@@ -88,6 +88,7 @@
 .mentoring .choices-list .choice-label-text {
     display: table-cell;
     padding-left: 0.4em;
+    padding-right: 0.4em;
 }
 
 .mentoring .choice-tips-container,
