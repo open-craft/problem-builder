@@ -86,6 +86,9 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     def _get_answer_checkmark(self, answer):
         return answer.find_element_by_xpath("ancestor::node()[3]").find_element_by_css_selector(".answer-checkmark")
 
+    def _get_completion_checkmark(self, completion):
+        return completion.find_element_by_xpath("ancestor::node()[4]").find_element_by_css_selector(".submit-result")
+
     def _get_messages_element(self, mentoring):
         return mentoring.find_element_by_css_selector('.messages')
 
@@ -97,13 +100,22 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         mcq = self._get_xblock(mentoring, "feedback_mcq_2")
         mrq = self._get_xblock(mentoring, "feedback_mrq_3")
         rating = self._get_xblock(mentoring, "feedback_rating_4")
+        completion = self._get_xblock(mentoring, "completion_1").find_element_by_css_selector('.pb-completion-value')
 
-        return answer, mcq, mrq, rating
+        return answer, mcq, mrq, rating, completion
 
     def _assert_answer(self, answer, results_shown=True):
         self.assertEqual(answer.get_attribute('value'), 'This is the answer')
         answer_checkmark = self._get_answer_checkmark(answer)
         self._assert_checkmark(answer_checkmark, shown=results_shown)
+
+    def _assert_completion(self, completion, results_shown=True):
+        self.assertTrue(completion.is_selected())
+        completion_checkmark = self._get_completion_checkmark(completion)
+        if results_shown:
+            self.assertTrue(completion_checkmark.is_displayed())
+        else:
+            self.assertFalse(completion_checkmark.is_displayed())
 
     def _assert_checkmark(self, checkmark, correct=True, shown=True):
         result_classes = checkmark.get_attribute('class').split()
@@ -198,7 +210,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             self.assertFalse(messages.is_displayed())
             self.assertEqual(messages.text, "")
 
-    def _standard_filling(self, answer, mcq, mrq, rating):
+    def _standard_filling(self, answer, mcq, mrq, rating, completion):
         # Long answer
         answer.send_keys('This is the answer')
         # MCQ
@@ -212,15 +224,18 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.click_choice(mrq, "Its bugs")
         # Rating
         self.click_choice(rating, "4")
+        # Completion - tick the checkbox
+        completion.click()
 
     # mcq and rating can't be reset easily, but it's not required; listing them here to keep method signature similar
-    def _clear_filling(self, answer, mcq, mrq, rating):      # pylint: disable=unused-argument
+    def _clear_filling(self, answer, mcq, mrq, rating, completion):      # pylint: disable=unused-argument
         answer.clear()
+        completion.click()
         for checkbox in mrq.find_elements_by_css_selector('.choice input'):
             if checkbox.is_selected():
                 checkbox.click()
 
-    def _standard_checks(self, answer, mcq, mrq, rating, messages):
+    def _standard_checks(self, answer, mcq, mrq, rating, completion, messages):
         self.wait_until_visible(messages)
 
         # Long answer: Previous answer and results visible
@@ -231,10 +246,12 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_mrq(mrq)
         # Rating: Previous answer and results visible
         self._assert_rating(rating)
+        # Completion: Previous answer and results visible
+        self._assert_completion(completion)
         # Messages visible
         self._assert_messages(messages)
 
-    def _mcq_hide_previous_answer_checks(self, answer, mcq, mrq, rating, messages):
+    def _mcq_hide_previous_answer_checks(self, answer, mcq, mrq, rating, completion, messages):
         self.wait_until_visible(messages)
 
         # Long answer: Previous answer and results visible
@@ -245,10 +262,12 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_mrq(mrq, previous_answer_shown=False)
         # Rating: Previous answer and results hidden
         self._assert_rating(rating, previous_answer_shown=False)
+        # Completion: Previous answer and results visible
+        self._assert_completion(completion)
         # Messages visible
         self._assert_messages(messages)
 
-    def _hide_feedback_checks(self, answer, mcq, mrq, rating, messages):
+    def _hide_feedback_checks(self, answer, mcq, mrq, rating, completion, messages):
         # Long answer: Previous answer visible and results hidden
         self._assert_answer(answer, results_shown=False)
         # MCQ: Previous answer and results visible
@@ -257,10 +276,12 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_mrq(mrq)
         # Rating: Previous answer and results visible
         self._assert_rating(rating)
+        # Completion: Previous answer visible and results hidden
+        self._assert_completion(completion, results_shown=False)
         # Messages hidden
         self._assert_messages(messages, shown=False)
 
-    def _mcq_hide_previous_answer_hide_feedback_checks(self, answer, mcq, mrq, rating, messages):
+    def _mcq_hide_previous_answer_hide_feedback_checks(self, answer, mcq, mrq, rating, completion, messages):
         # Long answer: Previous answer visible and results hidden
         self._assert_answer(answer, results_shown=False)
         # MCQ: Previous answer and results hidden
@@ -269,6 +290,8 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_mrq(mrq, previous_answer_shown=False)
         # Rating: Previous answer and feedback hidden
         self._assert_rating(rating, previous_answer_shown=False)
+        # Completion: Previous answer visible and results hidden
+        self._assert_completion(completion, results_shown=False)
         # Messages hidden
         self._assert_messages(messages, shown=False)
 
@@ -289,7 +312,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
     def test_feedback_and_messages_not_shown_on_first_load(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
-        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
         submit = self._get_submit(mentoring)
 
@@ -301,6 +324,8 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             self._assert_feedback_hidden(mrq, i)
         for i in range(5):
             self._assert_feedback_hidden(rating, i)
+        completion_checkmark = self._get_completion_checkmark(completion)
+        self.assertFalse(completion_checkmark.is_displayed())
         self.assertFalse(messages.is_displayed())
         self.assertFalse(submit.is_enabled())
 
@@ -336,21 +361,21 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_options") as patched_options:
             patched_options.return_value = options
             mentoring = self.load_scenario("feedback_persistence.xml")
-            answer, mcq, mrq, rating = self._get_controls(mentoring)
+            answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
             messages = self._get_messages_element(mentoring)
 
-            self._standard_filling(answer, mcq, mrq, rating)
+            self._standard_filling(answer, mcq, mrq, rating, completion)
             self.click_submit(mentoring)
-            self._standard_checks(answer, mcq, mrq, rating, messages)
+            self._standard_checks(answer, mcq, mrq, rating, completion, messages)
 
             # Now reload the page...
             mentoring = self.reload_student_view()
-            answer, mcq, mrq, rating = self._get_controls(mentoring)
+            answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
             messages = self._get_messages_element(mentoring)
             submit = self._get_submit(mentoring)
 
             # ... and see if previous answers, results, feedback are shown/hidden correctly
-            getattr(self, after_reload_checks)(answer, mcq, mrq, rating, messages)
+            getattr(self, after_reload_checks)(answer, mcq, mrq, rating, completion, messages)
 
             # After reloading, submit is enabled only when:
             #  - feedback is hidden; and
@@ -370,7 +395,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
     def test_given_perfect_score_in_past_loads_current_result(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
-        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
 
         answer.send_keys('This is the answer')
@@ -380,6 +405,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.click_choice(mrq, "Its gracefulness")
         self.click_choice(mrq, "Its beauty")
         self.click_choice(rating, "4")
+        completion.click()
         self.click_submit(mentoring)
 
         # precondition - verifying 100% score achieved
@@ -396,23 +422,24 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self._assert_feedback_shown(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
         self._assert_feedback_shown(mrq, 3, "Nah, there aren't any!", click_choice_result=True)
         self._assert_feedback_shown(rating, 3, "I love good grades.", click_choice_result=True)
+        self.assertTrue(completion.is_selected())
         self.assertTrue(messages.is_displayed())
         self.assertEqual(messages.text, "FEEDBACK\nAll Good")
 
-        self._clear_filling(answer, mcq, mrq, rating)
-        self._standard_filling(answer, mcq, mrq, rating)
+        self._clear_filling(answer, mcq, mrq, rating, completion)
+        self._standard_filling(answer, mcq, mrq, rating, completion)
         self.click_submit(mentoring)
-        self._standard_checks(answer, mcq, mrq, rating, messages)
+        self._standard_checks(answer, mcq, mrq, rating, completion, messages)
 
         # now, reload the page and make sure LATEST submission is loaded and feedback is shown
         mentoring = self.reload_student_view()
-        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
-        self._standard_checks(answer, mcq, mrq, rating, messages)
+        self._standard_checks(answer, mcq, mrq, rating, completion, messages)
 
     def test_partial_mrq_is_not_completed(self):
         mentoring = self.load_scenario("feedback_persistence.xml")
-        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
 
         answer.send_keys('This is the answer')
@@ -421,9 +448,10 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         self.click_choice(mrq, "Its elegance")
         self.click_choice(mrq, "Its gracefulness")
         self.click_choice(rating, "4")
+        completion.click()
         self.click_submit(mentoring)
 
-        def assert_state(answer, mcq, mrq, rating, messages):
+        def assert_state(answer, mcq, mrq, rating, completion, messages):
             self.wait_until_visible(messages)
             self.assertEqual(answer.get_attribute('value'), 'This is the answer')
             self._assert_feedback_shown(mcq, 0, "Great!", click_choice_result=True)
@@ -438,16 +466,17 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             self._assert_feedback_shown(mrq, 2, "This MRQ is indeed very graceful", click_choice_result=True)
             self._assert_feedback_shown(mrq, 3, "Nah, there aren't any!", click_choice_result=True)
             self._assert_feedback_shown(rating, 3, "I love good grades.", click_choice_result=True)
+            self.assertTrue(completion.is_selected())
             self.assertTrue(messages.is_displayed())
             self.assertEqual(messages.text, "FEEDBACK\nNot done yet")
 
-        assert_state(answer, mcq, mrq, rating, messages)
+        assert_state(answer, mcq, mrq, rating, completion, messages)
 
         # now, reload the page and make sure the same result is shown
         mentoring = self.reload_student_view()
-        answer, mcq, mrq, rating = self._get_controls(mentoring)
+        answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
         messages = self._get_messages_element(mentoring)
-        assert_state(answer, mcq, mrq, rating, messages)
+        assert_state(answer, mcq, mrq, rating, completion, messages)
 
     @ddt.unpack
     @ddt.data(
