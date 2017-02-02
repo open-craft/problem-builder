@@ -32,6 +32,8 @@
             <pb-tip values='["notwant"]'>Your loss!</pb-tip>
         </pb-rating>
 
+        <pb-completion name="completion_1" question="Did you attend the meeting?" answer="Yes, I did." />
+
         <pb-message type="completed">All Good</pb-message>
         <pb-message type="incomplete">Not done yet</pb-message>
     </problem-builder>

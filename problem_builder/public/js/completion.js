@@ -16,10 +16,12 @@ function CompletionBlock(runtime, element) {
             return $completion.is(':checked');
         },
 
-        handleSubmit: function(result) {
+        handleSubmit: function(result, options) {
             if (typeof result.submission !== 'undefined') {
                 this.updateCompletion(result);
-                $('.submit-result', element).css('visibility', 'visible');
+                if (!options.hide_results) {
+                    $('.submit-result', element).css('visibility', 'visible');
+                }
             }
         },
 
