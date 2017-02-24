@@ -71,7 +71,7 @@ BLOCKS = [
 
 setup(
     name='xblock-problem-builder',
-    version='2.6.6',
+    version='2.6.7',
     description='XBlock - Problem Builder',
     packages=['problem_builder', 'problem_builder.v1'],
     install_requires=[
