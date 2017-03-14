@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="xblock-answer">
-  {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
+  {% if not hide_header %}<h4 class="question-title">{{ title }}</h4>{% endif %}
   {% if description %}<p>{{ description|safe }}</p>{% endif %}
   <blockquote class="answer read_only">
     {% if student_input %}

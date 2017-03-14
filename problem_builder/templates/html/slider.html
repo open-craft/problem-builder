@@ -1,6 +1,6 @@
 {% load i18n %}
 <div class="xblock-pb-slider">
-  {% if not hide_header %}<h3 class="question-title">{{ title }}</h3>{% endif %}
+  {% if not hide_header %}<h4 class="question-title">{{ title }}</h4>{% endif %}
   <div class="pb-slider-box clearfix">
     <p><label>{{ question|safe }} <span class="sr">({{instructions_string}})</span>
       <input type="range" id="{{ slider_id }}" class="pb-slider-range"

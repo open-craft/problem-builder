@@ -1,7 +1,7 @@
 {% load i18n %}
 <div class="sb-plot-overlay">
   {% if self.plot_label and self.point_color %}
-    <h3 style="color: {{ self.point_color }};">{{ self.plot_label }} {% trans "Overlay" %}</h3>
+    <h4 style="color: {{ self.point_color }};">{{ self.plot_label }} {% trans "Overlay" %}</h4>
   {% endif %}
   <p>
     <strong>{% trans "Description:" %}</strong>

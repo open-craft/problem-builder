@@ -1,6 +1,6 @@
 {% load i18n %}
 {% if not hide_header %}
-<h3 class="question-title" id="heading_{{ self.html_id }}">{{ self.display_name_with_default }}</h3>
+<h4 class="question-title" id="heading_{{ self.html_id }}">{{ self.display_name_with_default }}</h4>
 {% endif %}
 <fieldset class="choices questionnaire" id="{{ self.html_id }}">
   <legend class="question field-group-hd">{{ self.question|safe }}</legend>
