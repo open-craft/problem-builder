@@ -146,7 +146,7 @@ class StepTitlesTest(SeleniumXBlockTest):
                     pb_element = self.go_to_view()
                     if expected_title:
                         h4 = pb_element.find_element_by_css_selector('h4')
-                        self.assertEqual(h3.text, expected_title)
+                        self.assertEqual(h4.text, expected_title)
                     else:
                         # No <h4> element should be present:
                         all_h4s = pb_element.find_elements_by_css_selector('h4')
