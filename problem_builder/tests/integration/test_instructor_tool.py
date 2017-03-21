@@ -62,10 +62,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_export_field_container_width(self):
@@ -81,10 +79,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_root_block_select_width(self):
@@ -100,10 +96,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export_delete(self):
@@ -132,10 +126,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export_success(self):
@@ -172,10 +164,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=False),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_data_export_error(self):
@@ -206,10 +196,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
     @patch.dict('sys.modules', {
         'problem_builder.tasks': MockTasksModule(successful=True),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_pagination_no_results(self):
@@ -242,10 +230,8 @@ class InstructorToolTest(SeleniumXBlockTest):
                 'Test section', 'Test subsection', 'Test unit',
                 'Test type', 'Test question', 'Test answer', 'Test username'
             ]]),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_pagination_single_result(self):
@@ -284,10 +270,8 @@ class InstructorToolTest(SeleniumXBlockTest):
                 'Test section', 'Test subsection', 'Test unit',
                 'Test type', 'Test question', 'Test answer', 'Test username'
             ] for _ in range(PAGE_SIZE*3)]),
-        'lms': True,
-        'lms.djangoapps': True,
-        'lms.djangoapps.instructor_task': True,
-        'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
+        'instructor_task': True,
+        'instructor_task.models': MockInstructorTaskModelsModule(),
     })
     @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
     def test_pagination_multiple_results(self):
