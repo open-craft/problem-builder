@@ -439,6 +439,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
+    @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context):
         from .questionnaire import QuestionnaireAbstractBlock  # Import here to avoid circular dependency
 
@@ -1068,6 +1069,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     def show_extended_feedback(self):
         return self.extended_feedback and self.max_attempts_reached
 
+    @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context):
         fragment = Fragment()
         children_contents = []

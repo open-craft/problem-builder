@@ -382,6 +382,7 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
             if child_isinstance(mentoring_block, child_id, MCQBlock):
                 yield child_id
 
+    @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context=None):  # pylint: disable=unused-argument
         """
         Standard view of this XBlock.
