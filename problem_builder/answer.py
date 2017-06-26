@@ -266,7 +266,10 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         Returns a JSON representation of the student_view of this XBlock,
         retrievable from the Course Block API.
         """
-        return {'question': self.question}
+        return {
+            'question': self.question,
+            'name': self.name,
+        }
 
 
 @XBlock.needs("i18n")
