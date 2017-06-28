@@ -167,6 +167,42 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
                 self._(u"A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
             )
 
+    def student_view_data(self):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'id': self.url_name,
+            'type': self.CATEGORY,
+            'question': self.question,
+            'message': self.message,
+            'choices': [
+                {'value': choice['value'], 'content': choice['display_name']}
+                for choice in self.human_readable_choices
+            ],
+            'weight': self.weight,
+            'correct_choices': self.correct_choices,
+            'tips': [
+                {'content': tip.content, 'for_choices': tip.values}
+                for tip in self.get_tips()
+            ],
+            'user_state': {
+                'student_choice': self.student_choice,
+            },
+        }
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the usage_id.
+        """
+        try:
+            return super(MCQBlock, self).url_name
+        except AttributeError:
+            return unicode(self.scope_ids.usage_id)
+
 
 class RatingBlock(MCQBlock):
     """

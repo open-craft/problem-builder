@@ -905,6 +905,38 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         """
         return loader.load_scenarios_from_path('templates/xml')
 
+    def student_view_data(self):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        components = []
+        for child_id in self.children:
+            block = self.runtime.get_block(child_id)
+            if hasattr(block, 'student_view_data'):
+                components.append(block.student_view_data())
+        return {
+            'max_attempts': self.max_attempts,
+            'user_state': {
+                'num_attempts': self.num_attempts,
+                'attempted': self.attempted,
+                'completed': self.completed,
+                'student_results': self.student_results,
+                'step': self.step,
+            },
+            'extended_feedback': self.extended_feedback,
+            'feedback_label': self.feedback_label,
+            'components': components,
+            'messages': {
+                message_type: get_message_label(message_type)
+                for message_type in (
+                        'completed',
+                        'incomplete',
+                        'max_attempts_reached',
+                )
+            }
+        }
+
 
 class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin):
     """
