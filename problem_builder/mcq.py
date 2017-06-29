@@ -173,7 +173,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
         retrievable from the Course Block API.
         """
         return {
-            'id': self.url_name,
+            'id': self.name,
             'type': self.CATEGORY,
             'question': self.question,
             'message': self.message,
@@ -187,21 +187,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
                 {'content': tip.content, 'for_choices': tip.values}
                 for tip in self.get_tips()
             ],
-            'user_state': {
-                'student_choice': self.student_choice,
-            },
         }
-
-    @property
-    def url_name(self):
-        """
-        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
-        defer to super(). In the workbench or any other platform, we use the name.
-        """
-        try:
-            return super(MCQBlock, self).url_name
-        except AttributeError:
-            return self.name
 
 
 class RatingBlock(MCQBlock):
@@ -259,6 +245,17 @@ class RatingBlock(MCQBlock):
         }))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
         return fragment
+
+    @property
+    def url_name(self):
+        """
+        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
+        defer to super(). In the workbench or any other platform, we use the name.
+        """
+        try:
+            return super(RatingBlock, self).url_name
+        except AttributeError:
+            return self.name
 
     def student_view(self, context):
         fragment = super(RatingBlock, self).student_view(context)

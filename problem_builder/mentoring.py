@@ -917,13 +917,6 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
                 components.append(block.student_view_data())
         return {
             'max_attempts': self.max_attempts,
-            'user_state': {
-                'num_attempts': self.num_attempts,
-                'attempted': self.attempted,
-                'completed': self.completed,
-                'student_results': self.student_results,
-                'step': self.step,
-            },
             'extended_feedback': self.extended_feedback,
             'feedback_label': self.feedback_label,
             'components': components,
