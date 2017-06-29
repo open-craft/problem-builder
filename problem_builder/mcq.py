@@ -196,12 +196,12 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
     def url_name(self):
         """
         Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
-        defer to super(). In the workbench or any other platform, we use the usage_id.
+        defer to super(). In the workbench or any other platform, we use the name.
         """
         try:
             return super(MCQBlock, self).url_name
         except AttributeError:
-            return unicode(self.scope_ids.usage_id)
+            return self.name
 
 
 class RatingBlock(MCQBlock):
@@ -259,17 +259,6 @@ class RatingBlock(MCQBlock):
         }))
         self.render_children(context, fragment, can_reorder=True, can_add=False)
         return fragment
-
-    @property
-    def url_name(self):
-        """
-        Get the url_name for this block. In Studio/LMS it is provided by a mixin, so we just
-        defer to super(). In the workbench or any other platform, we use the name.
-        """
-        try:
-            return super(RatingBlock, self).url_name
-        except AttributeError:
-            return self.name
 
     def student_view(self, context):
         fragment = super(RatingBlock, self).student_view(context)
