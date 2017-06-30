@@ -921,7 +921,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
             'feedback_label': self.feedback_label,
             'components': components,
             'messages': {
-                message_type: get_message_label(message_type)
+                message_type: self.get_message_content(message_type)
                 for message_type in (
                         'completed',
                         'incomplete',

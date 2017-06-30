@@ -127,19 +127,19 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         block_data = {'children': children}
         block_data.update(shared_data)
         block = MentoringBlock(Mock(), DictFieldData(block_data), Mock())
-        block.runtime = Mock()
-        block.runtime.get_block.side_effect = lambda child: children_by_id[child.block_id]
+        block.runtime = Mock(
+            get_block=lambda block: children_by_id[block.block_id],
+            load_block_type=lambda block: Mock,
+            id_reader=Mock(get_definition_id=lambda block: block, get_block_type=lambda block: block),
+        )
         expected = {
             'components': [
                 'child_a_json',
             ],
             'messages': {
-                message_type: MentoringMessageBlock.MESSAGE_TYPES[message_type]['studio_label']
-                for message_type in (
-                        'completed',
-                        'incomplete',
-                        'max_attempts_reached',
-                )
+                'completed': None,
+                'incomplete': None,
+                'max_attempts_reached': None,
             }
         }
         expected.update(shared_data)
