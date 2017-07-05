@@ -109,6 +109,42 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
             (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
         )
 
+    def test_student_view_data(self):
+        def get_mock_components():
+            child_a = Mock(spec=['student_view_data'])
+            child_a.block_id = 'child_a'
+            child_a.student_view_data.return_value = 'child_a_json'
+            child_b = Mock(spec=[])
+            child_b.block_id = 'child_b'
+            return [child_a, child_b]
+        shared_data = {
+            'max_attempts': 3,
+            'extended_feedback': True,
+            'feedback_label': 'Feedback label',
+        }
+        children = get_mock_components()
+        children_by_id = {child.block_id: child for child in children}
+        block_data = {'children': children}
+        block_data.update(shared_data)
+        block = MentoringBlock(Mock(), DictFieldData(block_data), Mock())
+        block.runtime = Mock(
+            get_block=lambda block: children_by_id[block.block_id],
+            load_block_type=lambda block: Mock,
+            id_reader=Mock(get_definition_id=lambda block: block, get_block_type=lambda block: block),
+        )
+        expected = {
+            'components': [
+                'child_a_json',
+            ],
+            'messages': {
+                'completed': None,
+                'incomplete': None,
+                'max_attempts_reached': None,
+            }
+        }
+        expected.update(shared_data)
+        self.assertEqual(block.student_view_data(), expected)
+
 
 @ddt.ddt
 class TestMentoringBlockTheming(unittest.TestCase):

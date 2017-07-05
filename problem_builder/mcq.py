@@ -167,6 +167,27 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
                 self._(u"A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
             )
 
+    def student_view_data(self):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'question': self.question,
+            'message': self.message,
+            'choices': [
+                {'value': choice['value'], 'content': choice['display_name']}
+                for choice in self.human_readable_choices
+            ],
+            'weight': self.weight,
+            'tips': [
+                {'content': tip.content, 'for_choices': tip.values}
+                for tip in self.get_tips()
+            ],
+        }
+
 
 class RatingBlock(MCQBlock):
     """
