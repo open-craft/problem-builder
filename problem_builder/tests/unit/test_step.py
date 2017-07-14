@@ -33,11 +33,7 @@ class Parent(StepParentMixin):
                 pass
 
 
-class BaseClass(object):
-    pass
-
-
-class Step(BaseClass, QuestionMixin):
+class Step(QuestionMixin):
     def __init__(self):
         pass
 

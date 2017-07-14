@@ -66,6 +66,16 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithT
             status = self._(u"Out of Context")  # Parent block should implement describe_choice_correctness()
         return self._(u"Choice ({status})").format(status=status)
 
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'value': self.value,
+            'content': self.content,
+        }
+
     def mentoring_view(self, context=None):
         """ Render this choice string within a mentoring block question. """
         return Fragment(u'<span class="choice-text">{}</span>'.format(self.content))

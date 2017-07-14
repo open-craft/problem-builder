@@ -109,6 +109,14 @@ class ConditionalMessageBlock(
 
         return True
 
+    def student_view_data(self, context=None):
+        return {
+            'type': self.CATEGORY,
+            'content': self.content,
+            'score_condition': self.score_condition,
+            'num_attempts_condition': self.num_attempts_condition,
+        }
+
     def student_view(self, _context=None):
         """ Render this message. """
         html = u'<div class="review-conditional-message">{content}</div>'.format(
@@ -150,6 +158,14 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
         context = context or {}
         html = loader.render_template("templates/html/sb-review-score.html", context.get("score_summary", {}))
         return Fragment(html)
+
+    def student_view_data(self, context=None):
+        context = context or {}
+
+        return {
+            'type': self.CATEGORY,
+            'score_summary': context.get('score_summary', {}),
+        }
 
     embedded_student_view = student_view
 
@@ -198,6 +214,15 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
         else:
             html = u""
         return Fragment(html)
+
+    def student_view_data(self, context=None):
+        context = context or {}
+        review_tips = context.get('score_summary', {}).get('review_tips')
+
+        return {
+            'type': self.CATEGORY,
+            'tips': review_tips
+        }
 
     embedded_student_view = student_view
 
@@ -278,6 +303,24 @@ class ReviewStepBlock(
                     fragment.add_content(child_fragment.content)
 
         return fragment
+
+    def student_view_data(self, context=None):
+        context = context.copy() if context else {}
+        components = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if hasattr(child, 'student_view_data'):
+                if hasattr(context, 'score_summary') and hasattr(child, 'is_applicable'):
+                    if not child.is_applicable(context):
+                        continue
+                components.append(child.student_view_data(context))
+
+        return {
+            'type': self.CATEGORY,
+            'title': self.display_name,
+            'components': components,
+        }
 
     mentoring_view = student_view
 

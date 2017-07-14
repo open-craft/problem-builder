@@ -188,3 +188,18 @@ class MRQBlock(QuestionnaireAbstractBlock):
             add_error(self._(u"A choice value listed as required does not exist: {}").format(choice_name(val)))
         for val in (ignored - all_values):
             add_error(self._(u"A choice value listed as ignored does not exist: {}").format(choice_name(val)))
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'id': self.name,
+            'title': self.display_name,
+            'type': self.CATEGORY,
+            'weight': self.weight,
+            'question': self.question,
+            'message': self.message,
+            'hide_results': self.hide_results,
+        }

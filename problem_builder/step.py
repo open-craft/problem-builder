@@ -265,3 +265,24 @@ class MentoringStepBlock(
         fragment.initialize_js('MentoringStepBlock')
 
         return fragment
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course XBlock API.
+        """
+        components = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if hasattr(child, 'student_view_data'):
+                components.append(child.student_view_data(context))
+
+        return {
+            'type': self.CATEGORY,
+            'title': self.display_name_with_default,
+            'show_title': self.show_title,
+            'next_button_label': self.next_button_label,
+            'message': self.message,
+            'components': components,
+        }

@@ -17,6 +17,7 @@ logging_level_overrides = {
     'workbench.runtime': logging.ERROR,
 }
 
+
 def patch_broken_pipe_error():
     """Monkey Patch BaseServer.handle_error to not write a stacktrace to stderr on broken pipe.
     This message is automatically suppressed in Django 1.8, so this monkey patch can be

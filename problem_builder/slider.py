@@ -121,6 +121,18 @@ class SliderBlock(
     student_view = mentoring_view
     preview_view = mentoring_view
 
+    def student_view_data(self, context=None):
+        return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'question': self.question,
+            'initial_value': int(self.student_value*100) if self.student_value is not None else 50,
+            'min_label': self.min_label,
+            'max_label': self.max_label,
+            'title': self.display_name_with_default,
+            'hide_header': not self.show_title,
+        }
+
     def author_view(self, context):
         """
         Add some HTML to the author view that allows authors to see the ID of the block, so they
