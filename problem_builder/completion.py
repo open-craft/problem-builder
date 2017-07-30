@@ -105,6 +105,21 @@ class CompletionBlock(
     student_view = mentoring_view
     preview_view = mentoring_view
 
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course XBlock API.
+        """
+        return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'question': self.question,
+            'answer': self.answer,
+            'checked': self.student_value if self.student_value is not None else False,
+            'title': self.display_name_with_default,
+            'hide_header': self.show_title,
+        }
+
     def get_last_result(self):
         """ Return the current/last result in the required format """
         if self.student_value is None:

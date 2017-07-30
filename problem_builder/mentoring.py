@@ -906,7 +906,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         """
         return loader.load_scenarios_from_path('templates/xml')
 
-    def student_view_data(self):
+    def student_view_data(self, context=None):
         """
         Returns a JSON representation of the student_view of this XBlock,
         retrievable from the Course Block API.
@@ -1247,3 +1247,23 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
         fragment.initialize_js('ProblemBuilderContainerEdit')
         return fragment
+
+    def student_view_data(self, context=None):
+        components = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if hasattr(child, 'student_view_data'):
+                components.append(child.student_view_data(context))
+
+        return {
+            'title': self.display_name,
+            'show_title': self.show_title,
+            'weight': self.weight,
+            'extended_feedback': self.extended_feedback,
+            'active_step': self.active_step_safe,
+            'max_attempts': self.max_attempts,
+            'num_attempts': self.num_attempts,
+            'hide_prev_answer': True,
+            'components': components,
+        }

@@ -167,7 +167,7 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
                 self._(u"A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
             )
 
-    def student_view_data(self):
+    def student_view_data(self, context=None):
         """
         Returns a JSON representation of the student_view of this XBlock,
         retrievable from the Course Block API.

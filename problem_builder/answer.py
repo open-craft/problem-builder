@@ -261,14 +261,17 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
             return {'data': {'name': uuid.uuid4().hex[:7]}}
         return {'metadata': {}, 'data': {}}
 
-    def student_view_data(self):
+    def student_view_data(self, context=None):
         """
         Returns a JSON representation of the student_view of this XBlock,
         retrievable from the Course Block API.
         """
         return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'weight': self.weight,
             'question': self.question,
-            'name': self.name,
+            'name': self.name,  # For backwards compatibility; same as 'id'
         }
 
 
