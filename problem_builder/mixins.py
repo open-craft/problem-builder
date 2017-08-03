@@ -1,4 +1,5 @@
 from lazy import lazy
+from xblock.core import XBlock
 from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
 from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
@@ -176,3 +177,25 @@ class NoSettingsMixin(object):
     def studio_view(self, _context=None):
         """ Studio View """
         return Fragment(u'<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
+
+
+class StudentViewUserStateMixin(object):
+    NESTED_BLOCKS_KEY = "components"
+    INCLUDE_SCOPES = (Scope.user_state, Scope.user_info, Scope.preferences)
+
+    def student_user_view_user_state(self, context=None):
+        result = {}
+        for _, field in self.fields.iteritems():
+            if field.scope in self.INCLUDE_SCOPES:
+                result[field.name] = field.read_from(self)
+
+        if self.has_children:
+            components = []
+            for child_id in self.children:
+                child = self.runtime.get_block(child_id)
+                if hasattr(child, 'student_user_view_user_state'):
+                    components.append(child.student_user_view_user_state(context))
+
+            result[self.NESTED_BLOCKS_KEY] = components
+
+        return result
