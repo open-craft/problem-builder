@@ -35,6 +35,9 @@ class Answer(models.Model):
     """
 
     class Meta:
+        # Since problem_builder isn't added to INSTALLED_APPS until it's imported,
+        # specify the app_label here.
+        app_label = 'problem_builder'
         unique_together = (
             ('student_id', 'course_id', 'name'),
             ('student_id', 'course_key', 'name'),
@@ -69,4 +72,7 @@ class Share(models.Model):
     notified = models.BooleanField(default=False, db_index=True)
 
     class Meta(object):
+        # Since problem_builder isn't added to INSTALLED_APPS until it's imported,
+        # specify the app_label here.
+        app_label = 'problem_builder'
         unique_together = (('shared_by', 'shared_with', 'block_id'),)
