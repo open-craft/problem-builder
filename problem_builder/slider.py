@@ -29,7 +29,7 @@ from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.resources import ResourceLoader
 
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
 from .sub_api import sub_api, SubmittingXBlockMixin
 
 
@@ -48,7 +48,8 @@ def _(text):
 
 @XBlock.needs("i18n")
 class SliderBlock(
-    SubmittingXBlockMixin, QuestionMixin, StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBlock,
+    SubmittingXBlockMixin, QuestionMixin, StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin,
+    StudentViewUserStateMixin, XBlock,
 ):
     """
     An XBlock used by students to indicate a numeric value on a sliding scale.

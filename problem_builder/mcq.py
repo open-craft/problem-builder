@@ -27,6 +27,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
+from problem_builder.mixins import StudentViewUserStateMixin
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api, SubmittingXBlockMixin
 
@@ -44,7 +45,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
+class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
     """

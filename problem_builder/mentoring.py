@@ -36,8 +36,8 @@ from xblock.validation import ValidationMessage
 
 from .message import MentoringMessageBlock, get_message_label
 from .mixins import (
-    _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
-)
+    _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin,
+    StudentViewUserStateMixin)
 from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
@@ -91,6 +91,7 @@ PARTIAL = 'partial'
 class BaseMentoringBlock(
     XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
     StudioEditableXBlockMixin, ThemableXBlockMixin, MessageParentMixin,
+    StudentViewUserStateMixin,
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.

@@ -33,7 +33,7 @@ from xblockutils.studio_editable import (
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
-from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
+from problem_builder.mixins import EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
@@ -70,7 +70,7 @@ class Correctness(object):
 @XBlock.needs('i18n')
 class MentoringStepBlock(
         StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
-        EnumerableChildMixin, StepParentMixin, XBlock
+        EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, XBlock
 ):
     """
     An XBlock for a step.
