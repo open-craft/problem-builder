@@ -3,6 +3,8 @@ Unit tests for AnswerMixin.
 """
 import unittest
 from collections import namedtuple
+from datetime import datetime
+
 from django.utils.crypto import get_random_string
 
 from problem_builder.answer import AnswerMixin
@@ -28,6 +30,8 @@ class TestAnswerMixin(unittest.TestCase):
         answer_mixin = AnswerMixin()
         answer_mixin.name = name
         answer_mixin.runtime = self.FakeRuntime(course_id, student_id)
+        answer_mixin.fields = {}
+        answer_mixin.has_children = False
         return answer_mixin
 
     def test_creates_model_instance(self):
@@ -57,3 +61,26 @@ class TestAnswerMixin(unittest.TestCase):
         answer_mixin = self.make_answer_mixin(course_id=course_id)
         model = answer_mixin.get_model_object()
         self.assertEqual(model.course_key, course_id)
+
+    def test_student_view_user_state(self):
+        name = 'test-course-key-2'
+        existing_model = Answer(
+            name=name,
+            student_id=self.anonymous_student_id,
+            course_key=self.course_id,
+            student_input="Test",
+            created_on=datetime(2017, 1, 2, 3, 4, 5),
+            modified_on=datetime(2017, 7, 8, 9, 10, 11),
+        )
+        existing_model.save()
+        answer_mixin = self.make_answer_mixin(name=name)
+        student_view_user_state = answer_mixin.student_view_user_state()
+
+        expected_user_state_data = {
+            "answer_data": {
+                "student_input": existing_model.student_input,
+                "created_on": existing_model.created_on,
+                "modified_on": existing_model.modified_on,
+            }
+        }
+        self.assertEqual(student_view_user_state, expected_user_state_data)

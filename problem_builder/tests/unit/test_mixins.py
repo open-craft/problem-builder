@@ -76,7 +76,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
     def test_no_user_state_returns_empty(self):
         block = self._build_block(XBlockWithNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
 
-        self.assertEqual(block.student_user_view_user_state(), {})
+        self.assertEqual(block.student_view_user_state(), {})
 
     def test_no_child_blocks_with_user_state(self):
         user_fields = {
@@ -91,13 +91,13 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         block_fields = self._merge_dicts(user_fields, other_fields)
         block = self._build_block(XBlockNoChildrenWithUserState, block_fields)
 
-        self.assertEqual(block.student_user_view_user_state(), user_fields)
+        self.assertEqual(block.student_view_user_state(), user_fields)
 
     def test_children_empty_no_user_state(self):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
         self.assertEqual(block.children, [])  # precondition
 
-        self.assertEqual(block.student_user_view_user_state(), {"components": []})
+        self.assertEqual(block.student_view_user_state(), {"components": []})
 
     def test_children_no_user_state(self):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
@@ -111,7 +111,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(self._runtime.get_block("child1"), no_user_state1)
         self.assertEqual(self._runtime.get_block("child2"), no_user_state2)
 
-        student_user_state = block.student_user_view_user_state()
+        student_user_state = block.student_view_user_state()
 
         expected = {"components": [{}, {}]}
         self.assertEqual(student_user_state, expected)
@@ -146,7 +146,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(self._runtime.get_block("child1"), user_state1)
         self.assertEqual(self._runtime.get_block("child2"), user_state2)
 
-        student_user_state = block.student_user_view_user_state()
+        student_user_state = block.student_view_user_state()
 
         expected = {"components": [user_fields1, user_fields2]}
         self.assertEqual(student_user_state, expected)
@@ -181,7 +181,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(block.children, nested.keys())
         self.assertEqual(self._runtime.get_block("child1"), user_state)
 
-        student_user_state = block.student_user_view_user_state()
+        student_user_state = block.student_view_user_state()
 
         expected = user_fields.copy()
         expected["components"] = [nested_user_fields]
