@@ -100,7 +100,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
         self.assertEqual(block.children, [])  # precondition
 
-        self.assertEqual(block.build_user_state_data(), {"components": []})
+        self.assertEqual(block.build_user_state_data(), {"components": {}})
 
     def test_children_no_user_state(self):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
@@ -116,7 +116,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
 
         student_user_state = block.build_user_state_data()
 
-        expected = {"components": [{}, {}]}
+        expected = {"components": {"child1": {}, "child2": {}}}
         self.assertEqual(student_user_state, expected)
 
     def test_children_with_user_state(self):
@@ -151,7 +151,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
 
         student_user_state = block.build_user_state_data()
 
-        expected = {"components": [user_fields1, user_fields2]}
+        expected = {"components": {"child1": user_fields1, "child2": user_fields2}}
         self.assertEqual(student_user_state, expected)
 
     def test_user_state_at_parent_and_children(self):
@@ -187,7 +187,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         student_user_state = block.build_user_state_data()
 
         expected = user_fields.copy()
-        expected["components"] = [nested_user_fields]
+        expected["components"] = {"child1": nested_user_fields}
         self.assertEqual(student_user_state, expected)
 
     def test_user_state_handler(self):
@@ -227,5 +227,5 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         expected["user_info_2"] = expected["user_info_2"].isoformat()
         nested_copy = nested_user_fields.copy()
         nested_copy["user_info_2"] = nested_copy["user_info_2"].isoformat()
-        expected["components"] = [nested_copy]
+        expected["components"] = {"child1": nested_copy}
         self.assertEqual(student_user_state, expected)
