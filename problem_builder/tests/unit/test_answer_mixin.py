@@ -1,6 +1,7 @@
 """
 Unit tests for AnswerMixin.
 """
+import json
 import unittest
 from collections import namedtuple
 from datetime import datetime
@@ -62,8 +63,31 @@ class TestAnswerMixin(unittest.TestCase):
         model = answer_mixin.get_model_object()
         self.assertEqual(model.course_key, course_id)
 
-    def test_student_view_user_state(self):
+    def test_build_user_state_data(self):
         name = 'test-course-key-2'
+        existing_model = Answer(
+            name=name,
+            student_id=self.anonymous_student_id,
+            course_key=self.course_id,
+            student_input="Test",
+            created_on=datetime(2017, 1, 2, 3, 4, 5),
+            modified_on=datetime(2017, 7, 8, 9, 10, 11),
+        )
+        existing_model.save()
+        answer_mixin = self.make_answer_mixin(name=name)
+        student_view_user_state = answer_mixin.build_user_state_data()
+
+        expected_user_state_data = {
+            "answer_data": {
+                "student_input": existing_model.student_input,
+                "created_on": existing_model.created_on,
+                "modified_on": existing_model.modified_on,
+            }
+        }
+        self.assertEqual(student_view_user_state, expected_user_state_data)
+
+    def test_student_view_user_state(self):
+        name = 'test-course-key-3'
         existing_model = Answer(
             name=name,
             student_id=self.anonymous_student_id,
@@ -76,11 +100,13 @@ class TestAnswerMixin(unittest.TestCase):
         answer_mixin = self.make_answer_mixin(name=name)
         student_view_user_state = answer_mixin.student_view_user_state()
 
+        parsed_student_state = json.loads(student_view_user_state.body)
+
         expected_user_state_data = {
             "answer_data": {
                 "student_input": existing_model.student_input,
-                "created_on": existing_model.created_on,
-                "modified_on": existing_model.modified_on,
+                "created_on": existing_model.created_on.isoformat(),
+                "modified_on": existing_model.modified_on.isoformat(),
             }
         }
-        self.assertEqual(student_view_user_state, expected_user_state_data)
+        self.assertEqual(parsed_student_state, expected_user_state_data)

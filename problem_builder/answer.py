@@ -115,12 +115,12 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
         if not data.name:
             add_error(u"A Question ID is required.")
 
-    def student_view_user_state(self, context=None):
+    def build_user_state_data(self, context=None):
         """
         Returns a JSON representation of the student data of this XBlock,
         retrievable from the Course Block API.
         """
-        result = super(AnswerMixin, self).student_view_user_state(context)
+        result = super(AnswerMixin, self).build_user_state_data(context)
         answer_data = self.get_model_object()
         result["answer_data"] = {
             "student_input": answer_data.student_input,

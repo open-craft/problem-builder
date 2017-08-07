@@ -1,4 +1,9 @@
+import json
+
+import webob
 from lazy import lazy
+from problem_builder.tests.unit.utils import DateTimeEncoder
+from xblock.core import XBlock
 from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
 from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
@@ -185,7 +190,7 @@ class StudentViewUserStateMixin(object):
     NESTED_BLOCKS_KEY = "components"
     INCLUDE_SCOPES = (Scope.user_state, Scope.user_info, Scope.preferences)
 
-    def student_view_user_state(self, context=None):
+    def build_user_state_data(self, context=None):
         """
         Returns a JSON representation of the student data of this XBlock,
         retrievable from the Course Block API.
@@ -196,12 +201,23 @@ class StudentViewUserStateMixin(object):
                 result[field.name] = field.read_from(self)
 
         if getattr(self, "has_children", False):
-            components = []
+            components = {}
             for child_id in self.children:
                 child = self.runtime.get_block(child_id)
-                if hasattr(child, 'student_view_user_state'):
-                    components.append(child.student_view_user_state(context))
+                if hasattr(child, 'build_user_state_data'):
+                    components[str(child_id)] = child.build_user_state_data(context)
 
             result[self.NESTED_BLOCKS_KEY] = components
 
         return result
+
+    @XBlock.handler
+    def student_view_user_state(self, context=None, suffix=''):
+        """
+        Returns a JSON representation of the student data of this XBlock,
+        retrievable from the Course Block API.
+        """
+        result = self.build_user_state_data(context)
+        json_result = json.dumps(result, cls=DateTimeEncoder)
+
+        return webob.response.Response(body=json_result, content_type='application/json')

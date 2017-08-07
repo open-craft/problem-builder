@@ -1,9 +1,12 @@
+import json
 import unittest
+from datetime import datetime
 
+import pytz
 from mock import MagicMock, Mock
 from xblock.core import XBlock
 from xblock.field_data import DictFieldData
-from xblock.fields import String, Scope, Boolean, Integer
+from xblock.fields import String, Scope, Boolean, Integer, DateTime
 
 from problem_builder.mixins import StudentViewUserStateMixin
 
@@ -22,7 +25,7 @@ class UserStateFieldsMixin(object):
     preference_2 = Integer(name="pref2", scope=Scope.preferences)
 
     user_info_1 = String(name="info1", scope=Scope.user_info)
-    user_info_2 = Integer(name="info2", scope=Scope.user_info)
+    user_info_2 = DateTime(name="info2", scope=Scope.user_info)
 
 
 class ChildrenMixin(object):
@@ -76,7 +79,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
     def test_no_user_state_returns_empty(self):
         block = self._build_block(XBlockWithNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
 
-        self.assertEqual(block.student_view_user_state(), {})
+        self.assertEqual(block.build_user_state_data(), {})
 
     def test_no_child_blocks_with_user_state(self):
         user_fields = {
@@ -85,19 +88,19 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "preference_1": "Yes",
             "preference_2": 12,
             "user_info_1": "John",
-            "user_info_2": 27
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         other_fields = {"setting": "setting", "content": "content", "user_state_summary": "Something"}
         block_fields = self._merge_dicts(user_fields, other_fields)
         block = self._build_block(XBlockNoChildrenWithUserState, block_fields)
 
-        self.assertEqual(block.student_view_user_state(), user_fields)
+        self.assertEqual(block.build_user_state_data(), user_fields)
 
     def test_children_empty_no_user_state(self):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
         self.assertEqual(block.children, [])  # precondition
 
-        self.assertEqual(block.student_view_user_state(), {"components": []})
+        self.assertEqual(block.build_user_state_data(), {"components": []})
 
     def test_children_no_user_state(self):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
@@ -111,7 +114,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(self._runtime.get_block("child1"), no_user_state1)
         self.assertEqual(self._runtime.get_block("child2"), no_user_state2)
 
-        student_user_state = block.student_view_user_state()
+        student_user_state = block.build_user_state_data()
 
         expected = {"components": [{}, {}]}
         self.assertEqual(student_user_state, expected)
@@ -126,7 +129,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "preference_1": "Yes",
             "preference_2": 12,
             "user_info_1": "John",
-            "user_info_2": 27
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         user_fields2 = {
             "answer_1": "BBBB",
@@ -134,7 +137,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "preference_1": "No",
             "preference_2": 7,
             "user_info_1": "jane",
-            "user_info_2": 19
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         user_state1 = self._build_block(XBlockNoChildrenWithUserState, self._merge_dicts(user_fields1, other_fields))
         user_state2 = self._build_block(XBlockNoChildrenWithUserState, self._merge_dicts(user_fields2, other_fields))
@@ -146,7 +149,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(self._runtime.get_block("child1"), user_state1)
         self.assertEqual(self._runtime.get_block("child2"), user_state2)
 
-        student_user_state = block.student_view_user_state()
+        student_user_state = block.build_user_state_data()
 
         expected = {"components": [user_fields1, user_fields2]}
         self.assertEqual(student_user_state, expected)
@@ -159,7 +162,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "preference_1": "IDN",
             "preference_2": 42,
             "user_info_1": "Douglas",
-            "user_info_2": 9
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         block = self._build_block(XBlockChildrenUserState, self._merge_dicts(user_fields, other_fields))
 
@@ -169,7 +172,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "preference_1": "Yes",
             "preference_2": 12,
             "user_info_1": "John",
-            "user_info_2": 27
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         user_state = self._build_block(
             XBlockNoChildrenWithUserState, self._merge_dicts(nested_user_fields, other_fields)
@@ -181,8 +184,48 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(block.children, nested.keys())
         self.assertEqual(self._runtime.get_block("child1"), user_state)
 
-        student_user_state = block.student_view_user_state()
+        student_user_state = block.build_user_state_data()
 
         expected = user_fields.copy()
         expected["components"] = [nested_user_fields]
+        self.assertEqual(student_user_state, expected)
+
+    def test_user_state_handler(self):
+        other_fields = {"setting": "setting", "content": "content", "user_state_summary": "Something"}
+        user_fields = {
+            "answer_1": "OOOO",
+            "answer_2": True,
+            "preference_1": "IDN",
+            "preference_2": 42,
+            "user_info_1": "Douglas",
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
+        }
+        block = self._build_block(XBlockChildrenUserState, self._merge_dicts(user_fields, other_fields))
+
+        nested_user_fields = {
+            "answer_1": "AAAA",
+            "answer_2": False,
+            "preference_1": "Yes",
+            "preference_2": 12,
+            "user_info_1": "John",
+            "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
+        }
+        user_state = self._build_block(
+            XBlockNoChildrenWithUserState, self._merge_dicts(nested_user_fields, other_fields)
+        )
+        nested = {"child1": user_state}
+        self._set_children(block, nested)
+
+        # preconditions
+        self.assertEqual(block.children, nested.keys())
+        self.assertEqual(self._runtime.get_block("child1"), user_state)
+
+        student_user_state_response = block.student_view_user_state()
+        student_user_state = json.loads(student_user_state_response.body)
+
+        expected = user_fields.copy()
+        expected["user_info_2"] = expected["user_info_2"].isoformat()
+        nested_copy = nested_user_fields.copy()
+        nested_copy["user_info_2"] = nested_copy["user_info_2"].isoformat()
+        expected["components"] = [nested_copy]
         self.assertEqual(student_user_state, expected)
