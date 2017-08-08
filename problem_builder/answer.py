@@ -32,7 +32,7 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
 import uuid
 
 
@@ -49,7 +49,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
+class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
@@ -114,6 +114,20 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
 
         if not data.name:
             add_error(u"A Question ID is required.")
+
+    def build_user_state_data(self, context=None):
+        """
+        Returns a JSON representation of the student data of this XBlock,
+        retrievable from the Course Block API.
+        """
+        result = super(AnswerMixin, self).build_user_state_data(context)
+        answer_data = self.get_model_object()
+        result["answer_data"] = {
+            "student_input": answer_data.student_input,
+            "created_on": answer_data.created_on,
+            "modified_on": answer_data.modified_on,
+        }
+        return result
 
 
 @XBlock.needs("i18n")

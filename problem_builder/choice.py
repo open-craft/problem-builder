@@ -29,7 +29,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 
-from problem_builder.mixins import XBlockWithTranslationServiceMixin
+from problem_builder.mixins import XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
 
 
 # Make '_' a no-op so we can scrape strings
@@ -40,7 +40,10 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class ChoiceBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, XBlock):
+class ChoiceBlock(
+    StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin,
+    XBlock
+):
     """
     Custom choice of an answer for a MCQ/MRQ
     """

@@ -24,6 +24,8 @@ import logging
 
 from xblock.fields import List, Scope, Boolean, String
 from xblock.validation import ValidationMessage
+
+from problem_builder.mixins import StudentViewUserStateMixin
 from .questionnaire import QuestionnaireAbstractBlock
 from xblockutils.resources import ResourceLoader
 
@@ -40,7 +42,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MRQBlock(QuestionnaireAbstractBlock):
+class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-response questions
     """

@@ -1,6 +1,9 @@
 """
 Helper methods for testing Problem Builder / Step Builder blocks
 """
+import json
+from datetime import datetime, date
+
 from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
 
@@ -87,3 +90,11 @@ def instantiate_block(cls, fields=None):
     block.children = children
     block.runtime.get_block = lambda child_id: children[child_id]
     return block
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, (datetime, date)):
+            return o.isoformat()
+
+        return json.JSONEncoder.default(self, o)
