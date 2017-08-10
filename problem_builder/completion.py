@@ -116,9 +116,8 @@ class CompletionBlock(
             'type': self.CATEGORY,
             'question': self.question,
             'answer': self.answer,
-            'checked': self.student_value if self.student_value is not None else False,
             'title': self.display_name_with_default,
-            'hide_header': self.show_title,
+            'hide_header': not self.show_title,
         }
 
     def get_last_result(self):

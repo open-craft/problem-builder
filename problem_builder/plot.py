@@ -358,13 +358,12 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
             'q2_label': self.q2_label,
             'q3_label': self.q3_label,
             'q4_label': self.q4_label,
-            'default_claims_json': self.default_claims_json(),
             'point_color_default': self.point_color_default,
             'plot_label': self.plot_label,
-            'average_claims_json': self.average_claims_json(),
             'point_color_average': self.point_color_average,
             'overlay_data': self.overlay_data,
             'hide_header': True,
+            'claims': self.claims,
         }
 
     def author_edit_view(self, context):
