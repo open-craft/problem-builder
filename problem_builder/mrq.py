@@ -203,5 +203,13 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
             'weight': self.weight,
             'question': self.question,
             'message': self.message,
+            'choices': [
+                {'value': choice['value'], 'content': choice['display_name']}
+                for choice in self.human_readable_choices
+            ],
             'hide_results': self.hide_results,
+            'tips': [
+                {'content': tip.content, 'for_choices': tip.values}
+                for tip in self.get_tips()
+            ],
         }
