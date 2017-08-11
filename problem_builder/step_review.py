@@ -215,9 +215,6 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
         return Fragment(html)
 
     def student_view_data(self, context=None):
-        context = context or {}
-        review_tips = context.get('score_summary', {}).get('review_tips')
-
         return {
             'type': self.CATEGORY,
         }
