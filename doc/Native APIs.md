@@ -335,6 +335,10 @@ Multiple Response Question (`pb-mrq`)
 - `question`: (string) The content of the question.
 - `message`: (string) General feedback provided when submitting.
 - `hide_results`: (boolean) `true` if results should be hidden.
+- `choices`: (array) A list of objects providing info about available
+  choices. See below for more info.
+- `tips`: (array) A list of objects providing info about tips defined for the
+  problem. See below for more info.
 
 ### `student_view_user_state`
 
