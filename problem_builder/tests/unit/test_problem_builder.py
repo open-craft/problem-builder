@@ -7,9 +7,24 @@ from random import random
 from xblock.field_data import DictFieldData
 
 from problem_builder.mcq import MCQBlock
+from problem_builder.mrq import MRQBlock
+
 from problem_builder.mentoring import MentoringBlock, MentoringMessageBlock, _default_options_config
 
 from .utils import BlockWithChildrenTestMixin
+
+
+@ddt.ddt
+class TestMRQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
+    def test_student_view_data(self):
+        """
+        Ensure that all expected fields are always returned.
+        """
+        block = MRQBlock(Mock(), DictFieldData({}), Mock())
+
+        self.assertListEqual(
+            block.student_view_data().keys(),
+            ['hide_results', 'tips', 'weight', 'title', 'question', 'message', 'type', 'id', 'choices'])
 
 
 @ddt.ddt
