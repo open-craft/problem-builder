@@ -164,7 +164,6 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
 
         return {
             'type': self.CATEGORY,
-            'score_summary': context.get('score_summary', {}),
         }
 
     embedded_student_view = student_view
@@ -216,12 +215,8 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
         return Fragment(html)
 
     def student_view_data(self, context=None):
-        context = context or {}
-        review_tips = context.get('score_summary', {}).get('review_tips')
-
         return {
             'type': self.CATEGORY,
-            'tips': review_tips
         }
 
     embedded_student_view = student_view

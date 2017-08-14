@@ -127,7 +127,6 @@ class SliderBlock(
             'id': self.name,
             'type': self.CATEGORY,
             'question': self.question,
-            'initial_value': int(self.student_value*100) if self.student_value is not None else 50,
             'min_label': self.min_label,
             'max_label': self.max_label,
             'title': self.display_name_with_default,

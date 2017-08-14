@@ -48,9 +48,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
             'show_title': False,
             'weight': 5.0,
             'max_attempts': 3,
-            'num_attempts': 2,
             'extended_feedback': True,
-            'active_step': 0,
         }
         step_builder = make_block(MentoringWithExplicitStepsBlock, step_builder_data)
 
@@ -96,10 +94,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
             'show_title': step_builder_data['show_title'],
             'weight': step_builder_data['weight'],
             'max_attempts': step_builder_data['max_attempts'],
-            'num_attempts': step_builder_data['num_attempts'],
             'extended_feedback': step_builder_data['extended_feedback'],
-            'active_step': step_builder_data['active_step'],
-            'hide_prev_answer': True,
             'components': [
                 {
                     'type': 'sb-step',
@@ -115,7 +110,6 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                     'components': [
                         {
                             'type': 'sb-review-score',
-                            'score_summary': {},
                         },
                         {
                             'type': 'sb-conditional-message',

@@ -1262,9 +1262,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'show_title': self.show_title,
             'weight': self.weight,
             'extended_feedback': self.extended_feedback,
-            'active_step': self.active_step_safe,
             'max_attempts': self.max_attempts,
-            'num_attempts': self.num_attempts,
-            'hide_prev_answer': True,
             'components': components,
         }
