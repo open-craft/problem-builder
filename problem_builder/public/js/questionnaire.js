@@ -107,7 +107,7 @@ function MCQBlock(runtime, element) {
             var checkedRadio = $('input[type=radio]:checked', element);
 
             if(checkedRadio.length) {
-                return checkedRadio.val();
+                return {"value": checkedRadio.val()};
             } else {
                 return null;
             }

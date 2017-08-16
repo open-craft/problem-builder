@@ -223,7 +223,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         The parent block is handling a student submission, including a new answer for this
         block. Update accordingly.
         """
-        self.student_input = submission[0]['value'].strip()
+        self.student_input = submission['value'].strip()
         self.save()
 
         if sub_api:
