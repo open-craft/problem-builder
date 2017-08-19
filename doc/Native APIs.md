@@ -249,8 +249,8 @@ The `answer_data` field contains these items:
 ### POST Submit Data
 
 When submitting the problem either via Problem Builder or Step Builder, the data
-entry corresponding to the Long Answer block should be an array with a single
-object containing the `"value"` property. Example: `[{"value": "Student's input"}]`.
+entry corresponding to the Long Answer block should be a single object
+containing the `"value"` property. Example: `{"value": "Student's input"}`.
 
 Multiple Choice Question (`pb-mcq`)
 -----------------------------------
@@ -298,8 +298,10 @@ Each entry in the `tips` array contains these values:
 
 ### POST Submit Data
 
-When submitting the problem the data should be equal to the string value of the
-selected choice. Example: `"blue"`.
+When submitting the problem the data should be a single object containing the
+`"value"` property which has the value of the selected choice.
+Example: `{"value": "blue"}`
+
 
 Rating Question (`pb-rating`)
 -----------------------------

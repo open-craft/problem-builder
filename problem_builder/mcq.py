@@ -125,8 +125,8 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
 
     def submit(self, submission):
         log.debug(u'Received MCQ submission: "%s"', submission)
-        result = self.calculate_results(submission)
-        self.student_choice = submission
+        result = self.calculate_results(submission['value'])
+        self.student_choice = submission['value']
         log.debug(u'MCQ submission result: %s', result)
         return result
 
