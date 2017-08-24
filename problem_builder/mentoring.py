@@ -36,8 +36,8 @@ from xblock.validation import ValidationMessage
 
 from .message import MentoringMessageBlock, get_message_label
 from .mixins import (
-    _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin
-)
+    _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin,
+    StudentViewUserStateMixin)
 from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
@@ -91,6 +91,7 @@ PARTIAL = 'partial'
 class BaseMentoringBlock(
     XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
     StudioEditableXBlockMixin, ThemableXBlockMixin, MessageParentMixin,
+    StudentViewUserStateMixin,
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -439,6 +440,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
 
         return Score(score, int(round(score * 100)), correct, incorrect, partially_correct)
 
+    @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context):
         from .questionnaire import QuestionnaireAbstractBlock  # Import here to avoid circular dependency
 
@@ -905,6 +907,31 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
         """
         return loader.load_scenarios_from_path('templates/xml')
 
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        components = []
+        for child_id in self.children:
+            block = self.runtime.get_block(child_id)
+            if hasattr(block, 'student_view_data'):
+                components.append(block.student_view_data())
+        return {
+            'max_attempts': self.max_attempts,
+            'extended_feedback': self.extended_feedback,
+            'feedback_label': self.feedback_label,
+            'components': components,
+            'messages': {
+                message_type: self.get_message_content(message_type)
+                for message_type in (
+                        'completed',
+                        'incomplete',
+                        'max_attempts_reached',
+                )
+            }
+        }
+
 
 class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin):
     """
@@ -1068,6 +1095,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     def show_extended_feedback(self):
         return self.extended_feedback and self.max_attempts_reached
 
+    @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context):
         fragment = Fragment()
         children_contents = []
@@ -1220,3 +1248,20 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
         fragment.initialize_js('ProblemBuilderContainerEdit')
         return fragment
+
+    def student_view_data(self, context=None):
+        components = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if hasattr(child, 'student_view_data'):
+                components.append(child.student_view_data(context))
+
+        return {
+            'title': self.display_name,
+            'show_title': self.show_title,
+            'weight': self.weight,
+            'extended_feedback': self.extended_feedback,
+            'max_attempts': self.max_attempts,
+            'components': components,
+        }

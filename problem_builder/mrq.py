@@ -24,6 +24,8 @@ import logging
 
 from xblock.fields import List, Scope, Boolean, String
 from xblock.validation import ValidationMessage
+
+from problem_builder.mixins import StudentViewUserStateMixin
 from .questionnaire import QuestionnaireAbstractBlock
 from xblockutils.resources import ResourceLoader
 
@@ -40,7 +42,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MRQBlock(QuestionnaireAbstractBlock):
+class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-response questions
     """
@@ -188,3 +190,26 @@ class MRQBlock(QuestionnaireAbstractBlock):
             add_error(self._(u"A choice value listed as required does not exist: {}").format(choice_name(val)))
         for val in (ignored - all_values):
             add_error(self._(u"A choice value listed as ignored does not exist: {}").format(choice_name(val)))
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'id': self.name,
+            'title': self.display_name,
+            'type': self.CATEGORY,
+            'weight': self.weight,
+            'question': self.question,
+            'message': self.message,
+            'choices': [
+                {'value': choice['value'], 'content': choice['display_name']}
+                for choice in self.human_readable_choices
+            ],
+            'hide_results': self.hide_results,
+            'tips': [
+                {'content': tip.content, 'for_choices': tip.values}
+                for tip in self.get_tips()
+            ],
+        }

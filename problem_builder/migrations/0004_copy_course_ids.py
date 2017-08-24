@@ -21,5 +21,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(code=migrations.RunPython.noop, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(code=copy_course_id_to_course_key, reverse_code=migrations.RunPython.noop),
     ]

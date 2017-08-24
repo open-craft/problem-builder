@@ -23,11 +23,6 @@
 import logging
 from lazy import lazy
 
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError
-from django.db.models import Q
-from django.utils.crypto import get_random_string
-
 from .models import Answer
 
 from xblock.core import XBlock
@@ -37,7 +32,7 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
 import uuid
 
 
@@ -54,7 +49,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
+class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
@@ -69,35 +64,6 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
         except AttributeError:
             return self.scope_ids.user_id
 
-    @staticmethod
-    def _fetch_model_object(name, student_id, course_id):
-        answer = Answer.objects.get(
-            Q(name=name),
-            Q(student_id=student_id),
-            Q(course_key=course_id) | Q(course_id=course_id)
-        )
-        if not answer.course_key:
-            answer.course_key = answer.course_id
-        return answer
-
-    @staticmethod
-    def _create_model_object(name, student_id, course_id):
-        # Try to store the course_id into the deprecated course_id field if it fits into
-        # the 50 character limit for compatibility with old code. If it does not fit,
-        # use a random temporary value until the column gets removed in next release.
-        # This should not create any issues with old code running alongside the new code,
-        # since Answer blocks don't work with old code when course_id is longer than 50 chars anyway.
-        if len(course_id) > 50:
-            # The deprecated course_id field cannot be blank. It also needs to be unique together with
-            # the name and student_id fields, so we cannot use a static placeholder value, we generate
-            # a random value instead, to make the database happy.
-            deprecated_course_id = get_random_string(24)
-        else:
-            deprecated_course_id = course_id
-        answer = Answer(student_id=student_id, name=name, course_key=course_id, course_id=deprecated_course_id)
-        answer.save()
-        return answer
-
     def get_model_object(self, name=None):
         """
         Fetches the Answer model object for the answer named `name`
@@ -110,18 +76,13 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
             raise ValueError('AnswerBlock.name field need to be set to a non-null/empty value')
 
         student_id = self._get_student_id()
-        course_id = self._get_course_id()
+        course_key = self._get_course_id()
 
-        try:
-            answer_data = self._fetch_model_object(name, student_id, course_id)
-        except Answer.DoesNotExist:
-            try:
-                # Answer object does not exist, try to create it.
-                answer_data = self._create_model_object(name, student_id, course_id)
-            except (IntegrityError, ValidationError):
-                # Integrity/validation error means the object must have been created in the meantime,
-                # so fetch the new object from the db.
-                answer_data = self._fetch_model_object(name, student_id, course_id)
+        answer_data, _ = Answer.objects.get_or_create(
+            student_id=student_id,
+            course_key=course_key,
+            name=name,
+        )
 
         return answer_data
 
@@ -153,6 +114,20 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin):
 
         if not data.name:
             add_error(u"A Question ID is required.")
+
+    def build_user_state_data(self, context=None):
+        """
+        Returns a JSON representation of the student data of this XBlock,
+        retrievable from the Course Block API.
+        """
+        result = super(AnswerMixin, self).build_user_state_data(context)
+        answer_data = self.get_model_object()
+        result["answer_data"] = {
+            "student_input": answer_data.student_input,
+            "created_on": answer_data.created_on,
+            "modified_on": answer_data.modified_on,
+        }
+        return result
 
 
 @XBlock.needs("i18n")
@@ -248,7 +223,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         The parent block is handling a student submission, including a new answer for this
         block. Update accordingly.
         """
-        self.student_input = submission[0]['value'].strip()
+        self.student_input = submission['value'].strip()
         self.save()
 
         if sub_api:
@@ -300,12 +275,18 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
             return {'data': {'name': uuid.uuid4().hex[:7]}}
         return {'metadata': {}, 'data': {}}
 
-    def student_view_data(self):
+    def student_view_data(self, context=None):
         """
         Returns a JSON representation of the student_view of this XBlock,
         retrievable from the Course Block API.
         """
-        return {'question': self.question}
+        return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'weight': self.weight,
+            'question': self.question,
+            'name': self.name,  # For backwards compatibility; same as 'id'
+        }
 
 
 @XBlock.needs("i18n")

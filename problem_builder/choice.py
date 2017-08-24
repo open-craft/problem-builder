@@ -29,7 +29,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 
-from problem_builder.mixins import XBlockWithTranslationServiceMixin
+from problem_builder.mixins import XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
 
 
 # Make '_' a no-op so we can scrape strings
@@ -40,7 +40,10 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class ChoiceBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, XBlock):
+class ChoiceBlock(
+    StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin,
+    XBlock
+):
     """
     Custom choice of an answer for a MCQ/MRQ
     """
@@ -65,6 +68,16 @@ class ChoiceBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithT
         except Exception:
             status = self._(u"Out of Context")  # Parent block should implement describe_choice_correctness()
         return self._(u"Choice ({status})").format(status=status)
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'value': self.value,
+            'content': self.content,
+        }
 
     def mentoring_view(self, context=None):
         """ Render this choice string within a mentoring block question. """

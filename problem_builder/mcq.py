@@ -27,6 +27,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
+from problem_builder.mixins import StudentViewUserStateMixin
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api, SubmittingXBlockMixin
 
@@ -44,7 +45,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
+class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-choice questions
     """
@@ -124,8 +125,8 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
 
     def submit(self, submission):
         log.debug(u'Received MCQ submission: "%s"', submission)
-        result = self.calculate_results(submission)
-        self.student_choice = submission
+        result = self.calculate_results(submission['value'])
+        self.student_choice = submission['value']
         log.debug(u'MCQ submission result: %s', result)
         return result
 
@@ -166,6 +167,27 @@ class MCQBlock(SubmittingXBlockMixin, QuestionnaireAbstractBlock):
             add_error(
                 self._(u"A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
             )
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+        return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'question': self.question,
+            'message': self.message,
+            'choices': [
+                {'value': choice['value'], 'content': choice['display_name']}
+                for choice in self.human_readable_choices
+            ],
+            'weight': self.weight,
+            'tips': [
+                {'content': tip.content, 'for_choices': tip.values}
+                for tip in self.get_tips()
+            ],
+        }
 
 
 class RatingBlock(MCQBlock):

@@ -1,10 +1,12 @@
 """
-Tests temporary AnswerMixin code that helps migrate course_id column to course_key.
+Unit tests for AnswerMixin.
 """
+import json
 import unittest
 from collections import namedtuple
+from datetime import datetime
+
 from django.utils.crypto import get_random_string
-from mock import patch
 
 from problem_builder.answer import AnswerMixin
 from problem_builder.models import Answer
@@ -29,6 +31,8 @@ class TestAnswerMixin(unittest.TestCase):
         answer_mixin = AnswerMixin()
         answer_mixin.name = name
         answer_mixin.runtime = self.FakeRuntime(course_id, student_id)
+        answer_mixin.fields = {}
+        answer_mixin.has_children = False
         return answer_mixin
 
     def test_creates_model_instance(self):
@@ -37,7 +41,6 @@ class TestAnswerMixin(unittest.TestCase):
         model = answer_mixin.get_model_object()
         self.assertEqual(model.name, name)
         self.assertEqual(model.student_id, self.anonymous_student_id)
-        self.assertEqual(model.course_id, self.course_id)
         self.assertEqual(model.course_key, self.course_id)
         self.assertEqual(Answer.objects.get(pk=model.pk), model)
 
@@ -47,28 +50,11 @@ class TestAnswerMixin(unittest.TestCase):
             name=name,
             student_id=self.anonymous_student_id,
             course_key=self.course_id,
-            course_id='ignored'
         )
         existing_model.save()
         answer_mixin = self.make_answer_mixin(name=name)
         model = answer_mixin.get_model_object()
         self.assertEqual(model, existing_model)
-
-    def test_finds_instance_by_course_id(self):
-        name = 'test-course-id'
-        existing_model = Answer(
-            name=name,
-            student_id=self.anonymous_student_id,
-            course_id=self.course_id,
-            course_key=None
-        )
-        # Temporarily patch full_clean to allow saving object with blank course_key to the database.
-        with patch.object(Answer, 'full_clean', return_value=None):
-            existing_model.save()
-        answer_mixin = self.make_answer_mixin(name=name)
-        model = answer_mixin.get_model_object()
-        self.assertEqual(model, existing_model)
-        self.assertEqual(model.course_key, self.course_id)
 
     def test_works_with_long_course_keys(self):
         course_id = 'course-v1:VeryLongOrganizationName+VeryLongCourseNumber+VeryLongCourseRun'
@@ -76,3 +62,51 @@ class TestAnswerMixin(unittest.TestCase):
         answer_mixin = self.make_answer_mixin(course_id=course_id)
         model = answer_mixin.get_model_object()
         self.assertEqual(model.course_key, course_id)
+
+    def test_build_user_state_data(self):
+        name = 'test-course-key-2'
+        existing_model = Answer(
+            name=name,
+            student_id=self.anonymous_student_id,
+            course_key=self.course_id,
+            student_input="Test",
+            created_on=datetime(2017, 1, 2, 3, 4, 5),
+            modified_on=datetime(2017, 7, 8, 9, 10, 11),
+        )
+        existing_model.save()
+        answer_mixin = self.make_answer_mixin(name=name)
+        student_view_user_state = answer_mixin.build_user_state_data()
+
+        expected_user_state_data = {
+            "answer_data": {
+                "student_input": existing_model.student_input,
+                "created_on": existing_model.created_on,
+                "modified_on": existing_model.modified_on,
+            }
+        }
+        self.assertEqual(student_view_user_state, expected_user_state_data)
+
+    def test_student_view_user_state(self):
+        name = 'test-course-key-3'
+        existing_model = Answer(
+            name=name,
+            student_id=self.anonymous_student_id,
+            course_key=self.course_id,
+            student_input="Test",
+            created_on=datetime(2017, 1, 2, 3, 4, 5),
+            modified_on=datetime(2017, 7, 8, 9, 10, 11),
+        )
+        existing_model.save()
+        answer_mixin = self.make_answer_mixin(name=name)
+        student_view_user_state = answer_mixin.student_view_user_state()
+
+        parsed_student_state = json.loads(student_view_user_state.body)
+
+        expected_user_state_data = {
+            "answer_data": {
+                "student_input": existing_model.student_input,
+                "created_on": existing_model.created_on.isoformat(),
+                "modified_on": existing_model.modified_on.isoformat(),
+            }
+        }
+        self.assertEqual(parsed_student_state, expected_user_state_data)

@@ -33,7 +33,7 @@ from xblockutils.studio_editable import (
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
-from problem_builder.mixins import EnumerableChildMixin, StepParentMixin
+from problem_builder.mixins import EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
@@ -70,7 +70,7 @@ class Correctness(object):
 @XBlock.needs('i18n')
 class MentoringStepBlock(
         StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
-        EnumerableChildMixin, StepParentMixin, XBlock
+        EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, XBlock
 ):
     """
     An XBlock for a step.
@@ -265,3 +265,24 @@ class MentoringStepBlock(
         fragment.initialize_js('MentoringStepBlock')
 
         return fragment
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course XBlock API.
+        """
+        components = []
+
+        for child_id in self.children:
+            child = self.runtime.get_block(child_id)
+            if hasattr(child, 'student_view_data'):
+                components.append(child.student_view_data(context))
+
+        return {
+            'type': self.CATEGORY,
+            'title': self.display_name_with_default,
+            'show_title': self.show_title,
+            'next_button_label': self.next_button_label,
+            'message': self.message,
+            'components': components,
+        }

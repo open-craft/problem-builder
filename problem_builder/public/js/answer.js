@@ -15,7 +15,13 @@ function AnswerBlock(runtime, element) {
         },
 
         submit: function() {
-            return $(':input', element).serializeArray();
+            var freeform_answer = $(':input', element);
+
+            if(freeform_answer.length) {
+                return {"value": freeform_answer.val()};
+            } else {
+                return null;
+            }
         },
 
         handleReview: function(result) {

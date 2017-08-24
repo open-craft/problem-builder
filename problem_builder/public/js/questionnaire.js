@@ -107,7 +107,7 @@ function MCQBlock(runtime, element) {
             var checkedRadio = $('input[type=radio]:checked', element);
 
             if(checkedRadio.length) {
-                return checkedRadio.val();
+                return {"value": checkedRadio.val()};
             } else {
                 return null;
             }
@@ -221,7 +221,9 @@ function MRQBlock(runtime, element) {
                 display_message(result.message, messageView, options.checkmark);
             }
 
-            $.each(result.choices, function(index, choice) {
+            // If user has never submitted an answer for this MRQ, `result` will be empty.
+            // So we need to fall back on an empty list for `result.choices` to avoid errors in the next step:
+            $.each(result.choices || [], function(index, choice) {
                 var choiceInputDOM = $('.choice input[value='+choice.value+']', element);
                 var choiceDOM = choiceInputDOM.closest('.choice');
                 var choiceResultDOM = $('.choice-result', choiceDOM);

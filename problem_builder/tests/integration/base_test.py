@@ -281,7 +281,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         self.wait_until_text_in(question_text, mentoring)
         question_div = None
         for xblock_div in mentoring.find_elements_by_css_selector('div.xblock-v1'):
-            header_text = xblock_div.find_elements_by_css_selector('h3.question-title')
+            header_text = xblock_div.find_elements_by_css_selector('h4.question-title')
             if header_text and question_text in header_text[0].text:
                 question_div = xblock_div
                 self.assertTrue(xblock_div.is_displayed())

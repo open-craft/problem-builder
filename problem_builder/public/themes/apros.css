@@ -3,17 +3,21 @@
     box-sizing: content-box;  /* Avoid a global reset to border-box found on Apros */
 }
 
+.mentoring .questionnaire .choice-label {
+    width: 100%
+}
+
 .themed-xblock.mentoring .choices-list .choice-selector {
     padding: 4px 3px 0 3px;
     font-size: 16px;
 }
 
-.mentoring .title h2 {
-	/* Same as h2.main in Apros */
+.mentoring .title h3 {
+	/* Same as h2.main in Apros, amended to h3 */
 	color: #66a5b5;
 }
 
-.mentoring h3 {
+.mentoring h4 {
     text-transform: uppercase;
 }
 

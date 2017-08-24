@@ -7,7 +7,7 @@ This contains a typical problem taken from a live course (content changed)
         <![CDATA[
         <mentoring enforce_dependency="false" followed_by="past_attempts">
           <html>
-            <h3>Checking your improvement frog</h3>
+            <h4>Checking your improvement frog</h4>
             <p>Now, let's make sure your frog meets the criteria for a strong column 1. Here is your frog:</p>
           </html>
           <answer name="improvement-frog" read_only="true"/>

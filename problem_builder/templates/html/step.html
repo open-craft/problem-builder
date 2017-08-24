@@ -2,13 +2,13 @@
      data-next-button-label="{{ self.next_button_label }}" {% if self.has_question %} data-has-question="true" {% endif %}>
   {% if show_title %}
   <div class="title">
-    <h3>
+    <h4>
       {% if title %}
         {{ title }}
       {% else %}
         {{ self.display_name_with_default }}
       {% endif %}
-    </h3>
+    </h4>
   </div>
   {% endif %}
 

@@ -28,7 +28,7 @@ from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.resources import ResourceLoader
 
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
 from .sub_api import sub_api, SubmittingXBlockMixin
 
 
@@ -47,7 +47,8 @@ def _(text):
 
 @XBlock.needs('i18n')
 class CompletionBlock(
-        SubmittingXBlockMixin, QuestionMixin, StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBlock
+    SubmittingXBlockMixin, QuestionMixin, StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin,
+    StudentViewUserStateMixin, XBlock
 ):
     """
     An XBlock used by students to indicate that they completed a given task.
@@ -104,6 +105,20 @@ class CompletionBlock(
 
     student_view = mentoring_view
     preview_view = mentoring_view
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course XBlock API.
+        """
+        return {
+            'id': self.name,
+            'type': self.CATEGORY,
+            'question': self.question,
+            'answer': self.answer,
+            'title': self.display_name_with_default,
+            'hide_header': not self.show_title,
+        }
 
     def get_last_result(self):
         """ Return the current/last result in the required format """

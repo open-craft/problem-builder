@@ -48,12 +48,12 @@ class TitleTest(SeleniumXBlockTest):
         self.set_scenario_xml(xml)
         pb_element = self.go_to_view()
         if expected_title is not None:
-            h2 = pb_element.find_element_by_css_selector('h2')
-            self.assertEqual(h2.text, expected_title)
+            h3 = pb_element.find_element_by_css_selector('h3')
+            self.assertEqual(h3.text, expected_title)
         else:
-            # No <h2> element should be present:
-            all_h2s = pb_element.find_elements_by_css_selector('h2')
-            self.assertEqual(len(all_h2s), 0)
+            # No <h3> element should be present:
+            all_h3s = pb_element.find_elements_by_css_selector('h3')
+            self.assertEqual(len(all_h3s), 0)
 
 
 class StepTitlesTest(SeleniumXBlockTest):
@@ -145,9 +145,9 @@ class StepTitlesTest(SeleniumXBlockTest):
                     self.set_scenario_xml(xml)
                     pb_element = self.go_to_view()
                     if expected_title:
-                        h3 = pb_element.find_element_by_css_selector('h3')
-                        self.assertEqual(h3.text, expected_title)
+                        h4 = pb_element.find_element_by_css_selector('h4')
+                        self.assertEqual(h4.text, expected_title)
                     else:
-                        # No <h3> element should be present:
-                        all_h3s = pb_element.find_elements_by_css_selector('h3')
-                        self.assertEqual(len(all_h3s), 0)
+                        # No <h4> element should be present:
+                        all_h4s = pb_element.find_elements_by_css_selector('h4')
+                        self.assertEqual(len(all_h4s), 0)
