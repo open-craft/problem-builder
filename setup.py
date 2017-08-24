@@ -21,7 +21,7 @@
 # Imports ###########################################################
 
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 # Functions #########################################################
@@ -71,13 +71,9 @@ BLOCKS = [
 
 setup(
     name='xblock-problem-builder',
-<<<<<<< HEAD
-    version='2.6.5patch1',
-=======
     version='2.7.2',
->>>>>>> master
     description='XBlock - Problem Builder',
-    packages=['problem_builder', 'problem_builder.v1', 'problem_builder.management', 'problem_builder.management.commands'],
+    packages=find_packages(),
     install_requires=[
         'XBlock',
         'xblock-utils',
