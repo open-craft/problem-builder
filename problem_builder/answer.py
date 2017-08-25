@@ -19,7 +19,6 @@
 #
 
 # Imports ###########################################################
-
 import logging
 from lazy import lazy
 
@@ -53,6 +52,11 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
+    def build_user_state_data(self, context=None):
+        result = super(AnswerMixin, self).build_user_state_data()
+        result['student_input'] = self.student_input
+        return result
+
     def _get_course_id(self):
         """ Get a course ID if available """
         return getattr(self.runtime, 'course_id', 'all')
@@ -86,12 +90,6 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
 
         return answer_data
 
-    @property
-    def student_input(self):
-        if self.name:
-            return self.get_model_object().student_input
-        return ''
-
     @XBlock.json_handler
     def answer_value(self, data, suffix=''):
         """ Current value of the answer, for refresh by client """
@@ -102,6 +100,25 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
         """ Complete HTML view of the XBlock, for refresh by client """
         frag = self.mentoring_view({})
         return {'html': frag.content}
+
+    @lazy
+    def student_input(self):
+        """
+        The student input value, or a default which may come from another block.
+        Read from a Django model, since XBlock API doesn't yet support course-scoped
+        fields or generating instructor reports across many student responses.
+        """
+        # Only attempt to locate a model object for this block when the answer has a name
+        if not self.name:
+            return ''
+
+        student_input = self.get_model_object().student_input
+
+        # Default value can be set from another answer's current value
+        if not student_input and hasattr(self, 'default_from') and self.default_from:
+            student_input = self.get_model_object(name=self.default_from).student_input
+
+        return student_input
 
     def validate_field_data(self, validation, data):
         """
@@ -114,20 +131,6 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
 
         if not data.name:
             add_error(u"A Question ID is required.")
-
-    def build_user_state_data(self, context=None):
-        """
-        Returns a JSON representation of the student data of this XBlock,
-        retrievable from the Course Block API.
-        """
-        result = super(AnswerMixin, self).build_user_state_data(context)
-        answer_data = self.get_model_object()
-        result["answer_data"] = {
-            "student_input": answer_data.student_input,
-            "created_on": answer_data.created_on,
-            "modified_on": answer_data.modified_on,
-        }
-        return result
 
 
 @XBlock.needs("i18n")
@@ -169,25 +172,6 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
     )
 
     editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from', 'display_name', 'show_title')
-
-    @lazy
-    def student_input(self):
-        """
-        The student input value, or a default which may come from another block.
-        Read from a Django model, since XBlock API doesn't yet support course-scoped
-        fields or generating instructor reports across many student responses.
-        """
-        # Only attempt to locate a model object for this block when the answer has a name
-        if not self.name:
-            return ''
-
-        student_input = self.get_model_object().student_input
-
-        # Default value can be set from another answer's current value
-        if not student_input and self.default_from:
-            student_input = self.get_model_object(name=self.default_from).student_input
-
-        return student_input
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
@@ -282,6 +266,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         """
         return {
             'id': self.name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'type': self.CATEGORY,
             'weight': self.weight,
             'question': self.question,

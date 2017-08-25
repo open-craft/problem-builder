@@ -78,11 +78,7 @@ class TestAnswerMixin(unittest.TestCase):
         student_view_user_state = answer_mixin.build_user_state_data()
 
         expected_user_state_data = {
-            "answer_data": {
-                "student_input": existing_model.student_input,
-                "created_on": existing_model.created_on,
-                "modified_on": existing_model.modified_on,
-            }
+            "student_input": existing_model.student_input,
         }
         self.assertEqual(student_view_user_state, expected_user_state_data)
 
@@ -103,10 +99,6 @@ class TestAnswerMixin(unittest.TestCase):
         parsed_student_state = json.loads(student_view_user_state.body)
 
         expected_user_state_data = {
-            "answer_data": {
-                "student_input": existing_model.student_input,
-                "created_on": existing_model.created_on.isoformat(),
-                "modified_on": existing_model.modified_on.isoformat(),
-            }
+            "student_input": existing_model.student_input,
         }
         self.assertEqual(parsed_student_state, expected_user_state_data)

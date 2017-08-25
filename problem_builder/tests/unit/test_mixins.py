@@ -93,8 +93,55 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         other_fields = {"setting": "setting", "content": "content", "user_state_summary": "Something"}
         block_fields = self._merge_dicts(user_fields, other_fields)
         block = self._build_block(XBlockNoChildrenWithUserState, block_fields)
+        block.USER_STATE_FIELDS = user_fields.keys()
 
         self.assertEqual(block.build_user_state_data(), user_fields)
+
+    def test_only_shows_whitelisted_fields(self):
+        user_fields = {
+            "answer_1": "AAAA",
+            "answer_2": False,
+        }
+        other_fields = {"setting": "setting", "content": "content", "user_state_summary": "Something"}
+        block_fields = self._merge_dicts(user_fields, other_fields)
+        block = self._build_block(XBlockNoChildrenWithUserState, block_fields)
+        block.USER_STATE_FIELDS = ['answer_1']
+
+        self.assertEqual(block.build_user_state_data(), {
+            'answer_1': 'AAAA'
+        })
+
+    def test_transform(self):
+        """
+        Transform should only affect fields listed in USER_STATE_FIELDS,
+        and should only return functions that accept one parameter.
+        """
+        block_fields = {
+            "answer_1": "AAAA",
+            "answer_2": False,
+        }
+        block = self._build_block(XBlockNoChildrenWithUserState, block_fields)
+        block.USER_STATE_FIELDS = ['answer_1']
+
+        def transforms():
+            return {
+                'answer_1': lambda value: value.replace('A', 'B'),
+                'answer_2': lambda value: True
+            }
+
+        block.transforms = transforms
+        self.assertEqual(block.build_user_state_data(), {
+            'answer_1': 'BBBB'
+        })
+
+        def bad_transforms():
+            return {
+                'answer_1': lambda: 'Fail'
+            }
+
+        block.transforms = bad_transforms
+        with self.assertRaises(TypeError):
+            block.build_user_state_data()
 
     def test_children_empty_no_user_state(self):
         block = self._build_block(XBlockChildrenNoUserState, {"scope_settings": "qwe", "scope_content": "ASD"})
@@ -131,6 +178,8 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "user_info_1": "John",
             "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
+        block.USER_STATE_FIELDS = user_fields1.keys()
+
         user_fields2 = {
             "answer_1": "BBBB",
             "answer_2": True,
@@ -151,7 +200,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
 
         student_user_state = block.build_user_state_data()
 
-        expected = {"components": {"child1": user_fields1, "child2": user_fields2}}
+        expected = {"components": {"child1": {}, "child2": {}}}
         self.assertEqual(student_user_state, expected)
 
     def test_user_state_at_parent_and_children(self):
@@ -165,6 +214,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         block = self._build_block(XBlockChildrenUserState, self._merge_dicts(user_fields, other_fields))
+        block.USER_STATE_FIELDS = user_fields.keys()
 
         nested_user_fields = {
             "answer_1": "AAAA",
@@ -187,7 +237,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         student_user_state = block.build_user_state_data()
 
         expected = user_fields.copy()
-        expected["components"] = {"child1": nested_user_fields}
+        expected["components"] = {"child1": {}}
         self.assertEqual(student_user_state, expected)
 
     def test_user_state_handler(self):
@@ -201,6 +251,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         block = self._build_block(XBlockChildrenUserState, self._merge_dicts(user_fields, other_fields))
+        block.USER_STATE_FIELDS = user_fields.keys()
 
         nested_user_fields = {
             "answer_1": "AAAA",
@@ -220,12 +271,11 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         self.assertEqual(block.children, nested.keys())
         self.assertEqual(self._runtime.get_block("child1"), user_state)
 
+        block.USER_STATE_FIELDS = ['answer_1', 'answer_2', 'preference_1', 'preference_2', 'user_info_1', 'user_info_2']
         student_user_state_response = block.student_view_user_state()
         student_user_state = json.loads(student_user_state_response.body)
 
         expected = user_fields.copy()
         expected["user_info_2"] = expected["user_info_2"].isoformat()
-        nested_copy = nested_user_fields.copy()
-        nested_copy["user_info_2"] = nested_copy["user_info_2"].isoformat()
-        expected["components"] = {"child1": nested_copy}
+        expected["components"] = {"child1": {}}
         self.assertEqual(student_user_state, expected)

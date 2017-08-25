@@ -24,7 +24,7 @@ class TestMRQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         self.assertListEqual(
             block.student_view_data().keys(),
-            ['hide_results', 'tips', 'weight', 'title', 'question', 'message', 'type', 'id', 'choices'])
+            ['hide_results', 'tips', 'block_id', 'weight', 'title', 'question', 'message', 'type', 'id', 'choices'])
 
 
 @ddt.ddt
@@ -141,13 +141,14 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         children_by_id = {child.block_id: child for child in children}
         block_data = {'children': children}
         block_data.update(shared_data)
-        block = MentoringBlock(Mock(), DictFieldData(block_data), Mock())
+        block = MentoringBlock(Mock(usage_id=1), DictFieldData(block_data), Mock(usage_id=1))
         block.runtime = Mock(
             get_block=lambda block: children_by_id[block.block_id],
             load_block_type=lambda block: Mock,
             id_reader=Mock(get_definition_id=lambda block: block, get_block_type=lambda block: block),
         )
         expected = {
+            'block_id': '1',
             'components': [
                 'child_a_json',
             ],

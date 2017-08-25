@@ -33,7 +33,8 @@ from xblockutils.studio_editable import (
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
-from problem_builder.mixins import EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin
+from problem_builder.mixins import (
+    EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, StudentViewUserStateResultsTransformerMixin)
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
@@ -69,8 +70,9 @@ class Correctness(object):
 
 @XBlock.needs('i18n')
 class MentoringStepBlock(
-        StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
-        EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, XBlock
+    StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
+    EnumerableChildMixin, StepParentMixin, StudentViewUserStateResultsTransformerMixin,
+    StudentViewUserStateMixin, XBlock,
 ):
     """
     An XBlock for a step.
@@ -78,6 +80,7 @@ class MentoringStepBlock(
     CAPTION = _(u"Step")
     STUDIO_LABEL = _(u"Mentoring Step")
     CATEGORY = 'sb-step'
+    USER_STATE_FIELDS = ['student_results']
 
     # Settings
     display_name = String(
@@ -279,6 +282,7 @@ class MentoringStepBlock(
                 components.append(child.student_view_data(context))
 
         return {
+            'block_id': unicode(self.scope_ids.usage_id),
             'type': self.CATEGORY,
             'title': self.display_name_with_default,
             'show_title': self.show_title,
