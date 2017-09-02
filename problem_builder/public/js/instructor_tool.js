@@ -251,7 +251,7 @@ function InstructorToolBlock(runtime, element) {
     }
 
     // Block types with answers we can export
-    var questionBlockTypes = ['pb-mcq', 'pb-rating', 'pb-answer'];
+    var questionBlockTypes = ['pb-mcq', 'pb-mrq', 'pb-rating', 'pb-answer'];
 
     // Fetch this course's blocks from the REST API, and add them to the
     // list of blocks in the Section/Question drop-down list.

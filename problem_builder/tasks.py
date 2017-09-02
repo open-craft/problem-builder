@@ -12,6 +12,7 @@ from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from .mcq import MCQBlock, RatingBlock
+from .mrq import MRQBlock
 from problem_builder.answer import AnswerBlock
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api
@@ -22,7 +23,7 @@ logger = get_task_logger(__name__)
 @task()
 def export_data(course_id, source_block_id_str, block_types, user_ids, match_string):
     """
-    Exports student answers to all MCQ questions to a CSV file.
+    Exports student answers to all supported questions to a CSV file.
     """
     start_timestamp = time.time()
 
@@ -34,7 +35,7 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
         raise ValueError("Could not find the specified Block ID.")
     course_key_str = unicode(course_key)
 
-    type_map = {cls.__name__: cls for cls in [MCQBlock, RatingBlock, AnswerBlock]}
+    type_map = {cls.__name__: cls for cls in [MCQBlock, MRQBlock, RatingBlock, AnswerBlock]}
 
     if not block_types:
         block_types = tuple(type_map.values())

@@ -48,6 +48,7 @@ class TestInstructorToolBlock(unittest.TestCase):
         """
         block_choices = {
             'Multiple Choice Question': 'MCQBlock',
+            'Multiple Response Question': 'MRQBlock',
             'Rating Question': 'RatingBlock',
             'Long Answer': 'AnswerBlock',
         }

@@ -135,6 +135,7 @@ class InstructorToolBlock(XBlock):
             return Fragment(u'<p>This interface can only be used by course staff.</p>')
         block_choices = {
             _('Multiple Choice Question'): 'MCQBlock',
+            _('Multiple Response Question'): 'MRQBlock',
             _('Rating Question'): 'RatingBlock',
             _('Long Answer'): 'AnswerBlock',
         }
