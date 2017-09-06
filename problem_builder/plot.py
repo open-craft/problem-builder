@@ -32,6 +32,7 @@ from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
     StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
 )
+from .mixins import StudentViewUserStateMixin
 from .sub_api import sub_api
 
 
@@ -59,7 +60,10 @@ def _normalize_id(key):
 
 @XBlock.needs('i18n')
 @XBlock.wants('user')
-class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin, XBlock):
+class PlotBlock(
+    StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin, XBlock,
+    StudentViewUserStateMixin,
+):
     """
     XBlock that displays plot that summarizes answers to scale and/or rating questions.
     """
@@ -238,6 +242,12 @@ class PlotBlock(StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin
 
     def average_claims_json(self):
         return json.dumps(self.average_claims)
+
+    def build_user_state_data(self, context=None):
+        user_state_data = super(PlotBlock, self).build_user_state_data()
+        user_state_data['default_claims'] = self.default_claims
+        user_state_data['average_claims'] = self.average_claims
+        return user_state_data
 
     @XBlock.json_handler
     def get_data(self, data, suffix):

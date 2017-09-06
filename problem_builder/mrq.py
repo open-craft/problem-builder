@@ -24,10 +24,10 @@ import logging
 
 from xblock.fields import List, Scope, Boolean, String
 from xblock.validation import ValidationMessage
+from xblockutils.resources import ResourceLoader
 
 from problem_builder.mixins import StudentViewUserStateMixin
 from .questionnaire import QuestionnaireAbstractBlock
-from xblockutils.resources import ResourceLoader
 
 
 # Globals ###########################################################
@@ -48,6 +48,7 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
     """
     CATEGORY = 'pb-mrq'
     STUDIO_LABEL = _(u"Multiple Response Question")
+    USER_STATE_FIELDS = ['student_choices', ]
 
     student_choices = List(
         # Last submissions by the student
@@ -139,14 +140,14 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
             choice_result = {
                 'value': choice.value,
                 'selected': choice_selected,
-                }
+            }
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
                 loader = ResourceLoader(__name__)
                 choice_result['completed'] = choice_completed
                 choice_result['tips'] = loader.render_template('templates/html/tip_choice_group.html', {
                     'tips_html': choice_tips_html,
-                    })
+                })
 
             results.append(choice_result)
 
@@ -198,6 +199,7 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
         """
         return {
             'id': self.name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'title': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
@@ -208,8 +210,5 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
                 for choice in self.human_readable_choices
             ],
             'hide_results': self.hide_results,
-            'tips': [
-                {'content': tip.content, 'for_choices': tip.values}
-                for tip in self.get_tips()
-            ],
+            'tips': [tip.student_view_data() for tip in self.get_tips()],
         }

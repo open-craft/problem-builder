@@ -95,6 +95,12 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
         })
         return Fragment(html)
 
+    def student_view_data(self, context=None):
+        return {
+            'content': self.content,
+            'for_choices': self.values,
+        }
+
     def student_view(self, context=None):
         """ Normal view of this XBlock, identical to mentoring_view """
         return self.mentoring_view(context)

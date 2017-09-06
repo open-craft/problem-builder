@@ -25,6 +25,7 @@ Problem Builder (`problem-builder`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `max_attempts`: (integer) Max number of allowed attempts.
 - `extended_feedback`: (boolean) `true` if extended feedback is enabled for this
   block.
@@ -101,6 +102,7 @@ Step Builder (`step-builder`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `title`: (string) The display name of the component.
 - `show_title`: (boolean) `true` if the title should be displayed.
 - `weight`: (float) The weight of the problem.
@@ -158,6 +160,7 @@ Mentoring Step (`sb-step`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"sb-step"` for Mentoring Step components.
 - `title`: (string) Step component's display name.
 - `show_title`: (boolean) `true` if the title should be displayed.
@@ -180,6 +183,7 @@ Review Step (`sb-review-step`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"sb-review-step`" for Review Step components.
 - `title`: (string) Display name of the component.
 - `components`: (array) A list of `student_view_data` output of all immediate
@@ -193,6 +197,7 @@ Conditional Message component is always child of a Review Step component.
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"sb-conditional-message"` for Conditional
   Message components.
 - `content`: (string) Content of the message. May contain HTML.
@@ -205,6 +210,7 @@ Score Summary (`sb-review-score`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"sb-review-score"` for Score Summary
   components.
 
@@ -213,6 +219,7 @@ Per-Question Feedback (`sb-review-per-question-feedback`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"sb-review-per-question-feedback"` for Score
   Summary components.
 
@@ -221,6 +228,7 @@ Long Answer (`pb-answer`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"pb-answer"` for Long Answer components.
 - `id`: (string) Unique ID (name) of the component.
 - `weight`: (float) The weight of this component.
@@ -257,6 +265,7 @@ Multiple Choice Question (`pb-mcq`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"pb-mcq"` for MCQ components.
 - `id`: (string) Unique ID (name) of the component.
 - `question`: (string) The content of the question.
@@ -294,7 +303,6 @@ Each entry in the `tips` array contains these values:
 - `weight`: (float) Child component's weight attribute.
 - `submission`: (string) The value of the choice that the user selected.
 - `message`: (string) General feedback. May contain HTML.
-- `tips`: (string) HTML representation of tips. May be `null`.
 
 ### POST Submit Data
 
@@ -308,6 +316,7 @@ Rating Question (`pb-rating`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 Identical to [MCQ questions](#multiple-choice-question-pb-mcq) except that the
 `type` field always equals `"pb-rating"`.
 
@@ -329,6 +338,7 @@ Multiple Response Question (`pb-mrq`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"pb-mrq"` for Multiple Response Question
   components.
 - `id`: (string) Unique ID (name) of the component.
@@ -341,6 +351,14 @@ Multiple Response Question (`pb-mrq`)
   choices. See below for more info.
 - `tips`: (array) A list of objects providing info about tips defined for the
   problem. See below for more info.
+
+#### `tips`
+
+Each entry in the `tips` array contains these values:
+
+- `content`: (string) The text content of the tip.
+- `for_choices`: (array) A list of string values corresponding to choices to
+  which this tip applies to.
 
 ### `student_view_user_state`
 
@@ -365,7 +383,6 @@ Each item in the `choices` array contains these fields:
 - `completed`: (boolean) Boolean indicating whether the state of the choice is
   correct.
 - `selected`: (boolean) `true` if the user selected this choice.
-- `tips`: (string) Tips formatted as a string of HTML.
 - `value`: (string) The value of the choice.
 
 ### POST Submit Data
@@ -378,6 +395,7 @@ Ranged Value Slider (`pb-slider`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"pb-slider"` for Ranged Value Slider
   components.
 - `id`: (string) Unique ID (name) of the component.
@@ -409,6 +427,7 @@ Completion (`pb-completion`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"pb-completion"` for Completion components.
 - `id`: (string) Unique ID (name) of the component.
 - `title`: (string) Display name of the problem.
@@ -440,6 +459,7 @@ Plot (`sb-plot`)
 
 ### `student_view_data`
 
+- `block_id`: (string) The XBlock's usage ID.
 - `type`: (string) Always equals `"sb-plot"` for Plot components.
 - `title`: (string) Display name of the component.
 - `q1_label`: (string) Quadrant I label.
@@ -452,3 +472,8 @@ Plot (`sb-plot`)
 - `point_color_average`: (string) Point color to use for the average overlay.
 - `overlay_data`: (string) JSON data representing points on overlays.
 - `hide_header`: (boolean) Always `true` for Plot components.
+
+### `student_view_user_state`
+
+- `average_claims`: (array) Averaged claim data
+- `default_claims`: (array) Default claim data

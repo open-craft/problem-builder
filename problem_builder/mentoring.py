@@ -37,7 +37,7 @@ from xblock.validation import ValidationMessage
 from .message import MentoringMessageBlock, get_message_label
 from .mixins import (
     _normalize_id, QuestionMixin, MessageParentMixin, StepParentMixin, XBlockWithTranslationServiceMixin,
-    StudentViewUserStateMixin)
+    StudentViewUserStateMixin, StudentViewUserStateResultsTransformerMixin)
 from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
@@ -229,7 +229,10 @@ class BaseMentoringBlock(
         return 1.0
 
 
-class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin):
+class MentoringBlock(
+    StudentViewUserStateResultsTransformerMixin,
+    BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin,
+):
     """
     An XBlock providing mentoring capabilities
 
@@ -239,6 +242,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
     ok to continue.
     """
     # Content
+    USER_STATE_FIELDS = ['completed', 'num_attempts', 'student_results']
     MENTORING_MODES = ('standard', 'assessment')
     mode = String(
         display_name=_("Mode"),
@@ -918,6 +922,7 @@ class MentoringBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, 
             if hasattr(block, 'student_view_data'):
                 components.append(block.student_view_data())
         return {
+            'block_id': unicode(self.scope_ids.usage_id),
             'max_attempts': self.max_attempts,
             'extended_feedback': self.extended_feedback,
             'feedback_label': self.feedback_label,
@@ -937,6 +942,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     """
     An XBlock providing mentoring capabilities with explicit steps
     """
+    USER_STATE_FIELDS = ['num_attempts']
+
     # Content
     extended_feedback = Boolean(
         display_name=_("Extended feedback"),
@@ -962,6 +969,11 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     )
 
     editable_fields = ('display_name', 'max_attempts', 'extended_feedback', 'weight')
+
+    def build_user_state_data(self, context=None):
+        user_state_data = super(MentoringWithExplicitStepsBlock, self).build_user_state_data()
+        user_state_data['active_step'] = self.active_step_safe
+        return user_state_data
 
     @lazy
     def question_ids(self):
@@ -1259,6 +1271,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
         return {
             'title': self.display_name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'show_title': self.show_title,
             'weight': self.weight,
             'extended_feedback': self.extended_feedback,
