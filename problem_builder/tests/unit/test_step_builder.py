@@ -11,7 +11,6 @@ from .utils import BlockWithChildrenTestMixin
 
 
 class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
-
     def test_student_view_data(self):
         blocks_by_id = {}
 
@@ -90,6 +89,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         make_block(ConditionalMessageBlock, conditional_message_data, for_parent=review_step)
 
         expected = {
+            'block_id': u'1',
             'title': step_builder_data['display_name'],
             'show_title': step_builder_data['show_title'],
             'weight': step_builder_data['weight'],
@@ -97,6 +97,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
             'extended_feedback': step_builder_data['extended_feedback'],
             'components': [
                 {
+                    'block_id': '2',
                     'type': 'sb-step',
                     'title': step_data['display_name'],
                     'show_title': step_data['show_title'],
@@ -105,13 +106,16 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                     'components': ['child_a_json'],
                 },
                 {
+                    'block_id': '3',
                     'type': 'sb-review-step',
                     'title': review_step_data['display_name'],
                     'components': [
                         {
+                            'block_id': '4',
                             'type': 'sb-review-score',
                         },
                         {
+                            'block_id': '5',
                             'type': 'sb-conditional-message',
                             'content': conditional_message_data['content'],
                             'score_condition': conditional_message_data['score_condition'],

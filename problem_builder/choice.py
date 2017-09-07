@@ -75,6 +75,7 @@ class ChoiceBlock(
         retrievable from the Course Block API.
         """
         return {
+            'block_id': unicode(self.scope_ids.usage_id),
             'value': self.value,
             'content': self.content,
         }

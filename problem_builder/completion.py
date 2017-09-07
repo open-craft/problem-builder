@@ -56,6 +56,8 @@ class CompletionBlock(
     """
     CATEGORY = 'pb-completion'
     STUDIO_LABEL = _(u'Completion')
+    USER_STATE_FIELDS = ['student_value']
+
     answerable = True
 
     question = String(
@@ -113,6 +115,7 @@ class CompletionBlock(
         """
         return {
             'id': self.name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'type': self.CATEGORY,
             'question': self.question,
             'answer': self.answer,

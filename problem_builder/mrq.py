@@ -24,9 +24,9 @@ import logging
 
 from xblock.fields import List, Scope, Boolean, String
 from xblock.validation import ValidationMessage
+from xblockutils.resources import ResourceLoader
 
 from problem_builder.mixins import StudentViewUserStateMixin
-from xblockutils.resources import ResourceLoader
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api, SubmittingXBlockMixin
 
@@ -49,6 +49,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
     """
     CATEGORY = 'pb-mrq'
     STUDIO_LABEL = _(u"Multiple Response Question")
+    USER_STATE_FIELDS = ['student_choices', ]
 
     student_choices = List(
         # Last submissions by the student
@@ -205,6 +206,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         return {
             'id': self.name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'title': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
@@ -215,8 +217,5 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
                 for choice in self.human_readable_choices
             ],
             'hide_results': self.hide_results,
-            'tips': [
-                {'content': tip.content, 'for_choices': tip.values}
-                for tip in self.get_tips()
-            ],
+            'tips': [tip.student_view_data() for tip in self.get_tips()],
         }

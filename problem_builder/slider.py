@@ -57,6 +57,8 @@ class SliderBlock(
     """
     CATEGORY = 'pb-slider'
     STUDIO_LABEL = _(u"Ranged Value Slider")
+    USER_STATE_FIELDS = ['student_value']
+
     answerable = True
 
     min_label = String(
@@ -125,6 +127,7 @@ class SliderBlock(
     def student_view_data(self, context=None):
         return {
             'id': self.name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'type': self.CATEGORY,
             'question': self.question,
             'min_label': self.min_label,

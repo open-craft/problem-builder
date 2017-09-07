@@ -185,20 +185,37 @@ class NoSettingsMixin(object):
 
 class StudentViewUserStateMixin(object):
     """
-    Mixin to provide student_view_user_state view
+    Mixin to provide student_view_user_state view.
+
+    To prevent unnecessary overloading of the build_user_state_data method,
+    you may specify `USER_STATE_FIELDS` to customise build_user_state_data
+    and student_view_user_state output.
     """
     NESTED_BLOCKS_KEY = "components"
     INCLUDE_SCOPES = (Scope.user_state, Scope.user_info, Scope.preferences)
+    USER_STATE_FIELDS = []
+
+    def transforms(self):
+        """
+        Return a dict where keys are fields to transform, and values are
+        transform functions that accept a value to to transform as the
+        only argument.
+        """
+        return {}
 
     def build_user_state_data(self, context=None):
         """
-        Returns a JSON representation of the student data of this XBlock,
+        Returns a dictionary of the student data of this XBlock,
         retrievable from the Course Block API.
         """
+
         result = {}
+        transforms = self.transforms()
         for _, field in self.fields.iteritems():
-            if field.scope in self.INCLUDE_SCOPES:
-                result[field.name] = field.read_from(self)
+            # Only insert fields if their scopes and field names match
+            if field.scope in self.INCLUDE_SCOPES and field.name in self.USER_STATE_FIELDS:
+                transformer = transforms.get(field.name, lambda value: value)
+                result[field.name] = transformer(field.read_from(self))
 
         if getattr(self, "has_children", False):
             components = {}
@@ -221,3 +238,36 @@ class StudentViewUserStateMixin(object):
         json_result = json.dumps(result, cls=DateTimeEncoder)
 
         return webob.response.Response(body=json_result, content_type='application/json')
+
+
+class StudentViewUserStateResultsTransformerMixin(object):
+    """
+    A convenient way for MentoringBlock and MentoringStepBlock to share
+    student_results transform code.
+    Needs to be used alongside StudentViewUserStateMixin.
+    """
+    def transforms(self):
+        return {
+            'student_results': self.transform_student_results
+        }
+
+    def transform_student_results(self, student_results):
+        """
+        Remove tips, since they are already in student_view_data.
+        """
+        for _name, current_student_results in student_results:
+            for choice in current_student_results.get('choices', []):
+                self.delete_key(choice, 'tips')
+            self.delete_key(current_student_results, 'tips')
+
+        return student_results
+
+    def delete_key(self, dictionary, key):
+        """
+        Safely delete `key` from `dictionary`.
+        """
+        try:
+            del dictionary[key]
+        except KeyError:
+            pass
+        return dictionary

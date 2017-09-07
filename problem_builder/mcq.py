@@ -51,6 +51,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
     """
     CATEGORY = 'pb-mcq'
     STUDIO_LABEL = _(u"Multiple Choice Question")
+    USER_STATE_FIELDS = ['num_attempts', 'student_choice']
 
     message = String(
         display_name=_("Message"),
@@ -75,7 +76,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         list_values_provider=QuestionnaireAbstractBlock.choice_values_provider,
         list_style='set',  # Underered, unique items. Affects the UI editor.
     )
-    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('message', 'correct_choices', )
+    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('message', 'correct_choices',)
 
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.correct_choices:
@@ -175,6 +176,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         return {
             'id': self.name,
+            'block_id': unicode(self.scope_ids.usage_id),
             'type': self.CATEGORY,
             'question': self.question,
             'message': self.message,
@@ -183,10 +185,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
                 for choice in self.human_readable_choices
             ],
             'weight': self.weight,
-            'tips': [
-                {'content': tip.content, 'for_choices': tip.values}
-                for tip in self.get_tips()
-            ],
+            'tips': [tip.student_view_data() for tip in self.get_tips()],
         }
 
 
@@ -229,7 +228,7 @@ class RatingBlock(MCQBlock):
         display_names = ["1 - {}".format(self.low), "2", "3", "4", "5 - {}".format(self.high)]
         return [
             {"display_name": dn, "value": val} for val, dn in zip(self.FIXED_VALUES, display_names)
-            ] + super(RatingBlock, self).human_readable_choices
+        ] + super(RatingBlock, self).human_readable_choices
 
     def get_author_edit_view_fragment(self, context):
         """
