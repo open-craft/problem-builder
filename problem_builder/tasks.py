@@ -6,7 +6,8 @@ import time
 from celery.task import task
 from celery.utils.log import get_task_logger
 from lms.djangoapps.instructor_task.models import ReportStore
-from opaque_keys.edx.keys import CourseKey
+from opaque_keys import InvalidKeyError
+from opaque_keys.edx.keys import CourseKey, UsageKey
 from student.models import user_by_anonymous_id
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
@@ -30,11 +31,12 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
     logger.debug("Beginning data export")
     try:
         course_key = CourseKey.from_string(course_id)
-        src_block = modulestore().get_items(course_key, qualifiers={'name': source_block_id_str}, depth=0)[0]
-    except IndexError:
+        usage_key = UsageKey.from_string(source_block_id_str)
+    except InvalidKeyError:
         raise ValueError("Could not find the specified Block ID.")
-    course_key_str = unicode(course_key)
 
+    src_block = modulestore().get_item(usage_key)
+    course_key_str = unicode(course_key)
     type_map = {cls.__name__: cls for cls in [MCQBlock, MRQBlock, RatingBlock, AnswerBlock]}
 
     if not block_types:
