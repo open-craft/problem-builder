@@ -288,7 +288,7 @@ function InstructorToolBlock(runtime, element) {
         // Returns the <option> element so that it can be enabled later,
         // if it's found to have a descendant that is enabled.
         var appendBlock = function(block) {
-            var blockId = block.id.split('+block@').pop(),
+            var blockId = block.id,
                 padding = Array(2*block.depth).join('&nbsp;'),
                 disabled = (block.enabled ? undefined : 'disabled'),
                 labelAttr,

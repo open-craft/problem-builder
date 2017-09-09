@@ -155,6 +155,9 @@ Example URL:
 POST https://<lms_server_url>/courses/<course_id>/xblock/<xblock_id>/handler/try_again
 ```
 
+To call this method you must send a valid JSON body, so put `{}` as the body
+of the POST request.
+
 Mentoring Step (`sb-step`)
 --------------------------
 
