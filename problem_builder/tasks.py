@@ -13,6 +13,7 @@ from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
 from .mcq import MCQBlock, RatingBlock
+from .mrq import MRQBlock
 from problem_builder.answer import AnswerBlock
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api
@@ -23,7 +24,7 @@ logger = get_task_logger(__name__)
 @task()
 def export_data(course_id, source_block_id_str, block_types, user_ids, match_string):
     """
-    Exports student answers to all MCQ questions to a CSV file.
+    Exports student answers to all supported questions to a CSV file.
     """
     start_timestamp = time.time()
 
@@ -36,7 +37,7 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
 
     src_block = modulestore().get_item(usage_key)
     course_key_str = unicode(course_key)
-    type_map = {cls.__name__: cls for cls in [MCQBlock, RatingBlock, AnswerBlock]}
+    type_map = {cls.__name__: cls for cls in [MCQBlock, MRQBlock, RatingBlock, AnswerBlock]}
 
     if not block_types:
         block_types = tuple(type_map.values())
@@ -62,7 +63,9 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
 
     # Define the header row of our CSV:
     rows = []
-    rows.append(["Section", "Subsection", "Unit", "Type", "Question", "Answer", "Username"])
+    rows.append(
+        ["Section", "Subsection", "Unit", "Type", "Question", "Answer", "Username", "User ID", "User E-mail"]
+    )
 
     # Collect results for each block in blocks_to_include
     for block in blocks_to_include:
@@ -110,17 +113,27 @@ def _extract_data(course_key_str, block, user_id, match_string):
     # - Get all of the most recent student submissions for this block:
     submissions = _get_submissions(course_key_str, block, user_id)
 
-    # - For each submission, look up student's username and answer:
+    # - For each submission, look up student's username, email and answer:
     answer_cache = {}
     for submission in submissions:
-        username = _get_username(submission, user_id)
+        username, _user_id, user_email = _get_user_info(submission, user_id)
         answer = _get_answer(block, submission, answer_cache)
 
         # Short-circuit if answer does not match search criteria
         if not match_string.lower() in answer.lower():
             continue
 
-        rows.append([section_name, subsection_name, unit_name, block_type, block_question, answer, username])
+        rows.append([
+            section_name,
+            subsection_name,
+            unit_name,
+            block_type,
+            block_question,
+            answer,
+            username,
+            _user_id,
+            user_email
+        ])
 
     return rows
 
@@ -177,19 +190,19 @@ def _get_submissions(course_key_str, block, user_id):
         return sub_api.get_submissions(student_dict, limit=1)
 
 
-def _get_username(submission, user_id):
+def _get_user_info(submission, user_id):
     """
-    Return username of student who provided `submission`.
+    Return a (username, user id, user email) tuple for the student who provided `submission`.
 
-    If the anonymous id of the submission can't be resolved into a username, the anonymous
-    id is returned.
+    If the anonymous ID of the submission can't be resolved into a user,
+    (student ID, 'N/A', 'N/A') is returned
     """
     # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
     student_id = submission.get('student_id', user_id)
     user = user_by_anonymous_id(student_id)
     if user is None:
-        return student_id
-    return user.username
+        return (student_id, 'N/A', 'N/A')
+    return (user.username, user.id, user.email)
 
 
 def _get_answer(block, submission, answer_cache):

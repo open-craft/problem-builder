@@ -28,6 +28,7 @@ from xblockutils.resources import ResourceLoader
 
 from problem_builder.mixins import StudentViewUserStateMixin
 from .questionnaire import QuestionnaireAbstractBlock
+from .sub_api import sub_api, SubmittingXBlockMixin
 
 
 # Globals ###########################################################
@@ -42,7 +43,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
+class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock):
     """
     An XBlock used to ask multiple-response questions
     """
@@ -140,6 +141,7 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
             choice_result = {
                 'value': choice.value,
                 'selected': choice_selected,
+                'content': choice.content
             }
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
@@ -152,6 +154,11 @@ class MRQBlock(StudentViewUserStateMixin, QuestionnaireAbstractBlock):
             results.append(choice_result)
 
         status = 'incorrect' if score <= 0 else 'correct' if score >= len(results) else 'partial'
+
+        if sub_api:
+            # Send the answer as a concatenated list to the submissions API
+            answer = [choice['content'] for choice in results if choice['selected']]
+            sub_api.create_submission(self.student_item_key, ', '.join(answer))
 
         return {
             'submissions': submissions,
