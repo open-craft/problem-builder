@@ -22,9 +22,13 @@ class TestMRQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         """
         block = MRQBlock(Mock(), DictFieldData({}), Mock())
 
-        self.assertListEqual(
+        self.assertItemsEqual(
             block.student_view_data().keys(),
-            ['hide_results', 'tips', 'block_id', 'weight', 'title', 'question', 'message', 'type', 'id', 'choices'])
+            [
+                'hide_results', 'tips', 'block_id', 'display_name',
+                'weight', 'title', 'question', 'message', 'type', 'id', 'choices'
+            ]
+        )
 
 
 @ddt.ddt
@@ -139,7 +143,8 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         }
         children = get_mock_components()
         children_by_id = {child.block_id: child for child in children}
-        block_data = {'children': children}
+        display_name = "I'm problem builder"
+        block_data = {'display_name': display_name, 'children': children}
         block_data.update(shared_data)
         block = MentoringBlock(Mock(usage_id=1), DictFieldData(block_data), Mock(usage_id=1))
         block.runtime = Mock(
@@ -149,6 +154,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         )
         expected = {
             'block_id': '1',
+            'display_name': display_name,
             'components': [
                 'child_a_json',
             ],

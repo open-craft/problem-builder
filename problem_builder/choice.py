@@ -77,7 +77,7 @@ class ChoiceBlock(
         # display_name_with_default gives out correctness - not adding it here
         return {
             'block_id': unicode(self.scope_ids.usage_id),
-            'display_name': self._(u"Choice ({content})").format(content=self.content)
+            'display_name': self._(u"Choice ({content})").format(content=self.content),
             'value': self.value,
             'content': self.content,
         }
