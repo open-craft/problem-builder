@@ -267,6 +267,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         return {
             'id': self.name,
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
             'question': self.question,

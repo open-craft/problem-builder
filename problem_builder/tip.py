@@ -97,6 +97,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
 
     def student_view_data(self, context=None):
         return {
+            'display_name': self.display_name_with_default,
             'content': self.content,
             'for_choices': self.values,
         }

@@ -923,6 +923,7 @@ class MentoringBlock(
                 components.append(block.student_view_data())
         return {
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name,
             'max_attempts': self.max_attempts,
             'extended_feedback': self.extended_feedback,
             'feedback_label': self.feedback_label,
@@ -1272,6 +1273,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         return {
             'title': self.display_name,
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name,
             'show_title': self.show_title,
             'weight': self.weight,
             'extended_feedback': self.extended_feedback,

@@ -362,6 +362,7 @@ class PlotBlock(
         retrievable from the Course XBlock API.
         """
         return {
+            'display_name': self.display_name,
             'type': self.CATEGORY,
             'title': self.display_name,
             'q1_label': self.q1_label,
