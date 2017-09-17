@@ -26,6 +26,7 @@ Problem Builder (`problem-builder`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `max_attempts`: (integer) Max number of allowed attempts.
 - `extended_feedback`: (boolean) `true` if extended feedback is enabled for this
   block.
@@ -103,6 +104,7 @@ Step Builder (`step-builder`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `title`: (string) The display name of the component.
 - `show_title`: (boolean) `true` if the title should be displayed.
 - `weight`: (float) The weight of the problem.
@@ -164,6 +166,7 @@ Mentoring Step (`sb-step`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"sb-step"` for Mentoring Step components.
 - `title`: (string) Step component's display name.
 - `show_title`: (boolean) `true` if the title should be displayed.
@@ -187,6 +190,7 @@ Review Step (`sb-review-step`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"sb-review-step`" for Review Step components.
 - `title`: (string) Display name of the component.
 - `components`: (array) A list of `student_view_data` output of all immediate
@@ -201,6 +205,7 @@ Conditional Message component is always child of a Review Step component.
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"sb-conditional-message"` for Conditional
   Message components.
 - `content`: (string) Content of the message. May contain HTML.
@@ -214,6 +219,7 @@ Score Summary (`sb-review-score`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"sb-review-score"` for Score Summary
   components.
 
@@ -223,6 +229,7 @@ Per-Question Feedback (`sb-review-per-question-feedback`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"sb-review-per-question-feedback"` for Score
   Summary components.
 
@@ -232,6 +239,7 @@ Long Answer (`pb-answer`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"pb-answer"` for Long Answer components.
 - `id`: (string) Unique ID (name) of the component.
 - `weight`: (float) The weight of this component.
@@ -269,6 +277,7 @@ Multiple Choice Question (`pb-mcq`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"pb-mcq"` for MCQ components.
 - `id`: (string) Unique ID (name) of the component.
 - `question`: (string) The content of the question.
@@ -320,6 +329,7 @@ Rating Question (`pb-rating`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 Identical to [MCQ questions](#multiple-choice-question-pb-mcq) except that the
 `type` field always equals `"pb-rating"`.
 
@@ -342,6 +352,7 @@ Multiple Response Question (`pb-mrq`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"pb-mrq"` for Multiple Response Question
   components.
 - `id`: (string) Unique ID (name) of the component.
@@ -399,6 +410,7 @@ Ranged Value Slider (`pb-slider`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"pb-slider"` for Ranged Value Slider
   components.
 - `id`: (string) Unique ID (name) of the component.
@@ -431,6 +443,7 @@ Completion (`pb-completion`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"pb-completion"` for Completion components.
 - `id`: (string) Unique ID (name) of the component.
 - `title`: (string) Display name of the problem.
@@ -463,6 +476,7 @@ Plot (`sb-plot`)
 ### `student_view_data`
 
 - `block_id`: (string) The XBlock's usage ID.
+- `display_name`: (string) The XBlock's display name.
 - `type`: (string) Always equals `"sb-plot"` for Plot components.
 - `title`: (string) Display name of the component.
 - `q1_label`: (string) Quadrant I label.

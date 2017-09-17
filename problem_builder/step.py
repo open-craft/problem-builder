@@ -283,6 +283,7 @@ class MentoringStepBlock(
 
         return {
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'title': self.display_name_with_default,
             'show_title': self.show_title,

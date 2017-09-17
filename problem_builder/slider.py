@@ -128,6 +128,7 @@ class SliderBlock(
         return {
             'id': self.name,
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.question,
             'min_label': self.min_label,

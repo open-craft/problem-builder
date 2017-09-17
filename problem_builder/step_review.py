@@ -112,6 +112,7 @@ class ConditionalMessageBlock(
     def student_view_data(self, context=None):
         return {
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'content': self.content,
             'score_condition': self.score_condition,
@@ -163,6 +164,7 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
     def student_view_data(self, context=None):
         return {
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
         }
 
@@ -217,6 +219,7 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
     def student_view_data(self, context=None):
         return {
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
         }
 
@@ -314,6 +317,7 @@ class ReviewStepBlock(
 
         return {
             'block_id': unicode(self.scope_ids.usage_id),
+            'display_name': self.display_name,
             'type': self.CATEGORY,
             'title': self.display_name,
             'components': components,

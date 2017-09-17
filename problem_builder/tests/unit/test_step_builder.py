@@ -14,9 +14,14 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
     def test_student_view_data(self):
         blocks_by_id = {}
 
+        services_mocks = {
+            "i18n": Mock(ugettext=lambda string: string)
+        }
+
         mock_runtime = Mock(
             get_block=lambda block_id: blocks_by_id[block_id],
             load_block_type=lambda block: block.__class__,
+            service=lambda _, service_id: services_mocks.get(service_id),
             id_reader=Mock(
                 get_definition_id=lambda block_id: block_id,
                 get_block_type=lambda block_id: blocks_by_id[block_id],
@@ -90,6 +95,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         expected = {
             'block_id': u'1',
+            'display_name': step_builder_data['display_name'],
             'title': step_builder_data['display_name'],
             'show_title': step_builder_data['show_title'],
             'weight': step_builder_data['weight'],
@@ -99,6 +105,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                 {
                     'block_id': '2',
                     'type': 'sb-step',
+                    'display_name': step_data['display_name'],
                     'title': step_data['display_name'],
                     'show_title': step_data['show_title'],
                     'next_button_label': step_data['next_button_label'],
@@ -108,14 +115,17 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                 {
                     'block_id': '3',
                     'type': 'sb-review-step',
+                    'display_name': review_step_data['display_name'],
                     'title': review_step_data['display_name'],
                     'components': [
                         {
                             'block_id': '4',
+                            'display_name': "Score Summary",
                             'type': 'sb-review-score',
                         },
                         {
                             'block_id': '5',
+                            'display_name': "Conditional Message",
                             'type': 'sb-conditional-message',
                             'content': conditional_message_data['content'],
                             'score_condition': conditional_message_data['score_condition'],
