@@ -12,12 +12,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='answer',
-            name='course_id',
-        ),
         migrations.AlterUniqueTogether(
             name='answer',
             unique_together=set([('student_id', 'course_key', 'name')]),
+        ),
+        migrations.RemoveField(
+            model_name='answer',
+            name='course_id',
         ),
     ]
