@@ -10,3 +10,4 @@
 .idea/*
 dump.rdb
 problem_builder.tests.*
+.tox/
