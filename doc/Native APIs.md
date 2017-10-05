@@ -124,6 +124,22 @@ contains these additional fields:
 
 - `active_step`: (integer) The index of the step which is currently
   active. Starts at zero.
+- `score_summary`: (object) Contains the user's score information for their completed attempts.
+  If no attempts have been completed yet, then this object will be empty (`{}`).
+  If one or more attempts have been made, then this object will contain:
+    - `correct`: (array) list of questions that were answered correctly.
+    - `correct_answers`: (integer) Number of questions answered correctly.
+    - `incorrect`: (array) list of questions that were answered incorrectly.
+    - `incorrect_answers`: (integer) Number of questions answered incorrectly.
+    - `partial`: (array) list of questions that were answered partially correctly.
+    - `partially_correct_answers`: (integer) Number of questions answered partially correctly.
+    - `review_tips`: (array) List of review tips for each question answered incorrectly, where provided.
+    - `score`: (integer) Total points earned for the problems in the step builder, weighted for each step.
+    - `complete`: (boolean) True if all problems were answered correctly.
+    - `max_attempts_reached`: (boolean) True if the maximum number of attempts has been reached.
+    - `show_extended_review`: (boolean) True if extended feedback is configured, and the maximum
+      number of attempts has been reached.
+
 
 ### Custom Handlers
 
