@@ -206,7 +206,7 @@ class StudentViewUserStateMixin(object):
     def build_user_state_data(self, context=None):
         """
         Returns a dictionary of the student data of this XBlock,
-        retrievable from the Course Block API.
+        retrievable from the student_view_user_state XBlock handler.
         """
 
         result = {}
@@ -231,8 +231,7 @@ class StudentViewUserStateMixin(object):
     @XBlock.handler
     def student_view_user_state(self, context=None, suffix=''):
         """
-        Returns a JSON representation of the student data of this XBlock,
-        retrievable from the Course Block API.
+        Returns a JSON representation of the student data of this XBlock.
         """
         result = self.build_user_state_data(context)
         json_result = json.dumps(result, cls=DateTimeEncoder)

@@ -974,6 +974,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     def build_user_state_data(self, context=None):
         user_state_data = super(MentoringWithExplicitStepsBlock, self).build_user_state_data()
         user_state_data['active_step'] = self.active_step_safe
+        user_state_data['score_summary'] = self.get_score_summary()
         return user_state_data
 
     @lazy
