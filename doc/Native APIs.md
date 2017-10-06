@@ -362,6 +362,50 @@ Identical to [MCQ questions](#multiple-choice-question-pb-mcq).
 When submitting the problem the data should be equal to the string value of the
 selected choice. Example: `"3"`.
 
+
+Swipeable Binary Response (`pb-swipe`)
+--------------------------------------
+
+### `student_view_data`
+- `id`: (string) The XBlock's ID
+- `block_id`: (string) The XBlock's usage ID
+- `display_name`: (string) The XBlock's display name
+- `type`: (string): The XBlock's identifier, "pb-swipe"
+- `question`: (string) The question contents
+- `message`: (string) Feedback provided when submitting
+- `img_url`: (string) URL to an associated image
+- `weight`: (float) Overall value of the question
+- `choices`: (array) A list of objects providing info about available
+  choices. See below for more info.
+- `tips`: (array) A list of objects providing info about tips defined for the
+  problem. See below for more info.
+
+#### `tips`
+
+Each entry in the `tips` array contains these values:
+
+- `content`: (string) The text content of the tip.
+- `for_choices`: (array) A list of string values corresponding to choices to
+  which this tip applies to.
+
+#### `choices`
+
+Each item in the `choices` array contains these fields:
+
+- `value`: (string) The value of the choice.
+- `content`: (string) The description of the choice
+
+### `student_view_user_state`
+
+- `student_choice`: (string) The value of the last submitted choice.
+
+### POST Submit Data
+
+When submitting the problem the data should be a single object containing the
+`"value"` property which has the value of the selected choice.
+Example: `{"value": "blue"}`
+
+
 Multiple Response Question (`pb-mrq`)
 -------------------------------------
 

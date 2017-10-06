@@ -50,6 +50,7 @@ from xblockutils.studio_editable import (
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
+from problem_builder.swipe import SwipeBlock
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
@@ -358,6 +359,14 @@ class MentoringBlock(
             additional_blocks.append(NestedXBlockSpec(
                 ImageModal, category='imagemodal', label=_(u"Image Modal")
             ))
+        except ImportError:
+            pass
+
+        try:
+            from xblock_django.models import XBlockConfiguration
+            opt = XBlockConfiguration.objects.filter(name="pb-swipe")
+            if opt.count() and opt.first().enabled:
+                additional_blocks.append(SwipeBlock)
         except ImportError:
             pass
 
