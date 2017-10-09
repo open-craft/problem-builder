@@ -176,6 +176,10 @@ function RatingBlock(runtime, element) {
     return MCQBlock(runtime, element);
 }
 
+function SwipeBlock(runtime, element) {
+    return MCQBlock(runtime, element);
+}
+
 function MRQBlock(runtime, element) {
     return {
         mode: null,

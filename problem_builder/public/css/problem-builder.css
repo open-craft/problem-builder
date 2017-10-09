@@ -260,3 +260,7 @@
 .mentoring .copyright a {
     color: #69C0E8;
 }
+
+.swipe-img {
+    max-width: 100%;
+}

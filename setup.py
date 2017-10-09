@@ -56,6 +56,7 @@ BLOCKS = [
     'pb-answer = problem_builder.answer:AnswerBlock',
     'pb-answer-recap = problem_builder.answer:AnswerRecapBlock',
     'pb-mcq = problem_builder.mcq:MCQBlock',
+    'pb-swipe = problem_builder.swipe:SwipeBlock',
     'pb-rating = problem_builder.mcq:RatingBlock',
     'pb-mrq = problem_builder.mrq:MRQBlock',
     'pb-slider = problem_builder.slider:SliderBlock',
@@ -71,7 +72,7 @@ BLOCKS = [
 
 setup(
     name='xblock-problem-builder',
-    version='2.7.8',
+    version='2.7.9',
     description='XBlock - Problem Builder',
     packages=find_packages(),
     install_requires=[
