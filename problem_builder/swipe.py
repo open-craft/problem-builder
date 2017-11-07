@@ -19,18 +19,20 @@
 #
 
 # Imports ###########################################################
+
 import logging
 
-from xblock.fields import Scope, String
-from xblock.validation import ValidationMessage
+from xblock.core import XBlock
+from xblock.fields import Boolean, Scope, String
+from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 
-from .mixins import StudentViewUserStateMixin
-from .questionnaire import QuestionnaireAbstractBlock
-from .sub_api import SubmittingXBlockMixin
+from .mixins import QuestionMixin, StudentViewUserStateMixin
 
 
 # Globals ###########################################################
+
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
@@ -41,53 +43,51 @@ def _(text):
 
 
 # Classes ###########################################################
-class SwipeBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock):
+
+@XBlock.needs("i18n")
+class SwipeBlock(
+    QuestionMixin, StudioEditableXBlockMixin, StudentViewUserStateMixin, XBlockWithPreviewMixin, XBlock,
+):
     """
     An XBlock used to ask binary-choice questions with a swiping interface
     """
     CATEGORY = 'pb-swipe'
     STUDIO_LABEL = _(u"Swipeable Binary Choice Question")
-    USER_STATE_FIELDS = ['num_attempts', 'student_choice']
+    USER_STATE_FIELDS = ['student_choice']
 
-    message = String(
-        display_name=_("Message"),
-        help=_(
-            "General feedback provided when submitting. "
-            "(This is not shown if there is a more specific feedback tip for the choice selected by the learner.)"
-        ),
+    text = String(
+        display_name=_("Text"),
+        help=_("Text to display on this card. The student must determine if this statement is true or false."),
         scope=Scope.content,
-        default=""
-    )
-
-    student_choice = String(
-        # {Last input submitted by the student
         default="",
-        scope=Scope.user_state,
+        multiline_editor=True,
     )
 
-    correct_choice = String(
-        display_name=_("Correct Choice"),
-        help=_("Specify the value that students may select for this question to be considered correct."),
-        scope=Scope.content,
-        values_provider=QuestionnaireAbstractBlock.choice_values_provider,
-    )
     img_url = String(
         display_name=_("Image"),
-        help=_(
-            "Specify the URL of an image associated with this question."
-        ),
+        help=_("Specify the URL of an image associated with this question."),
         scope=Scope.content,
         default=""
     )
-    editable_fields = QuestionnaireAbstractBlock.editable_fields + ('message', 'correct_choice', 'img_url',)
+
+    correct = Boolean(
+        display_name=_("Correct Choice"),
+        help=_("Specifies whether the card is correct."),
+        scope=Scope.content,
+    )
+
+    student_choice = Boolean(
+        scope=Scope.user_state,
+        help=_("Last input submitted by the student.")
+    )
+
+    editable_fields = ('display_name', 'text', 'img_url', 'correct')
 
     def calculate_results(self, submission):
-        correct = self.correct_choice == submission
+        correct = submission == self.correct
         return {
             'submission': submission,
-            'message': self.message_formatted,
             'status': 'correct' if correct else 'incorrect',
-            'weight': self.weight,
             'score': 1 if correct else 0,
         }
 
@@ -99,32 +99,11 @@ class SwipeBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, Questionnaire
 
     def submit(self, submission):
         log.debug(u'Received Swipe submission: "%s"', submission)
-        result = self.calculate_results(submission['value'])
+        # We expect to receive a boolean indicating the swipe the student made (left -> false, right -> true)
         self.student_choice = submission['value']
+        result = self.calculate_results(self.student_choice)
         log.debug(u'Swipe submission result: %s', result)
         return result
-
-    def validate_field_data(self, validation, data):
-        """
-        Validate this block's field data.
-        """
-        super(SwipeBlock, self).validate_field_data(validation, data)
-
-        def add_error(msg):
-            validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
-
-        if len(self.all_choice_values) == 0:
-            # Let's not set an error until at least one choice is added
-            return
-
-        if len(self.all_choice_values) != 2:
-            add_error(
-                self._(u"You must have exactly two choices.")
-            )
-        if not data.correct_choice:
-            add_error(
-                self._(u"You must indicate the correct answer, or the student will always get this question wrong.")
-            )
 
     def student_view_data(self, context=None):
         """
@@ -136,15 +115,9 @@ class SwipeBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, Questionnaire
             'block_id': unicode(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
-            'question': self.question,
-            'message': self.message,
+            'text': self.text,
             'img_url': self.expand_static_url(self.img_url),
-            'choices': [
-                {'value': choice['value'], 'content': choice['display_name']}
-                for choice in self.human_readable_choices
-            ],
-            'weight': self.weight,
-            'tips': [tip.student_view_data() for tip in self.get_tips()],
+            'correct': self.correct,
         }
 
     def expand_static_url(self, url):
@@ -166,6 +139,18 @@ class SwipeBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, Questionnaire
                 pass
         return url
 
-    @property
-    def expanded_img_url(self):
-        return self.expand_static_url(self.img_url)
+    def mentoring_view(self, context=None):
+        """ Render the swipe image, text & whether it's correct within a mentoring block question. """
+        return Fragment(
+            (
+                u'<img src="{img_url}" style="max-width: 100%;" />'
+                u'<p class="swipe-text">"{text}"</p>'
+            ).format(
+                img_url=self.expand_static_url(self.img_url),
+                text=self.text,
+            )
+        )
+
+    def student_view(self, context=None):
+        """ Normal view of this XBlock, identical to mentoring_view """
+        return self.mentoring_view(context)
