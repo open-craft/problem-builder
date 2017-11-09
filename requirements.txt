@@ -1,4 +1,3 @@
-tox
 ddt
 mock
 unicodecsv==0.9.4

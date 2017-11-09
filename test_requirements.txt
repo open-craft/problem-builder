@@ -1,3 +1,4 @@
+tox
 selenium==2.47.3
 fs<2
 xblock>0.5.0
