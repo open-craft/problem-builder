@@ -364,11 +364,22 @@ function MentoringWithStepsBlock(runtime, element) {
         });
     }
 
+    function buildInteractionData() {
+        var attemptsData = attemptsDOM.data();
+
+        return {
+            "attempts_count": attemptsData.num_used,
+            "attempts_max": attemptsData.max_attempts || "unlimited",
+            "score": reviewStepDOM.find(".grade-result").data('score')
+        }
+    }
+
     function showGrade() {
         // Tell supporting runtimes to enable navigation between units;
         // user is currently not in the middle of an attempt
         // so it makes sense for them to be able to leave the current unit by clicking arrow buttons
         notify('navigation', {state: 'unlock'});
+        notify("xblock.interaction", buildInteractionData());
 
         cleanAll();
         showReviewStep();
