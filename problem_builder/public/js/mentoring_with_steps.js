@@ -200,6 +200,7 @@ function MentoringWithStepsBlock(runtime, element) {
             // Reinstate default event handlers
             nextDOM.off('click');
             nextDOM.on('click', updateDisplay);
+            reviewButtonDOM.off('click');
             reviewButtonDOM.on('click', showGrade);
 
             var step = getActiveStep();
@@ -368,7 +369,7 @@ function MentoringWithStepsBlock(runtime, element) {
         var attemptsData = attemptsDOM.data();
 
         return {
-            "attempts_count": attemptsData.num_used,
+            "attempts_count": attemptsData.num_attempts,
             "attempts_max": attemptsData.max_attempts || "unlimited",
             "score": reviewStepDOM.find(".grade-result").data('score')
         }
@@ -489,6 +490,7 @@ function MentoringWithStepsBlock(runtime, element) {
         }
 
         reviewButtonDOM = $(element).find('.submit .input-review');
+        reviewButtonDOM.off('click');
         reviewButtonDOM.on('click', showGrade);
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
@@ -498,6 +500,7 @@ function MentoringWithStepsBlock(runtime, element) {
         attemptsDOM = $('.attempts', element);
 
         reviewLinkDOM = $(element).find('.review-link');
+        reviewLinkDOM.off('click');
         reviewLinkDOM.on('click', showGrade);
 
         // Add click handler that takes care of links to steps on the extended review:
