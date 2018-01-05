@@ -380,6 +380,10 @@ function MentoringWithStepsBlock(runtime, element) {
         // user is currently not in the middle of an attempt
         // so it makes sense for them to be able to leave the current unit by clicking arrow buttons
         notify('navigation', {state: 'unlock'});
+        // Tell XBlock runtime that an interaction with this XBlock happened, submitting
+        // current and max attempts and current score. Runtime is free to react to this event as necessary.
+        // This event is not used in this XBlock, but removing it might break some integrations with third party
+        // software
         notify("xblock.interaction", buildInteractionData());
 
         cleanAll();
