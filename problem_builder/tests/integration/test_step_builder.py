@@ -414,16 +414,24 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             # Note that we can't use patched_method.assert_called_once_with here
             # because there is no way to obtain a reference to the block instance generated from the XML scenario
             self.assertTrue(patched_method.called)
-            self.assertEquals(len(patched_method.call_args_list), 1)
+            self.assertEquals(len(patched_method.call_args_list), 2)
 
             block_object = self.load_root_xblock()
 
-            positional_args = patched_method.call_args[0]
+            positional_args = patched_method.call_args_list[0][0]
             block, event, data = positional_args
 
             self.assertEquals(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
             self.assertEquals(event, 'grade')
             self.assertEquals(data, {'value': 0.625, 'max_value': 1})
+
+            # test xblock.interaction is submitted
+            block, event, data = patched_method.call_args_list[1][0]
+            self.assertEquals(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
+            self.assertEquals(event, 'xblock.interaction')
+            self.assertEquals(data, {
+                'attempts_max': max_attempts if max_attempts else 'unlimited', 'attempts_count': 1, 'score': 63
+            })
 
         # Review step
         expected_results = {
