@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="sb-review-score">
-  <div class="grade-result">
+  <div class="grade-result" data-score="{{score}}">
     <h4>{% blocktrans %}You scored {{score}}% on this assessment. {% endblocktrans %}</h4>
     {% if show_extended_review %}
       <p class="review-links-explanation">

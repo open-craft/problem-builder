@@ -200,6 +200,7 @@ function MentoringWithStepsBlock(runtime, element) {
             // Reinstate default event handlers
             nextDOM.off('click');
             nextDOM.on('click', updateDisplay);
+            reviewButtonDOM.off('click');
             reviewButtonDOM.on('click', showGrade);
 
             var step = getActiveStep();
@@ -364,11 +365,34 @@ function MentoringWithStepsBlock(runtime, element) {
         });
     }
 
+    function buildInteractionData() {
+        var attemptsData = attemptsDOM.data();
+
+        return {
+            "attempts_count": attemptsData.num_attempts,
+            "attempts_max": attemptsData.max_attempts || "unlimited",
+            "score": reviewStepDOM.find(".grade-result").data('score')
+        }
+    }
+
+    function notifyInteraction() {
+        // Tell XBlock runtime that an interaction with this XBlock happened, submitting
+        // current and max attempts and current score. Runtime is free to react to this event as necessary.
+        // This event is not used in this XBlock, but removing it might break some integrations with third party
+        // software
+        var interactionData = buildInteractionData();
+        notify("xblock.interaction", interactionData);
+
+        var xblockBackendEventData = $.extend({}, interactionData, {event_type: 'xblock.interaction'});
+        publishEvent(xblockBackendEventData);
+    }
+
     function showGrade() {
         // Tell supporting runtimes to enable navigation between units;
         // user is currently not in the middle of an attempt
         // so it makes sense for them to be able to leave the current unit by clicking arrow buttons
         notify('navigation', {state: 'unlock'});
+        notifyInteraction();
 
         cleanAll();
         showReviewStep();
@@ -478,6 +502,7 @@ function MentoringWithStepsBlock(runtime, element) {
         }
 
         reviewButtonDOM = $(element).find('.submit .input-review');
+        reviewButtonDOM.off('click');
         reviewButtonDOM.on('click', showGrade);
 
         tryAgainDOM = $(element).find('.submit .input-try-again');
@@ -487,6 +512,7 @@ function MentoringWithStepsBlock(runtime, element) {
         attemptsDOM = $('.attempts', element);
 
         reviewLinkDOM = $(element).find('.review-link');
+        reviewLinkDOM.off('click');
         reviewLinkDOM.on('click', showGrade);
 
         // Add click handler that takes care of links to steps on the extended review:
