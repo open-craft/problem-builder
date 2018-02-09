@@ -4,7 +4,7 @@ function MentoringStandardView(runtime, element, mentoring) {
 
     var callIfExists = mentoring.callIfExists;
 
-    function handleSubmitResults(response, disable_submit) {
+    function handleSubmitResults(response, disable_submit, trigger_interaction) {
         messagesDOM.empty().hide();
 
         var hide_results = response.message === undefined;
@@ -25,6 +25,10 @@ function MentoringStandardView(runtime, element, mentoring) {
 
         $('.attempts', element).data('max_attempts', response.max_attempts);
         $('.attempts', element).data('num_attempts', response.num_attempts);
+
+        if (trigger_interaction) {
+            mentoring.notifyInteraction(response.num_attempts, response.max_attempts, "N/A");
+        }
         mentoring.renderAttempts();
 
         if (!hide_results) {
@@ -66,7 +70,7 @@ function MentoringStandardView(runtime, element, mentoring) {
         }
     }
 
-    function calculate_results(handler_name, disable_submit) {
+    function calculate_results(handler_name, disable_submit, trigger_interaction) {
         var data = {};
         var children = mentoring.children;
         for (var i = 0; i < children.length; i++) {
@@ -80,16 +84,16 @@ function MentoringStandardView(runtime, element, mentoring) {
             submitXHR.abort();
         }
         submitXHR = $.post(handlerUrl, JSON.stringify(data))
-            .success(function(response) { handleSubmitResults(response, disable_submit); })
+            .success(function(response) { handleSubmitResults(response, disable_submit, trigger_interaction); })
             .error(function(jqXHR, textStatus, errorThrown) { handleSubmitError(jqXHR, textStatus, errorThrown, disable_submit); });
     }
 
     function get_results(){
-        calculate_results('get_results', false);
+        calculate_results('get_results', false, false);
     }
 
     function submit() {
-        calculate_results('submit', true);
+        calculate_results('submit', true, true);
     }
 
     function clearResults() {

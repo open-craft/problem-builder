@@ -36,7 +36,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     }
 
     function renderGrade() {
-        notify('navigation', {state: 'unlock'})
+        mentoring.notify('navigation', {state: 'unlock'});
         var data = $('.grade', element).data();
         data.enable_extended = (no_more_attempts() && data.extended_feedback);
         _.extend(data, {
@@ -92,7 +92,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
             return;
 
         active_child = -1;
-        notify('navigation', {state: 'lock'})
+        mentoring.notify('navigation', {state: 'lock'})
         displayNextChild();
         tryAgainDOM.hide();
         submitDOM.show();
@@ -110,7 +110,7 @@ function MentoringAssessmentView(runtime, element, mentoring) {
     }
 
     function initXBlockView() {
-        notify('navigation', {state: 'lock'})
+        mentoring.notify('navigation', {state: 'lock'})
         submitDOM = $(element).find('.submit .input-main');
         nextDOM = $(element).find('.submit .input-next');
         reviewDOM = $(element).find('.submit .input-review');
@@ -155,13 +155,6 @@ function MentoringAssessmentView(runtime, element, mentoring) {
 
     function isDone() {
         return (active_child == mentoring.steps.length);
-    }
-
-    function notify(name, data){
-        // Notification interface does not exist in the workbench.
-        if (runtime.notify) {
-            runtime.notify(name, data)
-        }
     }
 
     function reviewJump(event) {
@@ -305,6 +298,8 @@ function MentoringAssessmentView(runtime, element, mentoring) {
         handleResults(response);
         // Update grade information
         $('.grade').data(response);
+
+        mentoring.notifyInteraction(response.num_attempts, response.max_attempts, response.score);
     }
 
 
