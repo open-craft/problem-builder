@@ -82,7 +82,7 @@ class CompletionBlock(
     student_value = Boolean(
         help=_("Records student's answer."),
         scope=Scope.user_state,
-        default=None,
+        default=False,
     )
 
     editable_fields = ('display_name', 'show_title', 'question', 'answer')
