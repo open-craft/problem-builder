@@ -25,9 +25,7 @@ function MentoringBlock(runtime, element) {
         step: step,
         steps: steps,
         publish_event: publish_event,
-        data: data,
-        notify: notify,
-        notifyInteraction: notifyInteraction
+        data: data
     };
 
     function publish_event(data) {
@@ -111,29 +109,6 @@ function MentoringBlock(runtime, element) {
                 return child;
             }
         }
-    }
-
-    function notify(name, data) {
-        // Notification interface does not exist in the workbench.
-        if (runtime.notify) {
-            runtime.notify(name, data);
-        }
-    }
-
-    function notifyInteraction(num_attempts, max_attempts, score) {
-        // Tell XBlock runtime that an interaction with this XBlock happened, submitting
-        // current and max attempts and current score. Runtime is free to react to this event as necessary.
-        // This event is not used in this XBlock, but removing it might break some integrations with third party
-        // software
-        var interactionData = {
-            "attempts_count": num_attempts,
-            "attempts_max": max_attempts || "unlimited",
-            "score": score
-        };
-        notify("xblock.interaction", interactionData);
-
-        var xblockBackendEventData = $.extend({}, interactionData, {event_type: 'xblock.interaction'});
-        publish_event(xblockBackendEventData);
     }
 
     ProblemBuilderUtil.transformClarifications(element);
