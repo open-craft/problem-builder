@@ -271,8 +271,6 @@ Long Answer (`pb-answer`)
 The `answer_data` field contains these items:
 
 - `student_input`: (string) Text that the student entered.
-- `created_on`: (string) Date/Time when the answer was first submitted.
-- `modified_on`: (string) Date/Time when the answer was last modified.
 
 ### `student_results`
 
@@ -286,6 +284,20 @@ The `answer_data` field contains these items:
 When submitting the problem either via Problem Builder or Step Builder, the data
 entry corresponding to the Long Answer block should be a single object
 containing the `"value"` property. Example: `{"value": "Student's input"}`.
+
+Long Answer Recap (`pb-answer-recap`)
+-------------------------------------
+
+### `student_view_data`
+
+- `block_id`: (string) The XBlock's usage ID (the ID of the associated Long Answer).
+- `display_name`: (string) The XBlock's display name (the title of this Long Answer Recap section).
+- `type`: (string) Always equals `"pb-answer-recap"` for Long Answer Recap components.
+- `id`: (string) Unique ID (name) of the component.
+
+### `student_view_user_state`
+
+Same as the Long Answer `student_view_user_state`, above.
 
 Multiple Choice Question (`pb-mcq`)
 -----------------------------------
