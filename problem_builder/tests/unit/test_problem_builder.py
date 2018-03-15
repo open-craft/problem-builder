@@ -114,8 +114,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                 'pb-message',  # Message type: "completed"
                 'pb-message',  # Message type: "incomplete"
                 'pb-message',  # Message type: "max_attempts_reached"
-            ] +
-            (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
+            ]
         )
 
     def test_allowed_nested_blocks_assessment(self):
@@ -124,8 +123,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                 'pb-message',  # Message type: "completed"
                 'pb-message',  # Message type: "incomplete"
                 'pb-message',  # Message type: "max_attempts_reached"
-            ] +
-            (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
+            ]
         )
 
     def test_student_view_data(self):

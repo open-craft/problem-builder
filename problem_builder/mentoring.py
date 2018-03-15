@@ -244,14 +244,6 @@ class MentoringBlock(
     """
     # Content
     USER_STATE_FIELDS = ['completed', 'num_attempts', 'student_results']
-    MENTORING_MODES = ('standard', 'assessment')
-    mode = String(
-        display_name=_("Mode"),
-        help=_("Mode of the mentoring. 'standard' or 'assessment'"),
-        default='standard',
-        scope=Scope.content,
-        values=MENTORING_MODES
-    )
     followed_by = String(
         display_name=_("Followed by"),
         help=_("url_name of the step after the current mentoring block in workflow."),
@@ -384,27 +376,12 @@ class MentoringBlock(
             )
         ]
 
-        if self.is_assessment:
-            message_block_shims.append(
-                NestedXBlockSpec(
-                    MentoringMessageBlock,
-                    category='pb-message',
-                    boilerplate='on-assessment-review',
-                    label=get_message_label('on-assessment-review'),
-                )
-            )
-
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
             MCQBlock, RatingBlock, MRQBlock, CompletionBlock,
             NestedXBlockSpec(None, category="html", label=self._("HTML")),
             AnswerRecapBlock, MentoringTableBlock, PlotBlock, SliderBlock
         ] + additional_blocks + message_block_shims
-
-    @property
-    def is_assessment(self):
-        """ Checks if mentoring XBlock is in assessment mode """
-        return self.mode == 'assessment'
 
     def get_question_number(self, question_id):
         """
@@ -476,14 +453,11 @@ class MentoringBlock(
                 child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
             elif not isinstance(child, MentoringMessageBlock):
                 try:
-                    if self.is_assessment and isinstance(child, QuestionMixin):
-                        child_fragment = child.render('assessment_step_view', context)
+                    if mcq_hide_previous_answer and isinstance(child, QuestionnaireAbstractBlock):
+                        context['hide_prev_answer'] = True
                     else:
-                        if mcq_hide_previous_answer and isinstance(child, QuestionnaireAbstractBlock):
-                            context['hide_prev_answer'] = True
-                        else:
-                            context['hide_prev_answer'] = False
-                        child_fragment = child.render('mentoring_view', context)
+                        context['hide_prev_answer'] = False
+                    child_fragment = child.render('mentoring_view', context)
                 except NoSuchViewError:
                     if child.scope_ids.block_type == 'html' and getattr(self.runtime, 'is_author_mode', False):
                         # html block doesn't support mentoring_view, and if we use student_view Studio will wrap
@@ -504,14 +478,9 @@ class MentoringBlock(
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
-        js_file = 'public/js/mentoring_{}_view.js'.format('assessment' if self.is_assessment else 'standard')
-        fragment.add_javascript_url(self.runtime.local_resource_url(self, js_file))
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-        if self.is_assessment:
-            fragment.add_resource(
-                loader.load_unicode('templates/html/mentoring_assessment_templates.html'), "text/html"
-            )
 
         self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
@@ -590,20 +559,7 @@ class MentoringBlock(
     @property
     def review_tips(self):
         """ Get review tips, shown for wrong answers in assessment mode. """
-        if not self.is_assessment or self.step != len(self.step_ids):
-            return []  # Review tips are only used in assessment mode, and only on the last step.
-        review_tips = []
-        status_cache = dict(self.student_results)
-        for child in self.steps:
-            result = status_cache.get(child.name)
-            if result and result.get('status') != 'correct':
-                # The student got this wrong. Check if there is a review tip to show.
-                tip_html = child.get_review_tip()
-                if tip_html:
-                    if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
-                        tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
-                    review_tips.append(tip_html)
-        return review_tips
+        return []
 
     def show_extended_feedback(self):
         return self.extended_feedback and self.max_attempts_reached
@@ -702,9 +658,6 @@ class MentoringBlock(
         # This has now been attempted:
         self.attempted = True
 
-        if self.is_assessment:
-            return self.handle_assessment_submit(submissions, suffix)
-
         submit_results = []
         previously_completed = self.completed
         completed = True
@@ -773,78 +726,6 @@ class MentoringBlock(
 
     def partial_json(self, stringify=True):
         return self.feedback_dispatch(self.score.partially_correct, stringify)
-
-    def handle_assessment_submit(self, submissions, suffix):
-        completed = False
-        current_child = None
-        children = [self.runtime.get_block(child_id) for child_id in self.children]
-        children = [child for child in children if not isinstance(child, MentoringMessageBlock)]
-        # The following is faster than the self.step_ids property
-        steps = [child for child in children if isinstance(child, QuestionMixin)]
-        assessment_message = None
-        review_tips = []
-
-        for child in children:
-            if child.name and child.name in submissions:
-                submission = submissions[child.name]
-
-                # Assessment mode doesn't allow to modify answers
-                # This will get the student back at the step he should be
-                current_child = child
-                step = steps.index(child)
-                if self.step > step or self.max_attempts_reached:
-                    step = self.step
-                    completed = False
-                    break
-
-                self.step = step + 1
-
-                child_result = child.submit(submission)
-                if 'tips' in child_result:
-                    del child_result['tips']
-                self.student_results.append([child.name, child_result])
-                completed = child_result['status']
-
-        event_data = {}
-
-        score = self.score
-
-        if current_child == steps[-1]:
-            log.info(u'Last assessment step submitted: {}'.format(submissions))
-            self.runtime.publish(self, 'grade', {
-                'value': score.raw,
-                'max_value': self.max_score(),
-                'score_type': 'proficiency',
-            })
-            event_data['final_grade'] = score.raw
-            assessment_message = self.assessment_message
-            review_tips = self.review_tips
-
-            self.num_attempts += 1
-            self.completed = True
-
-        event_data['exercise_id'] = current_child.name
-        event_data['num_attempts'] = self.num_attempts
-        event_data['submitted_answer'] = submissions
-
-        self.runtime.publish(self, 'xblock.problem_builder.assessment.submitted', event_data)
-
-        return {
-            'completed': completed,
-            'max_attempts': self.max_attempts,
-            'num_attempts': self.num_attempts,
-            'step': self.step,
-            'score': score.percentage,
-            'correct_answer': len(score.correct),
-            'incorrect_answer': len(score.incorrect),
-            'partially_correct_answer': len(score.partially_correct),
-            'correct': self.correct_json(stringify=False),
-            'incorrect': self.incorrect_json(stringify=False),
-            'partial': self.partial_json(stringify=False),
-            'extended_feedback': self.show_extended_feedback() or '',
-            'assessment_message': assessment_message,
-            'assessment_review_tips': review_tips,
-        }
 
     @XBlock.json_handler
     def try_again(self, data, suffix=''):
