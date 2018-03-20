@@ -336,3 +336,17 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     def student_view(self, context=None):
         """ Normal view of this XBlock, identical to mentoring_view """
         return self.mentoring_view(context)
+
+    def student_view_data(self, context=None):
+        """
+        Returns a JSON representation of the student_view of this XBlock,
+        retrievable from the Course Block API.
+        """
+
+        return {
+            'id': self.name,
+            'name': self.name,  # For backwards compatibility; same as 'id'
+            'display_name': self.display_name,
+            'block_id': unicode(self.scope_ids.usage_id),
+            'type': self.CATEGORY
+        }
