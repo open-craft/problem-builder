@@ -1,27 +1,47 @@
-machine:
-  python:
-    version: 2.7.10
-dependencies:
-  override:
-    - "pip install -U pip wheel"
-    # Temporarily pin setuptools to a specific version.
-    # See commit message of https://github.com/open-craft/problem-builder/commit/51277a34fb426724616618c1afdb893ab2de4c6b for more info:
-    - "pip install setuptools==24.3.1"
-    - "pip install -e git://github.com/edx/xblock-sdk.git@bddf9f4a2c6e4df28a411c8f632cc2250170ae9d#egg=xblock-sdk"
-    - "pip install -r requirements.txt"
-    - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/base.txt"
-    - "pip install -r $VIRTUAL_ENV/src/xblock-sdk/requirements/test.txt"
-    - "pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-*.tar.gz"
-    - "pip install -r test_requirements.txt"
-    - "mkdir var"
-test:
-  override:
-    - "if [ $CIRCLE_NODE_INDEX = '0' ]; then pep8 problem_builder --max-line-length=120; fi":
-        parallel: true
-    - "if [ $CIRCLE_NODE_INDEX = '1' ]; then pylint problem_builder --disable=all --enable=function-redefined,undefined-variable,unused-import,unused-variable; fi":
-        parallel: true
-    - "python run_tests.py":
-        parallel: true
-        files:
-          - "problem_builder/v1/tests/**/*.py"
-          - "problem_builder/tests/**/*.py"
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:2.7.14
+    parallelism: 4
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "test_requirements.txt" }}
+      - run:
+          name: Install dependencies
+          command: |
+            virtualenv venv
+            . venv/bin/activate
+            pip install -U pip wheel
+            # Temporarily pin setuptools to a specific version.
+            # See commit message of https://github.com/open-craft/problem-builder/commit/51277a34fb426724616618c1afdb893ab2de4c6b for more info:
+            pip install setuptools==24.3.1
+            pip install -e git://github.com/edx/xblock-sdk.git@bddf9f4a2c6e4df28a411c8f632cc2250170ae9d#egg=xblock-sdk
+            pip install -r requirements.txt
+            pip install -r venv/src/xblock-sdk/requirements/base.txt
+            pip install -r venv/src/xblock-sdk/requirements/test.txt
+            pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-*.tar.gz
+            pip install -r test_requirements.txt
+            mkdir var
+      - save_cache:
+          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "test_requirements.txt" }}
+          paths:
+            - "venv"
+      - run:
+          name: Install firefox 38.0.5
+          command: |
+            FIREFOX_URL="https://sourceforge.net/projects/ubuntuzilla/files/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_38.0.5-0ubuntu1_amd64.deb/download" \
+            && curl --silent --show-error --location --fail --retry 3 --output /tmp/firefox.deb $FIREFOX_URL \
+            && sudo dpkg -i /tmp/firefox.deb || sudo apt-get -f install  \
+            && sudo apt-get install -y libgtk3.0-cil-dev libasound2 libasound2 libdbus-glib-1-2 libdbus-1-3 libgtk2.0-0 \
+            && rm -rf /tmp/firefox.deb \
+            && firefox --version
+      - run:
+          name: Run tests
+          command: |
+            . venv/bin/activate
+            if [ $CIRCLE_NODE_INDEX = '0' ]; then pep8 problem_builder --max-line-length=120; fi
+            if [ $CIRCLE_NODE_INDEX = '1' ]; then pylint problem_builder --disable=all --enable=function-redefined,undefined-variable,unused-import,unused-variable; fi
+            TESTFILES=$(circleci tests glob "problem_builder/v1/tests/**/*.py" "problem_builder/tests/**/*.py"| circleci tests split)
+            xvfb-run --server-args="-screen 0 1280x1024x24" python run_tests.py ${TESTFILES}
