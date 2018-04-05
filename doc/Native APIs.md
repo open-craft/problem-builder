@@ -386,6 +386,8 @@ Swipeable Binary Response (`pb-swipe`)
 - `text`: (string) The text to display on the card
 - `img_url`: (string) URL of the image to display as the background of the card
 - `correct`: (boolean) Whether the student's swipe is correct or not
+- `feedback`: (object) Feedback to display to users in case of correct or 
+  incorrect response.
 
 ### `student_view_user_state`
 
@@ -406,6 +408,8 @@ The returned result will contain the following:
 - `submission`: (boolean) The value just POST'd.
 - `status`: (string) `"correct"` if the swipe is correct, `"incorrect"` otherwise.
 - `score`: (integer) 1 if the swipe is correct, otherwise 0.
+- `feedback`: (string) The ``feedback_correct`` message or ``feedback_incorrect`` 
+  message based on whether the feedback is correct or incorrect. 
 
 Multiple Response Question (`pb-mrq`)
 -------------------------------------

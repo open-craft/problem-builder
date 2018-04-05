@@ -76,12 +76,24 @@ class SwipeBlock(
         scope=Scope.content,
     )
 
+    feedback_correct = String(
+        display_name=_("Correct Answer Feedback"),
+        help=_("Feedback to display when student answers correctly."),
+        scope=Scope.content,
+    )
+
+    feedback_incorrect = String(
+        display_name=_("Incorrect Answer Feedback"),
+        help=_("Feedback to display when student answers incorrectly."),
+        scope=Scope.content,
+    )
+
     student_choice = Boolean(
         scope=Scope.user_state,
         help=_("Last input submitted by the student.")
     )
 
-    editable_fields = ('display_name', 'text', 'img_url', 'correct')
+    editable_fields = ('display_name', 'text', 'img_url', 'correct', 'feedback_correct', 'feedback_incorrect')
 
     def calculate_results(self, submission):
         correct = submission == self.correct
@@ -89,6 +101,7 @@ class SwipeBlock(
             'submission': submission,
             'status': 'correct' if correct else 'incorrect',
             'score': 1 if correct else 0,
+            'feedback': self.feedback_correct if correct else self.feedback_incorrect,
         }
 
     def get_results(self, previous_result):
@@ -118,6 +131,10 @@ class SwipeBlock(
             'text': self.text,
             'img_url': self.expand_static_url(self.img_url),
             'correct': self.correct,
+            'feedback': {
+                'correct': self.feedback_correct,
+                'incorrect': self.feedback_incorrect,
+            },
         }
 
     def expand_static_url(self, url):
