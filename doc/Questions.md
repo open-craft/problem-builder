@@ -160,3 +160,19 @@ Screenshot:
 ### "Dashboard" Self-Assessment Summary Block
 
 [Instructions for using the "Dashboard" Self-Assessment Summary Block](Dashboard.md)
+
+### Swipeable Binary Choice Question
+
+The Swipeable Binary Choice Question is a block for creating a UI for selecting 
+an answer by swiping left or right on a touch screen. It is currently in 
+development, and is API-only with no usable interface available to users.
+
+As such it needs to be manually enabled using the following steps:
+
+1. Visit the Django Admin panel for X block configuration at 
+   {STUDIO_URL}/admin/xblock_django/xblockconfiguration/
+2. Click "Add x block configuration"
+3. Enter `pb-swipe` in the `Name` field, check `Enabled` and hit Save. 
+
+You should now see the "Swipeable Binary Choice Question" component as an option
+in Problem Builder.

@@ -38,3 +38,7 @@ modifying the advanced settings for your course:
 
 Note that it is perfectly fine to enable both Problem Builder and Step Builder
 for your course -- the blocks do not interfere with each other.
+
+NOTE: The ``pb-swipe`` component is currently in development and as such is 
+disabled by default. It needs to be 
+[manually enabled](Questions.md#swipeable-binary-choice-question).
