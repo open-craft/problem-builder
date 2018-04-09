@@ -97,3 +97,17 @@
     vertical-align: top;
     width: 50%;
 }
+
+/*RTL Specified CSS*/
+
+.rtl .mentoring .questionnaire .choice-tips,
+.rtl .mentoring .questionnaire .feedback{
+    right: auto;
+    left: 0;
+}
+
+.rtl .themed-xblock.mentoring .choice .choice-tips-container.with-tips,
+.rtl .themed-xblock.mentoring .questionnaire .feedback{
+    border-right: 2px solid #ddd;
+    border-left: 0;
+}
