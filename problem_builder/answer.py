@@ -347,6 +347,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
             'id': self.name,
             'name': self.name,  # For backwards compatibility; same as 'id'
             'display_name': self.display_name,
+            'description': self.description,
             'block_id': unicode(self.scope_ids.usage_id),
             'type': self.CATEGORY
         }
