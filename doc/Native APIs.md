@@ -292,6 +292,8 @@ Long Answer Recap (`pb-answer-recap`)
 
 - `block_id`: (string) The XBlock's usage ID (the ID of the associated Long Answer).
 - `display_name`: (string) The XBlock's display name (the title of this Long Answer Recap section).
+- `description`: (string) The XBlock's description (the text message displayed in
+  the Long Answer Recap section).
 - `type`: (string) Always equals `"pb-answer-recap"` for Long Answer Recap components.
 - `id`: (string) Unique ID (name) of the component.
 

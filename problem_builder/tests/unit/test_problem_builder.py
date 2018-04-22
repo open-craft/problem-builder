@@ -43,7 +43,7 @@ class TestAnswerRecapBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         self.assertItemsEqual(
             block.student_view_data().keys(),
             [
-                'block_id', 'display_name', 'type', 'id', 'name'
+                'block_id', 'display_name', 'type', 'id', 'name', 'description'
             ]
         )
 
