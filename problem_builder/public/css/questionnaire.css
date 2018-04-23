@@ -111,3 +111,9 @@
     border-right: 2px solid #ddd;
     border-left: 0;
 }
+
+.rtl .mentoring .questionnaire .choice-tips .close,
+.rtl .mentoring .questionnaire .feedback .close {
+    right: auto;
+    left: 3px;
+}
