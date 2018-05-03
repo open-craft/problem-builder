@@ -180,6 +180,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.question,
+            'question_parts': self.split_question(),
             'message': self.message,
             'choices': [
                 {'value': choice['value'], 'content': choice['display_name']}

@@ -19,10 +19,11 @@
 #
 
 # Imports ###########################################################
+import re
+import uuid
 
 from django.utils.safestring import mark_safe
 from lazy import lazy
-import uuid
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
@@ -30,6 +31,7 @@ from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlockWithPreviewMixin
+from lxml.html import HtmlElement, fromstring as lxml_fromstring, tostring as lxml_tostring
 
 from .choice import ChoiceBlock
 from .message import MentoringMessageBlock
@@ -235,3 +237,45 @@ class QuestionnaireAbstractBlock(
             format_html = getattr(self.runtime, 'replace_urls', lambda html: html)
             return format_html(self.message)
         return ""
+
+    def split_question(self):
+        """
+        Splits question into three parts if it contains ooyala video, part before video, part after video and ooyala
+        video id and returns these three parts in json format. if question does'nt contains ooyala video then returns
+        whole question html in `html_before_video` json attribute
+        """
+        stripped_question = self.question.strip()
+        has_ooyala_script = False
+        html_before_video = stripped_question
+        html_after_video = ''
+        ooyala_video_id = ''
+        if stripped_question:
+            question_html = lxml_fromstring(stripped_question)
+            has_ooyala_script = question_html.xpath("boolean(//script[contains(@src, '//player.ooyala.com')])")
+
+        if has_ooyala_script:
+            nodes_before_video = question_html.xpath(
+                "//script[contains(@src, '//player.ooyala.com')]/preceding-sibling::node()"
+            )
+            html_before_video = ''.join(
+                [lxml_tostring(node) if type(node) is HtmlElement else node for node in nodes_before_video]
+            )
+
+            has_noscript_tag = question_html.xpath("boolean(//noscript)")
+            if has_noscript_tag:
+                nodes_after_video = question_html.xpath("//noscript/following-sibling::node()")
+            else:
+                nodes_after_video = question_html.xpath("//script[last()]/following-sibling::node()")
+
+            html_after_video = ''.join(
+                [lxml_tostring(node) if type(node) is HtmlElement else node for node in nodes_after_video]
+            )
+            ooyala_video_id = next(
+                iter(re.findall("OO.Player.create.*[\"'],\s*[\"'](.*)[\"']", stripped_question) or []), ''
+            )
+
+        return {
+            'html_before_video': html_before_video,
+            'html_after_video': html_after_video,
+            'ooyala_video_id': ooyala_video_id
+        }

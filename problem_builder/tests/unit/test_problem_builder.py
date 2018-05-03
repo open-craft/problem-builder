@@ -26,8 +26,8 @@ class TestMRQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         self.assertItemsEqual(
             block.student_view_data().keys(),
             [
-                'hide_results', 'tips', 'block_id', 'display_name',
-                'weight', 'title', 'question', 'message', 'type', 'id', 'choices'
+                'hide_results', 'tips', 'block_id', 'display_name', 'weight',
+                'question_parts', 'title', 'question', 'message', 'type', 'id', 'choices'
             ]
         )
 
