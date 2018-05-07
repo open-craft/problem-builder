@@ -259,7 +259,7 @@ class QuestionnaireAbstractBlock(
             )
             html_before_video = ''.join(
                 [lxml_tostring(node) if type(node) is HtmlElement else node for node in nodes_before_video]
-            )
+            ).strip()
 
             has_noscript_tag = question_html.xpath("boolean(//noscript)")
             if has_noscript_tag:
@@ -269,7 +269,7 @@ class QuestionnaireAbstractBlock(
 
             html_after_video = ''.join(
                 [lxml_tostring(node) if type(node) is HtmlElement else node for node in nodes_after_video]
-            )
+            ).strip()
             ooyala_video_id = next(
                 iter(re.findall("OO.Player.create.*[\"'],\s*[\"'](.*)[\"']", stripped_question) or []), ''
             )
