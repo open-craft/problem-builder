@@ -50,7 +50,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         self.set_scenario_xml("""
         <vertical_demo>
           <pb-instructor-tool url_name="data_export"/>
-          <problem-builder mode="standard">
+          <problem-builder>
             <pb-answer name="answer" question="Is this a long long long long long long long long long long question?" />
           </problem-builder>
         </vertical_demo>

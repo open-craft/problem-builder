@@ -4,7 +4,7 @@ happen?
 """
 import time
 
-from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest
+from .base_test import ProblemBuilderBaseTest
 
 
 class AuthorChangesTest(ProblemBuilderBaseTest):
@@ -13,7 +13,7 @@ class AuthorChangesTest(ProblemBuilderBaseTest):
     """
     def setUp(self):
         super(AuthorChangesTest, self).setUp()
-        self.load_scenario("author_changes.xml", {"mode": "standard"}, load_immediately=False)
+        self.load_scenario("author_changes.xml", {}, load_immediately=False)
         self.refresh_page()
 
     def refresh_page(self):
@@ -82,44 +82,3 @@ class AuthorChangesTest(ProblemBuilderBaseTest):
 
         # Now, the student's score should be 1 out of 6 (only q3 is correct):
         self.assertEqual(self.pb_block.score.percentage, 17)
-
-
-class AuthorChangesAssessmentTest(MentoringAssessmentBaseTest):
-    """
-    Test various scenarios involving author changes made to an assessment block already in use
-    """
-    def test_delete_question(self):
-        """ Test that the assessment behaves correctly when deleting a question. """
-        pb_block_dom, controls = self.load_assessment_scenario("author_changes.xml", {"mode": "assessment"})
-
-        # Answer each question, getting the first question wrong:
-        mentoring = pb_block_dom.find_element_by_css_selector(".mentoring")
-        self.answer_mcq(number=1, name="q1", value="no", mentoring=mentoring, controls=controls, is_last=False)
-        self.answer_mcq(number=2, name="q2", value="elegance", mentoring=mentoring, controls=controls, is_last=False)
-
-        pb_block_dom.find_element_by_css_selector('textarea').send_keys("Hello world")
-        controls.submit.click()
-        self.wait_until_clickable(controls.review)
-        controls.review.click()
-        self.wait_until_hidden(controls.review)
-
-        # Delete question 3:
-        vertical = self.load_root_xblock()
-        pb_block = vertical.runtime.get_block(vertical.children[0])
-        self.assertEqual(pb_block.score.percentage, 67)
-        pb_block.children = [pb_block.children[0], pb_block.children[1]]
-        pb_block.save()
-        pb_block_dom, controls = self.go_to_assessment()
-
-        self.assertIn("You scored 50% on this assessment.", pb_block_dom.text)
-        self.assertIn("You answered 1 question correctly.", pb_block_dom.text)
-        self.assertIn("You answered 1 question incorrectly.", pb_block_dom.text)
-
-        controls.try_again.click()
-        self.wait_until_hidden(controls.try_again)
-
-        # Now answer again, getting a perfect score:
-        mentoring = pb_block_dom.find_element_by_css_selector(".mentoring")
-        self.answer_mcq(number=1, name="q1", value="yes", mentoring=mentoring, controls=controls, is_last=False)
-        self.answer_mcq(number=2, name="q2", value="elegance", mentoring=mentoring, controls=controls, is_last=True)
-        self.assertIn("You scored 100% on this assessment.", mentoring.text)

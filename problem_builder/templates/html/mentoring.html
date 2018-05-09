@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="mentoring themed-xblock" data-mode="{{ self.mode }}" data-step="{{ self.step }}" data-feedback_label="{{ self.feedback_label }}" data-hide_feedback="{{ self.hide_feedback }}">
+<div class="mentoring themed-xblock" data-step="{{ self.step }}" data-feedback_label="{{ self.feedback_label }}" data-hide_feedback="{{ self.hide_feedback }}">
   <div class="missing-dependency warning" data-missing="{{ self.has_missing_dependency }}">
     {% with url=missing_dependency_url|safe %}
     {% blocktrans with link_start="<a href='"|add:url|add:"'>" link_end="</a>" %}
@@ -15,8 +15,7 @@
   </div>
   {% endif %}
 
-  <div class="{{self.mode}}-question-block">
-    <div class="assessment-message"></div>
+  <div>
 
     {{child_content|safe}}
 
@@ -29,7 +28,6 @@
          data-max_attempts="{{ self.max_attempts }}"
          data-num_attempts="{{ self.num_attempts }}"
          data-extended_feedback="{%if self.extended_feedback %}True{% endif %}"
-         data-assessment_message="{{ self.assessment_message }}"
          data-assessment_review_tips="{{ self.review_tips_json }}"
          data-correct="{{ self.correct_json }}"
          data-incorrect="{{ self.incorrect_json }}"
@@ -37,17 +35,8 @@
     </div>
 
     <div class="submit">
-      {% if self.mode == 'assessment' %}
-      <span class="assessment-checkmark fa icon-2x"></span>
-      {% endif %}
 
       <input type="button" class="input-main" value="{% trans "Submit" %}" disabled="disabled" />
-
-      {% if self.mode == 'assessment' %}
-      <input type="button" class="input-next" value="{% trans "Next Question" %}" disabled="disabled" />
-      <input type="button" class="input-review" value="{% trans "Review grade" %}" disabled="disabled" />
-      <input type="button" class="input-try-again" value="{% trans "Try again" %}" disabled="disabled" />
-      {% endif %}
 
       <div class="attempts" data-max_attempts="{{ self.max_attempts }}" data-num_attempts="{{ self.num_attempts }}"></div>
     </div>

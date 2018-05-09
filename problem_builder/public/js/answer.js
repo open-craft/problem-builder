@@ -1,11 +1,9 @@
 function AnswerBlock(runtime, element) {
     return {
-        mode: null,
         init: function(options) {
             // Clear results and validate block when answer changes
             $(':input', element).on('keyup', options.onChange);
 
-            this.mode = options.mode;
             this.validateXBlock = options.validateXBlock;
 
             // In the LMS, the HTML of multiple units can be loaded at once,
@@ -34,8 +32,7 @@ function AnswerBlock(runtime, element) {
 
             this.clearResult();
 
-            if (options.hide_results || this.mode === 'assessment') {
-                // In assessment mode, display of checkmark would be redundant.
+            if (options.hide_results) {
                 return;
             }
             if (result.status) {

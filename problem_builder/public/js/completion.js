@@ -3,11 +3,9 @@ function CompletionBlock(runtime, element) {
     var $completion = $('.pb-completion-value', element);
 
     return {
-        mode: null,
         mentoring: null,
 
         init: function(options) {
-            this.mode = options.mode;
             this.mentoring = options.mentoring;
             $completion.on('change', options.onChange);
         },

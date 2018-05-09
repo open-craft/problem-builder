@@ -8,9 +8,6 @@ function MentoringBlock(runtime, element) {
     var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var data = $('.mentoring', element).data();
     var children = runtime.children(element);
-    var steps = runtime.children(element).filter(function(c) {
-        return $(c.element).attr("class").indexOf('assessment_step_view') > -1;
-    });
     var step = data.step;
 
     var mentoring = {
@@ -21,9 +18,7 @@ function MentoringBlock(runtime, element) {
         children: children,
         initChildren: initChildren,
         getChildByName: getChildByName,
-        hideAllSteps: hideAllSteps,
         step: step,
-        steps: steps,
         publish_event: publish_event,
         data: data
     };
@@ -89,16 +84,9 @@ function MentoringBlock(runtime, element) {
     function initChildren(options) {
         options = options || {};
         options.mentoring = mentoring;
-        options.mode = data.mode;
         for (var i=0; i < children.length; i++) {
             var child = children[i];
             callIfExists(child, 'init', options);
-        }
-    }
-
-    function hideAllSteps() {
-        for (var i=0; i < steps.length; i++) {
-            $(steps[i].element).hide();
         }
     }
 
@@ -113,12 +101,7 @@ function MentoringBlock(runtime, element) {
 
     ProblemBuilderUtil.transformClarifications(element);
 
-    if (data.mode === 'standard') {
-        MentoringStandardView(runtime, element, mentoring);
-    }
-    else if (data.mode === 'assessment') {
-        MentoringAssessmentView(runtime, element, mentoring);
-    }
+    MentoringStandardView(runtime, element, mentoring);
 
     publish_event({event_type:"xblock.problem_builder.loaded"});
 }

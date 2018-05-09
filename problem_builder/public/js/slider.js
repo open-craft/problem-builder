@@ -1,7 +1,6 @@
 function SliderBlock(runtime, element) {
     var $slider = $('.pb-slider-range', element);
     return {
-        mode: null,
         mentoring: null,
 
         value: function() {
@@ -10,7 +9,6 @@ function SliderBlock(runtime, element) {
 
         init: function(options) {
             this.mentoring = options.mentoring;
-            this.mode = options.mode;
             $slider.on('change', options.onChange);
         },
 

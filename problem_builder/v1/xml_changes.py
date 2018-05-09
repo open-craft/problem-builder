@@ -304,56 +304,6 @@ class TipChanges(Change):
             p.remove(self.node)
 
 
-class AlternatingHTMLToQuestions(Change):
-    """
-    In mentoring v1, an assessment could have XML like this:
-        <mentoring mode="assessment"...>
-            <html>Question 1 introduction text</html>
-            <mcq name="Q1" type="choices"><question>Question 1</question>...</mcq>
-            <html>Question 2 introduction text</html>
-            <mcq name="Q2" type="choices"><question>Question 2</question>...</mcq>
-            ...
-        </mentoring>
-    Notice that nearest-sibling HTML and MCQ tags are meant to be displayed together.
-    This migration changes that to:
-        <mentoring mode="assessment"...>
-            <mcq name="Q1" question="Question 1 introduction text. Question 1">...</mcq>
-            <mcq name="Q2" question="Question 2 introduction text. Question 2">...</mcq>
-            ...
-        </mentoring>
-
-    QuestionToField (<question> tag converted to attribute) must already be applied, and
-    SharedHeaderToHTML must not yet be applied.
-    """
-    @staticmethod
-    def applies_to(node):
-        return (
-            node.tag == "html" and
-            node.getparent().attrib.get("mode") == "assessment" and
-            node.getnext() is not None and
-            node.getnext().tag in ("pb-answer", "pb-mcq", "pb-mrq", "pb-rating")
-        )
-
-    def apply(self):
-        html_content = u""
-        for child in list(self.node):
-            if child.tag == "p":
-                # This HTML will ultimately be rendered inside a <p> so it can't be a <p> as well:
-                child.tag = "span"
-                tail = child.tail if child.tail else u""
-                child.tail = u""
-                html_content += etree.tostring(child) + u"<br><br>" + tail
-            else:
-                html_content += etree.tostring(child)
-
-        q = self.node.getnext()
-        existing_question = q.attrib.get('question', '')
-        q.attrib["question"] = u"{}{}".format(html_content, existing_question)
-
-        p = self.node.getparent()
-        p.remove(self.node)
-
-
 class SharedHeaderToHTML(Change):
     """ <shared-header> element no longer exists. Just use <html> """
     @staticmethod
@@ -408,7 +358,6 @@ xml_changes = [
     QuestionToField,
     QuestionSubmitMessageToField,
     TipChanges,
-    AlternatingHTMLToQuestions,
     SharedHeaderToHTML,
     CommaSeparatedListToJson,
 ]

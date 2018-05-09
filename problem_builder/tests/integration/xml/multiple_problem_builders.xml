@@ -19,7 +19,7 @@
             <pb-choice value="understand">I don't understand</pb-choice>
         </pb-mcq>
     </problem-builder>
-    <problem-builder url_name="d" display_name="Fourth: An MRQ Assessment" mode="assessment">
+    <problem-builder url_name="d" display_name="Fourth: An MRQ">
         <pb-mrq name="mrq_1_1" question="What do you like in this MRQ?" 
             required_choices='["gracefulness","elegance","beauty"]'
         >

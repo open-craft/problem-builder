@@ -131,18 +131,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                 'pb-message',  # Message type: "completed"
                 'pb-message',  # Message type: "incomplete"
                 'pb-message',  # Message type: "max_attempts_reached"
-            ] +
-            (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
-        )
-
-    def test_allowed_nested_blocks_assessment(self):
-        block = MentoringBlock(Mock(), DictFieldData({'mode': 'assessment'}), Mock())
-        self.assert_allowed_nested_blocks(block, message_blocks=[
-                'pb-message',  # Message type: "completed"
-                'pb-message',  # Message type: "incomplete"
-                'pb-message',  # Message type: "max_attempts_reached"
-            ] +
-            (['pb-message'] if block.is_assessment else [])  # Message type: "on-assessment-review"
+            ]
         )
 
     def test_student_view_data(self):
@@ -338,7 +327,7 @@ class TestMentoringBlockJumpToIds(unittest.TestCase):
         self.service_mock = Mock()
         self.runtime_mock = Mock()
         self.runtime_mock.service = Mock(return_value=self.service_mock)
-        self.block = MentoringBlock(self.runtime_mock, DictFieldData({'mode': 'assessment'}), Mock())
+        self.block = MentoringBlock(self.runtime_mock, DictFieldData({}), Mock())
         self.block.children = ['dummy_id']
         self.message_block = MentoringMessageBlock(
             self.runtime_mock, DictFieldData({'type': 'bogus', 'content': 'test'}), Mock()
@@ -356,10 +345,7 @@ class TestMentoringBlockJumpToIds(unittest.TestCase):
         self.mcq_block = MCQBlock(self.runtime_mock, DictFieldData({'name': 'test_mcq'}), Mock())
         self.mcq_block.get_review_tip = Mock()
         self.mcq_block.get_review_tip.return_value = self.message_block.content
-        self.block.step_ids = []
-        self.block.steps = [self.mcq_block]
-        self.block.student_results = {'test_mcq': {'status': 'incorrect'}}
-        self.assertEqual(self.block.review_tips, ['replaced-url'])
+        self.assertEqual(self.block.review_tips, [])
 
     def test_get_tip_content_no_tips(self):
         self.mcq_block = MCQBlock(self.runtime_mock, DictFieldData({'name': 'test_mcq'}), Mock())
