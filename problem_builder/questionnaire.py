@@ -158,14 +158,13 @@ class QuestionnaireAbstractBlock(
         """
         Add some HTML to the author view that allows authors to add choices and tips.
         """
+        from .mentoring import MentoringWithExplicitStepsBlock
+
         fragment = self.get_author_edit_view_fragment(context)
 
-        # Let the parent block determine whether to display buttons to add review-related child blocks.
-        # * Problem Builder units use MentoringBlock parent components, which define an 'is_assessment' property,
-        #   indicating whether the (deprecated) assessment mode is enabled.
         # * Step Builder units can show review components in the Review Step.
         fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {
-            'show_review': getattr(self.get_parent(), 'is_assessment', True),
+            'show_review': isinstance(self.get_parent(), MentoringWithExplicitStepsBlock)
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))

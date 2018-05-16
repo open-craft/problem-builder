@@ -133,11 +133,6 @@
     padding: 20px;
 }
 
-.mentoring .assessment-question-block > .xblock-v1-assessment_step_view,
-.mentoring .assessment-question-block > .xblock-assessment_step_view  {
-    display: none; /* Each "step" (question) is hidden at first, and shown one at a time by JavaScript */
-}
-
 .mentoring .assessment-checkmark {
     margin-right: 10px;
 }

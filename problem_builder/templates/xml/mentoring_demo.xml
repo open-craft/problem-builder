@@ -1,6 +1,6 @@
 <vertical_demo>
     <html_demo><h1>Problem Builder Demo</h1></html_demo>
-    <problem-builder display_name="Basic Usage: Questions" weight="1" mode="standard">
+    <problem-builder display_name="Basic Usage: Questions" weight="1">
         <html_demo>
             <p>At its most basic, a mentoring block can contain instructions (like this sentence), long answer questions, and various forms of multiple choice question.</p>
 
@@ -17,7 +17,7 @@
         <html_demo><p>Notice the submit button below will only be enabled once you have completed both questions.</p></html_demo>
     </problem-builder>
 
-    <problem-builder display_name="Basic Long Answer Question" weight="1" mode="standard">
+    <problem-builder display_name="Basic Long Answer Question" weight="1">
         <html_demo>
             <p>And here is an example of a Multiple Choice Question (MCQ):</p>
         </html_demo>
@@ -34,7 +34,7 @@
         </html_demo>
     </problem-builder>
 
-    <problem-builder display_name="Multiple Choice Rating Question" weight="1" mode="standard">
+    <problem-builder display_name="Multiple Choice Rating Question" weight="1">
         <html_demo>
             <p>Multiple choice questions can be configured with only one correct answer or with many accepted answers. There is also a special type of multiple choice question, a rating question, which provides a Likert Scale (5-point scale) prompt. Here is an example rating question where any answer is acceptable:</p>
             <p>How did you like <em>To Kill a Mockingbird</em>?</p>
@@ -43,7 +43,7 @@
         <pb-rating name="rate_mockingbird" low="I really disliked it" high="I loved it" correct_choices='["1","2","3","4","5"]' />
     </problem-builder>
 
-    <problem-builder display_name="Multiple Response Question (and introducing tips)" weight="1" mode="standard">
+    <problem-builder display_name="Multiple Response Question (and introducing tips)" weight="1">
         <html_demo><p>A fourth type of question is the Multiple Response Question (MRQ), which allows student to select multiple answers. Each answer can be marked as required, not required, or acceptable either way. The following question contains examples of each possibility. Try getting it wrong and see how it provides feedback to guide you to a correct answer.</p></html_demo>
         <pb-mrq name="future_movies" question="Which of these films are set in the future?" required_choices='["apes"]' ignored_choices='["2001"]'>
             <pb-choice value="starwars">Star Wars Episode V: The Empire Strikes Back</pb-choice>
@@ -64,7 +64,7 @@
         </pb-message>
     </problem-builder>
 
-    <problem-builder display_name="MCQ With Tips" weight="1" mode="standard">
+    <problem-builder display_name="MCQ With Tips" weight="1">
         <html_demo>
             <p>Like the MRQ above, multiple choice and rating questions can also provide feedback based on which answer was selected and whether the answer is correct or not. Here's an example:</p>
         </html_demo>
@@ -108,29 +108,6 @@
                 <html_demo><p>(This column shows what an answer recap looks like when the student has not yet answered the particular question)</p></html_demo>
             </pb-column>
         </pb-table>
-    </problem-builder>
-    <problem-builder display_name="Assessment Example" mode="assessment">
-        <html_demo><p>Mentoring questions can also be asked in "Assessment" mode, where each question is asked one at a time, and a final score is shown at the end. The author can set how many attempts each student is given to go through the assessment.</p></html_demo>
-        <pb-mcq name="aq1" question="What is 7+3?" correct_choices='["ten"]'>
-            <pb-choice value="ten">10</pb-choice>
-            <pb-choice value="prime">104,297</pb-choice>
-            <pb-choice value="infinity">Infinity</pb-choice>
-            <pb-choice value="undefined">Undefined</pb-choice>
-        </pb-mcq>
-        <pb-mcq name="aq2" question="What is the square root of nine?" correct_choices='["three"]'>
-            <pb-choice value="zero">1</pb-choice>
-            <pb-choice value="three">3</pb-choice>
-            <pb-choice value="nine">9</pb-choice>
-            <pb-choice value="infinity">Infinity</pb-choice>
-            <pb-choice value="undefined">Undefined</pb-choice>
-        </pb-mcq>
-        <pb-mcq name="aq3" question="What is 10&#247;0?" correct_choices='["infinity","undefined"]'>
-            <pb-choice value="zero">0</pb-choice>
-            <pb-choice value="ten">10</pb-choice>
-            <pb-choice value="negten">-10</pb-choice>
-            <pb-choice value="infinity">Infinity</pb-choice>
-            <pb-choice value="undefined">Undefined</pb-choice>
-        </pb-mcq>
     </problem-builder>
     <html_demo>
         <h1>See the details</h1>

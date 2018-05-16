@@ -50,7 +50,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             "default": _(u"Great job!"),
             "description": _(
                 u"This message will be shown when the student achieves a perfect score. "
-                "Note that it is ignored in Problem Builder blocks using the legacy assessment mode."
             ),
         },
         "incomplete": {
@@ -61,7 +60,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             "description": _(
                 u"This message will be shown when the student gets at least one question wrong, "
                 "but is allowed to try again. "
-                "Note that it is ignored in Problem Builder blocks using the legacy assessment mode."
             ),
         },
         "max_attempts_reached": {
@@ -72,22 +70,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             "description": _(
                 u"This message will be shown when the student has used up "
                 "all of their allowed attempts without achieving a perfect score. "
-                "Note that it is ignored in Problem Builder blocks using the legacy assessment mode."
-            ),
-        },
-        "on-assessment-review": {
-            "display_name": _(u"Review with attempts left"),
-            "studio_label": _(u'Message (Assessment Review)'),
-            "long_display_name": _(u"Message shown during review when attempts remain"),
-            "default": _(
-                u"Note: if you retake this assessment, only your final score counts. "
-                "If you would like to keep this score, please continue to the next unit."
-            ),
-            "description": _(
-                u"In assessment mode, this message will be shown when the student is reviewing "
-                "their answers to the assessment, if the student is allowed to try again. "
-                "This message is ignored in standard mode and is not shown if the student has "
-                "used up all of their allowed attempts."
             ),
         },
         "on-assessment-review-question": {
@@ -122,7 +104,6 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
             {"value": "completed", "display_name": MESSAGE_TYPES["completed"]["display_name"]},
             {"value": "incomplete", "display_name": MESSAGE_TYPES["incomplete"]["display_name"]},
             {"value": "max_attempts_reached", "display_name": MESSAGE_TYPES["max_attempts_reached"]["display_name"]},
-            {"value": "on-assessment-review", "display_name": MESSAGE_TYPES["on-assessment-review"]["display_name"]},
             {
                 "value": "on-assessment-review-question",
                 "display_name": MESSAGE_TYPES["on-assessment-review-question"]["display_name"]

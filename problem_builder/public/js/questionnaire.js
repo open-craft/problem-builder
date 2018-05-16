@@ -95,11 +95,9 @@ function MessageView(element, mentoring) {
 
 function MCQBlock(runtime, element) {
     return {
-        mode: null,
         mentoring: null,
         init: function(options) {
             this.mentoring = options.mentoring;
-            this.mode = options.mode;
             $('input[type=radio]', element).on('change', options.onChange);
         },
 
@@ -182,11 +180,9 @@ function SwipeBlock(runtime, element) {
 
 function MRQBlock(runtime, element) {
     return {
-        mode: null,
         mentoring: null,
         init: function(options) {
             this.mentoring = options.mentoring;
-            this.mode = options.mode;
             $('input[type=checkbox]', element).on('change', options.onChange);
         },
 

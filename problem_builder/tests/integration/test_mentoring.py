@@ -17,12 +17,11 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-import re
 import mock
 import ddt
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
-from .base_test import MentoringBaseTest, MentoringAssessmentBaseTest, GetChoices, ProblemBuilderBaseTest
+from .base_test import MentoringBaseTest, ProblemBuilderBaseTest
 
 
 class MentoringTest(MentoringBaseTest):
@@ -37,42 +36,6 @@ def _get_mentoring_theme_settings(theme):
         'package': 'problem_builder',
         'locations': ['public/themes/{}.css'.format(theme)]
     }
-
-
-@ddt.ddt
-class MentoringThemeTest(MentoringAssessmentBaseTest):
-    def rgb_to_hex(self, rgb):
-        r, g, b = map(int, re.search(r'rgba?\((\d+),\s*(\d+),\s*(\d+)', rgb).groups())
-        return '#%02x%02x%02x' % (r, g, b)
-
-    def assert_status_icon_color(self, color, question_text):
-        mentoring, controls = self.load_assessment_scenario('assessment_single.xml', {"max_attempts": 2})
-        question = self.expect_question_visible(0, mentoring, question_text=question_text)
-        choice_name = "Maybe not"
-
-        choices = GetChoices(question)
-        expected_state = {"Yes": False, "Maybe not": False, "I don't understand": False}
-        self.assertEquals(choices.state, expected_state)
-
-        choices.select(choice_name)
-        expected_state[choice_name] = True
-        self.assertEquals(choices.state, expected_state)
-
-        controls.submit.click()
-        self.wait_until_disabled(controls.submit)
-
-        answer_result = mentoring.find_element_by_css_selector(".assessment-checkmark")
-        self.assertEqual(self.rgb_to_hex(answer_result.value_of_css_property("color")), color)
-
-    @ddt.unpack
-    @ddt.data(
-        ('lms', "#c1373f", "Question"),
-        ('apros', "#ff0000", "QUESTION")
-    )
-    def test_lms_theme_applied(self, theme, expected_color, question_text):
-        with mock.patch("problem_builder.mentoring.MentoringBlock.get_theme") as patched_theme:
-            patched_theme.return_value = _get_mentoring_theme_settings(theme)
-            self.assert_status_icon_color(expected_color, question_text)
 
 
 @ddt.ddt

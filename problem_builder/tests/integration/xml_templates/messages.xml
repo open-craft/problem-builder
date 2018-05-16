@@ -15,5 +15,4 @@
     <pb-message type="completed">Great job! (completed message)</pb-message>
     <pb-message type="incomplete">Not quite! You can try again, though. (incomplete message)</pb-message>
     <pb-message type="max_attempts_reached">Sorry, you have used up all of your allowed submissions. (max_attempts_reached message)</pb-message>
-    <pb-message type="on-assessment-review">You may try this assessment again, and only the latest score will be used. (on-assessment-review message)</pb-message>
 </problem-builder>

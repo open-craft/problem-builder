@@ -1,4 +1,4 @@
-<problem-builder url_name="some_url_name" weight="1" mode="standard" display_name="Default Title">
+<problem-builder url_name="some_url_name" weight="1" display_name="Default Title">
   <html>
     <p>This paragraph is shared between <strong>all</strong> questions.</p>
   </html>

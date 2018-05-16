@@ -9,7 +9,7 @@ Changes from the original:
 <mentoring xmlns:option="http://code.edx.org/xblock/option">
     <option:xml_content>
         <![CDATA[
-            <mentoring url_name="some_url_name" weight="1" mode="standard">
+            <mentoring url_name="some_url_name" weight="1">
                 <title>Default Title</title>
                 <shared-header>
                     <p>This paragraph is shared between <strong>all</strong> questions.</p>

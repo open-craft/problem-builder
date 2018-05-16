@@ -72,7 +72,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     )
 
     mcq_template = """
-        <problem-builder mode="{mode}">
+        <problem-builder>
             <pb-mcq name="mcq_1_1" question="Who was your favorite character?"
               correct_choices="[gaius,adama,starbuck,roslin,six,lee]"
               {display_name_attr} {show_title_attr}
@@ -88,7 +88,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     mrq_template = """
-        <problem-builder mode="{mode}">
+        <problem-builder>
             <pb-mrq name="mrq_1_1" question="What makes a great MRQ?"
               ignored_choices="[1,2,3]"
               {display_name_attr} {show_title_attr}
@@ -101,7 +101,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     rating_template = """
-        <problem-builder mode="{mode}">
+        <problem-builder>
             <pb-rating name="rating_1_1" question="How do you rate Battlestar Galactica?"
               correct_choices="[5,6]"
               {display_name_attr} {show_title_attr}
@@ -112,7 +112,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     long_answer_template = """
-        <problem-builder mode="{mode}">
+        <problem-builder>
             <pb-answer name="answer_1_1" question="What did you think of the ending?"
               {display_name_attr} {show_title_attr} />
         </problem-builder>
@@ -134,20 +134,18 @@ class StepTitlesTest(SeleniumXBlockTest):
         # We use a loop within the test rather than DDT, because this is WAY faster
         # since we can bypass the Selenium set-up and teardown
         for display_name, show_title, expected_title in self.test_parameters:
-            for mode in ("standard", "assessment"):
-                for qtype in ("mcq", "mrq", "rating", "long_answer"):
-                    template = getattr(self, qtype + "_template")
-                    xml = template.format(
-                        mode=mode,
-                        display_name_attr='display_name="{}"'.format(display_name) if display_name is not None else "",
-                        show_title_attr='show_title="{}"'.format(show_title) if show_title is not None else "",
-                    )
-                    self.set_scenario_xml(xml)
-                    pb_element = self.go_to_view()
-                    if expected_title:
-                        h4 = pb_element.find_element_by_css_selector('h4')
-                        self.assertEqual(h4.text, expected_title)
-                    else:
-                        # No <h4> element should be present:
-                        all_h4s = pb_element.find_elements_by_css_selector('h4')
-                        self.assertEqual(len(all_h4s), 0)
+            for qtype in ("mcq", "mrq", "rating", "long_answer"):
+                template = getattr(self, qtype + "_template")
+                xml = template.format(
+                    display_name_attr='display_name="{}"'.format(display_name) if display_name is not None else "",
+                    show_title_attr='show_title="{}"'.format(show_title) if show_title is not None else "",
+                )
+                self.set_scenario_xml(xml)
+                pb_element = self.go_to_view()
+                if expected_title:
+                    h4 = pb_element.find_element_by_css_selector('h4')
+                    self.assertEqual(h4.text, expected_title)
+                else:
+                    # No <h4> element should be present:
+                    all_h4s = pb_element.find_elements_by_css_selector('h4')
+                    self.assertEqual(len(all_h4s), 0)

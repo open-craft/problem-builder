@@ -52,7 +52,6 @@ class TestUpgrade(unittest.TestCase):
         "v1_upgrade_a",
         "v1_upgrade_b",
         "v1_upgrade_c",
-        "v1_upgrade_d",
     )
     @XBlock.register_temp_plugin(HtmlBlock, "html")
     @XBlock.register_temp_plugin(MentoringBlock, "mentoring")

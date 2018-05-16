@@ -1,4 +1,4 @@
-<problem-builder display_name="Default Title" weight="1" mode="standard">
+<problem-builder display_name="Default Title" weight="1">
     <html_demo>
         <p>Please answer the questions below.</p>
     </html_demo>
