@@ -138,9 +138,11 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         def get_mock_components():
             child_a = Mock(spec=['student_view_data'])
             child_a.block_id = 'child_a'
+            child_a.category = 'text'
             child_a.student_view_data.return_value = 'child_a_json'
             child_b = Mock(spec=[])
             child_b.block_id = 'child_b'
+            child_b.category = 'html'
             return [child_a, child_b]
         shared_data = {
             'max_attempts': 3,
@@ -161,9 +163,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         expected = {
             'block_id': '1',
             'display_name': display_name,
-            'components': [
-                'child_a_json',
-            ],
+            'components': ['child_a_json'],
             'messages': {
                 'completed': None,
                 'incomplete': None,

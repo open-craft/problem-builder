@@ -146,6 +146,14 @@ class MentoringStepBlock(
         except ImportError:
             pass
 
+        try:
+            from ooyala_player import OoyalaPlayerBlock
+            additional_blocks.append(NestedXBlockSpec(
+                OoyalaPlayerBlock, category='ooyala-player', label=_(u"Ooyala Player")
+            ))
+        except ImportError:
+            pass
+
         return [
             NestedXBlockSpec(AnswerBlock, boilerplate='studio_default'),
             MCQBlock, RatingBlock, MRQBlock, CompletionBlock,
