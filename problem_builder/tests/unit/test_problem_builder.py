@@ -26,9 +26,93 @@ class TestMRQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         self.assertItemsEqual(
             block.student_view_data().keys(),
             [
-                'hide_results', 'tips', 'block_id', 'display_name',
-                'weight', 'title', 'question', 'message', 'type', 'id', 'choices'
+                'hide_results', 'tips', 'block_id', 'display_name', 'weight',
+                'question_parts', 'title', 'question', 'message', 'type', 'id', 'choices'
             ]
+        )
+
+
+class TestMCQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
+    def test_student_view_data_question_parts_with_script_and_html(self):
+        """
+        Test that question is being broken into parts correctly.
+        """
+        question_html = """
+        <p>Add the content you want students to see on this page.</p>
+        <script src="//player.ooyala.com/v3/635104fd644c4170ae227af2de27deab"></script>
+        <div id="ooyalaplayer_1" style="width: 320px; height: 180px;"></div>
+        <script>// <![CDATA[
+        OO.ready(function() { OO.Player.create('ooyalaplayer_1', 'VBHbewhjfwjkOEWDNFaskdnwfweNJKWkl'); });
+        // ]]></script>
+        <noscript><div>Please enable Javascript to watch this video</div></noscript><p></p>
+        """
+        expected_question_parts = {
+            'html_before_video': '<p>Add the content you want students to see on this page.</p>',
+            'html_after_video': '<p></p>',
+            'ooyala_video_id': u'VBHbewhjfwjkOEWDNFaskdnwfweNJKWkl'
+        }
+        block = MCQBlock(Mock(), DictFieldData(
+            {
+                'display_name': 'My MCQ',
+                'question': question_html
+            }
+        ), Mock())
+
+        self.assertEqual(
+            block.student_view_data().get('question_parts'),
+            expected_question_parts
+        )
+
+    def test_student_view_data_question_parts_with_script(self):
+        """
+        Test that question is being broken into parts correctly, if question contains script only.
+        """
+        question_html = """
+        <script src="//player.ooyala.com/v3/635104fd644c4170ae227af2de27deab"></script>
+        <div id="ooyalaplayer_1" style="width: 320px; height: 180px;"></div>
+        <script>// <![CDATA[
+        OO.ready(function() { OO.Player.create('ooyalaplayer_1', 'VBHbewhjfwjkOEWDNFaskdnwfweNJKWkl'); });
+        // ]]></script>
+        """
+        expected_question_parts = {
+            'html_before_video': '',
+            'html_after_video': '',
+            'ooyala_video_id': u'VBHbewhjfwjkOEWDNFaskdnwfweNJKWkl'
+        }
+        block = MCQBlock(Mock(), DictFieldData(
+            {
+                'display_name': 'My MCQ',
+                'question': question_html
+            }
+        ), Mock())
+
+        self.assertEqual(
+            block.student_view_data().get('question_parts'),
+            expected_question_parts
+        )
+
+    def test_student_view_data_question_parts_without_script(self):
+        """
+        Test that question is being broken into parts correctly, if question contains no script.
+        """
+        question_html = """
+        <p>Add the content you want students to see on this page.</p>
+        """
+        expected_question_parts = {
+            'html_before_video': '<p>Add the content you want students to see on this page.</p>',
+            'html_after_video': '',
+            'ooyala_video_id': ''
+        }
+        block = MCQBlock(Mock(), DictFieldData(
+            {
+                'display_name': 'My MCQ',
+                'question': question_html
+            }
+        ), Mock())
+
+        self.assertEqual(
+            block.student_view_data().get('question_parts'),
+            expected_question_parts
         )
 
 

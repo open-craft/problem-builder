@@ -212,6 +212,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'type': self.CATEGORY,
             'weight': self.weight,
             'question': self.question,
+            'question_parts': self.split_question(),
             'message': self.message,
             'choices': [
                 {'value': choice['value'], 'content': choice['display_name']}
