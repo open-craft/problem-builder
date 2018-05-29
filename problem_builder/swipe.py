@@ -74,6 +74,7 @@ class SwipeBlock(
         display_name=_("Correct Choice"),
         help=_("Specifies whether the card is correct."),
         scope=Scope.content,
+        default=False,
     )
 
     feedback_correct = String(
