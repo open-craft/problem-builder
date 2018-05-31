@@ -370,6 +370,14 @@ class MentoringBlock(
         except ImportError:
             pass
 
+        try:
+            from ooyala_player import OoyalaPlayerBlock
+            additional_blocks.append(NestedXBlockSpec(
+                OoyalaPlayerBlock, category='ooyala-player', label=_(u"Ooyala Player")
+            ))
+        except ImportError:
+            pass
+
         message_block_shims = [
             NestedXBlockSpec(
                 MentoringMessageBlock,
@@ -930,6 +938,7 @@ class MentoringBlock(
             block = self.runtime.get_block(child_id)
             if hasattr(block, 'student_view_data'):
                 components.append(block.student_view_data())
+
         return {
             'block_id': unicode(self.scope_ids.usage_id),
             'display_name': self.display_name,
