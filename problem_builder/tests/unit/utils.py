@@ -44,6 +44,7 @@ class BlockWithChildrenTestMixin(object):
     ADDITIONAL_BLOCKS = [
         'video',
         'imagemodal',
+        'ooyala-player',
     ]
 
     def get_allowed_blocks(self, block):
@@ -66,7 +67,8 @@ class BlockWithChildrenTestMixin(object):
             'xmodule': xmodule_mock,
             'xmodule.video_module': xmodule_mock.video_module,
             'xmodule.video_module.video_module': xmodule_mock.video_module.video_module,
-            'imagemodal': Mock()
+            'imagemodal': Mock(),
+            'ooyala_player': Mock(),
         }
         with patch.dict(modules, fake_modules):
             self.assertEqual(
