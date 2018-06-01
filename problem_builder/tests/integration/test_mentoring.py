@@ -67,7 +67,6 @@ class MentoringThemeTest(MentoringAssessmentBaseTest):
     @ddt.unpack
     @ddt.data(
         ('lms', "#c1373f", "Question"),
-        ('apros', "#ff0000", "QUESTION")
     )
     def test_lms_theme_applied(self, theme, expected_color, question_text):
         with mock.patch("problem_builder.mentoring.MentoringBlock.get_theme") as patched_theme:
