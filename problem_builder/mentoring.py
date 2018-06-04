@@ -42,7 +42,7 @@ from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
-from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
+from xblockutils.settings import XBlockWithSettingsMixin
 from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin,
 )
@@ -91,7 +91,7 @@ PARTIAL = 'partial'
 @XBlock.wants('settings')
 class BaseMentoringBlock(
     XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
-    StudioEditableXBlockMixin, ThemableXBlockMixin, MessageParentMixin,
+    StudioEditableXBlockMixin, MessageParentMixin,
     StudentViewUserStateMixin,
 ):
     """
