@@ -91,8 +91,7 @@ PARTIAL = 'partial'
 @XBlock.wants('settings')
 class BaseMentoringBlock(
     XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
-    StudioEditableXBlockMixin, MessageParentMixin,
-    StudentViewUserStateMixin,
+    StudioEditableXBlockMixin, MessageParentMixin, StudentViewUserStateMixin,
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -222,7 +221,6 @@ class BaseMentoringBlock(
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
-        self.include_theme_files(fragment)
         return fragment
 
     def max_score(self):
@@ -490,7 +488,6 @@ class MentoringBlock(
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
 
-        self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
         if WorkbenchRuntime and isinstance(self.runtime, WorkbenchRuntime):
             fragment.add_css_url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
@@ -990,9 +987,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-
-        self.include_theme_files(fragment)
-
         fragment.initialize_js('MentoringWithStepsBlock', {
             'show_extended_feedback': self.show_extended_feedback(),
         })
