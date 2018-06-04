@@ -21,9 +21,7 @@
 # Imports ###########################################################
 
 import ddt
-from mock import patch, Mock
 
-from problem_builder.mentoring import MentoringBlock
 from .base_test import MentoringBaseTest
 
 
