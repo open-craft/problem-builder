@@ -42,7 +42,7 @@ from .step_review import ReviewStepBlock
 
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
-from xblockutils.settings import XBlockWithSettingsMixin, ThemableXBlockMixin
+from xblockutils.settings import XBlockWithSettingsMixin
 from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin,
 )
@@ -91,8 +91,7 @@ PARTIAL = 'partial'
 @XBlock.wants('settings')
 class BaseMentoringBlock(
     XBlock, XBlockWithTranslationServiceMixin, XBlockWithSettingsMixin,
-    StudioEditableXBlockMixin, ThemableXBlockMixin, MessageParentMixin,
-    StudentViewUserStateMixin,
+    StudioEditableXBlockMixin, MessageParentMixin, StudentViewUserStateMixin,
 ):
     """
     An XBlock that defines functionality shared by mentoring blocks.
@@ -133,11 +132,6 @@ class BaseMentoringBlock(
     icon_class = 'problem'
     block_settings_key = 'mentoring'
     options_key = 'options'
-
-    default_theme_config = {
-        'package': 'problem_builder',
-        'locations': ['public/themes/lms.css']
-    }
 
     @property
     def url_name(self):
@@ -222,7 +216,7 @@ class BaseMentoringBlock(
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
-        self.include_theme_files(fragment)
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/lms.css'))
         return fragment
 
     def max_score(self):
@@ -510,6 +504,7 @@ class MentoringBlock(
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/lms.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         js_file = 'public/js/mentoring_{}_view.js'.format('assessment' if self.is_assessment else 'standard')
@@ -521,7 +516,6 @@ class MentoringBlock(
                 loader.load_unicode('templates/html/mentoring_assessment_templates.html'), "text/html"
             )
 
-        self.include_theme_files(fragment)
         # Workbench doesn't have font awesome, so add it:
         if WorkbenchRuntime and isinstance(self.runtime, WorkbenchRuntime):
             fragment.add_css_url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css')
@@ -1152,14 +1146,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'children_contents': children_contents,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
+        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/lms.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
         fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
-
-        self.include_theme_files(fragment)
-
         fragment.initialize_js('MentoringWithStepsBlock', {
             'show_extended_feedback': self.show_extended_feedback(),
         })
