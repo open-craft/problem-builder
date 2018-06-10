@@ -21,9 +21,7 @@
 # Imports ###########################################################
 
 import ddt
-from mock import patch, Mock
 
-from problem_builder.mentoring import MentoringBlock
 from .base_test import MentoringBaseTest
 
 
@@ -282,8 +280,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         self.assertEqual(feedback_height, expected_height)
 
 
-@patch.object(MentoringBlock, 'get_theme', Mock(return_value={'package': 'problem_builder',
-                                                              'locations': ['public/themes/lms.css']}))
 class QuestionnaireBlockAprosThemeTest(QuestionnaireBlockTest):
     """
     Test MRQ/MCQ questions without the LMS theme which is on by default.
