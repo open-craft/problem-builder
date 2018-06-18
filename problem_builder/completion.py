@@ -23,7 +23,7 @@
 import logging
 
 from xblock.core import XBlock
-from xblock.fields import Scope, String, Boolean
+from xblock.fields import JSONField, Scope, String, UNSET
 from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.resources import ResourceLoader
@@ -44,6 +44,51 @@ def _(text):
 
 
 # Classes ###########################################################
+
+
+class NullableBoolean(JSONField):
+    """
+    A field class for representing a boolean which may also be ``null``,
+    indicating that a value has not been assigned.
+
+    The value, as loaded or enforced, can be either a Python bool, ``None``,
+    a string, or any value that will then be converted to a bool in the
+    ``from_json`` method.
+
+    Examples:
+1
+    ::
+
+        True -> True
+        'true' -> True
+        'TRUE' -> True
+        'any other string' -> False
+        [] -> False
+        ['123'] -> True
+        None - > None
+
+    """
+    # We're OK redefining built-in `help`
+    def __init__(self, help=None, default=UNSET, scope=Scope.content, display_name=None,
+                 **kwargs):  # pylint: disable=redefined-builtin
+        super(NullableBoolean, self).__init__(help, default, scope, display_name,
+                                              values=({'display_name': "True", "value": True},
+                                                      {'display_name': "False", "value": False},
+                                                      {'display_name': "Null", "value": None}),
+                                              **kwargs)
+
+    def from_json(self, value):
+        if value is None:
+            return None
+        if isinstance(value, str):
+            value = value.decode('ascii', errors='replace')
+        if isinstance(value, unicode):
+            return value.lower() == 'true'
+        else:
+            return bool(value)
+
+    enforce_type = from_json
+
 
 @XBlock.needs('i18n')
 class CompletionBlock(
@@ -79,7 +124,7 @@ class CompletionBlock(
         default=_('Yes, I attended the session.'),
     )
 
-    student_value = Boolean(
+    student_value = NullableBoolean(
         help=_("Records student's answer."),
         scope=Scope.user_state,
         default=None,
