@@ -1,0 +1,11 @@
+<script type="text/template" id="xblock-attempts-template">
+  <% if (_.isNumber(max_attempts) && max_attempts > 0) {{ %>
+  <span>
+  	<%= _.template(
+	    ngettext("You have used {num_used} of 1 submission.", "You have used {num_used} of {max_attempts} submissions.", max_attempts),
+	    {num_used: _.min([num_attempts, max_attempts]), max_attempts: max_attempts}, {interpolate: /\{(.+?)\}/g}
+	  ) 
+	  %>
+  </span>
+  <% }} %>
+</script>

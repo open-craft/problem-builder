@@ -483,7 +483,7 @@ class MentoringBlock(
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.underscore'), "text/html")
 
         # Workbench doesn't have font awesome, so add it:
         if WorkbenchRuntime and isinstance(self.runtime, WorkbenchRuntime):
@@ -984,7 +984,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.html'), "text/html")
+        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.underscore'), "text/html")
         fragment.initialize_js('MentoringWithStepsBlock', {
             'show_extended_feedback': self.show_extended_feedback(),
         })

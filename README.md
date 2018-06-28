@@ -115,11 +115,14 @@ To extract/update strings for translation, you will need i18n_tools:
 pip install git+https://github.com/edx/i18n-tools.git#egg=i18n_tools
 ```
 
-To extract strings, use `i18n_tool extract`. To build a dummy translation for
-testing, use:
-
+To extract strings, use `i18n_tool`. We added two dummy translations for testing. Easily set your openedx instance to use one of them (`eo` and `rtl`) and check.  
+If you want to add a new language:
+  1. Clone `en` directory to `problem_builder/locale/<lang_code>/` for example: `problem_builder/locale/fa_IR/`
+  2. Make neccessary changes to translation files headers. Make sure you have proper `Language` and `Plural-Forms` lines.
+  3. Edit the contents of .po files located in `problem_builder/locale/<lang_code>/LC_MESSAGES` as you wish
+  4. When you finished your modification process, re-compile the translation messages manually by executing the following command in the root of xblock:
 ```bash
-i18n_tool dummy && i18n_tool generate
+i18n_tool generate
 ```
 
 
