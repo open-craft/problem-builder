@@ -37,13 +37,14 @@ containing a free-form question, two MCQs and one MRQ:
 Installation
 ------------
 
-Install the requirements into the Python virtual environment of your
-`edx-platform` installation by running the following command from the
-root folder:
+You can install Problem Builder from [PyPI](https://pypi.org/project/xblock-problem-builder/)
+using this command:
 
-```bash
-$ pip install -r requirements.txt
 ```
+pip install xblock-problem-builder
+```
+
+For full details, see "Open edX Installation", below.
 
 Usage
 -----
@@ -53,8 +54,9 @@ See [Usage Instructions](doc/Usage.md)
 Workbench installation and settings
 -----------------------------------
 
-Install to the workbench's virtualenv by running the following command from the
-problem builder repo root:
+For developers, you can install this XBlock into the XBlock SDK workbench's
+virtualenv by running the following command from the problem builder repo
+root:
 
 ```bash
 pip install -r requirements.txt
@@ -161,24 +163,19 @@ version, with the exception of the following compatibility issues:
 * `edx-platform` version `open-release/eucalyptus.2` and earlier must use
   ≤[v2.6.0](https://github.com/open-craft/problem-builder/tree/v2.6.0).  See
   [PR 128](https://github.com/open-craft/problem-builder/pull/128) for details.
-* `edx-platform` version `named-release/dogwood.3` must use
+* `edx-platform` version `named-release/dogwood.3` and earlier must use
   [v2.0.0](https://github.com/open-craft/problem-builder/tree/v2.0.0).
-* Otherwise, consult the `edx-platform/requirements/edx/edx-private.txt` file to see which revision was
-  used by [edx.org](https://edx.org) for your branch.
 
 The `edx-platform` `master` branch will generally always be compatible with the most recent Problem Builder tag.  See
-[edx-private.txt](https://github.com/edx/edx-platform/blob/master/requirements/edx/edx-private.txt) for the version
+[the EDXAPP_PRIVATE_REQUIREMENTS setting](https://github.com/edx/configuration/blob/master/playbooks/roles/edxapp/defaults/main.yml) for the version
 currently installed on [edx.org](https://edx.org).
 
-To install Problem Builder on an Open edX installation, choose the tag you wish to install, and run:
+To install new versions of Problem Builder (v3.1.3+), use `pip install xblock-problem-builder` or specify a version using e.g. `pip install xblock-problem-builder==3.1.3`. To do this on Open edX could look like:
 
 ```bash
-$ sudo -u edxapp -Hs
-edxapp $ cd ~
-edxapp $ source edxapp_env
-edxapp $ TAG='v2.6.5'  # example revision
-edxapp $ pip install "git+https://github.com/open-craft/problem-builder.git@$TAG#egg=xblock-problem-builder==$TAG"
-edxapp $ cd edx-platform
+$ sudo -Hu edxapp bash
+edxapp $ cd && . edxapp_env  && . ./venvs/edxapp/bin/activate && cd edx-platform/
+edxapp $ pip install xblock-problem-builder
 edxapp $ ./manage.py lms migrate --settings=aws  # or openstack, as appropriate
 ```
 
@@ -188,7 +185,20 @@ $ sudo /edx/bin/supervisorctl restart edxapp:
 $ sudo /edx/bin/supervisorctl restart edxapp_workers:
 ```
 
+To install old verions of Problem Builder (< v3.1.3) on an Open edX installation, choose the tag you wish to install, follow the above instructions but instead of the `pip install xblock-problem-builder` command, use:
+
+```
+TAG='v2.6.5' pip install "git+https://github.com/open-craft/problem-builder.git@$TAG#egg=xblock-problem-builder==$TAG"
+```
+
 See [Usage Instructions](doc/Usage.md) for how to enable in Studio.
+
+Publishing to PyPI
+------------------
+
+Whenever we tag a new version, e.g. `v3.1.3` and push it to GitHub, CircleCI will
+build it and deploy it to PyPI automatically. For details on how this works, see
+[this pull request](https://github.com/open-craft/problem-builder/pull/199).
 
 License
 -------
