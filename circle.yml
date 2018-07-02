@@ -14,9 +14,6 @@ jobs:
             virtualenv venv
             . venv/bin/activate
             pip install -U pip wheel
-            # Temporarily pin setuptools to a specific version.
-            # See commit message of https://github.com/open-craft/problem-builder/commit/51277a34fb426724616618c1afdb893ab2de4c6b for more info:
-            pip install setuptools==24.3.1
             pip install -e git://github.com/edx/xblock-sdk.git@bddf9f4a2c6e4df28a411c8f632cc2250170ae9d#egg=xblock-sdk
             pip install -r requirements.txt
             pip install -r venv/src/xblock-sdk/requirements/base.txt
@@ -45,3 +42,59 @@ jobs:
             if [ $CIRCLE_NODE_INDEX = '1' ]; then pylint problem_builder --disable=all --enable=function-redefined,undefined-variable,unused-import,unused-variable; fi
             TESTFILES=$(circleci tests glob "problem_builder/v1/tests/**/*.py" "problem_builder/tests/**/*.py"| circleci tests split)
             xvfb-run --server-args="-screen 0 1280x1024x24" python run_tests.py ${TESTFILES}
+
+  deploy:
+    docker:
+      - image: circleci/python:2.7.14
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "setup.py" }}
+      - run:
+          name: Install dependencies
+          command: |
+            virtualenv venv
+            . venv/bin/activate
+            pip install -U pip twine wheel
+      - save_cache:
+          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "setup.py" }}
+          paths:
+            - "venv"
+      - run:
+          name: Verify commit is tagged and tag matches version
+          command: |
+            . venv/bin/activate
+            python setup.py verify_tag
+      - run:
+          name: Initialize .pypirc
+          command: |
+            echo -e "[pypi]" >> ~/.pypirc
+            echo -e "username = opencraft" >> ~/.pypirc
+            echo -e "password = $PYPI_PASSWORD" >> ~/.pypirc
+      - run:
+          name: Create packages
+          command: |
+            python setup.py sdist
+            python setup.py bdist_wheel
+      - run:
+          name: Upload to pypi
+          command: |
+            . venv/bin/activate
+            twine upload dist/*
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/

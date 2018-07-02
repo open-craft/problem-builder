@@ -21,7 +21,14 @@
 # Imports ###########################################################
 
 import os
+import sys
 from setuptools import setup, find_packages
+from setuptools.command.install import install
+
+
+# Constants #########################################################
+
+VERSION = '3.1.3'
 
 
 # Functions #########################################################
@@ -35,6 +42,20 @@ def package_data(pkg, root_list):
                 data.append(os.path.relpath(os.path.join(dirname, fname), pkg))
 
     return {pkg: data}
+
+
+class VerifyTagCommand(install):
+    """Custom command to verify that the git tag matches the current version."""
+    description = 'verify that the git tag matches the current version'
+
+    def run(self):
+        tag = os.getenv('CIRCLE_TAG')
+
+        if tag != 'v{}'.format(VERSION):
+            info = "Git tag: {0} does not match the version of this app: {1}".format(
+                tag, VERSION
+            )
+            sys.exit(info)
 
 
 # Main ##############################################################
@@ -72,7 +93,7 @@ BLOCKS = [
 
 setup(
     name='xblock-problem-builder',
-    version='3.1.2',
+    version=VERSION,
     description='XBlock - Problem Builder',
     packages=find_packages(),
     install_requires=[
@@ -83,4 +104,7 @@ setup(
         'xblock.v1': BLOCKS,
     },
     package_data=package_data("problem_builder", ["templates", "public", "migrations"]),
+    cmdclass={
+        'verify_tag': VerifyTagCommand,
+    },
 )
