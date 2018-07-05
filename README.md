@@ -191,6 +191,12 @@ To install old verions of Problem Builder (< v3.1.3) on an Open edX installation
 TAG='v2.6.5' pip install "git+https://github.com/open-craft/problem-builder.git@$TAG#egg=xblock-problem-builder==$TAG"
 ```
 
+Note that Problem Builder requires [xblock-utils](https://github.com/edx/xblock-utils).
+If you are installing it into a virtualenv used by edx-platform, xblock-utils should
+already be installed. But if you are installing it into another virtualenv, you may
+need to first install xblock-utils manually (recent versions of it are not available
+on PyPI so will not be automatically installed).
+
 See [Usage Instructions](doc/Usage.md) for how to enable in Studio.
 
 Publishing to PyPI
