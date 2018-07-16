@@ -10,3 +10,16 @@
 .idea/*
 dump.rdb
 problem_builder.tests.*
+
+### Internationalization artifacts
+*.mo
+*.po
+*.prob
+*.dup
+!django.po
+!django.mo
+!djangojs.po
+!djangojs.mo
+problem_builder/locale/en/LC_MESSAGES/*.mo
+problem_builder/locale/fake*/LC_MESSAGES/*.po
+problem_builder/locale/fake*/LC_MESSAGES/*.mo

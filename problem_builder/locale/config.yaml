@@ -7,11 +7,13 @@ locales:
 # The locales used for fake-accented English, for testing.
 dummy_locales:
     - eo
+    - fake2
+    - rtl
 
 # Directories we don't search for strings.
 ignore_dirs:
-    - mentoring/v1
-    - mentoring/tests
+    - problem_builder/v1
+    - problem_builder/tests
 
 # i18n_tools produces just "django-partial.po" by default, but we need "django.po":
 generate_merge:
@@ -19,3 +21,4 @@ generate_merge:
         - django-partial.po
     djangojs.po:
         - djangojs-partial.po
+        - underscore.po
