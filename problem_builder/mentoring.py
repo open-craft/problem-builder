@@ -216,7 +216,6 @@ class BaseMentoringBlock(
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/lms.css'))
         return fragment
 
     def max_score(self):
@@ -478,7 +477,6 @@ class MentoringBlock(
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/lms.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js'))
@@ -979,7 +977,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             'children_contents': children_contents,
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
-        fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/lms.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
