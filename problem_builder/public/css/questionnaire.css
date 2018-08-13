@@ -2,7 +2,7 @@
     display: table;
     position: relative;
     width: 100%;
-    border-spacing: 0 2px;
+    border-spacing: 0;
     padding-top: 10px;
     margin-bottom: 10px;
 }
@@ -13,6 +13,11 @@
     vertical-align: top;
     cursor: pointer;
     float: none;
+}
+
+.mentoring .questionnaire .feedback {
+    min-height: 100%;
+    border-left: 2px solid #ddd;
 }
 
 .mentoring div[data-block-type=pb-mrq] .questionnaire .choice-result {
@@ -33,15 +38,14 @@
 .mentoring .questionnaire .choice-tips,
 .mentoring .questionnaire .feedback {
     display: none;
-    color: #fff;
+    color: #3c3c3c;
     position: absolute;
     top: 0;
     right: 0;
-    background: none repeat scroll 0 0 #66A5B5;
+    background: transparent;
     font-family: arial;
     font-size: 14px;
-    opacity: 0.9;
-    padding: 22px 10px 10px 10px;
+    padding: 0 20px;
     width: 300px;
     min-height: 40px;
     max-height: 180px;
@@ -63,8 +67,14 @@
     max-height: 180px;
 }
 
+.mentoring .questionnaire .choice-tips p,
+.mentoring .questionnaire .feedback p {
+    color: #3c3c3c;
+}
+
 .mentoring .questionnaire .choice-tips .close,
 .mentoring .questionnaire .feedback .close {
+    display: none;
     cursor: pointer;
     position: absolute;
     top: 5px;
@@ -74,11 +84,6 @@
     font-family: FontAwesome;
     font-style: normal;
     text-align: center;
-}
-
-.mentoring .questionnaire .choice-tips p,
-.mentoring .questionnaire .feedback p {
-    color: #fff;
 }
 
 .mentoring .choices-list .choice-selector {

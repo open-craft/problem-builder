@@ -1,5 +1,5 @@
 .mentoring .title .shared-header {
-    margin: 1em 0em;
+    margin: 1em 0;
 }
 
 .mentoring .messages {
@@ -17,7 +17,7 @@
 
 .mentoring .warning {
     border: 1px solid;
-    margin: 10px 0px;
+    margin: 10px 0;
     padding: 15px 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
@@ -42,7 +42,7 @@
 }
 
 .xblock .mentoring h4 {
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 7px;
 }
 
@@ -101,7 +101,7 @@
 .mentoring .attempts > span {
     color: #777;
     font-style: italic;
-    webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
 }
 
 .mentoring .checkmark-correct {
@@ -118,15 +118,61 @@
 
 .mentoring .checkmark-incorrect {
     font-size: 22pt;
-    color: #ff0000;
+    color: #c1373f;
     float: left;
 }
 
-.mentoring .choice-result{
-    display:block;
-    float: left;
-    height:33.33px;
+.mentoring .choice-result,
+.mentoring .choice-label,
+.mentoring .choice-tips-container {
+    vertical-align: top;
 }
+
+.mentoring .choice-label {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.mentoring .choice-label span.low {
+    line-height: inherit;
+}
+
+.mentoring .choice-tips-container .choice-tips {
+    position: relative;
+}
+
+.mentoring .choice .choice-tips-container.with-tips {
+    border-left: 2px solid #ddd;
+}
+
+.mentoring .choice.correct .choice-tips-container.active {
+    border-color: #629b2b;
+}
+
+.mentoring .choice.incorrect .choice-tips-container.active {
+    border-color: #c1373f;
+}
+
+.mentoring .choice-result::before {
+    content: "";
+    display: block;
+    width: 36px;
+}
+
+.mentoring .choice-result {
+    display: block;
+    float: left;
+    height: 33.33px;
+}
+
+.mentoring .checkmark-correct::before {
+    content: "\f00c";
+}
+
+.mentoring .checkmark-incorrect::before {
+    content: "\f00d";
+}
+
 
 .mentoring .assessment-question-block {
     border: 5px solid #e5ebee;
@@ -150,8 +196,14 @@
     margin: 20px;
 }
 
+.mentoring .grade .grade-result .results-section p {
+    margin-bottom: 4px; /* Override LMS rule 'div.course-wrapper section.course-content p { margin-bottom: huge; }' */
+}
+
 .mentoring .grade .checkmark-incorrect {
-    margin-left: 10px;
+    margin-left: 0;
+    margin-right: 10px;
+    width: 29px;
 }
 
 .mentoring input[type=button],
@@ -173,6 +225,7 @@
 .mentoring .review-list {
     list-style: none;
     padding-left: 0 !important;
+    margin-top: 0;
     margin-left: 0;
     margin-bottom: 0.4em;
 }
@@ -259,4 +312,9 @@
 
 .mentoring .copyright a {
     color: #69C0E8;
+}
+
+div.course-wrapper section.course-content .mentoring p:empty {
+    display: block;
+    margin-bottom: 1.41575em;
 }
