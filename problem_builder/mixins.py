@@ -1,7 +1,10 @@
 import json
+import re
 
 import webob
 from lazy import lazy
+from urlparse import urljoin
+from django.conf import settings
 from problem_builder.tests.unit.utils import DateTimeEncoder
 from xblock.core import XBlock
 from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
@@ -261,3 +264,30 @@ class StudentViewUserStateResultsTransformerMixin(object):
         except KeyError:
             pass
         return dictionary
+
+
+class MakeURLAbsoluteMixin(object):
+    url_pattren = re.compile('<img\s*src="(.*)"')
+
+    def make_url_absolute(self, text):
+        if not text:
+            return text
+
+        try:
+            from static_replace import replace_static_urls
+        except ImportError:
+            return text
+
+        lms_relative_url = replace_static_urls(text, course_id=self.course_id)
+        return self._append_lms_base(lms_relative_url)
+
+    def _append_lms_base(self, text):
+        urls = self.url_pattren.findall(text)
+        if not urls:
+            return text
+
+        lms_base = settings.ENV_TOKENS.get('LMS_BASE')
+        scheme = 'https' if settings.HTTPS == 'on' else 'http'
+        lms_base = '{}://{}'.format(scheme, lms_base)
+        absolute_url = urljoin(lms_base, urls[0])
+        return text.replace(urls[0], absolute_url)
