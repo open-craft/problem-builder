@@ -26,7 +26,7 @@ from xblock.fields import List, Scope, Boolean, String
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
-from problem_builder.mixins import StudentViewUserStateMixin, MakeURLAbsoluteMixin
+from problem_builder.mixins import StudentViewUserStateMixin, ExpandStaticURLMixin
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api, SubmittingXBlockMixin
 
@@ -43,7 +43,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock, MakeURLAbsoluteMixin):
+class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock, ExpandStaticURLMixin):
     """
     An XBlock used to ask multiple-response questions
     """
@@ -211,10 +211,10 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'title': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
-            'question': self.make_url_absolute(self.question),
+            'question': self.expand_static_url(self.question),
             'message': self.message,
             'choices': [
-                {'value': choice['value'], 'content': self.make_url_absolute(choice['display_name'])}
+                {'value': choice['value'], 'content': self.expand_static_url(choice['display_name'])}
                 for choice in self.human_readable_choices
             ],
             'hide_results': self.hide_results,

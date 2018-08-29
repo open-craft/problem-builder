@@ -4,15 +4,13 @@ from datetime import datetime
 
 import pytz
 from mock import MagicMock, Mock
-from ddt import ddt, data, unpack
-from django.test import override_settings
 
 from xblock.core import XBlock
 from xblock.field_data import DictFieldData
 from xblock.fields import String, Scope, Boolean, Integer, DateTime
 
-from problem_builder.mixins import StudentViewUserStateMixin, MakeURLAbsoluteMixin
-from problem_builder.tests.unit.utils import patch_static_replace_module
+from problem_builder.mixins import StudentViewUserStateMixin
+
 
 class NoUserStateFieldsMixin(object):
     scope_settings = String(name="Field1", scope=Scope.settings)
@@ -282,26 +280,3 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         expected["user_info_2"] = expected["user_info_2"].isoformat()
         expected["components"] = {"child1": {}}
         self.assertEqual(student_user_state, expected)
-
-
-class MakeURLAbsoluteMixinWrapper(MakeURLAbsoluteMixin):
-    course_id = "test"
-
-
-@ddt
-class TestMakeURLAbsoluteMixin(unittest.TestCase):
-    def setUp(self):
-        patch_static_replace_module()
-
-    @data(
-        (None, None),
-        ("", ""),
-        ("Test text", "Test text"),
-        ("<img src=\"test.png\" />", "<img src=\"https://lms/test.png\" />"),
-        ("Test question  <img src=\"test.png\" />", "Test question  <img src=\"https://lms/test.png\" />"),
-    )
-    @unpack
-    @override_settings(ENV_TOKENS={'LMS_BASE': 'lms'}, HTTPS='on')
-    def test_make_url_absolute(self, value, expected):
-        value = MakeURLAbsoluteMixinWrapper().make_url_absolute(value)
-        self.assertEqual(value, expected)

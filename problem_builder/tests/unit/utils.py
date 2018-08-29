@@ -100,20 +100,3 @@ class DateTimeEncoder(json.JSONEncoder):
             return o.isoformat()
 
         return json.JSONEncoder.default(self, o)
-
-
-def patch_static_replace_module():
-    """
-    patches platform's `static_replace` module as it's
-    unavailable in test environment
-    """
-    mocked_static_replace = MagicMock()
-    mocked_static_replace.replace_static_urls = _mocked_replace_static_urls
-    patch.dict('sys.modules', static_replace=mocked_static_replace).start()
-
-
-def _mocked_replace_static_urls(url, course_id):
-    """
-    fake `replace_static_urls` method
-    """
-    return url

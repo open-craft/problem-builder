@@ -1,10 +1,7 @@
 import json
-import re
 
 import webob
 from lazy import lazy
-from urlparse import urljoin
-from django.conf import settings
 from problem_builder.tests.unit.utils import DateTimeEncoder
 from xblock.core import XBlock
 from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
@@ -266,28 +263,26 @@ class StudentViewUserStateResultsTransformerMixin(object):
         return dictionary
 
 
-class MakeURLAbsoluteMixin(object):
-    url_pattren = re.compile('<img\s*src="(.*)"')
+class ExpandStaticURLMixin(object):
 
-    def make_url_absolute(self, text):
+    def expand_static_url(self, text):
+        """
+        This is required to make URLs like '/static/dnd-test-image.png' work (note: that is the
+        only portable URL format for static files that works across export/import and reruns).
+        This method is unfortunately a bit hackish since XBlock does not provide a low-level API
+        for this.
+        """
         if not text:
             return text
 
-        try:
-            from static_replace import replace_static_urls
-        except ImportError:
-            return text
-
-        lms_relative_url = replace_static_urls(text, course_id=self.course_id)
-        return self._append_lms_base(lms_relative_url)
-
-    def _append_lms_base(self, text):
-        urls = self.url_pattren.findall(text)
-        if not urls:
-            return text
-
-        lms_base = settings.ENV_TOKENS.get('LMS_BASE')
-        scheme = 'https' if settings.HTTPS == 'on' else 'http'
-        lms_base = '{}://{}'.format(scheme, lms_base)
-        absolute_url = urljoin(lms_base, urls[0])
-        return text.replace(urls[0], absolute_url)
+        if hasattr(self.runtime, 'replace_urls'):
+            text = self.runtime.replace_urls(text)
+        elif hasattr(self.runtime, 'course_id'):
+            # edX Studio uses a different runtime for 'studio_view' than 'student_view',
+            # and the 'studio_view' runtime doesn't provide the replace_urls API.
+            try:
+                from static_replace import replace_static_urls  # pylint: disable=import-error
+                text = replace_static_urls(text, course_id=self.runtime.course_id)
+            except ImportError:
+                pass
+        return text
