@@ -27,7 +27,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
-from problem_builder.mixins import StudentViewUserStateMixin
+from problem_builder.mixins import StudentViewUserStateMixin, ExpandStaticURLMixin
 from .questionnaire import QuestionnaireAbstractBlock
 from .sub_api import sub_api, SubmittingXBlockMixin
 
@@ -45,7 +45,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock):
+class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAbstractBlock, ExpandStaticURLMixin):
     """
     An XBlock used to ask multiple-choice questions
     """
@@ -179,10 +179,10 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'block_id': unicode(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
-            'question': self.question,
+            'question': self.expand_static_url(self.question),
             'message': self.message,
             'choices': [
-                {'value': choice['value'], 'content': choice['display_name']}
+                {'value': choice['value'], 'content': self.expand_static_url(choice['display_name'])}
                 for choice in self.human_readable_choices
             ],
             'weight': self.weight,

@@ -30,7 +30,7 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
-from problem_builder.mixins import XBlockWithTranslationServiceMixin
+from problem_builder.mixins import XBlockWithTranslationServiceMixin, ExpandStaticURLMixin
 
 loader = ResourceLoader(__name__)
 
@@ -43,7 +43,7 @@ def _(text):
 
 
 @XBlock.needs("i18n")
-class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBlock):
+class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBlock, ExpandStaticURLMixin):
     """
     Each choice can define a tip depending on selection
     """
@@ -98,7 +98,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
     def student_view_data(self, context=None):
         return {
             'display_name': self.display_name_with_default,
-            'content': self.content,
+            'content': self.expand_static_url(self.content),
             'for_choices': self.values,
         }
 

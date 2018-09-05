@@ -270,3 +270,28 @@ class StudentViewUserStateResultsTransformerMixin(object):
         except KeyError:
             pass
         return dictionary
+
+
+class ExpandStaticURLMixin(object):
+
+    def expand_static_url(self, text):
+        """
+        This is required to make URLs like '/static/dnd-test-image.png' work (note: that is the
+        only portable URL format for static files that works across export/import and reruns).
+        This method is unfortunately a bit hackish since XBlock does not provide a low-level API
+        for this.
+        """
+        if not text:
+            return text
+
+        if hasattr(self.runtime, 'replace_urls'):
+            text = self.runtime.replace_urls(text)
+        elif hasattr(self.runtime, 'course_id'):
+            # edX Studio uses a different runtime for 'studio_view' than 'student_view',
+            # and the 'studio_view' runtime doesn't provide the replace_urls API.
+            try:
+                from static_replace import replace_static_urls  # pylint: disable=import-error
+                text = replace_static_urls(text, course_id=self.runtime.course_id)
+            except ImportError:
+                pass
+        return text
