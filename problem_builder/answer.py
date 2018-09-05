@@ -31,7 +31,7 @@ from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
+from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin, ExpandStaticURLMixin
 import uuid
 
 
@@ -134,7 +134,8 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
 
 
 @XBlock.needs("i18n")
-class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEditableXBlockMixin, XBlock):
+class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEditableXBlockMixin,
+                  XBlock, ExpandStaticURLMixin):
     """
     A field where the student enters an answer
 
@@ -270,7 +271,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
             'display_name': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
-            'question': self.question,
+            'question': self.expand_static_url(self.question),
             'name': self.name,  # For backwards compatibility; same as 'id'
         }
 
