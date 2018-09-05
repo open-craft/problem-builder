@@ -29,7 +29,7 @@ from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
 
-from problem_builder.mixins import XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
+from problem_builder.mixins import XBlockWithTranslationServiceMixin, StudentViewUserStateMixin, ExpandStaticURLMixin
 
 
 # Make '_' a no-op so we can scrape strings
@@ -42,7 +42,7 @@ def _(text):
 @XBlock.needs("i18n")
 class ChoiceBlock(
     StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin,
-    XBlock
+    XBlock, ExpandStaticURLMixin
 ):
     """
     Custom choice of an answer for a MCQ/MRQ
@@ -77,9 +77,9 @@ class ChoiceBlock(
         # display_name_with_default gives out correctness - not adding it here
         return {
             'block_id': unicode(self.scope_ids.usage_id),
-            'display_name': self._(u"Choice ({content})").format(content=self.content),
+            'display_name': self.expand_static_url(self._(u"Choice ({content})").format(content=self.content)),
             'value': self.value,
-            'content': self.content,
+            'content': self.expand_static_url(self.content),
         }
 
     def mentoring_view(self, context=None):
