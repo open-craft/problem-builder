@@ -19,8 +19,9 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         }
 
         mock_runtime = Mock(
-            get_block=lambda block_id: blocks_by_id[block_id],
+            replace_urls=lambda text: text,
             load_block_type=lambda block: block.__class__,
+            get_block=lambda block_id: blocks_by_id[block_id],
             service=lambda _, service_id: services_mocks.get(service_id),
             id_reader=Mock(
                 get_definition_id=lambda block_id: block_id,

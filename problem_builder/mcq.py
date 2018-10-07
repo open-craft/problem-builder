@@ -94,7 +94,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         tips_html = []
         for tip in self.get_tips():
             if submission in tip.values:
-                tips_html.append(tip.render('mentoring_view').content)
+                tips_html.append(self.expand_static_url(tip.render('mentoring_view').content))
 
         formatted_tips = None
 
@@ -111,7 +111,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
 
         return {
             'submission': submission,
-            'message': self.message_formatted,
+            'message': self.expand_static_url(self.message_formatted),
             'status': 'correct' if correct else 'incorrect',
             'tips': formatted_tips,
             'weight': self.weight,
@@ -180,7 +180,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.expand_static_url(self.question),
-            'message': self.message,
+            'message': self.expand_static_url(self.message),
             'choices': [
                 {'value': choice['value'], 'content': self.expand_static_url(choice['display_name'])}
                 for choice in self.human_readable_choices

@@ -251,7 +251,7 @@ class TestMentoringBlockOptions(unittest.TestCase):
 class TestMentoringBlockJumpToIds(unittest.TestCase):
     def setUp(self):
         self.service_mock = Mock()
-        self.runtime_mock = Mock()
+        self.runtime_mock = Mock(replace_urls=lambda text: text)
         self.runtime_mock.service = Mock(return_value=self.service_mock)
         self.block = MentoringBlock(self.runtime_mock, DictFieldData({'mode': 'assessment'}), Mock())
         self.block.children = ['dummy_id']

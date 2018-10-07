@@ -133,7 +133,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
                 choice_completed = False
             for tip in self.get_tips():
                 if choice.value in tip.values:
-                    choice_tips_html.append(tip.render('mentoring_view').content)
+                    choice_tips_html.append(self.expand_static_url(tip.render('mentoring_view').content))
 
             if choice_completed:
                 score += 1
@@ -141,7 +141,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             choice_result = {
                 'value': choice.value,
                 'selected': choice_selected,
-                'content': choice.content
+                'content': self.expand_static_url(choice.content)
             }
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
@@ -164,7 +164,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'submissions': submissions,
             'status': status,
             'choices': results,
-            'message': self.message_formatted,
+            'message': self.expand_static_url(self.message_formatted),
             'weight': self.weight,
             'score': (float(score) / len(results)) if results else 0,
         }
@@ -212,7 +212,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             'type': self.CATEGORY,
             'weight': self.weight,
             'question': self.expand_static_url(self.question),
-            'message': self.message,
+            'message': self.expand_static_url(self.message),
             'choices': [
                 {'value': choice['value'], 'content': self.expand_static_url(choice['display_name'])}
                 for choice in self.human_readable_choices
