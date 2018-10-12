@@ -603,7 +603,7 @@ class MentoringBlock(
                 if tip_html:
                     if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
                         tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
-                    review_tips.append(tip_html)
+                    review_tips.append(self.expand_static_url(tip_html))
         return review_tips
 
     def show_extended_feedback(self):
@@ -1114,7 +1114,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                 if tip_html:
                     if getattr(self.runtime, 'replace_jump_to_id_urls', None) is not None:
                         tip_html = self.runtime.replace_jump_to_id_urls(tip_html)
-                    review_tips.append(tip_html)
+                    review_tips.append(self.expand_static_url(tip_html))
         return review_tips
 
     def show_extended_feedback(self):

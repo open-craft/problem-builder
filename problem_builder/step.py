@@ -34,7 +34,9 @@ from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
 from problem_builder.mixins import (
-    EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, StudentViewUserStateResultsTransformerMixin)
+    EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, StudentViewUserStateResultsTransformerMixin,
+    ExpandStaticURLMixin)
+
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
@@ -72,7 +74,7 @@ class Correctness(object):
 class MentoringStepBlock(
     StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
     EnumerableChildMixin, StepParentMixin, StudentViewUserStateResultsTransformerMixin,
-    StudentViewUserStateMixin, XBlock,
+    StudentViewUserStateMixin, XBlock, ExpandStaticURLMixin
 ):
     """
     An XBlock for a step.
@@ -296,6 +298,6 @@ class MentoringStepBlock(
             'title': self.display_name_with_default,
             'show_title': self.show_title,
             'next_button_label': self.next_button_label,
-            'message': self.message,
+            'message': self.expand_static_url(self.message),
             'components': components,
         }
