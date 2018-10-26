@@ -2,6 +2,9 @@
 
 locales:
     - en  # English - Source Language
+    - fr  # French 
+    - de  # German
+    - ja  # Japanese
     # Add languages here as needed
 
 # The locales used for fake-accented English, for testing.
