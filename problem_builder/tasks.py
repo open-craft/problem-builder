@@ -5,8 +5,8 @@ import time
 
 from celery.task import task
 from celery.utils.log import get_task_logger
-from django.db.models import F
 from django.contrib.auth.models import User
+from django.db.models import F
 from lms.djangoapps.instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey, UsageKey
@@ -196,11 +196,12 @@ def _get_submissions(course_key_str, block, user_id):
 
 def _get_user_info(users, submission):
     """
-    Return a (username, user id, user email) tuple for the student who provided `submission`.
+    Return a (username, user id, user email) tuple for the user who provided `submission`.
 
     If the anonymous ID of the submission can't be resolved into a user,
     (student ID, 'N/A', 'N/A') is returned
     """
+    user = None
     if users is not None:
         user = next(user for user in users if user.anonymous_user_id == submission['student_id'])
 
