@@ -281,6 +281,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
     A block that displays an answer previously entered by the student (read-only).
     """
+
     CATEGORY = 'pb-answer-recap'
     STUDIO_LABEL = _(u"Long Answer Recap")
 
