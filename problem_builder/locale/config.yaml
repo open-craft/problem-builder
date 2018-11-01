@@ -2,6 +2,10 @@
 
 locales:
     - en  # English - Source Language
+    - ar  # Arabic
+    - es  # Spanish
+    - pt  # Portuguese
+    - zh  # Chinese
     - fr  # French 
     - de  # German
     - ja  # Japanese

@@ -1,0 +1,828 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-14 10:39+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: static/js/admin/client_sso.js:182
+msgid "You need to enter name!"
+msgstr "您需要输入名字！"
+
+#: static/js/admin/client_sso.js:187
+msgid "You need to enter course ID!"
+msgstr "您需要输入课程编号！"
+
+#: static/js/admin_learner_dashboard/element_modal.js:64
+#: static/js/views/admin/company_learner_dashboard_list.js:14
+#: static/js/views/admin/course_details_bulk_actions.js:275
+#: static/js/views/admin/participant_details_edit_info.js:359
+#: static/js/views/admin/participantsinfo.js:120
+msgid "Course"
+msgstr "课程"
+
+#: static/js/admin_learner_dashboard/element_modal.js:72
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:176
+msgid "In Person Session"
+msgstr "亲自参加的课程"
+
+#: static/js/admin_learner_dashboard/self_registration_roles.js:9
+msgid "Add new role e.g CEO,CTO"
+msgstr "增加新角色，例如 CEO（首席执行官）、CTO（首席技术官）"
+
+#: static/js/admin_learner_dashboard/self_registration_roles.js:10
+msgid "Delete Role"
+msgstr "删除角色"
+
+#: static/js/admin_learner_dashboard/sort.js:72
+#: static/js/learner_dashboard_sort.js:54
+msgid "Are you sure?"
+msgstr "确定？"
+
+#: static/js/admin_upload_students.js:8
+#: static/js/common/mass_participants_enroll.js:168
+#: static/js/common/mass_participants_upload.js:115
+msgid "Show Errors"
+msgstr "显示错误"
+
+#: static/js/admin_upload_students.js:73
+#: static/js/common/mass_participants_enroll.js:147
+#: static/js/common/mass_participants_upload.js:94 static/js/image_editor.js:77
+msgid "Please select file first."
+msgstr "请先选择文件。"
+
+#: static/js/application.js:192
+msgid "Your course hasn't begun yet. "
+msgstr "您的课程尚未开始。"
+
+#: static/js/application.js:195
+msgid "Your course begins in %(days)s day."
+msgid_plural "Your course begins in %(days)d days."
+msgstr[0] "您的课程于 %(days)s 天后开始。"
+msgstr[1] "您的课程于 %(days)d 天后开始。"
+
+#: static/js/application.js:198
+msgid "Welcome to McKinsey Academy"
+msgstr "欢迎来到麦肯锡学院"
+
+#: static/js/common/admin_bulk_actions.js:17
+msgid "Progress: %(value)s%"
+msgstr "进度: %(value)s%"
+
+#: static/js/common/bbGridExtend.js:70
+msgid "Keyword Search"
+msgstr "关键词搜索"
+
+#: static/js/common/common_js.js:171
+msgid "NoName"
+msgstr "无名字"
+
+#: static/js/common/common_js.js:514
+msgid "Send"
+msgstr "发送"
+
+#: static/js/common/common_js.js:744
+msgid "Fetching data for file: %(filename)s"
+msgstr "正在提取文件数据: %(filename)s"
+
+#: static/js/common/common_js.js:856
+msgid "%(value)s%"
+msgstr "%(value)s%"
+
+#: static/js/common/mass_participants_enroll.js:57
+#: static/js/common/mass_participants_enroll.js:128
+msgid ""
+"The .csv file has more then %(limit)s  rows: %(lines)s , please split it to "
+"more files!"
+msgstr "该 .csv 文件有超过 %(limit)s 行：%(lines)s，请将其分割为多个文件！"
+
+#: static/js/common/mass_participants_enroll.js:180
+#: static/js/common/mass_participants_upload.js:127
+msgid "Errors:"
+msgstr "错误:"
+
+#: static/js/common/mass_participants_enroll.js:189
+#: static/js/common/mass_participants_upload.js:136
+msgid "Total:"
+msgstr "总计:"
+
+#: static/js/common/mass_participants_enroll.js:191
+#: static/js/common/mass_participants_upload.js:138
+msgid "Succeded:"
+msgstr "成功:"
+
+#: static/js/common/mass_participants_enroll.js:193
+#: static/js/common/mass_participants_upload.js:140
+msgid "Failed:"
+msgstr "失败:"
+
+#: static/js/common/mass_participants_enroll.js:245
+msgid "email"
+msgstr "电子邮件"
+
+#: static/js/common/mass_participants_enroll.js:245
+msgid "course id"
+msgstr "课程编号"
+
+#: static/js/common/mass_participants_enroll.js:245
+msgid "status"
+msgstr "状态"
+
+#: static/js/common/mass_participants_upload.js:137
+#: static/js/common/mass_participants_upload.js:139
+#: static/js/common/mass_participants_upload.js:141
+msgid "0"
+msgstr "0"
+
+#: static/js/course_contact_modal.js:15
+msgid "Notification"
+msgstr "通知"
+
+#: static/js/course_drag_drop.js:70
+msgid "Group successfully updated"
+msgstr "小组成功更新"
+
+#: static/js/course_drag_drop.js:153
+msgid "Please select at least one student"
+msgstr "请至少选择一名学员"
+
+#: static/js/course_drag_drop.js:160
+msgid "Please select project"
+msgstr "请选择项目"
+
+#: static/js/course_drag_drop.js:174
+msgid "Group was not created"
+msgstr "组未创建"
+
+#: static/js/course_drag_drop.js:234
+msgid "All students added to private group have to be members of same company."
+msgstr "所有加入私人小组的学员必须隶属同一家公司。"
+
+#: static/js/course_drag_drop.js:242
+msgid ""
+"Are you sure you want to remove this group? Doing so will remove submissions "
+"and feedback associated with the group."
+msgstr "确定要删除该组？ 这样做会删除与该组相关的提交和反馈。"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:113
+msgid "Your Progress: %(value)s%"
+msgstr "您的进度: %(value)s%"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:123
+msgid "Complete"
+msgstr "完成"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:123
+msgid "Incomplete"
+msgstr "未完成"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:195
+msgid "Digital Course"
+msgstr "数字课程"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:220
+msgid "Group work"
+msgstr "小组合作"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:239
+msgid "Webinar"
+msgstr "在线会议"
+
+#: static/js/course_learner_dashboard/learner_dashboard_calendar_highcharts.js:258
+msgid "Digital Content"
+msgstr "数字内容"
+
+#: static/js/image_editor.js:3
+msgid "No file Selected"
+msgstr "未选择文件"
+
+#: static/js/image_editor.js:45
+msgid ""
+"Error uploading file. Please try again and be sure to use an accepted file "
+"format."
+msgstr "上传文件时出错。请确保使用的是接受的文件格式，然后重试。"
+
+#: static/js/image_editor.js:52
+msgid "Please select file for upload."
+msgstr "请选择要上传的文件。"
+
+#: static/js/models/city.js:29
+msgid "Participants:"
+msgstr "参与者:"
+
+#: static/js/models/city.js:68 static/js/views/admin/course_details.js:28
+#: static/js/views/admin/participantsinfo.js:23
+msgid "Email"
+msgstr "电子邮件"
+
+#: static/js/router.js:355
+msgid "Please select at least one course"
+msgstr "请至少选择一门课程"
+
+#: static/js/views/admin/companies_list.js:15
+#: static/js/views/admin/course_details.js:29
+#: static/js/views/admin/course_details.js:98
+#: static/js/views/admin/participantsinfo.js:22
+msgid "Company"
+msgstr "公司"
+
+#: static/js/views/admin/companies_list.js:23
+msgid "Company ID"
+msgstr "公司编号"
+
+#: static/js/views/admin/companies_list.js:24
+msgid "No. of Participants"
+msgstr "参加人数"
+
+#: static/js/views/admin/companies_list.js:25
+msgid "No. of Courses"
+msgstr "课程数量"
+
+#: static/js/views/admin/companies_list.js:98
+#: static/js/views/admin/company_details.js:189
+#: static/js/views/admin/company_learner_dashboard_list.js:139
+#: static/js/views/admin/participant_details_edit_info.js:474
+#: static/js/views/admin/participantsinfo.js:370
+msgid "This company name cannot contain non-alphanumeric characters!"
+msgstr "公司名称不能包含非字母数字字符！"
+
+#: static/js/views/admin/companies_list.js:105
+#: static/js/views/admin/company_details.js:184
+#: static/js/views/admin/company_learner_dashboard_list.js:135
+#: static/js/views/admin/participant_details_edit_info.js:468
+#: static/js/views/admin/participantsinfo.js:364
+msgid "This company name cannot have more than 30 characters!"
+msgstr "公司名称不得超过 30 个字符！"
+
+#: static/js/views/admin/companies_list.js:142
+msgid "Couldn't create new company!"
+msgstr "无法创建新公司！"
+
+#: static/js/views/admin/company_details.js:4
+#: static/js/views/admin/course_details.js:305
+#: static/js/views/admin/courses_list.js:13
+#: static/js/views/admin/participant_details_active_courses_view.js:54
+#: static/js/views/admin/participant_details_course_history_view.js:10
+msgid "Course Name"
+msgstr "课程名称"
+
+#: static/js/views/admin/company_details.js:20
+#: static/js/views/admin/course_details.js:315
+#: static/js/views/admin/courses_list.js:23
+#: static/js/views/admin/participant_details_active_courses_view.js:72
+#: static/js/views/admin/participant_details_course_history_view.js:28
+msgid "Course ID"
+msgstr "课程编号"
+
+#: static/js/views/admin/company_details.js:21
+msgid "Participants"
+msgstr "参与者"
+
+#: static/js/views/admin/company_details.js:22
+#: static/js/views/admin/courses_list.js:24
+msgid "Start"
+msgstr "开始"
+
+#: static/js/views/admin/company_details.js:38
+#: static/js/views/admin/courses_list.js:33
+msgid "End"
+msgstr "结束"
+
+#: static/js/views/admin/company_details.js:68
+msgid "Cohort Comp."
+msgstr "同期比较"
+
+#: static/js/views/admin/company_details.js:194
+#: static/js/views/admin/company_learner_dashboard_list.js:143
+msgid "No Company Display Name!"
+msgstr "无公司显示名称！"
+
+#: static/js/views/admin/company_learner_dashboard_list.js:4
+msgid "Dashboard Name"
+msgstr "仪表板名称"
+
+#: static/js/views/admin/company_linked_apps.js:4
+msgid "App Name"
+msgstr "应用程序名称"
+
+#: static/js/views/admin/company_linked_apps.js:20
+msgid "Deployment Mech"
+msgstr "部署机制"
+
+#: static/js/views/admin/company_linked_apps.js:21
+msgid "iOS DL URL"
+msgstr "iOS DL 网址"
+
+#: static/js/views/admin/company_linked_apps.js:26
+msgid "Android DL URL"
+msgstr "Android DL 网址"
+
+#: static/js/views/admin/company_linked_apps.js:31
+msgid "Urban Airship URL"
+msgstr "Urban Airship 网址"
+
+#: static/js/views/admin/company_linked_apps.js:36
+msgid "Analytics URL"
+msgstr "Google Analytics 网址"
+
+#: static/js/views/admin/company_linked_apps.js:41
+msgid "Active"
+msgstr "激活"
+
+#: static/js/views/admin/company_linked_apps.js:147
+msgid "Couldn't link this App!"
+msgstr "无法链接此应用程序！"
+
+#: static/js/views/admin/company_mobileapp_details.js:31
+msgid "Couldn't delink App!"
+msgstr "无法解除与应用程序的链接！"
+
+#: static/js/views/admin/company_mobileapp_details.js:108
+msgid "This app name cannot have more than 30 characters!"
+msgstr "此应用程序名称不得超过 30 个字符！"
+
+#: static/js/views/admin/company_mobileapp_details.js:113
+msgid "This app name cannot contain non-alphanumeric characters!"
+msgstr "此应用程序名称不得包含非字母数字字符！"
+
+#: static/js/views/admin/company_mobileapp_details.js:118
+msgid "No App Display Name!"
+msgstr "无应用程序显示名称！"
+
+#: static/js/views/admin/course_details.js:6
+#: static/js/views/admin/participantsinfo.js:12
+msgid "Name"
+msgstr "名称"
+
+#: static/js/views/admin/course_details.js:30
+#: static/js/views/admin/course_details_bulk_actions.js:279
+#: static/js/views/admin/participant_details_active_courses_view.js:111
+#: static/js/views/admin/participant_details_course_history_view.js:32
+#: static/js/views/admin/participant_details_edit_info.js:363
+#: static/js/views/admin/participantsinfo.js:129
+msgid "Status"
+msgstr "状态"
+
+#: static/js/views/admin/course_details.js:31
+#: static/js/views/admin/participantsinfo.js:40
+msgid "Activated"
+msgstr "已激活"
+
+#: static/js/views/admin/course_details.js:32
+msgid "Last Log In"
+msgstr "上次登录"
+
+#: static/js/views/admin/course_details.js:43
+#: static/js/views/admin/manager_dashboard.js:31
+#: static/js/views/admin/participant_details_active_courses_view.js:74
+msgid "Progress"
+msgstr "进度"
+
+#: static/js/views/admin/course_details.js:50
+#: static/js/views/admin/participant_details_active_courses_view.js:93
+msgid "Proficiency"
+msgstr "熟练程度"
+
+#: static/js/views/admin/course_details.js:57
+msgid "Engagement"
+msgstr "参与度"
+
+#: static/js/views/admin/course_details.js:64
+#: static/js/views/admin/course_details.js:68
+msgid "Activation Link"
+msgstr "激活链接"
+
+#: static/js/views/admin/course_details.js:72
+msgid "Username"
+msgstr "用户名"
+
+#: static/js/views/admin/course_details.js:73
+msgid "Country"
+msgstr "国家/地区"
+
+#: static/js/views/admin/course_details.js:234
+msgid "Couldn't create new tag!"
+msgstr "无法创建新标签！"
+
+#: static/js/views/admin/course_details.js:248
+msgid ""
+"You don't have permission to create a new tag, please select one from the "
+"list!"
+msgstr "您无权创建新标签，请从列表中选择一个标签！"
+
+#: static/js/views/admin/course_details.js:278
+msgid "Couldn't delete tag!"
+msgstr "无法删除标签！"
+
+#: static/js/views/admin/course_details.js:318
+msgid "%(count)s Course Tagged with %(tagDetails)s"
+msgid_plural "%(count)s Courses Tagged with %(tagDetails)s"
+msgstr[0] "%(count)s 门课程带标签 %(tagDetails)s"
+msgstr[1] "%(count)s 门课程带标签 %(tagDetails)s"
+
+#: static/js/views/admin/course_details.js:373
+msgid "Progress: %(progress)s %"
+msgstr "进度:%(progress)s% "
+
+#: static/js/views/admin/course_details.js:409
+msgid "Selected: %(selected)s, Successful: %(successful)s, Failed: %(failed)s"
+msgstr "已选择: %(selected)s，成功: %(successful)s，失败: %(failed)s"
+
+#: static/js/views/admin/course_details.js:460
+msgid "This tag name cannot have more than 30 characters!"
+msgstr "此标签名称不得超过 30 个字符！"
+
+#: static/js/views/admin/course_details.js:467
+msgid "This tag name cannot contain non-alphanumeric characters!"
+msgstr "此标签名称不得包含非字母数字字符！"
+
+#: static/js/views/admin/course_details.js:507
+msgid "Couldn't add tag to course!"
+msgstr "无法将标签添加至课程！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:58
+msgid "File successfully uploaded!"
+msgstr "文件上传成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:116
+msgid "Unenroll Participants"
+msgstr "取消报名的参与者"
+
+#: static/js/views/admin/course_details_bulk_actions.js:117
+#: static/js/views/admin/course_details_bulk_actions.js:178
+#: static/js/views/admin/course_details_bulk_actions.js:265
+msgid "Selected: %(selectedRows)s, Successful: 0, Failed: 0"
+msgstr "已选择: %(selectedRows)s，成功: 0，失败: 0 "
+
+#: static/js/views/admin/course_details_bulk_actions.js:120
+msgid "Unenroll all selected participants from this course?"
+msgstr "取消本课程所有选定参与者的报名？"
+
+#: static/js/views/admin/course_details_bulk_actions.js:133
+#: static/js/views/admin/course_details_bulk_actions.js:198
+#: static/js/views/admin/course_details_bulk_actions.js:299
+#: static/js/views/admin/course_details_bulk_actions.js:710
+msgid ""
+"You need to select at least one participant to be able to apply bulk actions."
+msgstr "要应用批量操作，您必须至少选择一个参与者。"
+
+#: static/js/views/admin/course_details_bulk_actions.js:137
+#: static/js/views/admin/participant_details_active_courses_view.js:131
+#: static/js/views/admin/participant_details_active_courses_view.js:133
+msgid "Unenroll"
+msgstr "取消报名"
+
+#: static/js/views/admin/course_details_bulk_actions.js:177
+msgid "Change Status"
+msgstr "更改状态"
+
+#: static/js/views/admin/course_details_bulk_actions.js:181
+msgid "Change status of all selected participants to:"
+msgstr "将所有选定参与者的状态更改为:"
+
+#: static/js/views/admin/course_details_bulk_actions.js:183
+#: static/js/views/admin/course_details_bulk_actions.js:281
+#: static/js/views/admin/participant_details_edit_info.js:365
+#: static/js/views/admin/participantsinfo.js:133
+msgid "Participant"
+msgstr "参与者"
+
+#: static/js/views/admin/course_details_bulk_actions.js:184
+#: static/js/views/admin/course_details_bulk_actions.js:282
+#: static/js/views/admin/participant_details_edit_info.js:366
+#: static/js/views/admin/participantsinfo.js:135
+msgid "Observer"
+msgstr "观察员"
+
+#: static/js/views/admin/course_details_bulk_actions.js:185
+#: static/js/views/admin/course_details_bulk_actions.js:283
+#: static/js/views/admin/participant_details_edit_info.js:367
+#: static/js/views/admin/participantsinfo.js:134
+msgid "TA"
+msgstr "助教"
+
+#: static/js/views/admin/course_details_bulk_actions.js:202
+msgid "Save Changes"
+msgstr "保存更改"
+
+#: static/js/views/admin/course_details_bulk_actions.js:223
+#: static/js/views/admin/course_details_bulk_actions.js:327
+#: static/js/views/admin/course_details_bulk_actions.js:333
+#: static/js/views/admin/participant_details_edit_info.js:400
+#: static/js/views/admin/participant_details_edit_info.js:406
+msgid "You need to select status!"
+msgstr "您需要选择状态！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:264
+#: static/js/views/admin/participant_details_edit_info.js:354
+msgid "Select Course"
+msgstr "选择课程"
+
+#: static/js/views/admin/course_details_bulk_actions.js:268
+msgid "%(selectedRows)s Participants will be enroll in course selected below."
+msgid_plural "%(selectedRows)s Participant will be enroll in course selected below."
+msgstr[0] "%(selectedRows)s 参与者将报名参加下面选择的课程。"
+msgstr[1] "%(selectedRows)s 参与者将报名参加下面选择的课程。"
+
+#: static/js/views/admin/course_details_bulk_actions.js:303
+msgid "Enroll Participants"
+msgstr "报名参与者"
+
+#: static/js/views/admin/course_details_bulk_actions.js:338
+#: static/js/views/admin/course_details_bulk_actions.js:342
+#: static/js/views/admin/participant_details_edit_info.js:411
+#: static/js/views/admin/participant_details_edit_info.js:415
+msgid "You need to select course!"
+msgstr "您需要选择课程！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:426
+msgid "Download"
+msgstr "下载"
+
+#: static/js/views/admin/course_details_bulk_actions.js:426
+msgid "Progress : 0%"
+msgstr "进度: 0%"
+
+#: static/js/views/admin/course_details_bulk_actions.js:427
+msgid "Download CSV File"
+msgstr "下载 CSV 文件"
+
+#: static/js/views/admin/course_details_bulk_actions.js:463
+msgid ""
+"Include breakdown of progress for each lesson (Note: the export will take "
+"more time)"
+msgstr "包括每个课程的进度明细（注意：导出将需要更多时间）"
+
+#: static/js/views/admin/course_details_bulk_actions.js:469
+msgid "We'll e-mail you when your report is ready to download."
+msgstr "当您的报告准备就绪，可供下载时，我们将会向您发送电子邮件。"
+
+#: static/js/views/admin/course_details_bulk_actions.js:472
+msgid "Exporting Stats for All Users"
+msgstr "导出所有用户的统计数据"
+
+#: static/js/views/admin/course_details_bulk_actions.js:473
+msgid "Export Report"
+msgstr "导出报告"
+
+#: static/js/views/admin/course_details_bulk_actions.js:512
+#, fuzzy
+#| msgid "Task failed to execute. Please retry later."
+msgid "Error initiating the report generation. Please retry later."
+msgstr "开始生成报告时出错。请稍后重试。"
+
+#: static/js/views/admin/course_details_bulk_actions.js:541
+msgid "Download Notifications CSV"
+msgstr "下载通知 CSV"
+
+#: static/js/views/admin/course_details_bulk_actions.js:626
+msgid "Group Work: %(label)s"
+msgstr "小组合作: %(label)s"
+
+#: static/js/views/admin/course_details_bulk_actions.js:654
+msgid "Assessment: %(label)s"
+msgstr "评定: %(label)s"
+
+#: static/js/views/admin/course_details_bulk_actions.js:680
+msgid "Task failed to execute. Please retry later."
+msgstr "任务未能执行。请稍后重试。"
+
+#: static/js/views/admin/course_details_bulk_actions.js:697
+msgid "Successfully Enrolled in 1 Course"
+msgstr "成功报名 1 门课程"
+
+#: static/js/views/admin/course_details_bulk_actions.js:699
+msgid "What would you like to do now?"
+msgstr "您现在想要做什么？"
+
+#: static/js/views/admin/course_details_bulk_actions.js:700
+msgid "Go to %(course_id)s Course"
+msgstr "转至 %(course_id)s 课程"
+
+#: static/js/views/admin/course_details_bulk_actions.js:702
+msgid "Send Course Intro Email"
+msgstr "发送课程介绍电子邮件"
+
+#: static/js/views/admin/course_details_bulk_actions.js:704
+msgid "Enroll this list in another course"
+msgstr "在另一门课程中注册此列表"
+
+#: static/js/views/admin/course_details_bulk_actions.js:716
+msgid "I'm Done"
+msgstr "我已完成"
+
+#: static/js/views/admin/course_details_bulk_actions.js:736
+msgid "Successfully deleted template!"
+msgstr "模板删除成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:743
+msgid "Successfully added new template!"
+msgstr "新模板添加成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:756
+msgid "Successfully updated template!"
+msgstr "模板更新成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:761
+msgid "Email Preview Success!"
+msgstr "电子邮件预览成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:761
+msgid "Successfully sent preview email!"
+msgstr "预览电子邮件发送成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:764
+msgid "Email Success!"
+msgstr "电子邮件发送成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:764
+msgid "Successfully sent email!"
+msgstr "电子邮件发送成功！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:806
+msgid "Preview Email!"
+msgstr "预览电子邮件！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:806
+msgid "Please enter preview email!"
+msgstr "请输入预览电子邮件！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:826
+msgid "Please enter new template name!"
+msgstr "请输入新模板名称！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:841
+msgid "Please enter updated template name or leave the old one!"
+msgstr "请输入更新的模板名称或保留旧的模板名称！"
+
+#: static/js/views/admin/course_details_bulk_actions.js:854
+msgid "You are about to delete email template. Are you sure?"
+msgstr "您即将删除电子邮件模板。确定？"
+
+#: static/js/views/admin/course_details_engagement.js:11
+msgid "# of people"
+msgstr "人数"
+
+#: static/js/views/admin/course_details_engagement.js:12
+msgid "% total cohort"
+msgstr "%小组总数"
+
+#: static/js/views/admin/course_details_engagement.js:13
+msgid "Avg Progress"
+msgstr "平均进度"
+
+#: static/js/views/admin/courseinfo.js:21
+msgid ".0%"
+msgstr ".0%"
+
+#: static/js/views/admin/courseinfo.js:48
+msgid " day"
+msgstr " 天"
+
+#: static/js/views/admin/courseinfo.js:49
+msgid " week"
+msgstr " 周"
+
+#: static/js/views/admin/group_work_dashboard.js:52
+msgid "None"
+msgstr "无"
+
+#: static/js/views/admin/group_work_dashboard.js:195
+msgid "Do you really want to delete: \n"
+msgstr "确定要删除: \n"
+
+#: static/js/views/admin/navigation.js:6
+msgid "Are you sure you want to remove this ?"
+msgstr "确定要删除？"
+
+#: static/js/views/admin/participant_details_active_courses_view.js:73
+#: static/js/views/admin/participant_details_course_history_view.js:29
+msgid "Program"
+msgstr "程序"
+
+#: static/js/views/admin/participant_details_course_history_view.js:30
+msgid "Completed"
+msgstr "已完成"
+
+#: static/js/views/admin/participant_details_course_history_view.js:31
+msgid "Grade"
+msgstr "评分"
+
+#: static/js/views/admin/participant_details_course_history_view.js:33
+msgid "End Date"
+msgstr "结束日期"
+
+#: static/js/views/admin/participant_details_edit_info.js:113
+msgid "Username can't be empty! "
+msgstr "用户名不能为空！"
+
+#: static/js/views/admin/participant_details_edit_info.js:118
+msgid "First name can't be empty! "
+msgstr "名字不能为空！"
+
+#: static/js/views/admin/participant_details_edit_info.js:123
+msgid "Last name can't be empty! "
+msgstr "姓氏不能为空！"
+
+#: static/js/views/admin/participant_details_edit_info.js:128
+msgid "Email can't be empty! "
+msgstr "电子邮件不能为空！"
+
+#: static/js/views/admin/participant_details_edit_info.js:152
+msgid "Company doesn't exist! "
+msgstr "公司不存在！"
+
+#: static/js/views/admin/participant_details_edit_info.js:202
+msgid "Updated user data!"
+msgstr "用户数据已更新！"
+
+#: static/js/views/admin/participant_details_edit_info.js:253
+#: static/js/views/admin/participant_details_edit_info.js:286
+msgid "Male"
+msgstr "男"
+
+#: static/js/views/admin/participant_details_edit_info.js:255
+#: static/js/views/admin/participant_details_edit_info.js:284
+msgid "Female"
+msgstr "女"
+
+#: static/js/views/admin/participant_details_edit_info.js:355
+msgid "User will be enrolled in course selected below."
+msgstr "用户将在下面选择的课程中注册。"
+
+#: static/js/views/admin/participant_details_edit_info.js:377
+msgid "Enroll Participant"
+msgstr "注册参与者"
+
+#: static/js/views/admin/participant_details_edit_info.js:435
+msgid "User successfully enrolled in course"
+msgstr "用户成功注册了课程"
+
+#: static/js/views/admin/participant_details_edit_info.js:521
+#: static/js/views/admin/participantsinfo.js:100
+msgid "Admin Company"
+msgstr "管理公司"
+
+#: static/js/views/admin/participant_details_edit_info.js:525
+msgid "Try selecting your company from the type-ahead results."
+msgstr "尝试从预输入结果中选择您的公司。"
+
+#: static/js/views/admin/participant_details_edit_info.js:531
+#: static/js/views/admin/participantsinfo.js:109
+msgid "Admin Permissions"
+msgstr "管理权限"
+
+#: static/js/views/admin/participant_details_edit_info.js:534
+#: static/js/views/admin/participantsinfo.js:112
+msgid "Company Admin"
+msgstr "公司管理员"
+
+#: static/js/views/admin/participantsinfo.js:24
+msgid "Date Added"
+msgstr "添加日期"
+
+#: static/js/views/admin/participantsinfo.js:34
+msgid "Enrolled In"
+msgstr "已报名"
+
+#: static/js/views/courses/lesson_note.js:2
+msgid "Lesson"
+msgstr "课程"
+
+#: static/js/views/courses/lesson_note.js:3
+msgid "Module"
+msgstr "模块"
+
+#~ msgid "Download Participants"
+#~ msgstr "下载参与者"
+
+#~ msgid "'"
+#~ msgstr "'"
+
+#~ msgid "Please correct following error: %(errors)s"
+#~ msgid_plural "Please correct following errors: %(errors)s"
+#~ msgstr[0] "الرجاء تصحيح الخطأ التالي: % (أخطاء)"
+#~ msgstr[1] "الرجاء تصحيح الأخطاء التالية:% (أخطاء)"
+
+#~ msgid "days"
+#~ msgstr "أيام"
+
+#~ msgid "weeks"
+#~ msgstr "أسابيع"
+
+#~ msgid "The discussion you are trying to access has been deleted"
+#~ msgstr "لقد تم حذف المناقشة التي تحاول الوصول إليها"
