@@ -162,6 +162,8 @@ class InstructorToolTest(SeleniumXBlockTest):
         self.wait_until_visible(download_button)
         self.wait_until_hidden(cancel_button)
         self.wait_until_visible(delete_button)
+        time.sleep(1)
+
         for column in [
                 'Section', 'Subsection', 'Unit',
                 'Type', 'Question', 'Answer', 'Username'
