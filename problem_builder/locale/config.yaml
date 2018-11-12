@@ -2,6 +2,13 @@
 
 locales:
     - en  # English - Source Language
+    - ar  # Arabic
+    - es_419  # Spanish
+    - pt_BR  # Portuguese
+    - zh_CN  # Chinese
+    - fr  # French 
+    - de_DE  # German
+    - ja_JP  # Japanese
     # Add languages here as needed
 
 # The locales used for fake-accented English, for testing.

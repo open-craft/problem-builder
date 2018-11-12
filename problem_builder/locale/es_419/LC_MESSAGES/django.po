@@ -1,0 +1,1587 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-28 14:17+0430\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: problem_builder/answer.py problem_builder/instructor_tool.py
+msgid "Long Answer"
+msgstr "Respuesta larga"
+
+#: problem_builder/answer.py problem_builder/mixins.py
+msgid "Question ID (name)"
+msgstr "ID de la pregunta (nombre)"
+
+#: problem_builder/answer.py
+msgid ""
+"The ID of this block. Should be unique unless you want the answer to be used"
+" in multiple places."
+msgstr "La ID de este bloque. Debe ser única a menos que desee que la respuesta se utilice en muchos lugares."
+
+#: problem_builder/answer.py
+msgid "Default From"
+msgstr "Predeterminado de"
+
+#: problem_builder/answer.py
+msgid "If a question ID is specified, get the default value from this answer."
+msgstr "Si se especifica una ID de pregunta, obtenga el valor predeterminado de dicha pregunta."
+
+#: problem_builder/answer.py
+msgid "Min. Allowed Characters"
+msgstr "Cantidad mínima de caracteres permitidos"
+
+#: problem_builder/answer.py
+msgid "Minimum number of characters allowed for the answer"
+msgstr "Cantidad mínima de caracteres permitidos para la respuesta"
+
+#: problem_builder/answer.py problem_builder/completion.py
+#: problem_builder/mixins.py problem_builder/questionnaire.py
+#: problem_builder/slider.py
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Question"
+msgstr "Pregunta"
+
+#: problem_builder/answer.py problem_builder/questionnaire.py
+msgid "Question to ask the student"
+msgstr "Pregunta que se debe hacer al estudiante"
+
+#: problem_builder/answer.py
+msgid "Long Answer Recap"
+msgstr "Resumen de la respuesta larga"
+
+#: problem_builder/answer.py
+msgid "Question ID"
+msgstr "ID de la pregunta"
+
+#: problem_builder/answer.py
+msgid "The ID of the question for which to display the student's answer."
+msgstr "La ID de la pregunta para la que se requiere mostrar la respuesta del estudiante."
+
+#: problem_builder/answer.py
+msgid "Title"
+msgstr "Título"
+
+#: problem_builder/answer.py
+msgid "Title of this answer recap section"
+msgstr "Título de la sección de resumen de esta respuesta"
+
+#: problem_builder/answer.py problem_builder/plot.py
+msgid "Description"
+msgstr "Descripción"
+
+#: problem_builder/answer.py
+msgid "Description of this answer (optional). Can include HTML."
+msgstr "Descripción de esta respuesta (opcional) Puede incluir HTML."
+
+#: problem_builder/choice.py
+msgid "Value"
+msgstr "Valor"
+
+#: problem_builder/choice.py
+msgid ""
+"Value of the choice when selected. Should be unique. Generally you do not "
+"need to edit this."
+msgstr "Valor de la elección cuando se selecciona. Debe ser único. En general, no tiene que editar esto."
+
+#: problem_builder/choice.py
+msgid "Choice Text"
+msgstr "Texto de elección"
+
+#: problem_builder/choice.py
+msgid "Human-readable version of the choice value"
+msgstr "Versión legible para humanos del valor de la elección"
+
+#: problem_builder/choice.py
+msgid "Out of Context"
+msgstr "Fuera de contexto"
+
+#: problem_builder/choice.py
+#, python-brace-format
+msgid "Choice ({status})"
+msgstr "Elección ({status})"
+
+#: problem_builder/choice.py
+#, python-brace-format
+msgid "Choice ({content})"
+msgstr "Elección ({content})"
+
+#: problem_builder/choice.py
+msgid "No value set. This choice will not work correctly."
+msgstr "No se estableció ningún valor. Esta elección no funcionará correctamente."
+
+#: problem_builder/choice.py
+msgid "No choice text set yet."
+msgstr "Aún no se estableció ningún texto de elección."
+
+#: problem_builder/choice.py
+msgid ""
+"This choice has a non-unique ID and won't work properly. This can happen if "
+"you duplicate a choice rather than use the Add Choice button."
+msgstr "Esta elección tiene una ID que no es única y no funcionará adecuadamente. Esto puede suceder si duplica una elección en lugar de usar el botón Agregar elección."
+
+#: problem_builder/completion.py
+msgid "Completion"
+msgstr "Finalización"
+
+#: problem_builder/completion.py
+msgid ""
+"Mentions a specific activity and asks the student whether they completed it."
+msgstr "Menciona una actividad específica y pregunta al estudiante si ya la completó."
+
+#: problem_builder/completion.py
+msgid ""
+"Please indicate whether you attended the In Person Workshop session by "
+"(un-)checking the option below."
+msgstr "Indique si asistió a la sesión presencial del taller mediante una marca en la opción siguiente."
+
+#: problem_builder/completion.py
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Answer"
+msgstr "Respuesta"
+
+#: problem_builder/completion.py
+msgid ""
+"Represents the answer that the student can (un-)check to indicate whether "
+"they completed the activity that the question mentions."
+msgstr "Representa la respuesta que el estudiante puede marcar (o desmarcar) para indicar si completó la actividad que menciona la pregunta."
+
+#: problem_builder/completion.py
+msgid "Yes, I attended the session."
+msgstr "Sí, asistí a la sesión."
+
+#: problem_builder/completion.py
+msgid "Records student's answer."
+msgstr "Registra la respuesta del estudiante."
+
+#: problem_builder/dashboard.py problem_builder/table.py
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#: problem_builder/dashboard.py
+msgid "Display name for this module"
+msgstr "Nombre para mostrar de este módulo"
+
+#: problem_builder/dashboard.py
+msgid "Self-Assessment Summary"
+msgstr "Resumen de la autoevaluación"
+
+#: problem_builder/dashboard.py
+msgid "Mentoring Blocks"
+msgstr "Bloques de tutoría"
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"This should be an ordered list of the url_names of each mentoring block "
+"whose multiple choice question values are to be shown on this dashboard. The"
+" list should be in JSON format. Example: {example_here}"
+msgstr "Debe ser una lista ordenada de los nombres de URL de cada bloque de tutoría cuyos valores de pregunta de elección múltiple se deben mostrar en este tablero. La lista debe estar en formato JSON. Ejemplo: {example_here}"
+
+#: problem_builder/dashboard.py
+msgid "Questions to be hidden"
+msgstr "Peguntas a ocultar"
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"Optional rules to exclude specific questions both from displaying in "
+"dashboard and from the calculated average. Rules must start with the "
+"url_name of a mentoring block, followed by list of question numbers to "
+"exclude. Rule set must be in JSON format. Question numbers are one-based "
+"(the first question being number 1). Must be in JSON format. Examples: "
+"{examples_here}"
+msgstr "Reglas opcionales para excluir preguntas específicas de la visualización tanto en el tablero como en el promedio calculado. Las reglas deben empezar con el nombre de URL de un bloque de tutoría, seguido de la lista de números de preguntas a excluir. El conjunto de reglas debe estar en formato JSON. Los números de las preguntas se basan en una sola (la primera pregunta es la número 1). Debe estar en formato JSON. Ejemplos: {examples_here}"
+
+#: problem_builder/dashboard.py
+msgid "Color Coding Rules"
+msgstr "Reglas de codificación por color"
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"Optional rules to assign colors to possible answer values and average "
+"values. One rule per line. First matching rule will be used. Light colors "
+"are recommended. Examples: {examples_here}"
+msgstr "Reglas opcionales para asignar colores a los valores y valores promedio de las respuestas posibles. Una regla por línea. Se utilizará la primera regla de coincidencia. Se recomienda usar colores claros. Ejemplos: {examples_here}"
+
+#: problem_builder/dashboard.py
+msgid "Visual Representation"
+msgstr "Representación visual"
+
+#: problem_builder/dashboard.py
+msgid ""
+"Optional: Enter the JSON configuration of the visual representation desired "
+"(Advanced)."
+msgstr "Opcional: ingrese la configuración JSON de la representación visual deseada (avanzada)."
+
+#: problem_builder/dashboard.py
+msgid "Visual Representation Title"
+msgstr "Título de la representación visual"
+
+#: problem_builder/dashboard.py
+msgid ""
+"This text is not displayed visually but is exposed to screen reader users "
+"who may not see the image."
+msgstr "Este texto no se muestra visualmente, pero está expuesto a los usuarios de lectores de pantalla que podrían no ver la imagen."
+
+#: problem_builder/dashboard.py
+msgid "Visual Repr. Description"
+msgstr "Descripción de la representación visual"
+
+#: problem_builder/dashboard.py
+msgid "The data represented in this image is available in the tables below."
+msgstr "Los datos representados en esta imagen están disponibles en los cuadros a continuación."
+
+#: problem_builder/dashboard.py
+msgid ""
+"This longer description is not displayed visually but is exposed to screen "
+"reader users who may not see the image."
+msgstr "Esta descripción más larga no se muestra visualmente, pero está expuesta a los usuarios de lectores de pantalla que podrían no ver la imagen."
+
+#: problem_builder/dashboard.py
+msgid "Label for average value"
+msgstr "Etiqueta para el valor promedio"
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"This settings allows overriding label for the calculated average per "
+"mentoring block. Must be in JSON format. Examples: {examples_here}."
+msgstr "Esta configuración permite anular la etiqueta para el promedio calculado por bloque de tutoría. Debe estar en formato JSON. Ejemplos: {examples_here}."
+
+#: problem_builder/dashboard.py
+msgid "Display values"
+msgstr "Mostrar valores"
+
+#: problem_builder/dashboard.py
+msgid "Toggles if numeric values are displayed"
+msgstr "Alterna si se muestran valores numéricos."
+
+#: problem_builder/dashboard.py
+msgid "Header HTML"
+msgstr "Encabezado HTML"
+
+#: problem_builder/dashboard.py
+msgid "Custom text to include at the beginning of the report."
+msgstr "Texto personalizado que se incluye en el principio del informe."
+
+#: problem_builder/dashboard.py
+msgid "Footer HTML"
+msgstr "Pie de página HTML"
+
+#: problem_builder/dashboard.py
+msgid "Custom text to include at the end of the report."
+msgstr "Texto personalizado que se incluye al final del informe."
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid "Invalid color rule on line {line_number}"
+msgstr "Color de regla no válido en la línea {line_number}"
+
+#: problem_builder/dashboard.py
+msgid "Not configured."
+msgstr "Sin configurar."
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid "Score: {score}"
+msgstr "Puntaje: {score}"
+
+#: problem_builder/dashboard.py
+msgid "No value yet"
+msgstr "Sin valor todavía"
+
+#: problem_builder/dashboard.py
+msgid "Average"
+msgstr "Promedio"
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid "Invalid block url_name given: \"{bad_url_name}\""
+msgstr "Nombre de URL de bloque no válido dado: \"{bad_url_name}\""
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"'Questions to be hidden' is malformed: value for key {key} is {value}, "
+"expected list of integers"
+msgstr "\"Preguntas a ocultar\" está mal formada: el valor de la clave {key} es {value}, la lista esperada de enteros."
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"'Questions to be hidden' is malformed: mentoring url_name {url_name} is not "
+"added to Dashboard"
+msgstr "\"Preguntas a ocultar\" está mal formada: el nombre de URL de tutoría {url_name} no se ha agregado al tablero."
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"'Label for average value' is malformed: value for key {key} is {value}, "
+"expected string"
+msgstr "\"Etiqueta para el valor promedio\" está mal formada: el valor de la clave {key} es {value}, la cadena de caracteres esperada."
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid ""
+"'Label for average value' is malformed: mentoring url_name {url_name} is not"
+" added to Dashboard"
+msgstr "\"Etiqueta para el valor promedio\" está mal formada: el nombre de URL de tutoría {url_name} no se ha agregado al tablero."
+
+#: problem_builder/dashboard.py
+#, python-brace-format
+msgid "Visual rules contains an error: {error}"
+msgstr "La reglas visuales contienen un error: {error}"
+
+#: problem_builder/dashboard.py
+msgid "Visual rules should be a JSON dictionary/object: {...}"
+msgstr "Las reglas visuales debe ser un diccionario u objeto de JSON: {...}"
+
+#: problem_builder/instructor_tool.py problem_builder/mentoring.py
+msgid "Title (Display name)"
+msgstr "Título (nombre para mostrar)"
+
+#: problem_builder/instructor_tool.py problem_builder/mentoring.py
+msgid "Title to display"
+msgstr "Título a mostrar"
+
+#: problem_builder/instructor_tool.py
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Instructor Tool"
+msgstr "Herramienta de instructor"
+
+#: problem_builder/instructor_tool.py problem_builder/mcq.py
+msgid "Multiple Choice Question"
+msgstr "Pregunta de selección múltiple"
+
+#: problem_builder/instructor_tool.py problem_builder/mrq.py
+msgid "Multiple Response Question"
+msgstr "Pregunta de respuesta múltiple"
+
+#: problem_builder/instructor_tool.py problem_builder/mcq.py
+msgid "Rating Question"
+msgstr "Pregunta de calificación"
+
+#: problem_builder/instructor_tool.py
+msgid "Could not find any of the specified usernames."
+msgstr "No se pudo encontrar ninguno de los nombres de usuario especificados."
+
+#: problem_builder/mcq.py problem_builder/message.py problem_builder/mrq.py
+#: problem_builder/step.py problem_builder/step_review.py
+msgid "Message"
+msgstr "Mensaje"
+
+#: problem_builder/mcq.py
+msgid ""
+"General feedback provided when submitting. (This is not shown if there is a "
+"more specific feedback tip for the choice selected by the learner.)"
+msgstr "Feedback general proporcionado a la hora de presentarlo. (No se muestra si existe un consejo de feedback más específico para la opción seleccionada por el aprendiz)."
+
+#: problem_builder/mcq.py
+msgid "Correct Choice[s]"
+msgstr "Elecciones correctas"
+
+#: problem_builder/mcq.py
+msgid ""
+"Specify the value[s] that students may select for this question to be "
+"considered correct."
+msgstr "Especifique los valores que los estudiantes podrían seleccionar para esta pregunta y que se consideran correctos."
+
+#. Translators: This is an adjective, describing a choice as correct
+#: problem_builder/mcq.py problem_builder/templates/html/answer_editable.html
+#: problem_builder/templates/html/mcqblock.html
+#: problem_builder/templates/html/mentoring_with_steps.html
+#: problem_builder/templates/html/mrqblock.html
+#: problem_builder/templates/html/ratingblock.html
+msgid "Correct"
+msgstr "Correcto"
+
+#: problem_builder/mcq.py
+msgid "Acceptable"
+msgstr "Aceptable"
+
+#: problem_builder/mcq.py
+msgid "Wrong"
+msgstr "Incorrecto"
+
+#: problem_builder/mcq.py problem_builder/mrq.py
+msgid "Not Acceptable"
+msgstr "No aceptable"
+
+#: problem_builder/mcq.py
+msgid ""
+"You must indicate the correct answer[s], or the student will always get this"
+" question wrong."
+msgstr "Debe indicar las respuestas correctas o el estudiante siempre tendrá esta pregunta incorrecta."
+
+#: problem_builder/mcq.py
+msgid "Duplicate correct choices set"
+msgstr "Duplicar el conjunto de elecciones correctas"
+
+#: problem_builder/mcq.py
+#, python-brace-format
+msgid "A choice value listed as correct does not exist: {choice}"
+msgstr "No existe un valor de elección registrado como correcto: {choice}"
+
+#: problem_builder/mcq.py problem_builder/slider.py
+msgid "Low"
+msgstr "Baja"
+
+#: problem_builder/mcq.py
+msgid "Label for low ratings"
+msgstr "Etiqueta para calificaciones bajas"
+
+#: problem_builder/mcq.py
+msgid "Less"
+msgstr "Menos"
+
+#: problem_builder/mcq.py problem_builder/slider.py
+msgid "High"
+msgstr "Alta"
+
+#: problem_builder/mcq.py
+msgid "Label for high ratings"
+msgstr "Etiqueta para calificaciones altas"
+
+#: problem_builder/mcq.py
+msgid "More"
+msgstr "Más"
+
+#: problem_builder/mcq.py
+msgid "Accepted Choice[s]"
+msgstr "Elecciones aceptadas"
+
+#: problem_builder/mcq.py
+msgid ""
+"Specify the rating value[s] that students may select for this question to be"
+" considered correct."
+msgstr "Especifique los valores de calificación que los estudiantes podrían seleccionar para esta pregunta y que se consideran correctos."
+
+#: problem_builder/mentoring.py problem_builder/mixins.py
+msgid "Show title"
+msgstr "Mostrar título"
+
+#: problem_builder/mentoring.py problem_builder/mixins.py
+msgid "Display the title?"
+msgstr "¿Mostrar el título?"
+
+#: problem_builder/mentoring.py
+msgid "Max. attempts allowed"
+msgstr "Cantidad máxima de intentos permitidos"
+
+#: problem_builder/mentoring.py
+msgid ""
+"Maximum number of times students are allowed to attempt the questions "
+"belonging to this block"
+msgstr "Cantidad máxima de veces que los estudiantes pueden intentar responder a las preguntas que pertenecen a este bloque"
+
+#: problem_builder/mentoring.py problem_builder/mixins.py
+msgid "Weight"
+msgstr "Peso"
+
+#: problem_builder/mentoring.py
+msgid "Defines the maximum total grade of the block."
+msgstr "Define la calificación total máxima del bloque."
+
+#: problem_builder/mentoring.py
+msgid "Followed by"
+msgstr "Seguidos por"
+
+#: problem_builder/mentoring.py
+msgid "url_name of the step after the current mentoring block in workflow."
+msgstr "nombre de URL del paso siguiente al bloque de tutoría actual en el flujo de trabajo."
+
+#: problem_builder/mentoring.py
+msgid "Enforce Dependency"
+msgstr "Ejecutar la dependencia"
+
+#: problem_builder/mentoring.py
+msgid "Should the next step be the current block to complete?"
+msgstr "¿El próximo paso debería ser el bloque actual por completar?"
+
+#: problem_builder/mentoring.py
+msgid "Show Submit Button"
+msgstr "Mostrar el botón de enviar"
+
+#: problem_builder/mentoring.py
+msgid "Allow submission of the current block?"
+msgstr "¿Permitir el envío del bloque actual?"
+
+#: problem_builder/mentoring.py
+msgid "XML content"
+msgstr "Contenido XML"
+
+#: problem_builder/mentoring.py
+msgid ""
+"Not used for version 2. This field is here only to preserve the data needed "
+"to upgrade from v1 to v2."
+msgstr "No se utiliza para la versión 2. Este campo está aquí solo para conservar los datos necesarios para actualizar de la versión 1 a la 2."
+
+#: problem_builder/mentoring.py
+msgid "Problem Builder"
+msgstr "Generador de problema"
+
+#: problem_builder/mentoring.py
+msgid "Feedback Header"
+msgstr "Encabezado del feedback"
+
+#: problem_builder/mentoring.py
+msgid "Header for feedback messages"
+msgstr "Encabezado para los mensajes de feedback"
+
+#: problem_builder/mentoring.py
+msgid "Feedback"
+msgstr "Feedback"
+
+#: problem_builder/mentoring.py
+msgid "Show extended feedback details when all attempts are used up."
+msgstr "Mostrar la versión extensa del feedback cuando se hayan usado todos los intentos."
+
+#: problem_builder/mentoring.py problem_builder/step.py
+msgid "Video"
+msgstr "Video"
+
+#: problem_builder/mentoring.py problem_builder/step.py
+msgid "Image Modal"
+msgstr "Modal de imagen"
+
+#: problem_builder/mentoring.py problem_builder/step.py
+msgid "Ooyala Player"
+msgstr "Reproductor Ooyala"
+
+#: problem_builder/mentoring.py problem_builder/step.py
+#: problem_builder/step_review.py
+msgid "HTML"
+msgstr "HTML"
+
+#: problem_builder/mentoring.py problem_builder/step.py
+msgid "Error: Unable to load child component."
+msgstr "Error: no se pudo cargar el componente secundario."
+
+#: problem_builder/mentoring.py
+#, python-brace-format
+msgid "There should only be one '{msg_type}' message component."
+msgstr "Solo debe haber un componente de mensaje \"{msg_type}\"."
+
+#: problem_builder/mentoring.py
+msgid "A component inside this mentoring block has issues."
+msgstr "Un componente dentro de este bloque de tutoría tiene problemas."
+
+#: problem_builder/mentoring.py
+msgid "Extended feedback"
+msgstr "Versión extensa del feedback"
+
+#: problem_builder/mentoring.py
+msgid "Show extended feedback when all attempts are used up?"
+msgstr "¿Mostrar la versión extensa del feedback cuando se hayan usado todos los intentos?"
+
+#: problem_builder/mentoring.py
+msgid "Title (display name)"
+msgstr "Título (nombre para mostrar)"
+
+#: problem_builder/mentoring.py
+msgid "Step Builder"
+msgstr "Generador de pasos"
+
+#: problem_builder/message.py
+msgid "Completed"
+msgstr "Completado"
+
+#: problem_builder/message.py
+msgid "Message (Complete)"
+msgstr "Mensaje (completo)"
+
+#: problem_builder/message.py
+msgid "Message shown when complete"
+msgstr "Mensaje mostrado cuando está completo"
+
+#: problem_builder/message.py
+msgid "Great job!"
+msgstr "¡Buen trabajo!"
+
+#: problem_builder/message.py
+msgid "This message will be shown when the student achieves a perfect score. "
+msgstr "Este mensaje se mostrará cuando el estudiante logre un puntaje perfecto. "
+
+#: problem_builder/message.py
+msgid "Incomplete"
+msgstr "Incompleto"
+
+#: problem_builder/message.py
+msgid "Message (Incomplete)"
+msgstr "Mensaje (incompleto)"
+
+#: problem_builder/message.py
+msgid "Message shown when incomplete"
+msgstr "Mensaje mostrado cuando no está completo"
+
+#: problem_builder/message.py
+msgid "Not quite! You can try again, though."
+msgstr "No exactamente, pero puede intentarlo de nuevo."
+
+#: problem_builder/message.py
+msgid ""
+"This message will be shown when the student gets at least one question "
+"wrong, but is allowed to try again. "
+msgstr "Este mensaje se mostrará cuando el estudiante obtenga al menos una pregunta incorrecta, pero se le permite intentarlo de nuevo. "
+
+#: problem_builder/message.py
+msgid "Reached max. # of attempts"
+msgstr "Alcanzó la cantidad máxima de intentos."
+
+#: problem_builder/message.py
+msgid "Message (Max # Attempts)"
+msgstr "Mensaje (cantidad máxima de intentos)"
+
+#: problem_builder/message.py
+msgid "Message shown when student reaches max. # of attempts"
+msgstr "Mensaje mostrado cuando el estudiante alcanza la cantidad máxima de intentos"
+
+#: problem_builder/message.py
+msgid "Sorry, you have used up all of your allowed submissions."
+msgstr "Lo sentimos, ha utilizado todos los intentos permitidos."
+
+#: problem_builder/message.py
+msgid ""
+"This message will be shown when the student has used up all of their allowed"
+" attempts without achieving a perfect score. "
+msgstr "Este mensaje se mostrará cuando el estudiante haya usado todos los intentos permitidos sin alcanzar un puntaje perfecto. "
+
+#: problem_builder/message.py
+msgid "Study tips if this question was wrong"
+msgstr "Consejos de estudio si se responde de forma incorrecta"
+
+#: problem_builder/message.py
+msgid "Study tips shown if question was answered incorrectly"
+msgstr "Consejos de estudio mostrados si se responde a una pregunta de forma incorrecta"
+
+#: problem_builder/message.py
+msgid "Review ____."
+msgstr "Revisar ____."
+
+#: problem_builder/message.py
+msgid ""
+"This message will be shown when the student is reviewing their answers to "
+"the assessment, if the student got this specific question wrong and is "
+"allowed to try again."
+msgstr "Este mensaje se mostrará cuando el estudiante esté revisando sus respuestas de la evaluación si respondió esta pregunta específica de manera incorrecta y tiene posibilidad de intentarlo de nuevo."
+
+#: problem_builder/message.py problem_builder/step_review.py
+msgid "Message to display upon completion"
+msgstr "Mensaje que se muestra al finalizar"
+
+#: problem_builder/message.py
+msgid "Type of message"
+msgstr "Tipo de mensaje"
+
+#: problem_builder/mixins.py
+msgid "Child"
+msgstr "Secundario"
+
+#: problem_builder/mixins.py
+#, python-brace-format
+msgid "{child_caption} {number}"
+msgstr "{child_caption} {number}"
+
+#: problem_builder/mixins.py
+msgid ""
+"The ID of this question (required). Should be unique within this mentoring "
+"component."
+msgstr "La ID de esta pregunta (obligatoria). Debe ser única dentro de este componente de tutoría."
+
+#: problem_builder/mixins.py
+msgid "Question title"
+msgstr "Título de la pregunta"
+
+#: problem_builder/mixins.py
+msgid "Leave blank to use the default (\"Question 1\", \"Question 2\", etc.)"
+msgstr "Dejar en blanco para usar la opción predeterminada (\"Pregunta 1\", \"Pregunta 2\", etc.)"
+
+#: problem_builder/mixins.py
+msgid "Defines the maximum total grade of this question."
+msgstr "Define la calificación total máxima de esta pregunta."
+
+#: problem_builder/mixins.py
+msgid "This XBlock does not have any settings."
+msgstr "Este XBlock no tiene ninguna configuración."
+
+#: problem_builder/mrq.py
+msgid "Required Choices"
+msgstr "Elecciones obligatorias"
+
+#: problem_builder/mrq.py
+msgid ""
+"Specify the value[s] that students must select for this MRQ to be considered"
+" correct."
+msgstr "Especifique los valores que los estudiantes podrían seleccionar para este MRQ y que se consideran correctos."
+
+#: problem_builder/mrq.py
+msgid "Ignored Choices"
+msgstr "Elecciones omitidas"
+
+#: problem_builder/mrq.py
+msgid ""
+"Specify the value[s] that are neither correct nor incorrect. Any values not "
+"listed as required or ignored will be considered wrong."
+msgstr "Especifique los valores que no sean correctos ni incorrectos. Cualquier valor que no aparezca como obligatorio u omitido se considerará incorrecto."
+
+#: problem_builder/mrq.py
+msgid "General feedback provided when submitting"
+msgstr "Feedback general proporcionado cuando se envía la respuesta"
+
+#: problem_builder/mrq.py
+msgid "Required"
+msgstr "Obligatorio"
+
+#: problem_builder/mrq.py
+msgid "Ignored"
+msgstr "Omitido"
+
+#: problem_builder/mrq.py
+msgid "Duplicate required choices set"
+msgstr "Duplicar el conjunto de elecciones obligatorias"
+
+#: problem_builder/mrq.py
+msgid "Duplicate ignored choices set"
+msgstr "Duplicar el conjunto de elecciones omitidas"
+
+#: problem_builder/mrq.py
+msgid "A choice is listed as both required and ignored: {}"
+msgstr "Una elección aparece como obligatoria y como omitida: {}"
+
+#: problem_builder/mrq.py
+msgid "A choice value listed as required does not exist: {}"
+msgstr "No existe un valor de elección registrado como obligatorio: {}"
+
+#: problem_builder/mrq.py
+msgid "A choice value listed as ignored does not exist: {}"
+msgstr "No existe un valor de elección registrado como omitido: {}"
+
+#: problem_builder/plot.py
+msgid "Plot"
+msgstr "Gráfico"
+
+#: problem_builder/plot.py
+msgid "Plot title"
+msgstr "Título del gráfico"
+
+#: problem_builder/plot.py
+msgid "Plot label"
+msgstr "Etiqueta del gráfico"
+
+#: problem_builder/plot.py
+msgid ""
+"Label for default overlay that shows student's answers to scale questions"
+msgstr "Etiqueta para la superposición predeterminada que muestra las respuestas del estudiante a las preguntas de escala"
+
+#: problem_builder/plot.py
+msgid "Point color (default overlay)"
+msgstr "Color del punto (superposición predeterminada)"
+
+#: problem_builder/plot.py
+msgid "Point color to use for default overlay"
+msgstr "Color del punto a utilizar para la superposición predeterminada"
+
+#: problem_builder/plot.py
+msgid "Point color (average overlay)"
+msgstr "Color del punto (superposición promedio)"
+
+#: problem_builder/plot.py
+msgid "Point color to use for average overlay"
+msgstr "Color del punto a utilizar para la superposición promedio"
+
+#: problem_builder/plot.py
+msgid "Quadrant I"
+msgstr "Cuadrante I"
+
+#: problem_builder/plot.py
+msgid ""
+"Label for the first quadrant. Plot uses counter-clockwise numbering starting"
+" in the top right quadrant."
+msgstr "Etiqueta para el primer cuadrante. El gráfico usa la numeración en sentido contrario a las agujas del reloj y empieza en el cuadrante superior derecho."
+
+#: problem_builder/plot.py
+msgid "Quadrant II"
+msgstr "Cuadrante II"
+
+#: problem_builder/plot.py
+msgid ""
+"Label for the second quadrant. Plot uses counter-clockwise numbering "
+"starting in the top right quadrant."
+msgstr "Etiqueta para el segundo cuadrante. El gráfico usa la numeración en sentido contrario a las agujas del reloj y empieza en el cuadrante superior derecho."
+
+#: problem_builder/plot.py
+msgid "Quadrant III"
+msgstr "Cuadrante III"
+
+#: problem_builder/plot.py
+msgid ""
+"Label for the third quadrant. Plot uses counter-clockwise numbering starting"
+" in the top right quadrant."
+msgstr "Etiqueta para el tercer cuadrante. El gráfico usa la numeración en sentido contrario a las agujas del reloj y empieza en el cuadrante superior derecho."
+
+#: problem_builder/plot.py
+msgid "Quadrant IV"
+msgstr "Cuadrante IV"
+
+#: problem_builder/plot.py
+msgid ""
+"Label for the fourth quadrant. Plot uses counter-clockwise numbering "
+"starting in the top right quadrant."
+msgstr "Etiqueta para el cuarto cuadrante. El gráfico usa la numeración en sentido contrario a las agujas del reloj y empieza en el cuadrante superior derecho."
+
+#: problem_builder/plot.py
+msgid "Claims and associated questions"
+msgstr "Reclamos y preguntas asociadas"
+
+#: problem_builder/plot.py
+msgid ""
+"Claims and questions that should be included in the plot. Each line defines "
+"a triple of the form \"claim, q1, q2\", where \"claim\" is arbitrary text "
+"that represents a claim, and \"q1\" and \"q2\" are IDs of scale or rating "
+"questions. "
+msgstr "Reclamos y preguntas que deben incluirse en el gráfico. Cada línea define un triple del formulario \"reclamo, c1, c2\", en el que \"reclamo\" es un texto arbitrario que representa un reclamo y \"c1\" y \"c2\" son las ID de las preguntas de escala o calificación. "
+
+#: problem_builder/plot.py
+msgid ""
+"In addition to the default and average overlays the plot includes the "
+"following overlays:"
+msgstr "Además de las superposiciones predeterminada y promedio, el gráfico incluye las siguientes superposiciones:"
+
+#: problem_builder/plot.py
+msgid "Plot Overlay"
+msgstr "Superposición de gráfico"
+
+#: problem_builder/plot.py
+msgid "Overlay title"
+msgstr "Título de la superposición"
+
+#: problem_builder/plot.py
+msgid "Label for button that allows to toggle visibility of this overlay"
+msgstr "Etiqueta para el botón que permite alternar la visibilidad de esta superposición"
+
+#: problem_builder/plot.py
+msgid "Point color"
+msgstr "Color del punto"
+
+#: problem_builder/plot.py
+msgid "Point color to use for this overlay"
+msgstr "Color del punto a utilizar para esta superposición"
+
+#: problem_builder/plot.py
+msgid "Description of this overlay (optional)"
+msgstr "Descripción de esta superposición (opcional)"
+
+#: problem_builder/plot.py
+msgid "Citation"
+msgstr "Referencia"
+
+#: problem_builder/plot.py
+msgid "Source of data belonging to this overlay (optional)"
+msgstr "Fuente de los datos que pertenecen a esta superposición (opcional)"
+
+#: problem_builder/plot.py
+msgid "Claim data"
+msgstr "Datos del reclamo"
+
+#: problem_builder/plot.py
+msgid ""
+"Claim data to include in this overlay. Each line defines a tuple of the form"
+" \"q1, q2\", where \"q1\" is the value associated with the first scale or "
+"rating question, and \"q2\" is the value associated with the second scale or"
+" rating question. Note that data will be associated with claims in the order"
+" that they are defined in the parent plot."
+msgstr "Datos del reclamo que se deben incluir en esta superposición. Cada línea define una tupla de la forma \"c1, c2\", donde \"c1\" es el valor asociado con la primera escala o pregunta de calificación y \"c2\" es el valor asociado con la segunda escala o pregunta de calificación. Tome en cuenta que los datos se asociarán con los reclamos en el orden en que se definen en el gráfico principal."
+
+#: problem_builder/plot.py
+msgid ""
+"No plot label set. Button for toggling visibility of this overlay will not "
+"have a label."
+msgstr "No se ha establecido ninguna etiqueta de gráfico. El botón para alternar la visibilidad de esta superposición no tendrá una etiqueta."
+
+#: problem_builder/plot.py
+msgid "No point color set. This overlay will not work correctly."
+msgstr "No se ha establecido un color del punto. Esta superposición no funcionará correctamente."
+
+#: problem_builder/plot.py
+msgid "No claim data provided. This overlay will not work correctly."
+msgstr "No se han proporcionado datos del reclamo. Esta superposición no funcionará correctamente."
+
+#: problem_builder/questionnaire.py
+msgid "A unique Question ID is required."
+msgstr "Se requiere una ID de pregunta única."
+
+#: problem_builder/questionnaire.py
+msgid "Question ID should not contain spaces."
+msgstr "La ID de la pregunta no debe contener espacios."
+
+#: problem_builder/questionnaire.py
+msgid "Some choice values are not unique."
+msgstr "Algunos valores de elección no son únicos."
+
+#: problem_builder/questionnaire.py
+msgid "Multiple tips configured for the same choice."
+msgstr "Se han configurado muchos consejos para la misma elección."
+
+#: problem_builder/slider.py
+msgid "Ranged Value Slider"
+msgstr "Control deslizante del valor de rango"
+
+#: problem_builder/slider.py
+msgid "Label for low end of the range"
+msgstr "Etiqueta para el extremo menor del rango"
+
+#: problem_builder/slider.py
+msgid "0%"
+msgstr "0 %"
+
+#: problem_builder/slider.py
+msgid "Label for high end of the range"
+msgstr "Etiqueta para el extremo mayor del rango"
+
+#: problem_builder/slider.py
+msgid "100%"
+msgstr "100 %"
+
+#: problem_builder/slider.py
+msgid "Question to ask the student (optional)"
+msgstr "Pregunta que se debe hacer al estudiante (opcional)"
+
+#: problem_builder/slider.py
+#, python-brace-format
+msgid "Select a value from {min_label} to {max_label}"
+msgstr "Seleccione un valor de {min_label} a {max_label}"
+
+#: problem_builder/step.py
+msgid "Step"
+msgstr "Paso"
+
+#: problem_builder/step.py
+msgid "Mentoring Step"
+msgstr "Paso de tutoría"
+
+#: problem_builder/step.py
+msgid "Step Title"
+msgstr "Título del paso"
+
+#: problem_builder/step.py
+msgid "Leave blank to use sequential numbering"
+msgstr "Déjelo en blanco para usar una numeración secuencial."
+
+#: problem_builder/step.py
+msgid "Next Button Label"
+msgstr "Etiqueta del botón Siguiente"
+
+#: problem_builder/step.py
+msgid "Customize the text of the 'Next' button."
+msgstr "Personalice el texto del botón Siguiente."
+
+#: problem_builder/step.py
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "Next Step"
+msgstr "Próximo paso"
+
+#: problem_builder/step.py
+msgid "Feedback or instructional message which pops up after submitting."
+msgstr "Feedback o mensaje de instrucción que aparece después de enviar la respuesta."
+
+#: problem_builder/step_review.py
+msgid "Conditional Message"
+msgstr "Mensaje condicional"
+
+#: problem_builder/step_review.py
+msgid "Show only if student got a perfect score"
+msgstr "Mostrar solo si el estudiante obtuvo un puntaje perfecto"
+
+#: problem_builder/step_review.py
+msgid "Show only if student got at least one question wrong"
+msgstr "Mostrar solo si el estudiante obtuvo al menos una pregunta incorrecta"
+
+#: problem_builder/step_review.py
+msgid "Show for any score"
+msgstr "Mostrar para cualquier puntaje"
+
+#: problem_builder/step_review.py
+msgid "Score condition"
+msgstr "Condición de puntaje"
+
+#: problem_builder/step_review.py
+msgid "Show only if student can try again"
+msgstr "Mostrar solo si el estudiante puede intentarlo de nuevo"
+
+#: problem_builder/step_review.py
+msgid "Show only if student has used up all attempts"
+msgstr "Mostrar solo si el estudiante ha utilizado todos los intentos posibles"
+
+#: problem_builder/step_review.py
+msgid "Show whether student can try again or not"
+msgstr "Mostrar si el estudiante puede o no intentarlo de nuevo"
+
+#: problem_builder/step_review.py
+msgid "Try again condition"
+msgstr "Condición de intentarlo de nuevo"
+
+#: problem_builder/step_review.py
+msgid "Always shown"
+msgstr "Siempre se muestra"
+
+#: problem_builder/step_review.py
+msgid "Score Summary"
+msgstr "Resumen del puntaje"
+
+#: problem_builder/step_review.py
+msgid "Per-Question Feedback"
+msgstr "Feedback previo a la pregunta"
+
+#: problem_builder/step_review.py
+msgid ""
+"(Example tip:) Since you got Question 1 wrong, review Chapter 12 of your "
+"textbook."
+msgstr "(Ejemplo de consejo:) Dado que la respuesta de la pregunta 1 es incorrecta, revise el Capítulo 12 del libro de texto."
+
+#: problem_builder/step_review.py
+msgid "Review Step"
+msgstr "Paso de revisión"
+
+#: problem_builder/swipe.py
+msgid "Swipeable Binary Choice Question"
+msgstr "Pregunta de elección binaria deslizable"
+
+#: problem_builder/swipe.py
+msgid "Text"
+msgstr "Texto"
+
+#: problem_builder/swipe.py
+msgid ""
+"Text to display on this card. The student must determine if this statement "
+"is true or false."
+msgstr "Texto a mostrar en esta tarjeta. El estudiante debe determinar si esta afirmación es verdadera o falsa."
+
+#: problem_builder/swipe.py
+msgid "Image"
+msgstr "Imagen"
+
+#: problem_builder/swipe.py
+msgid "Specify the URL of an image associated with this question."
+msgstr "Especifique la URL de una imagen asociada con esta pregunta."
+
+#: problem_builder/swipe.py
+msgid "Correct Choice"
+msgstr "Elección correcta"
+
+#: problem_builder/swipe.py
+msgid "Specifies whether the card is correct."
+msgstr "Especifica si la tarjeta es correcta."
+
+#: problem_builder/swipe.py
+msgid "Correct Answer Feedback"
+msgstr "Feedback de la respuesta correcta"
+
+#: problem_builder/swipe.py
+msgid "Feedback to display when student answers correctly."
+msgstr "Feedback que se debe mostrar cuando el estudiante responde correctamente."
+
+#: problem_builder/swipe.py
+msgid "Incorrect Answer Feedback"
+msgstr "Feedback de la respuesta incorrecta"
+
+#: problem_builder/swipe.py
+msgid "Feedback to display when student answers incorrectly."
+msgstr "Feedback que se debe mostrar cuando el estudiante responde incorrectamente."
+
+#: problem_builder/swipe.py
+msgid "Last input submitted by the student."
+msgstr "Último aporte enviado por el estudiante."
+
+#: problem_builder/table.py
+msgid "Answer Recap Table"
+msgstr "Tabla de resumen de respuestas"
+
+#: problem_builder/table.py
+msgid "Display name"
+msgstr "Nombre para mostrar"
+
+#: problem_builder/table.py
+msgid "Title of the table"
+msgstr "Título de la tabla"
+
+#: problem_builder/table.py
+msgid "Answers Table"
+msgstr "Tabla de respuestas"
+
+#: problem_builder/table.py
+msgid "Special Mode"
+msgstr "Modo especial"
+
+#: problem_builder/table.py
+msgid "Variant of the table that will display a specific background image."
+msgstr "Variante de la tabla que mostrará una imagen de fondo específica."
+
+#: problem_builder/table.py
+msgid "Allow Download"
+msgstr "Permitir la descarga"
+
+#: problem_builder/table.py
+msgid "Allow students to download a copy of the table for themselves."
+msgstr "Permite a los estudiantes descargar una copia de la tabla para ellos mismos."
+
+#: problem_builder/table.py
+msgid "Allow Sharing"
+msgstr "Permitir el intercambio"
+
+#: problem_builder/table.py
+msgid "Allow students to share their results with other students."
+msgstr "Permite a los estudiantes compartir sus resultados con los demás."
+
+#: problem_builder/table.py
+msgid "You are not permitted to view this student's table."
+msgstr "No tiene permiso para ver esta tabla del estudiante."
+
+#: problem_builder/table.py
+msgid "Usernames not provided."
+msgstr "No se proporcionan los nombres de usuario."
+
+#: problem_builder/table.py
+msgid "Some users could not be shared with. Please check these usernames: {}"
+msgstr "No se podría compartir con algunos usuarios. Verifique estos nombres de usuario: {}"
+
+#: problem_builder/table.py
+msgid "Username not provided."
+msgstr "No se proporcionó el nombre de usuario."
+
+#: problem_builder/table.py
+msgid "Removed successfully."
+msgstr "Eliminado satisfactoriamente."
+
+#: problem_builder/table.py
+msgid "Header"
+msgstr "Encabezado"
+
+#: problem_builder/table.py
+msgid "Header of this column"
+msgstr "Encabezado de esta columna"
+
+#: problem_builder/templates/html/answer_editable.html
+#: problem_builder/templates/html/mcqblock.html
+#: problem_builder/templates/html/mentoring_with_steps.html
+#: problem_builder/templates/html/mrqblock.html
+#: problem_builder/templates/html/ratingblock.html
+msgid "Incorrect"
+msgstr "Incorrecto"
+
+#: problem_builder/templates/html/answer_read_only.html
+msgid "No answer yet."
+msgstr "No hay respuesta todavía."
+
+#: problem_builder/templates/html/completion.html
+#: problem_builder/templates/html/slider.html
+msgid "Complete"
+msgstr "Completado"
+
+#: problem_builder/templates/html/dashboard.html
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid "Download report"
+msgstr "Descargar el informe"
+
+#: problem_builder/templates/html/dashboard_report.html
+#: problem_builder/templates/html/mentoring-table-report.html
+msgid "Student"
+msgstr "Estudiante"
+
+#: problem_builder/templates/html/dashboard_report.html
+#: problem_builder/templates/html/mentoring-table-report.html
+msgid "Course"
+msgstr "Curso"
+
+#: problem_builder/templates/html/dashboard_report.html
+#: problem_builder/templates/html/mentoring-table-report.html
+msgid "Date"
+msgstr "Fecha"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Filters"
+msgstr "Filtros"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Username[s]:"
+msgstr "Nombre[s] de usuario:"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Enter one or more usernames, comma separated."
+msgstr "Ingrese uno o más nombres de usuario separados por comas."
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Text:"
+msgstr "Texto:"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Section/Question:"
+msgstr "Sección o pregunta:"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "All"
+msgstr "Todo"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Problem types:"
+msgstr "Tipos de problemas:"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Search"
+msgstr "Buscar"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Section"
+msgstr "Sección"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Subsection"
+msgstr "Subsección"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Unit"
+msgstr "Unidad"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Type"
+msgstr "Tipo"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "First"
+msgstr "Primero"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Prev"
+msgstr "Anterior"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Next"
+msgstr "Siguiente"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Last"
+msgstr "Último"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Download as CSV"
+msgstr "Descargar como CSV"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Cancel search"
+msgstr "Cancelar la búsqueda"
+
+#: problem_builder/templates/html/instructor_tool.html
+msgid "Delete results"
+msgstr "Eliminar los resultados"
+
+#: problem_builder/templates/html/mentoring-column-add-button.html
+msgid "Add HTML"
+msgstr "Agregar HTML"
+
+#: problem_builder/templates/html/mentoring-column-add-button.html
+msgid "Add Answer Recap"
+msgstr "Agregar resumen de respuesta"
+
+#: problem_builder/templates/html/mentoring-table-add-button.html
+msgid "Add Answer Recap Column"
+msgstr "Agregar columna de resumen de respuesta"
+
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid "Display Map from:"
+msgstr "Mostrar el mapa de:"
+
+#: problem_builder/templates/html/mentoring-table-container.html
+#, python-format
+msgid "You (%(username)s)"
+msgstr "Usted (%(username)s)"
+
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid "Share"
+msgstr "Compartir"
+
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid "Enter the username of another student you'd like to share this with:"
+msgstr "Ingresar el nombre de usuario de otro estudiante con quien desea compartir esto:"
+
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid "Map added!"
+msgstr "Mapa agregado"
+
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid "Another user has shared a map with you."
+msgstr "Otro usuario ha compartido un mapa con usted."
+
+#: problem_builder/templates/html/mentoring-table-container.html
+msgid ""
+"You can change the user you're currently displaying using the drop-down "
+"selector above."
+msgstr "Puede cambiar el usuario que se muestra mediante el selector desplegable que se encuentra arriba."
+
+#: problem_builder/templates/html/mentoring-table-shared-list.html
+msgid "Shared with:"
+msgstr "Compartido con:"
+
+#: problem_builder/templates/html/mentoring.html
+#, python-format
+msgid ""
+"\n"
+"    You need to complete %(link_start)sthe previous step%(link_end)s before\n"
+"    attempting this step.\n"
+"    "
+msgstr "\n"
+"    Debe completar %(link_start)sel paso anterior%(link_end)s para poder \n"
+"    intentar con este.\n"
+"    "
+
+#: problem_builder/templates/html/mentoring.html
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "Submit"
+msgstr "Enviar"
+
+#: problem_builder/templates/html/mentoring.html
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "Review final grade"
+msgstr "Revisar la calificación final"
+
+#: problem_builder/templates/html/mentoring.html
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "APGLv3 license"
+msgstr "Licencia APGLv3"
+
+#: problem_builder/templates/html/mentoring_url_name.html
+msgid "url_name for linking to this mentoring question set:"
+msgstr "Nombre de URL para enlazar a este conjunto de preguntas de tutoría:"
+
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "Partially correct"
+msgstr "Parcialmente correcto"
+
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "Review grade"
+msgstr "Revisar calificación"
+
+#: problem_builder/templates/html/mentoring_with_steps.html
+msgid "Try again"
+msgstr "Inténtelo de nuevo"
+
+#: problem_builder/templates/html/overlay.html
+msgid "Overlay"
+msgstr "Superposición"
+
+#: problem_builder/templates/html/overlay.html
+#: problem_builder/templates/html/plot.html
+msgid "Description:"
+msgstr "Descripción:"
+
+#: problem_builder/templates/html/overlay.html
+msgid "No description provided"
+msgstr "No se proporciona descripción."
+
+#: problem_builder/templates/html/overlay.html
+#: problem_builder/templates/html/plot.html
+msgid "Source:"
+msgstr "Fuente:"
+
+#: problem_builder/templates/html/overlay.html
+msgid "No citation provided"
+msgstr "No se proporciona referencia."
+
+#: problem_builder/templates/html/overlay.html
+msgid "Data:"
+msgstr "Datos:"
+
+#: problem_builder/templates/html/overlay.html
+msgid "No data provided"
+msgstr "No se proporcionan datos."
+
+#: problem_builder/templates/html/plot.html
+msgid "Quadrant labels"
+msgstr "Etiquetas de cuadrantes"
+
+#: problem_builder/templates/html/plot.html
+msgid "Compare your plot to others!"
+msgstr "Compare su gráfico con los demás."
+
+#: problem_builder/templates/html/plot.html
+msgid "Plot info"
+msgstr "Información del gráfico"
+
+#: problem_builder/templates/html/plot_preview.html
+msgid ""
+"This block displays a plot that summarizes responses to the following "
+"claims:"
+msgstr "Este bloque muestra un gráfico que resume las respuestas a los siguientes reclamos:"
+
+#: problem_builder/templates/html/plot_preview.html
+msgid "Claim"
+msgstr "Reclamo"
+
+#: problem_builder/templates/html/plot_preview.html
+msgid "Question 1"
+msgstr "Pregunta 1"
+
+#: problem_builder/templates/html/plot_preview.html
+msgid "Question 2"
+msgstr "Pregunta 2"
+
+#: problem_builder/templates/html/plot_preview.html
+msgid ""
+"This block displays a plot that summarizes responses to a set of claims."
+msgstr "Este bloque muestra un gráfico que resume las respuestas a un conjunto de reclamos."
+
+#: problem_builder/templates/html/questionnaire_add_buttons.html
+msgid "Add Custom Choice"
+msgstr "Agregar elecciones personalizadas"
+
+#: problem_builder/templates/html/questionnaire_add_buttons.html
+msgid "Add Tip"
+msgstr "Agregar consejo"
+
+#: problem_builder/templates/html/questionnaire_add_buttons.html
+msgid "Message (Review)"
+msgstr "Mensaje (revisión)"
+
+#: problem_builder/templates/html/rating_edit_footer.html
+msgid "ID for referencing this rating block:"
+msgstr "ID para referencia de este bloque de calificación:"
+
+#: problem_builder/templates/html/ratingblock_edit_preview.html
+msgid "Built-in choices:"
+msgstr "Elecciones integradas:"
+
+#: problem_builder/templates/html/ratingblock_edit_preview.html
+msgid "Additional custom choices and tips:"
+msgstr "Elecciones y consejos personalizados adicionales:"
+
+#: problem_builder/templates/html/sb-review-per-question-feedback.html
+msgid ""
+"You might consider reviewing the following items before your next assessment"
+" attempt:"
+msgstr "Considere revisar los siguientes puntos antes del próximo intento de completar la evaluación:"
+
+#: problem_builder/templates/html/sb-review-score.html
+#, python-format
+msgid "You scored %(score)s%% on this assessment. "
+msgstr "Su puntaje en esta evaluación es %(score)s%%. "
+
+#: problem_builder/templates/html/sb-review-score.html
+msgid "Click a question to review feedback on your response."
+msgstr "Haga clic en una pregunta para revisar el feedback de su respuesta."
+
+#: problem_builder/templates/html/sb-review-score.html
+msgid "Note: This is an example score, to show how the review step will look."
+msgstr "Nota: este es un puntaje de ejemplo para mostrar cómo se verá el paso de revisión."
+
+#: problem_builder/templates/html/sb-review-score.html
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question correctly.\n"
+"        "
+msgid_plural "\n          You answered %(correct_answers)s questions correctly.\n        "
+msgstr[0] "\n"
+"          Respondió 1 pregunta correctamente.\n"
+"        "
+msgstr[1] "\n"
+"          Respondió %(correct_answers)s preguntas correctamente.\n"
+"        "
+
+#: problem_builder/templates/html/sb-review-score.html
+msgid "and"
+msgstr "y"
+
+#: problem_builder/templates/html/sb-review-score.html
+#, python-format
+msgid "Question %(number)s"
+msgstr "Pregunta %(number)s"
+
+#: problem_builder/templates/html/sb-review-score.html
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question partially correctly.\n"
+"        "
+msgid_plural "\n          You answered %(partially_correct_answers)s questions partially correctly.\n        "
+msgstr[0] "\n"
+"          Respondió 1 pregunta parcialmente correcta.\n"
+"        "
+msgstr[1] "\n"
+"          Respondió %(partially_correct_answers)s preguntas parcialmente correctas.\n"
+"        "
+
+#: problem_builder/templates/html/sb-review-score.html
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question incorrectly.\n"
+"        "
+msgid_plural "\n          You answered %(incorrect_answers)s questions incorrectly.\n        "
+msgstr[0] "\n"
+"          Respondió 1 pregunta incorrectamente.\n"
+"        "
+msgstr[1] "\n"
+"          Respondió %(incorrect_answers)s preguntas incorrectamente.\n"
+"        "
+
+#: problem_builder/templates/html/slider_edit_footer.html
+msgid "ID for referencing this slider:"
+msgstr "ID para referencia de este control deslizante:"
+
+#: problem_builder/tip.py
+msgid "Content"
+msgstr "Contenido"
+
+#: problem_builder/tip.py
+msgid ""
+"Text of the tip to show if the student chooses this tip's associated "
+"choice[s]"
+msgstr "Texto del consejo a mostrar si el estudiante selecciona la elección asociada a este consejo"
+
+#: problem_builder/tip.py
+msgid "For Choices"
+msgstr "Para elecciones"
+
+#: problem_builder/tip.py
+msgid "List of choices for which to display this tip"
+msgstr "Lista de elecciones para las que se debe mostrar este consejo"
+
+#: problem_builder/tip.py
+msgid "Width"
+msgstr "Ancho"
+
+#: problem_builder/tip.py
+msgid "Width of the tip popup (e.g. '400px')"
+msgstr "Ancho de la ventana emergente del consejo (p. ej., \"400 px\")"
+
+#: problem_builder/tip.py
+msgid "Height"
+msgstr "Altura"
+
+#: problem_builder/tip.py
+msgid "Height of the tip popup (e.g. '200px')"
+msgstr "Altura de la ventana emergente del consejo (p. ej., \"200 px\")"
+
+#: problem_builder/tip.py
+#, python-brace-format
+msgid "Tip for {list_of_choices}"
+msgstr "Consejo para {list_of_choices}"
+
+#: problem_builder/tip.py
+msgid "A choice selected for this tip does not exist."
+msgstr "No existe una elección seleccionada para este consejo."
