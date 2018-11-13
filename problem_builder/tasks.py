@@ -5,10 +5,11 @@ import time
 
 from celery.task import task
 from celery.utils.log import get_task_logger
+from django.contrib.auth.models import User
+from django.db.models import F
 from lms.djangoapps.instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey, UsageKey
-from student.models import user_by_anonymous_id
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
 
@@ -111,12 +112,15 @@ def _extract_data(course_key_str, block, user_id, match_string):
 
     # Extract info for "Answer" and "Username" columns
     # - Get all of the most recent student submissions for this block:
-    submissions = _get_submissions(course_key_str, block, user_id)
+    submissions = tuple(_get_submissions(course_key_str, block, user_id))
+
+    student_ids = [submission['student_id'] for submission in submissions]
+    users = get_users_by_anonymous_ids(student_ids)
 
     # - For each submission, look up student's username, email and answer:
     answer_cache = {}
     for submission in submissions:
-        username, _user_id, user_email = _get_user_info(submission, user_id)
+        username, _user_id, user_email = _get_user_info(users, submission)
         answer = _get_answer(block, submission, answer_cache)
 
         # Short-circuit if answer does not match search criteria
@@ -190,19 +194,32 @@ def _get_submissions(course_key_str, block, user_id):
         return sub_api.get_submissions(student_dict, limit=1)
 
 
-def _get_user_info(submission, user_id):
+def _get_user_info(users, submission):
     """
-    Return a (username, user id, user email) tuple for the student who provided `submission`.
+    Return a (username, user id, user email) tuple for the user who provided `submission`.
 
     If the anonymous ID of the submission can't be resolved into a user,
     (student ID, 'N/A', 'N/A') is returned
     """
-    # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
-    student_id = submission.get('student_id', user_id)
-    user = user_by_anonymous_id(student_id)
+    user = None
+    if users is not None:
+        user = next(user for user in users if user.anonymous_user_id == submission['student_id'])
+
     if user is None:
-        return (student_id, 'N/A', 'N/A')
+        return (submission['student_id'], 'N/A', 'N/A')
     return (user.username, user.id, user.email)
+
+
+def get_users_by_anonymous_ids(anonymous_ids):
+    """
+    Return users by anonymous_ids using AnonymousUserId lookup table.
+    """
+    if not anonymous_ids:
+        return None
+
+    return User.objects.filter(
+        anonymoususerid__anonymous_user_id__in=anonymous_ids
+    ).annotate(anonymous_user_id=F('anonymoususerid__anonymous_user_id')).iterator()
 
 
 def _get_answer(block, submission, answer_cache):

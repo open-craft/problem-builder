@@ -32,6 +32,7 @@ jobs:
           name: Install firefox 38.0.5
           command: |
             FIREFOX_URL="https://sourceforge.net/projects/ubuntuzilla/files/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_38.0.5-0ubuntu1_amd64.deb/download" \
+            && sudo apt-get update \
             && curl --silent --show-error --location --fail --retry 3 --output /tmp/firefox.deb $FIREFOX_URL \
             && sudo dpkg -i /tmp/firefox.deb || sudo apt-get -f install  \
             && sudo apt-get install -y libgtk3.0-cil-dev libasound2 libasound2 libdbus-glib-1-2 libdbus-1-3 libgtk2.0-0 \

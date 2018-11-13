@@ -288,7 +288,6 @@ class StudentViewUserStateResultsTransformerMixin(ExpandStaticURLMixin):
 
         return student_results
 
-
     def delete_key(self, dictionary, key):
         """
         Safely delete `key` from `dictionary`.
