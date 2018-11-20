@@ -120,6 +120,10 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
     def calculate_results(self, submissions):
         score = 0
         results = []
+        tips = None
+
+        if not self.hide_results:
+            tips = self.get_tips()
 
         for choice in self.custom_choices:
             choice_completed = True
@@ -131,9 +135,13 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
                     choice_completed = False
             elif choice_selected and choice.value not in self.ignored_choices:
                 choice_completed = False
-            for tip in self.get_tips():
-                if choice.value in tip.values:
-                    choice_tips_html.append(self.expand_static_url(tip.render('mentoring_view').content))
+            # choice_tips_html list is being set only when 'self.hide_results' is False, to optimize,
+            # execute the loop only when 'self.hide_results' is set to False
+            if not self.hide_results:
+                for tip in tips:
+                    if choice.value in tip.values:
+                        choice_tips_html.append(self.expand_static_url(tip.render('mentoring_view').content))
+                        break
 
             if choice_completed:
                 score += 1
