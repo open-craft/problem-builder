@@ -135,13 +135,6 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
                     choice_completed = False
             elif choice_selected and choice.value not in self.ignored_choices:
                 choice_completed = False
-            # choice_tips_html list is being set only when 'self.hide_results' is False, to optimize,
-            # execute the loop only when 'self.hide_results' is set to False
-            if not self.hide_results:
-                for tip in tips:
-                    if choice.value in tip.values:
-                        choice_tips_html.append(self.expand_static_url(tip.render('mentoring_view').content))
-                        break
 
             if choice_completed:
                 score += 1
@@ -153,6 +146,13 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             }
             # Only include tips/results in returned response if we want to display them
             if not self.hide_results:
+                # choice_tips_html list is being set only when 'self.hide_results' is False, to optimize,
+                # execute the loop only when 'self.hide_results' is set to False
+                for tip in tips:
+                    if choice.value in tip.values:
+                        choice_tips_html.append(self.expand_static_url(tip.render('mentoring_view').content))
+                        break
+
                 loader = ResourceLoader(__name__)
                 choice_result['completed'] = choice_completed
                 choice_result['tips'] = loader.render_template('templates/html/tip_choice_group.html', {
@@ -226,5 +226,6 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
                 for choice in self.human_readable_choices
             ],
             'hide_results': self.hide_results,
-            'tips': [tip.student_view_data() for tip in self.get_tips()],
+            'tips': [tip.student_view_data() for tip in
+                     self.get_tips()] if not self.hide_results else [],
         }
