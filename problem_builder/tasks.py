@@ -217,7 +217,6 @@ def get_users_by_anonymous_ids(anonymous_ids):
     }
 
 
-
 def _get_answer(block, submission, answer_cache):
     """
     Return answer associated with `submission` to `block`.
