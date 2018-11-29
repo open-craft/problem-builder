@@ -120,7 +120,10 @@ def _extract_data(course_key_str, block, user_id, match_string):
     # - For each submission, look up student's username, email and answer:
     answer_cache = {}
     for submission in submissions:
-        username, _user_id, user_email = _get_user_info(users, submission)
+        username, _user_id, user_email = users.get(
+            submission['student_id'],
+            (submission['student_id'], 'N/A', 'N/A')
+        )
         answer = _get_answer(block, submission, answer_cache)
 
         # Short-circuit if answer does not match search criteria
@@ -194,25 +197,6 @@ def _get_submissions(course_key_str, block, user_id):
         return sub_api.get_submissions(student_dict, limit=1)
 
 
-def _get_user_info(users, submission):
-    """
-    Return a (username, user id, user email) tuple for the user who provided `submission`.
-
-    If the anonymous ID of the submission can't be resolved into a user,
-    (student ID, 'N/A', 'N/A') is returned
-    """
-    user = None
-    if users is not None:
-        try:
-            user = next(user for user in users if user.anonymous_user_id == submission['student_id'])
-        except StopIteration:
-            pass
-
-    if user is None:
-        return (submission['student_id'], 'N/A', 'N/A')
-    return (user.username, user.id, user.email)
-
-
 def get_users_by_anonymous_ids(anonymous_ids):
     """
     Return users by anonymous_ids using AnonymousUserId lookup table.
@@ -220,9 +204,18 @@ def get_users_by_anonymous_ids(anonymous_ids):
     if not anonymous_ids:
         return None
 
-    return User.objects.filter(
+    users = User.objects.filter(
         anonymoususerid__anonymous_user_id__in=anonymous_ids
-    ).annotate(anonymous_user_id=F('anonymoususerid__anonymous_user_id')).iterator()
+    ).annotate(
+        anonymous_user_id=F('anonymoususerid__anonymous_user_id')
+    ).values(
+        'anonymous_user_id', 'username', 'id', 'email'
+    ).iterator()
+
+    return {
+        user['anonymous_user_id']: (user['id'], user['username'], user['email']) for user in users
+    }
+
 
 
 def _get_answer(block, submission, answer_cache):
