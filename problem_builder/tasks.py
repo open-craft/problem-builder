@@ -203,7 +203,10 @@ def _get_user_info(users, submission):
     """
     user = None
     if users is not None:
-        user = next(user for user in users if user.anonymous_user_id == submission['student_id'])
+        try:
+            user = next(user for user in users if user.anonymous_user_id == submission['student_id'])
+        except StopIteration:
+            pass
 
     if user is None:
         return (submission['student_id'], 'N/A', 'N/A')
