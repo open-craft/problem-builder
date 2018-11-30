@@ -213,7 +213,7 @@ def get_users_by_anonymous_ids(anonymous_ids):
     ).iterator()
 
     return {
-        user['anonymous_user_id']: user['username'], user['id'], user['email']) for user in users
+        user['anonymous_user_id']: (user['username'], user['id'], user['email']) for user in users
     }
 
 
