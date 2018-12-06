@@ -27,6 +27,8 @@ from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (
     NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
 )
+from .utils import I18NService
+
 
 from .mixins import XBlockWithTranslationServiceMixin, NoSettingsMixin
 
@@ -143,7 +145,8 @@ class ConditionalMessageBlock(
 
 
 @XBlock.needs("i18n")
-class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, NoSettingsMixin, XBlock):
+class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin,
+                        NoSettingsMixin, XBlock, I18NService):
     """
     Summarize the score that the student earned.
     """
@@ -158,7 +161,9 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
     def student_view(self, context=None):
         """ Render the score summary message. """
         context = context or {}
-        html = loader.render_template("templates/html/sb-review-score.html", context.get("score_summary", {}))
+        html = loader.render_django_template("templates/html/sb-review-score.html",
+                                             context.get("score_summary", {}),
+                                             i18n_service=self.i18n_service)
         return Fragment(html)
 
     def student_view_data(self, context=None):
