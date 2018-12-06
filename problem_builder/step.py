@@ -19,6 +19,8 @@
 #
 
 import logging
+from django import utils
+import pkg_resources
 
 from lazy.lazy import lazy
 
@@ -41,6 +43,7 @@ from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
 from problem_builder.table import MentoringTableBlock
+from .utils import I18NService
 
 
 log = logging.getLogger(__name__)
@@ -74,7 +77,7 @@ class Correctness(object):
 class MentoringStepBlock(
     StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
     EnumerableChildMixin, StepParentMixin, StudentViewUserStateResultsTransformerMixin,
-    StudentViewUserStateMixin, XBlock, ExpandStaticURLMixin
+    StudentViewUserStateMixin, XBlock, ExpandStaticURLMixin, I18NService
 ):
     """
     An XBlock for a step.
@@ -240,6 +243,20 @@ class MentoringStepBlock(
         """ Mentoring View """
         return self._render_view(context, 'mentoring_view')
 
+    @staticmethod
+    def resource_string(path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
+
+    def get_translation_content(self):
+        try:
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
+                lang=utils.translation.get_language(),
+            ))
+        except IOError:
+            return self.resource_string('public/js/translations/en/textjs.js')
+
     def _render_view(self, context, view):
         """ Actually renders a view """
         rendering_for_studio = False
@@ -272,8 +289,10 @@ class MentoringStepBlock(
             'title': self.display_name,
             'show_title': self.show_title,
             'child_contents': child_contents,
+            'i18n_service': self.i18n_service,
         }))
 
+        fragment.add_javascript(self.get_translation_content())
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step.js'))
         fragment.initialize_js('MentoringStepBlock')
 
