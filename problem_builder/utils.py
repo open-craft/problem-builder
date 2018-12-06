@@ -24,8 +24,10 @@ class DummyTranslationService(object):
     ngettext = ngettext_fallback
 
 
-class I18NService:
-
+class I18NService(object):
+    """
+    Add i18n_service attribute to XBlocks
+    """
     @property
     def i18n_service(self):
         """ Obtains translation service """
