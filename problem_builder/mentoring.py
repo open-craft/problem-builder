@@ -471,7 +471,7 @@ class MentoringBlock(
                 fragment.add_frag_resources(child_fragment)
                 child_content += child_fragment.content
 
-        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,

@@ -41,7 +41,7 @@ window.ProblemBuilderUtil = {
 var gettext;
 var ngettext;
 if ('ProblemBuilderXBlockI18N' in window) {
-    // Use DnDv2's local translations
+    // Use problem builder's local translations
     gettext = window.ProblemBuilderXBlockI18N.gettext;
     ngettext = window.ProblemBuilderXBlockI18N.ngettext;
 } else if ('gettext' in window) {
