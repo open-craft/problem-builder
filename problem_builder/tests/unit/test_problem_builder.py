@@ -241,10 +241,6 @@ class TestMentoringBlockOptions(unittest.TestCase):
         with patch.object(self.block, 'get_option') as patched_get_option:
             self.runtime_mock.service.return_value = {
                 random_key: random_value,
-                random_key: random_value,
-                random_key: random_value,
-                random_key: random_value,
-                random_key: random_value,
             }
             self.block.student_view({})
             patched_get_option.assert_any_call('pb_mcq_hide_previous_answer')
