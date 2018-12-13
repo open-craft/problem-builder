@@ -282,7 +282,7 @@ class MentoringStepBlock(
                     fragment.add_frag_resources(child_fragment)
                     child_contents.append(child_fragment.content)
 
-        fragment.add_content(loader.render_template('templates/html/step.html', {
+        fragment.add_content(loader.render_django_template('templates/html/step.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,
