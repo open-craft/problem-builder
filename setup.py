@@ -28,7 +28,7 @@ from setuptools.command.install import install
 
 # Constants #########################################################
 
-VERSION = '3.1.5'
+VERSION = '3.1.6'
 
 
 # Functions #########################################################
@@ -97,7 +97,7 @@ setup(
     description='XBlock - Problem Builder',
     packages=find_packages(),
     install_requires=[
-        'XBlock',
+        'XBlock>=1.2',
         'xblock-utils',
     ],
     entry_points={
