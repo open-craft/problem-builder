@@ -30,7 +30,6 @@ from setuptools.command.install import install
 
 VERSION = '3.2.0'
 
-
 # Functions #########################################################
 
 def package_data(pkg, root_list):
@@ -97,7 +96,7 @@ setup(
     description='XBlock - Problem Builder',
     packages=find_packages(),
     install_requires=[
-        'XBlock',
+        'XBlock>=1.2',
         'xblock-utils',
     ],
     entry_points={

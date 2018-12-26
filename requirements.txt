@@ -1,3 +1,4 @@
+XBlock>=1.2
 ddt
 mock
 unicodecsv==0.9.4
