@@ -21,6 +21,8 @@
 Integrations between these XBlocks and the edX Submissions API
 """
 
+from xblock.completable import XBlockCompletionMode
+
 try:
     from submissions import api as sub_api
 except ImportError:
@@ -28,10 +30,18 @@ except ImportError:
 
 
 class SubmittingXBlockMixin(object):
-    """ Simplifies use of the submissions API by an XBlock """
+    """
+    Simplifies use of the submissions API by an XBlock.
+    """
+
+    completion_mode = XBlockCompletionMode.COMPLETABLE
+    has_score = True
+
     @property
     def student_item_key(self):
-        """ Get the student_item_dict required for the submissions API """
+        """
+        Get the student_item_dict required for the submissions API.
+        """
         assert sub_api is not None
         location = self.location.replace(branch=None, version=None)  # Standardize the key in case it isn't already
         return dict(
