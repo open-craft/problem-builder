@@ -289,8 +289,7 @@ class MentoringStepBlock(
             'title': self.display_name,
             'show_title': self.show_title,
             'child_contents': child_contents,
-            'i18n_service': self.i18n_service,
-        }))
+        }, i18n_service=self.i18n_service))
 
         fragment.add_javascript(self.get_translation_content())
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step.js'))
