@@ -15,6 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: problem_builder/answer.py problem_builder/instructor_tool.py
 msgid "Long Answer"
@@ -1522,7 +1523,7 @@ msgstr[0] "\n"
 "          Sie haben 1 Frage teilweise korrekt beantwortet.\n"
 "        "
 msgstr[1] "\n"
-"          Sie haben%(partially_correct_answers)s Fragen teilweise korrekt beantwortet.\n"
+"          Sie haben %(partially_correct_answers)s Fragen teilweise korrekt beantwortet.\n"
 "        "
 
 #: problem_builder/templates/html/sb-review-score.html
