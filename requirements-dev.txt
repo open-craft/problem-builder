@@ -1,0 +1,8 @@
+# Internationalization and Localization requirements
+-e git://github.com/edx/xblock-sdk.git@v0.1.2#egg=xblock-sdk==v0.1.2
+Django==1.8
+django-statici18n==1.8.2
+transifex-client==0.12.1
+edx-i18n-tools==0.4.5
+pycodestyle==2.4.0
+pylint==0.28.0

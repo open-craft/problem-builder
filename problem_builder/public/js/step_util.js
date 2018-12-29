@@ -17,7 +17,7 @@
             $element.detach()
         };
     }
-    
+
     /**
      *
      * Manager for HTML Video child. Videos are re-sized when showing them.
@@ -40,7 +40,7 @@
          */
         this.hide = function () {};
     }
-    
+
     /**
      * Manager for Plot Xblocks. Handles updating a plot before displaying it.
      * @param plot
@@ -91,18 +91,18 @@
             var type =  $(child.element).data('block-type');
             var constructor = Managers[type];
             if (typeof constructor === 'undefined') {
-                // This block does not requires special care, moving on 
+                // This block does not requires special care, moving on
                 continue;
             }
             managedChildren.push(new constructor(child));
         }
-        
+
         this.show = function () {
             for (var idx = 0; idx < managedChildren.length; idx++) {
                 managedChildren[idx].show();
             }
-        }; 
-        
+        };
+
         this.hide = function () {
             for (var idx = 0; idx < managedChildren.length; idx++) {
                 managedChildren[idx].hide();
@@ -118,3 +118,19 @@
     };
 })();
 
+var gettext;
+var ngettext;
+if ('ProblemBuilderXBlockI18N' in window) {
+    // Use problem builder's local translations
+    gettext = window.ProblemBuilderXBlockI18N.gettext;
+    ngettext = window.ProblemBuilderXBlockI18N.ngettext;
+} else if ('gettext' in window) {
+    // Use edxapp's global translations
+    gettext = window.gettext;
+    ngettext = window.ngettext;
+}
+if (typeof gettext == "undefined") {
+    // No translations -- used by test environment
+    gettext = function(string) { return string; };
+    ngettext = function(strA, strB, n) { return n == 1 ? strA : strB; };
+}

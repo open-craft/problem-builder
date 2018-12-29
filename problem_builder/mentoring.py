@@ -55,6 +55,7 @@ from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
 from problem_builder.table import MentoringTableBlock
+from .utils import I18NService
 
 
 try:
@@ -225,7 +226,7 @@ class BaseMentoringBlock(
 
 
 class MentoringBlock(
-    StudentViewUserStateResultsTransformerMixin,
+    StudentViewUserStateResultsTransformerMixin, I18NService,
     BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin,
 ):
     """
@@ -470,13 +471,13 @@ class MentoringBlock(
                 fragment.add_frag_resources(child_fragment)
                 child_content += child_fragment.content
 
-        fragment.add_content(loader.render_template('templates/html/mentoring.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,
             'child_content': child_content,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
-        }))
+        }, i18n_service=self.i18n_service))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
@@ -783,7 +784,8 @@ class MentoringBlock(
         }
 
 
-class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin):
+class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin,
+                                      I18NService):
     """
     An XBlock providing mentoring capabilities with explicit steps
     """
@@ -971,12 +973,12 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                 child_content = child_fragment.content
             children_contents.append(child_content)
 
-        fragment.add_content(loader.render_template('templates/html/mentoring_with_steps.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_with_steps.html', {
             'self': self,
             'title': self.display_name,
             'show_title': self.show_title,
             'children_contents': children_contents,
-        }))
+        }, i18n_service=self.i18n_service))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))

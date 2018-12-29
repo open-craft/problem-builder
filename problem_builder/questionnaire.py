@@ -35,6 +35,7 @@ from .choice import ChoiceBlock
 from .message import MentoringMessageBlock
 from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin
 from .tip import TipBlock
+from .utils import I18NService
 
 # Globals ###########################################################
 
@@ -51,7 +52,7 @@ def _(text):
 @XBlock.needs("i18n")
 class QuestionnaireAbstractBlock(
     StudioEditableXBlockMixin, StudioContainerXBlockMixin, QuestionMixin, XBlock, XBlockWithPreviewMixin,
-    XBlockWithTranslationServiceMixin
+    XBlockWithTranslationServiceMixin, I18NService
 ):
     """
     An abstract class used for MCQ/MRQ blocks
@@ -91,7 +92,7 @@ class QuestionnaireAbstractBlock(
         context['custom_choices'] = self.custom_choices
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
-        fragment = Fragment(loader.render_template(template_path, context))
+        fragment = Fragment(loader.render_django_template(template_path, context))
         # If we use local_resource_url(self, ...) the runtime may insert many identical copies
         # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible.
         block_with_resources = self.get_parent()

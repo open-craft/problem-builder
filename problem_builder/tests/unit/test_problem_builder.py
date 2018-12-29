@@ -225,8 +225,12 @@ class TestMentoringBlockOptions(unittest.TestCase):
             self.assertEqual(option, None)
 
     def test_student_view_calls_get_option(self):
+        random_key, random_value = random(), random()
         self.block.get_xblock_settings = Mock(return_value={})
         with patch.object(self.block, 'get_option') as patched_get_option:
+            self.runtime_mock.service.return_value = {
+                random_key: random_value,
+            }
             self.block.student_view({})
             patched_get_option.assert_any_call('pb_mcq_hide_previous_answer')
             patched_get_option.assert_any_call('pb_hide_feedback_if_attempts_remain')
