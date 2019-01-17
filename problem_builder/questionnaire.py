@@ -164,8 +164,12 @@ class QuestionnaireAbstractBlock(
         fragment = self.get_author_edit_view_fragment(context)
 
         # * Step Builder units can show review components in the Review Step.
+        show_review = isinstance(
+            self.get_parent().get_parent() if self.get_parent() else None,
+            MentoringWithExplicitStepsBlock
+        )
         fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {
-            'show_review': isinstance(self.get_parent(), MentoringWithExplicitStepsBlock)
+            'show_review': show_review
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
