@@ -21,7 +21,14 @@
 # Imports ###########################################################
 
 from django.db import models
+from django.db.models.signals import pre_delete
 from django.contrib.auth.models import User
+
+try:
+    # workaround so we don't explicitly import the AnonymousUserId model from LMS
+    from student.models import AnonymousUserId
+except ImportError:
+    AnonymousUserId = None
 
 
 # Classes ###########################################################
@@ -72,3 +79,17 @@ class Share(models.Model):
         # specify the app_label here.
         app_label = 'problem_builder'
         unique_together = (('shared_by', 'shared_with', 'block_id'),)
+
+
+# Signals ###########################################################
+
+def delete_anonymous_user_answers(sender, **kwargs):
+    """
+    Delete Answer records when an AnonymousUserId is deleted.
+    """
+    instance = kwargs['instance']
+    Answer.objects.filter(student_id=instance.anonymous_user_id).delete()
+
+
+if AnonymousUserId:
+    pre_delete.connect(delete_anonymous_user_answers, sender=AnonymousUserId)
