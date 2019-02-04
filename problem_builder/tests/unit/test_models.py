@@ -42,31 +42,3 @@ class AnswerDeleteSignalTest(TestCase):
         delete_anonymous_user_answers(MagicMock(), instance=anonymous_user_id_mock)
         self.assertEqual(Answer.objects.filter(student_id=self.anonymous_student_id).count(), 0)
         self.assertEqual(Answer.objects.exclude(student_id=self.anonymous_student_id).count(), 1)
-
-    def test_signal_receiver_connection(self):
-        """
-        Test the receiver function by deleting the parent User object.
-        TODO: figure out how to run this test
-        """
-        try:
-            from student.models import AnonymousUserId
-        except ImportError:
-            raise unittest.SkipTest('student.AnonymousUserId not available')
-
-        user = User.objects.create(username='edx', email='edx@example.com')
-        AnonymousUserId.objects.create(user=user, anonymous_user_id=self.anonymous_student_id)
-
-        # a different anonymous id for the same user
-        AnonymousUserId.objects.create(user=user, anonymous_user_id='12345678987654321-x')
-        Answer.objects.create(
-            name='test-course-key-3',
-            student_id='12345678987654321-x',
-            course_key=self.course_id,
-        )
-
-        self.assertEqual(Answer.objects.count(), 4)
-
-        user.delete()
-
-        # edx's answers should be deleted, leaving the one from the other user
-        self.assertEqual(Answer.objects.count(), 1)

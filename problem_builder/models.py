@@ -27,9 +27,8 @@ from django.contrib.auth.models import User
 try:
     # workaround so we don't explicitly import the AnonymousUserId model from LMS
     from student.models import AnonymousUserId
-    ANONYMOUS_USER_ID_IMPORTED = True
 except ImportError:
-    ANONYMOUS_USER_ID_IMPORTED = False
+    AnonymousUserId = None
 
 
 # Classes ###########################################################
@@ -92,5 +91,5 @@ def delete_anonymous_user_answers(sender, **kwargs):
     Answer.objects.filter(student_id=instance.anonymous_user_id).delete()
 
 
-if ANONYMOUS_USER_ID_IMPORTED:
+if AnonymousUserId:
     pre_delete.connect(delete_anonymous_user_answers, sender=AnonymousUserId)
