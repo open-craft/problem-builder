@@ -48,5 +48,5 @@ msgstr "فاث قثحخقف هس ذعققثرفمغ زثهرل لثرثقشفث�
 #: problem_builder/templates/html/mentoring_attempts.underscore
 msgid "You have used {num_used} of 1 submission."
 msgid_plural "You have used {num_used} of {max_attempts} submissions."
-msgstr[0] "غخع اشدث عسثي {num_used} خب 1 سعزوهسسهخر."
-msgstr[1] "غخع اشدث عسثي {num_used} خب {max_attempts} سعزوهسسهخرس."
+msgstr[0] "استهلكت وظيفة الإرسال {num_used} من أصل 1."
+msgstr[1] "استهلكت وظيفة الإرسال {num_used} من أصل {max_attempts}."
