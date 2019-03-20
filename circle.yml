@@ -6,8 +6,8 @@ jobs:
     parallelism: 4
     steps:
       - checkout
-      - restore_cache:
-          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "test_requirements.txt" }}
+#      - restore_cache:
+#          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "test_requirements.txt" }}
       - run:
           name: Install dependencies
           command: |
@@ -21,10 +21,10 @@ jobs:
             pip uninstall -y xblock-problem-builder && python setup.py sdist && pip install dist/xblock-problem-builder-*.tar.gz
             pip install -r test_requirements.txt
             mkdir var
-      - save_cache:
-          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "test_requirements.txt" }}
-          paths:
-            - "venv"
+#      - save_cache:
+#          key: dependencies-{{ checksum "circle.yml" }}-{{ checksum "requirements.txt" }}-{{ checksum "test_requirements.txt" }}
+#          paths:
+#            - "venv"
       - run:
           name: Install firefox 38.0.5
           command: |
