@@ -81,6 +81,7 @@ def _(text):
 
 # Classes ###########################################################
 
+
 Score = namedtuple("Score", ["raw", "percentage", "correct", "incorrect", "partially_correct"])
 
 CORRECT = 'correct'
