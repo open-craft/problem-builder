@@ -161,7 +161,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function clearSelections() {
         forEachStep(function (step) {
-            $('input[type=radio], input[type=checkbox]', step.element).prop('checked', false);
+            $('input[type=radio], input[type=checkbox]', step.element).prop('checked', false).change();
         });
     }
 
