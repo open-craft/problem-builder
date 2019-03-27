@@ -1472,7 +1472,7 @@ msgstr "حشقفهشممغ ذخققثذف"
 
 #: problem_builder/templates/html/mentoring_with_steps.html
 msgid "Review grade"
-msgstr "قثدهثص لقشيث"
+msgstr "اطّلع على النتيجة"
 
 #: problem_builder/templates/html/mentoring_with_steps.html
 msgid "Try again"
