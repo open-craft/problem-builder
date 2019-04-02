@@ -1,0 +1,11 @@
+bok_choy==0.4.3
+ddt
+django_nose>=1.4.4
+-e git+https://github.com/edx/acid-block.git@e46f9cda8a03e121a00c7e347084d142d22ebfb7#egg=acid-xblock
+-e git+https://github.com/edx/django-pyfs.git@1.0.3#egg=django-pyfs==1.0.3
+lazy
+lxml
+mock
+selenium==2.47.3  # 2.48 is not working atm
+webob
+XBlock>=1.2

@@ -92,20 +92,34 @@ Access it at [http://localhost:8000/](http://localhost:8000).
 Running tests
 -------------
 
-First, make sure the [XBlock SDK (Workbench)](https://github.com/edx/xblock-sdk)
-is installed in the same virtual environment as xblock-problem-builder.
+Install [Xvfb](https://en.wikipedia.org/wiki/Xvfb). For instance:
+
+```bash
+$ apt-get install xvfb
+```
+
+Install [firefox
+38.0.5](https://ftp.mozilla.org/pub/firefox/releases/38.0.5) in
+`/opt/firefox-38.0.5`. For instance:
+
+```bash
+$ mkdir /opt/firefox-38.0.5
+$ cd /opt/firefox-38.0.5
+$ wget https://ftp.mozilla.org/pub/firefox/releases/38.0.5/linux-x86_64/en-US/firefox-38.0.5.tar.bz2
+$ tar -xvf firefox-38.0.5.tar.bz2
+```
 
 From the xblock-problem-builder repository root, run the tests with the
 following command:
 
 ```bash
-$ ./run_tests.py
+$ PATH=/opt/firefox-38.0.5/firefox tox
 ```
 
 If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
 
 ```bash
-$ ./run_tests.py problem_builder/tests/unit
+$ PATH=/opt/firefox-38.0.5/firefox tox -- problem_builder/tests/unit
 ```
 
 Extracting Translatable Strings

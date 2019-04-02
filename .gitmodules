@@ -1,3 +1,6 @@
 [submodule "templates/xml"]
 	path = templates/xml
 	url = git@github.com:antoviaque/itc-course-content.git
+[submodule "xblock-sdk"]
+	path = xblock-sdk
+	url = https://github.com/edx/xblock-sdk.git
