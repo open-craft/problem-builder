@@ -283,6 +283,7 @@ function MentoringWithStepsBlock(runtime, element) {
     function jumpToReview(stepIndex) {
         activeStepIndex = stepIndex;
         cleanAll();
+        clearSelections();
         showActiveStep();
         updateNextLabel();
 
