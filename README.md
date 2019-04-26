@@ -55,21 +55,67 @@ Workbench installation and settings
 -----------------------------------
 
 For developers, you can install this XBlock into the XBlock SDK workbench's
-virtualenv by running the following command from the problem builder repo
+virtualenv.
+
+Firstly, create a directory for your XBlock development:
+
+```bash
+~ $ mkdir xblock_development
+~ $ cd xblock_development
+```
+
+Then create a virtualenv for the SDK:
+
+```bash
+~/xblock_development $ virtualenv venv
+~/xblock_development $ . venv/bin/activate
+```
+
+Next, install the XBlock SDK:
+
+```bash
+(venv) ~/xblock_development $ git clone https://github.com/edx/xblock-sdk.git
+(venv) ~/xblock_development/xblock-sdk $ cd xblock-sdk
+(venv) ~/xblock_development/xblock-sdk $ make install
+```
+
+**NOTE** There is a bug in the XBlock SDK, which specifies a default student ID
+which is too long for the database field. Modify `workbench/runtime.py` to
+change line 246 from:
+
+```
+    anonymous_student_id = 'dummydummy000-fake-fake-dummydummy00'  # Needed for the LTI XBlock
+```
+
+to:
+
+```
+    anonymous_student_id = 'dummydummy-fake-fake-dummydummy'  # Needed for the LTI XBlock
+```
+
+Now run the following commands from the problem builder repo
 root:
 
 ```bash
-pip install -r requirements.txt
+(venv) ~/xblock_development/problem-builder $ pip install -r requirements.txt
+(venv) ~/xblock_development/problem-builder $ pip install -r requirements-dev.txt
 ```
 
-In the main XBlock repository, create the following configuration file
-in `workbench/settings_pb.py` in the XBlock repository:
+**NOTE** Currently, this will revert Django to version 1.8 - to get back to
+1.11, run:
+
+```bash
+(venv) ~/xblock_development/problem-builder $ pip install 'django>=1.11,<2.0'
+```
+
+In the main XBlock SDK repository, create the following configuration file
+in `workbench/settings_pb.py`:
 
 ```python
 from settings import *
 
 INSTALLED_APPS += ('problem_builder',)
-DATABASES['default']['NAME'] = 'workbench.sqlite'
+DATABASES['default']['NAME'] = 'var/workbench.db'
 ```
 
 Because this XBlock uses a Django model, you need to sync the database
@@ -77,7 +123,7 @@ before starting the workbench. Run this from the XBlock repository
 root:
 
 ```bash
-$ ./manage.py syncdb --settings=workbench.settings_pb
+$ ./manage.py migrate --settings=workbench.settings_pb
 ```
 
 Running the workbench
