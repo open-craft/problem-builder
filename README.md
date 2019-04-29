@@ -54,62 +54,34 @@ See [Usage Instructions](doc/Usage.md)
 Workbench installation and settings
 -----------------------------------
 
-For developers, you can install this XBlock into the XBlock SDK workbench's
+For developers, you can install this XBlock into an XBlock SDK workbench's
 virtualenv.
 
-Firstly, create a directory for your XBlock development:
-
-```bash
-~ $ mkdir xblock_development
-~ $ cd xblock_development
-```
-
-Then create a virtualenv for the SDK:
+Firstly, create a virtualenv:
 
 ```bash
 ~/xblock_development $ virtualenv venv
 ~/xblock_development $ . venv/bin/activate
 ```
 
-Next, install the XBlock SDK:
-
-```bash
-(venv) ~/xblock_development $ git clone https://github.com/edx/xblock-sdk.git
-(venv) ~/xblock_development/xblock-sdk $ cd xblock-sdk
-(venv) ~/xblock_development/xblock-sdk $ make install
-```
-
-**NOTE** There is a bug in the XBlock SDK, which specifies a default student ID
-which is too long for the database field. Modify `workbench/runtime.py` to
-change line 246 from:
-
-```
-    anonymous_student_id = 'dummydummy000-fake-fake-dummydummy00'  # Needed for the LTI XBlock
-```
-
-to:
-
-```
-    anonymous_student_id = 'dummydummy-fake-fake-dummydummy'  # Needed for the LTI XBlock
-```
-
 Now run the following commands from the problem builder repo
-root:
+root to install the problem builder dependencies:
 
 ```bash
 (venv) ~/xblock_development/problem-builder $ pip install -r requirements.txt
 (venv) ~/xblock_development/problem-builder $ pip install -r requirements-dev.txt
 ```
 
-**NOTE** Currently, this will revert Django to version 1.8 - to get back to
-1.11, run:
+Switch to the created XBlock SDK repository, install its dependencies, and
+create its migrations:
 
 ```bash
-(venv) ~/xblock_development/problem-builder $ pip install 'django>=1.11,<2.0'
+(venv) ~/xblock_development/problem-builder $ cd ../venv/src/xblock-sdk
+(venv) ~/xblock_development/venv/src/xblock-sdk $ make pip
+(venv) ~/xblock_development/venv/src/xblock-sdk $ python manage.py makemigrations workbench
 ```
 
-In the main XBlock SDK repository, create the following configuration file
-in `workbench/settings_pb.py`:
+Create the following configuration file in `workbench/settings_pb.py`:
 
 ```python
 from settings import *
