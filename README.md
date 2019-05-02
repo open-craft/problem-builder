@@ -116,10 +116,14 @@ following command:
 $ PATH=/opt/firefox-38.0.5/firefox tox
 ```
 
-If you want to run only the integration or the unit tests, append the directory to the command. You can also run separate modules in this manner.
-
+To run only the quality tests run:
 ```bash
-$ PATH=/opt/firefox-38.0.5/firefox tox -- problem_builder/tests/unit
+$ PATH=/opt/firefox-38.0.5/firefox tox -e quality
+```
+
+To run only the integration tests run:
+```bash
+$ PATH=/opt/firefox-38.0.5/firefox tox -e integration
 ```
 
 Extracting Translatable Strings
