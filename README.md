@@ -54,22 +54,40 @@ See [Usage Instructions](doc/Usage.md)
 Workbench installation and settings
 -----------------------------------
 
-For developers, you can install this XBlock into the XBlock SDK workbench's
-virtualenv by running the following command from the problem builder repo
-root:
+For developers, you can install this XBlock into an XBlock SDK workbench's
+virtualenv.
+
+Firstly, create a virtualenv:
 
 ```bash
-pip install -r requirements.txt
+~/xblock_development $ virtualenv venv
+~/xblock_development $ . venv/bin/activate
 ```
 
-In the main XBlock repository, create the following configuration file
-in `workbench/settings_pb.py` in the XBlock repository:
+Now run the following commands from the problem builder repo
+root to install the problem builder dependencies:
+
+```bash
+(venv) ~/xblock_development/problem-builder $ pip install -r requirements.txt
+(venv) ~/xblock_development/problem-builder $ pip install -r requirements-dev.txt
+```
+
+Switch to the created XBlock SDK repository, install its dependencies, and
+create its migrations:
+
+```bash
+(venv) ~/xblock_development/problem-builder $ cd ../venv/src/xblock-sdk
+(venv) ~/xblock_development/venv/src/xblock-sdk $ make pip
+(venv) ~/xblock_development/venv/src/xblock-sdk $ python manage.py makemigrations workbench
+```
+
+Create the following configuration file in `workbench/settings_pb.py`:
 
 ```python
 from settings import *
 
 INSTALLED_APPS += ('problem_builder',)
-DATABASES['default']['NAME'] = 'workbench.sqlite'
+DATABASES['default']['NAME'] = 'var/workbench.db'
 ```
 
 Because this XBlock uses a Django model, you need to sync the database
@@ -77,7 +95,7 @@ before starting the workbench. Run this from the XBlock repository
 root:
 
 ```bash
-$ ./manage.py syncdb --settings=workbench.settings_pb
+$ ./manage.py migrate --settings=workbench.settings_pb
 ```
 
 Running the workbench
