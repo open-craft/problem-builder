@@ -1,26 +1,79 @@
-version: 2
+version: 2.1
 jobs:
   build:
+    docker:
+      - image: circleci/python:2.7.14-browsers
+    parameters:
+        tox_env:
+            type: string
+    steps:
+      - checkout
+      - run:
+          name: Update system
+          command: |
+            sudo sed -i '/jessie-updates/d' /etc/apt/sources.list
+            sudo sed -i '/jessie-backports/d' /etc/apt/sources.list
+            sudo apt-get update
+            sudo apt-get install -y libgtk3.0-cil-dev libasound2 libasound2 libdbus-glib-1-2 libdbus-1-3 libgtk2.0-0
+      - run:
+          name: Install firefox 38.0.5
+          command: |
+            FIREFOX_URL="https://sourceforge.net/projects/ubuntuzilla/files/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_38.0.5-0ubuntu1_amd64.deb/download"
+            sudo apt-get update
+            curl --silent --show-error --location --fail --retry 3 --output /tmp/firefox.deb $FIREFOX_URL
+            ls /tmp/
+            sudo dpkg -i /tmp/firefox.deb
+            rm -rf /tmp/firefox.deb
+            firefox --version
+            which firefox
+      - run: 
+          name: Sync submodules
+          command: git submodule sync
+      - run: 
+          name: Update submodules
+          command: git submodule update --init
+      - run:
+          name: Setup tox
+          command: virtualenv venv && venv/bin/pip install tox
+      - run:
+          name: Run tests
+          command: |
+            mkdir -p /tmp/coverage/$CIRCLE_SHA1
+            venv/bin/tox -e <<parameters.tox_env>>
+            if [ -e .coverage.* ]; then
+                cp .coverage.* /tmp/coverage/$CIRCLE_SHA1/.
+            fi
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+              - coverage
+
+  coverage:
     docker:
       - image: circleci/python:2.7.14
     steps:
       - checkout
-      - run: git submodule sync
-      - run: git submodule update --init
       - run:
-          name: Install firefox 38.0.5
+          name: Update system
           command: |
-            FIREFOX_URL="https://sourceforge.net/projects/ubuntuzilla/files/mozilla/apt/pool/main/f/firefox-mozilla-build/firefox-mozilla-build_38.0.5-0ubuntu1_amd64.deb/download" \
-            && sudo apt-get update \
-            && curl --silent --show-error --location --fail --retry 3 --output /tmp/firefox.deb $FIREFOX_URL \
-            && sudo dpkg -i /tmp/firefox.deb || sudo apt-get -f install  \
-            && sudo apt-get install -y libgtk3.0-cil-dev libasound2 libasound2 libdbus-glib-1-2 libdbus-1-3 libgtk2.0-0 \
-            && rm -rf /tmp/firefox.deb \
-            && firefox --version
+            # The jessie-updates and jessie-backports areas are now removed from the repositories. So
+            # the lines corresponding to those areas have to be removed to fix the resulting errors.
+            # This can be removed after upgrading to the image based on Debian Stretch.
+            sudo sed -i '/jessie-updates/d' /etc/apt/sources.list
+            sudo sed -i '/jessie-backports/d' /etc/apt/sources.list
+            sudo apt-get update
+            sudo pip install --upgrade pip
+            sudo pip install --upgrade virtualenv
+            virtualenv venv
+            source venv/bin/activate
+            pip install -r test_requirements.txt
+      - attach_workspace:
+          at: /tmp/workspace
       - run:
-          name: Run tests
           command: |
-            virtualenv venv && venv/bin/pip install tox && venv/bin/tox
+              source venv/bin/activate
+              coverage combine /tmp/workspace/coverage/$CIRCLE_SHA1/
+              coverage report
 
   deploy:
     docker:
@@ -66,12 +119,35 @@ workflows:
   build_and_deploy:
     jobs:
       - build:
+          name: quality
+          tox_env: quality
           filters:
             tags:
               only: /.*/
+      - build:
+          name: py27-django111-unit
+          tox_env: py27-django111-unit
+          filters:
+            tags:
+              only: /.*/
+      - build:
+          name: py27-django111-integration
+          tox_env: py27-django111-integration
+          filters:
+            tags:
+              only: /.*/
+      - coverage:
+          name: coverage
+          filters:
+            tags:
+              only: /.*/
+          requires:
+              - quality
+              - py27-django111-unit
+              - py27-django111-integration
       - deploy:
           requires:
-            - build
+            - coverage
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
