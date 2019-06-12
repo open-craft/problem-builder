@@ -35,6 +35,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'statici18n',
     'problem_builder',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
 )
 
 # Internationalization

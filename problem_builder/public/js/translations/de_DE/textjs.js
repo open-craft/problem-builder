@@ -9,14 +9,7 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(n) {
-    var v=(n != 1);
-    if (typeof(v) == 'boolean') {
-      return v ? 1 : 0;
-    } else {
-      return v;
-    }
-  };
+  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
   
 
   /* gettext library */
@@ -24,16 +17,16 @@
   django.catalog = django.catalog || {};
   
   var newcatalog = {
-    "All": "\u0634\u0645\u0645", 
-    "Data export failed. Reason: <%= error %>": "\u064a\u0634\u0641\u0634 \u062b\u0637\u062d\u062e\u0642\u0641 \u0628\u0634\u0647\u0645\u062b\u064a. \u0642\u062b\u0634\u0633\u062e\u0631: <%= error %>", 
+    "All": "Alle", 
+    "Data export failed. Reason: <%= error %>": "Export der Daten ist fehlgeschlagen. Grund: <%= error %>", 
     "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
-      "\u0642\u062b\u0633\u0639\u0645\u0641\u0633 \u0642\u062b\u0641\u0642\u0647\u062b\u062f\u062b\u064a \u062e\u0631 <%= creation_time %> (<%= seconds %> \u0633\u062b\u0630\u062e\u0631\u064a).", 
-      "\u0642\u062b\u0633\u0639\u0645\u0641\u0633 \u0642\u062b\u0641\u0642\u0647\u062b\u062f\u062b\u064a \u062e\u0631 <%= creation_time %> (<%= seconds %> \u0633\u062b\u0630\u062e\u0631\u064a\u0633)."
+      "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen", 
+      "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen."
     ], 
-    "The report is currently being generated\u2026": "\u0641\u0627\u062b \u0642\u062b\u062d\u062e\u0642\u0641 \u0647\u0633 \u0630\u0639\u0642\u0642\u062b\u0631\u0641\u0645\u063a \u0632\u062b\u0647\u0631\u0644 \u0644\u062b\u0631\u062b\u0642\u0634\u0641\u062b\u064a\u2026", 
+    "The report is currently being generated\u2026": "Der Report wird gerade zusammengestellt\u2026", 
     "You have used {num_used} of 1 submission.": [
-      "\u0627\u0633\u062a\u0647\u0644\u0643\u062a \u0648\u0638\u064a\u0641\u0629 \u0627\u0644\u0625\u0631\u0633\u0627\u0644 {num_used} \u0645\u0646 \u0623\u0635\u0644 1.", 
-      "\u0627\u0633\u062a\u0647\u0644\u0643\u062a \u0648\u0638\u064a\u0641\u0629 \u0627\u0644\u0625\u0631\u0633\u0627\u0644 {num_used} \u0645\u0646 \u0623\u0635\u0644 {max_attempts}."
+      "Sie haben {num_used} von einer Einreichung verwendet.", 
+      "Sie haben {num_used} von {max_attempts} Einreichungen verwendet."
     ]
   };
   for (var key in newcatalog) {
@@ -90,43 +83,31 @@
     /* formatting library */
 
     django.formats = {
-    "DATETIME_FORMAT": "N j, Y, P", 
+    "DATETIME_FORMAT": "j. F Y H:i", 
     "DATETIME_INPUT_FORMATS": [
+      "%d.%m.%Y %H:%M:%S", 
+      "%d.%m.%Y %H:%M:%S.%f", 
+      "%d.%m.%Y %H:%M", 
+      "%d.%m.%Y", 
       "%Y-%m-%d %H:%M:%S", 
       "%Y-%m-%d %H:%M:%S.%f", 
       "%Y-%m-%d %H:%M", 
-      "%Y-%m-%d", 
-      "%m/%d/%Y %H:%M:%S", 
-      "%m/%d/%Y %H:%M:%S.%f", 
-      "%m/%d/%Y %H:%M", 
-      "%m/%d/%Y", 
-      "%m/%d/%y %H:%M:%S", 
-      "%m/%d/%y %H:%M:%S.%f", 
-      "%m/%d/%y %H:%M", 
-      "%m/%d/%y"
+      "%Y-%m-%d"
     ], 
-    "DATE_FORMAT": "j F\u060c Y", 
+    "DATE_FORMAT": "j. F Y", 
     "DATE_INPUT_FORMATS": [
-      "%Y-%m-%d", 
-      "%m/%d/%Y", 
-      "%m/%d/%y", 
-      "%b %d %Y", 
-      "%b %d, %Y", 
-      "%d %b %Y", 
-      "%d %b, %Y", 
-      "%B %d %Y", 
-      "%B %d, %Y", 
-      "%d %B %Y", 
-      "%d %B, %Y"
+      "%d.%m.%Y", 
+      "%d.%m.%y", 
+      "%Y-%m-%d"
     ], 
     "DECIMAL_SEPARATOR": ",", 
-    "FIRST_DAY_OF_WEEK": "0", 
-    "MONTH_DAY_FORMAT": "j F", 
-    "NUMBER_GROUPING": "0", 
-    "SHORT_DATETIME_FORMAT": "m/d/Y P", 
-    "SHORT_DATE_FORMAT": "d\u200f/m\u200f/Y", 
+    "FIRST_DAY_OF_WEEK": "1", 
+    "MONTH_DAY_FORMAT": "j. F", 
+    "NUMBER_GROUPING": "3", 
+    "SHORT_DATETIME_FORMAT": "d.m.Y H:i", 
+    "SHORT_DATE_FORMAT": "d.m.Y", 
     "THOUSAND_SEPARATOR": ".", 
-    "TIME_FORMAT": "g:i A", 
+    "TIME_FORMAT": "H:i", 
     "TIME_INPUT_FORMATS": [
       "%H:%M:%S", 
       "%H:%M:%S.%f", 
