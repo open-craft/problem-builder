@@ -9,14 +9,7 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(n) {
-    var v=(n != 1);
-    if (typeof(v) == 'boolean') {
-      return v ? 1 : 0;
-    } else {
-      return v;
-    }
-  };
+  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
   
 
   /* gettext library */
@@ -24,16 +17,16 @@
   django.catalog = django.catalog || {};
   
   var newcatalog = {
-    "All": "\u0634\u0645\u0645", 
-    "Data export failed. Reason: <%= error %>": "\u064a\u0634\u0641\u0634 \u062b\u0637\u062d\u062e\u0642\u0641 \u0628\u0634\u0647\u0645\u062b\u064a. \u0642\u062b\u0634\u0633\u062e\u0631: <%= error %>", 
+    "All": "\u5168\u90e8", 
+    "Data export failed. Reason: <%= error %>": "\u6570\u636e\u5bfc\u51fa\u5931\u8d25\u3002\u539f\u56e0\uff1a<%= error %>", 
     "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
-      "\u0642\u062b\u0633\u0639\u0645\u0641\u0633 \u0642\u062b\u0641\u0642\u0647\u062b\u062f\u062b\u064a \u062e\u0631 <%= creation_time %> (<%= seconds %> \u0633\u062b\u0630\u062e\u0631\u064a).", 
-      "\u0642\u062b\u0633\u0639\u0645\u0641\u0633 \u0642\u062b\u0641\u0642\u0647\u062b\u062f\u062b\u064a \u062e\u0631 <%= creation_time %> (<%= seconds %> \u0633\u062b\u0630\u062e\u0631\u064a\u0633)."
+      "<%= creation_time %> (<%= seconds %> second) \u65f6\u68c0\u7d22\u5230\u7684\u7ed3\u679c\u3002", 
+      "<%= creation_time %> (<%= seconds %> seconds) \u65f6\u68c0\u7d22\u5230\u7684\u7ed3\u679c\u3002"
     ], 
-    "The report is currently being generated\u2026": "\u0641\u0627\u062b \u0642\u062b\u062d\u062e\u0642\u0641 \u0647\u0633 \u0630\u0639\u0642\u0642\u062b\u0631\u0641\u0645\u063a \u0632\u062b\u0647\u0631\u0644 \u0644\u062b\u0631\u062b\u0642\u0634\u0641\u062b\u064a\u2026", 
+    "The report is currently being generated\u2026": "\u76ee\u524d\u6b63\u5728\u751f\u6210\u62a5\u544a\u2026", 
     "You have used {num_used} of 1 submission.": [
-      "\u0627\u0633\u062a\u0647\u0644\u0643\u062a \u0648\u0638\u064a\u0641\u0629 \u0627\u0644\u0625\u0631\u0633\u0627\u0644 {num_used} \u0645\u0646 \u0623\u0635\u0644 1.", 
-      "\u0627\u0633\u062a\u0647\u0644\u0643\u062a \u0648\u0638\u064a\u0641\u0629 \u0627\u0644\u0625\u0631\u0633\u0627\u0644 {num_used} \u0645\u0646 \u0623\u0635\u0644 {max_attempts}."
+      "\u60a8\u5df2\u4f7f\u7528 {num_used} \u6b21\u63d0\u4ea4\uff08\u5171 1 \u6b21\uff09\u3002", 
+      "\u60a8\u5df2\u4f7f\u7528 {num_used} \u6b21\u63d0\u4ea4\uff08\u5171 {max_attempts} \u6b21\uff09\u3002"
     ]
   };
   for (var key in newcatalog) {
@@ -105,7 +98,7 @@
       "%m/%d/%y %H:%M", 
       "%m/%d/%y"
     ], 
-    "DATE_FORMAT": "j F\u060c Y", 
+    "DATE_FORMAT": "N j, Y", 
     "DATE_INPUT_FORMATS": [
       "%Y-%m-%d", 
       "%m/%d/%Y", 
@@ -119,14 +112,14 @@
       "%d %B %Y", 
       "%d %B, %Y"
     ], 
-    "DECIMAL_SEPARATOR": ",", 
+    "DECIMAL_SEPARATOR": ".", 
     "FIRST_DAY_OF_WEEK": "0", 
-    "MONTH_DAY_FORMAT": "j F", 
+    "MONTH_DAY_FORMAT": "F j", 
     "NUMBER_GROUPING": "0", 
     "SHORT_DATETIME_FORMAT": "m/d/Y P", 
-    "SHORT_DATE_FORMAT": "d\u200f/m\u200f/Y", 
-    "THOUSAND_SEPARATOR": ".", 
-    "TIME_FORMAT": "g:i A", 
+    "SHORT_DATE_FORMAT": "m/d/Y", 
+    "THOUSAND_SEPARATOR": ",", 
+    "TIME_FORMAT": "P", 
     "TIME_INPUT_FORMATS": [
       "%H:%M:%S", 
       "%H:%M:%S.%f", 

@@ -13,8 +13,6 @@ problem_builder.tests.*
 .tox
 
 ### Internationalization artifacts
-*.mo
-*.po
 *.prob
 *.dup
 !django.po

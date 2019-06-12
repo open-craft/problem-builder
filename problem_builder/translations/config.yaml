@@ -9,6 +9,7 @@ locales:
     - fr  # French
     - de_DE  # German
     - ja_JP  # Japanese
+    - pl # Polish
     # Add languages here as needed
 
 # The locales used for fake-accented English, for testing.
