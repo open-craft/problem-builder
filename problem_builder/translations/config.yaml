@@ -20,6 +20,7 @@ dummy_locales:
 ignore_dirs:
     - mentoring/v1
     - mentoring/tests
+    - public/js/translations
 
 # i18n_tools produces just "django-partial.po" by default, but we need "django.po":
 generate_merge:
