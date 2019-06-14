@@ -144,25 +144,50 @@ To run only the integration tests run:
 $ PATH=/opt/firefox-38.0.5/firefox tox -e integration
 ```
 
-Extracting Translatable Strings
+Translation (i18n)
 -------------------------------
 
-To extract/update strings for translation, you will need i18n_tools:
+This repo offers multiple make targets to automate the translation tasks.
+First, install `requirements-dev.txt`:
 
 ```bash
-pip install git+https://github.com/edx/i18n-tools.git#egg=i18n_tools
+pip install -r requirements-dev.txt
 ```
 
-To extract strings, use `i18n_tool`. We added two dummy translations for testing. Easily set your openedx instance to use one of them (`eo` and `rtl`) and check.  
+Each make target will be explained below:
+
+- `extract_translations`. Use [`i18n_tool` extract](https://github.com/edx/i18n-tools) to create `.po` files based on all the tagged strings in the python and javascript code.
+- `compile_translations`. Use [`i18n_tool` generate](https://github.com/edx/i18n-tools) to create `.mo` compiled files.
+- `detect_changed_source_translations`. Use [`i18n_tool` changed](https://github.com/edx/i18n-tools) to identify any updated translations.
+- `validate_translations`. Compile translations and check the source translations haven't changed.
+
 If you want to add a new language:
-  1. Clone `en` directory to `problem_builder/locale/<lang_code>/` for example: `problem_builder/locale/fa_IR/`
-  2. Make neccessary changes to translation files headers. Make sure you have proper `Language` and `Plural-Forms` lines.
-  3. Edit the contents of .po files located in `problem_builder/locale/<lang_code>/LC_MESSAGES` as you wish
-  4. When you finished your modification process, re-compile the translation messages manually by executing the following command in the root of xblock:
+  1. Add language to `problem_builder/translations/config.yaml`
+  2. Make sure all tagged strings have been extracted:
+  ```bash
+  make extract_translations
+  ```
+  3. Clone `en` directory to `problem_builder/translations/<lang_code>/` for example: `problem_builder/translations/fa_IR/`
+  4. Make necessary changes to translation files headers. Make sure you have proper `Language` and `Plural-Forms` lines.
+  5. When you finished your modification process, re-compile the translation messages.
+  ```bash
+  make compile_translations
+  ```
+
+Transifex
+---------
+
+This repo offers different make targets to automate interaction with transifex. To use these make targets first install `requirements-dev.txt`.
 ```bash
-i18n_tool generate
+pip install -r requirements-dev.txt
 ```
 
+These are the different make targets used to interact with transifex:
+
+- `pull_translations`. Pull translations from Transifex.
+- `push_translations`. Push translations to Transifex.
+
+The transifex configuration is stored in `.tx`. For more information read [transifex's documentation](https://docs.transifex.com/client/client-configuration)
 
 Adding custom scenarios to the workbench
 ----------------------------------------

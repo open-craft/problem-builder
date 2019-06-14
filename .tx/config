@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+
+[xblocks.problem-builder]
+file_filter = problem_builder/translations/<lang>/LC_MESSAGES/django.po
+source_file = problem_builder/translations/en/LC_MESSAGES/django.po
+source_lang = en
+type = PO
