@@ -64,7 +64,8 @@
     position: relative;
     overflow-y: auto;
     line-height: normal;
-    max-height: 180px;
+    max-height: 100px;
+    margin: 5px 0;
 }
 
 .mentoring .questionnaire .choice-tips p,
