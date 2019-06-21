@@ -28,7 +28,7 @@ from setuptools.command.install import install
 
 # Constants #########################################################
 
-VERSION = '3.3.7'
+VERSION = '3.3.8'
 
 # Functions #########################################################
 
