@@ -1510,6 +1510,9 @@ msgstr[0] "\n"
 msgstr[1] "\n"
 "          Odpowiedziałeś poprawnie na %(correct_answers)s pytań.\n"
 "        "
+msgstr[2] "\n"
+"          Odpowiedziałeś poprawnie na %(correct_answers)s pytań.\n"
+"        "
 
 #: problem_builder/templates/html/sb-review-score.html:30
 #: problem_builder/templates/html/sb-review-score.html:53
@@ -1537,6 +1540,9 @@ msgstr[0] "\n"
 msgstr[1] "\n"
 "          Odpowiedziałeś częściowo poprawnie na %(partially_correct_answers)s pytań.\n"
 "        "
+msgstr[2] "\n"
+"          Odpowiedziałeś częściowo poprawnie na %(partially_correct_answers)s pytań.\n"
+"        "
 
 #: problem_builder/templates/html/sb-review-score.html:66
 #, python-format
@@ -1549,6 +1555,9 @@ msgstr[0] "\n"
 "          Odpowiedziałeś niepoprawnie na 1 pytanie.\n"
 "        "
 msgstr[1] "\n"
+"          Odpowiedziałeś niepoprawnie na %(incorrect_answers)s pytań.\n"
+"        "
+msgstr[2] "\n"
 "          Odpowiedziałeś niepoprawnie na %(incorrect_answers)s pytań.\n"
 "        "
 
