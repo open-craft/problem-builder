@@ -1,0 +1,64 @@
+# #-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+# #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:41+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.7.0\n"
+"#-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#\n"
+
+#: templates/html/mentoring_attempts.underscore
+msgid "You have used {num_used} of 1 submission."
+msgid_plural "You have used {num_used} of {max_attempts} submissions."
+msgstr[0] ""
+"Ýöü hävé üséd {num_used} öf 1 süßmïssïön. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєт#"
+msgstr[1] ""
+"Ýöü hävé üséd {num_used} öf {max_attempts} süßmïssïöns. Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυ#"
+
+#: public/js/instructor_tool.js
+msgid "All"
+msgstr "Àll Ⱡ'σяєм#"
+
+#: public/js/instructor_tool.js
+msgid "Data export failed. Reason: <%= error %>"
+msgstr ""
+"Dätä éxpört fäïléd. Réäsön: <%= error %> Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢т#"
+
+#: public/js/instructor_tool.js
+msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
+msgid_plural ""
+"Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
+msgstr[0] ""
+"Résülts rétrïévéd ön <%= creation_time %> (<%= seconds %> séçönd). Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя#"
+msgstr[1] ""
+"Résülts rétrïévéd ön <%= creation_time %> (<%= seconds %> séçönds). Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя#"
+
+#: public/js/instructor_tool.js
+msgid "The report is currently being generated…"
+msgstr ""
+"Thé répört ïs çürréntlý ßéïng générätéd… Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"

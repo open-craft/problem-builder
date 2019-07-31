@@ -1,0 +1,60 @@
+# #-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+# 
+# #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Omar Al-Ithawi <i@omardo.com>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:04+0300\n"
+"PO-Revision-Date: 2019-07-27 14:08+0000\n"
+"Last-Translator: Omar Al-Ithawi <i@omardo.com>, 2019\n"
+"Language-Team: Polish (Poland) (https://www.transifex.com/open-edx/teams/6205/pl_PL/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"#-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Language: pl_PL\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: templates/html/mentoring_attempts.underscore:5
+msgid "You have used {num_used} of 1 submission."
+msgid_plural "You have used {num_used} of {max_attempts} submissions."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: public/js/instructor_tool.js:349
+msgid "All"
+msgstr "Wszystkie"
+
+#: public/js/instructor_tool.js:408
+msgid "Data export failed. Reason: <%= error %>"
+msgstr "Eksport danych nie powiódł się. Przyczyna: <%= error %>"
+
+#: public/js/instructor_tool.js:416
+msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
+msgid_plural ""
+"Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
+msgstr[0] "Rezultaty pobrano <%= creation_time %> (<%= seconds %> sekunda)."
+msgstr[1] "Rezultaty pobrano <%= creation_time %> (<%= seconds %> sekund)."
+msgstr[2] "Rezultaty pobrano <%= creation_time %> (<%= seconds %> sekund)."
+msgstr[3] "Rezultaty pobrano <%= creation_time %> (<%= seconds %> sekund)."
+
+#: public/js/instructor_tool.js:429
+msgid "The report is currently being generated…"
+msgstr "Generujemy raport..."

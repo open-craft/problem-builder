@@ -1,0 +1,1888 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:41+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: answer.py instructor_tool.py
+msgid "Long Answer"
+msgstr "Löng Ànswér Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: answer.py mixins.py
+msgid "Question ID (name)"
+msgstr "Qüéstïön ÌD (nämé) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: answer.py
+msgid ""
+"The ID of this block. Should be unique unless you want the answer to be used"
+" in multiple places."
+msgstr ""
+"Thé ÌD öf thïs ßlöçk. Shöüld ßé ünïqüé ünléss ýöü wänt thé änswér tö ßé üséd"
+" ïn mültïplé pläçés. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: answer.py
+msgid "Default From"
+msgstr "Défäült Fröm Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: answer.py
+msgid "If a question ID is specified, get the default value from this answer."
+msgstr ""
+"Ìf ä qüéstïön ÌD ïs spéçïfïéd, gét thé défäült välüé fröm thïs änswér. "
+"Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: answer.py
+msgid "Min. Allowed Characters"
+msgstr "Mïn. Àllöwéd Çhäräçtérs Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: answer.py
+msgid "Minimum number of characters allowed for the answer"
+msgstr ""
+"Mïnïmüm nümßér öf çhäräçtérs ällöwéd för thé änswér Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: answer.py completion.py mixins.py questionnaire.py slider.py
+#: templates/html/instructor_tool.html
+msgid "Question"
+msgstr "Qüéstïön Ⱡ'σяєм ιρѕυм ∂#"
+
+#: answer.py questionnaire.py
+msgid "Question to ask the student"
+msgstr "Qüéstïön tö äsk thé stüdént Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: answer.py
+msgid "Long Answer Recap"
+msgstr "Löng Ànswér Réçäp Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: answer.py
+msgid "Question ID"
+msgstr "Qüéstïön ÌD Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: answer.py
+msgid "The ID of the question for which to display the student's answer."
+msgstr ""
+"Thé ÌD öf thé qüéstïön för whïçh tö dïspläý thé stüdént's änswér. Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: answer.py
+msgid "Title"
+msgstr "Tïtlé Ⱡ'σяєм ιρѕ#"
+
+#: answer.py
+msgid "Title of this answer recap section"
+msgstr ""
+"Tïtlé öf thïs änswér réçäp séçtïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: answer.py plot.py
+msgid "Description"
+msgstr "Désçrïptïön Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: answer.py
+msgid "Description of this answer (optional). Can include HTML."
+msgstr ""
+"Désçrïptïön öf thïs änswér (öptïönäl). Çän ïnçlüdé HTML. Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: choice.py
+msgid "Value"
+msgstr "Välüé Ⱡ'σяєм ιρѕ#"
+
+#: choice.py
+msgid ""
+"Value of the choice when selected. Should be unique. Generally you do not "
+"need to edit this."
+msgstr ""
+"Välüé öf thé çhöïçé whén séléçtéd. Shöüld ßé ünïqüé. Générällý ýöü dö nöt "
+"nééd tö édït thïs. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢ση#"
+
+#: choice.py
+msgid "Choice Text"
+msgstr "Çhöïçé Téxt Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: choice.py
+msgid "Human-readable version of the choice value"
+msgstr ""
+"Hümän-réädäßlé vérsïön öf thé çhöïçé välüé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: choice.py
+msgid "Out of Context"
+msgstr "Öüt öf Çöntéxt Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: choice.py
+#, python-brace-format
+msgid "Choice ({status})"
+msgstr "Çhöïçé ({status}) Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: choice.py
+#, python-brace-format
+msgid "Choice ({content})"
+msgstr "Çhöïçé ({content}) Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: choice.py
+msgid "No value set. This choice will not work correctly."
+msgstr ""
+"Nö välüé sét. Thïs çhöïçé wïll nöt wörk çörréçtlý. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: choice.py
+msgid "No choice text set yet."
+msgstr "Nö çhöïçé téxt sét ýét. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: choice.py
+msgid ""
+"This choice has a non-unique ID and won't work properly. This can happen if "
+"you duplicate a choice rather than use the Add Choice button."
+msgstr ""
+"Thïs çhöïçé häs ä nön-ünïqüé ÌD änd wön't wörk pröpérlý. Thïs çän häppén ïf "
+"ýöü düplïçäté ä çhöïçé räthér thän üsé thé Àdd Çhöïçé ßüttön. Ⱡ'σяєм ιρѕυм "
+"∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α∂ιριѕι¢ιηg єłιт, ѕє∂ ∂σ єιυѕмσ∂ тємρσя "
+"ιη¢ι∂ι∂υηт υт łαвσяє єт ∂σłσяє мαgηα αłιqυα. υт єηιм α∂ мιηιм νєηιαм, qυιѕ "
+"ησѕтяυ∂ єχєя¢ιтαтιση υłłαм¢σ łαвσяιѕ ηιѕι υт αłιqυιρ єχ єα ¢σммσ∂σ "
+"¢σηѕєqυαт. ∂υιѕ αυтє ιяυяє ∂σłσя ιη яєρяєнєη∂єяιт ιη νσłυρтαтє νєłιт єѕѕє "
+"¢ιłłυм ∂σłσяє єυ ƒυgιαт ηυłłα ραяιαтυя. єχ¢єρтєυя ѕιηт σ¢¢αє¢αт ¢υρι∂αтαт "
+"ηση ρяσι∂єηт, ѕυηт ιη ¢υłρα qυι σƒƒι¢ια ∂єѕєяυηт мσłłιт αηιм ι∂ єѕт łαвσ#"
+
+#: completion.py
+msgid "Completion"
+msgstr "Çömplétïön Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: completion.py
+msgid ""
+"Mentions a specific activity and asks the student whether they completed it."
+msgstr ""
+"Méntïöns ä spéçïfïç äçtïvïtý änd äsks thé stüdént whéthér théý çömplétéd ït."
+" Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυ#"
+
+#: completion.py
+msgid ""
+"Please indicate whether you attended the In Person Workshop session by "
+"(un-)checking the option below."
+msgstr ""
+"Pléäsé ïndïçäté whéthér ýöü ätténdéd thé Ìn Pérsön Wörkshöp séssïön ßý "
+"(ün-)çhéçkïng thé öptïön ßélöw. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: completion.py templates/html/instructor_tool.html
+msgid "Answer"
+msgstr "Ànswér Ⱡ'σяєм ιρѕυ#"
+
+#: completion.py
+msgid ""
+"Represents the answer that the student can (un-)check to indicate whether "
+"they completed the activity that the question mentions."
+msgstr ""
+"Réprésénts thé änswér thät thé stüdént çän (ün-)çhéçk tö ïndïçäté whéthér "
+"théý çömplétéd thé äçtïvïtý thät thé qüéstïön méntïöns. Ⱡ'σ#"
+
+#: completion.py
+msgid "Yes, I attended the session."
+msgstr "Ýés, Ì ätténdéd thé séssïön. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: completion.py
+msgid "Records student's answer."
+msgstr "Réçörds stüdént's änswér. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#: dashboard.py table.py
+msgid "Display Name"
+msgstr "Dïspläý Nämé Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: dashboard.py
+msgid "Display name for this module"
+msgstr "Dïspläý nämé för thïs mödülé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: dashboard.py
+msgid "Self-Assessment Summary"
+msgstr "Sélf-Àsséssmént Sümmärý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: dashboard.py
+msgid "Mentoring Blocks"
+msgstr "Méntörïng Blöçks Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"This should be an ordered list of the url_names of each mentoring block "
+"whose multiple choice question values are to be shown on this dashboard. The"
+" list should be in JSON format. Example: {example_here}"
+msgstr ""
+"Thïs shöüld ßé än ördéréd lïst öf thé ürl_nämés öf éäçh méntörïng ßlöçk "
+"whösé mültïplé çhöïçé qüéstïön välüés äré tö ßé shöwn ön thïs däshßöärd. Thé"
+" lïst shöüld ßé ïn JSÖN förmät. Éxämplé: {example_here} Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α∂ιριѕι¢ιηg єłιт, ѕє∂ ∂σ єιυѕмσ∂ тємρσя ιη¢ι∂ι∂υηт υт "
+"łαвσяє єт ∂σłσяє мαgηα αłιqυα. υт єηιм α∂ мιηιм νєηιαм, qυιѕ ησѕтяυ∂ "
+"єχєя¢ιтαтιση υłłαм¢σ łαвσяιѕ ηιѕι υт αłιqυιρ єχ єα ¢σммσ∂σ ¢σηѕєqυαт. ∂υιѕ "
+"αυтє ιяυяє ∂σłσя ιη яєρяєнєη∂єяιт ιη νσłυρтαтє νєłιт єѕѕє ¢ιłłυм ∂σłσяє єυ "
+"ƒυgιαт ηυłłα ραяιαтυя. єχ¢єρтєυя ѕιηт σ¢¢αє¢αт ¢υρι∂αтαт ησ#"
+
+#: dashboard.py
+msgid "Questions to be hidden"
+msgstr "Qüéstïöns tö ßé hïddén Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"Optional rules to exclude specific questions both from displaying in "
+"dashboard and from the calculated average. Rules must start with the "
+"url_name of a mentoring block, followed by list of question numbers to "
+"exclude. Rule set must be in JSON format. Question numbers are one-based "
+"(the first question being number 1). Must be in JSON format. Examples: "
+"{examples_here}"
+msgstr ""
+"Öptïönäl rülés tö éxçlüdé spéçïfïç qüéstïöns ßöth fröm dïspläýïng ïn "
+"däshßöärd änd fröm thé çälçülätéd ävérägé. Rülés müst stärt wïth thé "
+"ürl_nämé öf ä méntörïng ßlöçk, föllöwéd ßý lïst öf qüéstïön nümßérs tö "
+"éxçlüdé. Rülé sét müst ßé ïn JSÖN förmät. Qüéstïön nümßérs äré öné-ßäséd "
+"(thé fïrst qüéstïön ßéïng nümßér 1). Müst ßé ïn JSÖN förmät. Éxämplés: "
+"{examples_here} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α∂#"
+
+#: dashboard.py
+msgid "Color Coding Rules"
+msgstr "Çölör Çödïng Rülés Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"Optional rules to assign colors to possible answer values and average "
+"values. One rule per line. First matching rule will be used. Light colors "
+"are recommended. Examples: {examples_here}"
+msgstr ""
+"Öptïönäl rülés tö ässïgn çölörs tö pössïßlé änswér välüés änd ävérägé "
+"välüés. Öné rülé pér lïné. Fïrst mätçhïng rülé wïll ßé üséd. Lïght çölörs "
+"äré réçömméndéd. Éxämplés: {examples_here} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя α∂ιριѕι¢ιηg єłιт, ѕє∂ ∂σ єιυѕмσ∂ тємρσя ιη¢ι∂ι∂υηт υт łαвσяє єт "
+"∂σłσяє мαgηα αłιqυα. υт єηιм α∂ мιηιм νєηιαм, qυιѕ ησѕтяυ∂ єχєя¢ιтαтιση "
+"υłłαм¢σ łαвσяιѕ ηιѕι υт αłιqυιρ єχ єα ¢σммσ∂σ ¢σηѕєqυαт. ∂υιѕ αυтє ιяυяє "
+"∂σłσя ιη яєρяєнєη∂єяιт ιη νσłυρтαтє νєłιт єѕѕє ¢ιłłυм ∂σłσяє єυ ƒυgιαт ηυłłα"
+" ραяιαтυя. єχ¢єρтєυя ѕιηт σ¢¢αє¢αт ¢υρι∂αтαт ηση ρяσι∂єηт, ѕυηт ιη ¢υłρα#"
+
+#: dashboard.py dashboard.py
+msgid "Visual Representation"
+msgstr "Vïsüäl Répréséntätïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: dashboard.py
+msgid ""
+"Optional: Enter the JSON configuration of the visual representation desired "
+"(Advanced)."
+msgstr ""
+"Öptïönäl: Éntér thé JSÖN çönfïgürätïön öf thé vïsüäl répréséntätïön désïréd "
+"(Àdvänçéd). Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: dashboard.py
+msgid "Visual Representation Title"
+msgstr "Vïsüäl Répréséntätïön Tïtlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: dashboard.py
+msgid ""
+"This text is not displayed visually but is exposed to screen reader users "
+"who may not see the image."
+msgstr ""
+"Thïs téxt ïs nöt dïspläýéd vïsüällý ßüt ïs éxpöséd tö sçréén réädér üsérs "
+"whö mäý nöt séé thé ïmägé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: dashboard.py
+msgid "Visual Repr. Description"
+msgstr "Vïsüäl Répr. Désçrïptïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢ση#"
+
+#: dashboard.py
+msgid "The data represented in this image is available in the tables below."
+msgstr ""
+"Thé dätä répréséntéd ïn thïs ïmägé ïs äväïläßlé ïn thé täßlés ßélöw. Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: dashboard.py
+msgid ""
+"This longer description is not displayed visually but is exposed to screen "
+"reader users who may not see the image."
+msgstr ""
+"Thïs löngér désçrïptïön ïs nöt dïspläýéd vïsüällý ßüt ïs éxpöséd tö sçréén "
+"réädér üsérs whö mäý nöt séé thé ïmägé. Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: dashboard.py
+msgid "Label for average value"
+msgstr "Läßél för ävérägé välüé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"This settings allows overriding label for the calculated average per "
+"mentoring block. Must be in JSON format. Examples: {examples_here}."
+msgstr ""
+"Thïs séttïngs ällöws övérrïdïng läßél för thé çälçülätéd ävérägé pér "
+"méntörïng ßlöçk. Müst ßé ïn JSÖN förmät. Éxämplés: {examples_here}. Ⱡ'σяєм "
+"ι#"
+
+#: dashboard.py
+msgid "Display values"
+msgstr "Dïspläý välüés Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: dashboard.py
+msgid "Toggles if numeric values are displayed"
+msgstr ""
+"Tögglés ïf nümérïç välüés äré dïspläýéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: dashboard.py
+msgid "Header HTML"
+msgstr "Héädér HTML Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: dashboard.py
+msgid "Custom text to include at the beginning of the report."
+msgstr ""
+"Çüstöm téxt tö ïnçlüdé ät thé ßégïnnïng öf thé répört. Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: dashboard.py
+msgid "Footer HTML"
+msgstr "Föötér HTML Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: dashboard.py
+msgid "Custom text to include at the end of the report."
+msgstr ""
+"Çüstöm téxt tö ïnçlüdé ät thé énd öf thé répört. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: dashboard.py
+#, python-brace-format
+msgid "Invalid color rule on line {line_number}"
+msgstr ""
+"Ìnvälïd çölör rülé ön lïné {line_number} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢т#"
+
+#: dashboard.py
+msgid "Not configured."
+msgstr "Nöt çönfïgüréd. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: dashboard.py dashboard.py
+#, python-brace-format
+msgid "Score: {score}"
+msgstr "Sçöré: {score} Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: dashboard.py
+msgid "No value yet"
+msgstr "Nö välüé ýét Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: dashboard.py
+msgid "Average"
+msgstr "Àvérägé Ⱡ'σяєм ιρѕυм #"
+
+#: dashboard.py
+#, python-brace-format
+msgid "Invalid block url_name given: \"{bad_url_name}\""
+msgstr ""
+"Ìnvälïd ßlöçk ürl_nämé gïvén: \"{bad_url_name}\" Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєт#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"'Questions to be hidden' is malformed: value for key {key} is {value}, "
+"expected list of integers"
+msgstr ""
+"'Qüéstïöns tö ßé hïddén' ïs mälförméd: välüé för kéý {key} ïs {value}, "
+"éxpéçtéd lïst öf ïntégérs Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"'Questions to be hidden' is malformed: mentoring url_name {url_name} is not "
+"added to Dashboard"
+msgstr ""
+"'Qüéstïöns tö ßé hïddén' ïs mälförméd: méntörïng ürl_nämé {url_name} ïs nöt "
+"äddéd tö Däshßöärd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"'Label for average value' is malformed: value for key {key} is {value}, "
+"expected string"
+msgstr ""
+"'Läßél för ävérägé välüé' ïs mälförméd: välüé för kéý {key} ïs {value}, "
+"éxpéçtéd strïng Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тє#"
+
+#: dashboard.py
+#, python-brace-format
+msgid ""
+"'Label for average value' is malformed: mentoring url_name {url_name} is not"
+" added to Dashboard"
+msgstr ""
+"'Läßél för ävérägé välüé' ïs mälförméd: méntörïng ürl_nämé {url_name} ïs nöt"
+" äddéd tö Däshßöärd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: dashboard.py
+#, python-brace-format
+msgid "Visual rules contains an error: {error}"
+msgstr ""
+"Vïsüäl rülés çöntäïns än érrör: {error} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєт#"
+
+#: dashboard.py
+msgid "Visual rules should be a JSON dictionary/object: {...}"
+msgstr ""
+"Vïsüäl rülés shöüld ßé ä JSÖN dïçtïönärý/ößjéçt: {...} Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: instructor_tool.py mentoring.py
+msgid "Title (Display name)"
+msgstr "Tïtlé (Dïspläý nämé) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: instructor_tool.py mentoring.py mentoring.py
+msgid "Title to display"
+msgstr "Tïtlé tö dïspläý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: instructor_tool.py templates/html/instructor_tool.html
+msgid "Instructor Tool"
+msgstr "Ìnstrüçtör Tööl Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: instructor_tool.py mcq.py
+msgid "Multiple Choice Question"
+msgstr "Mültïplé Çhöïçé Qüéstïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢ση#"
+
+#: instructor_tool.py mrq.py
+msgid "Multiple Response Question"
+msgstr "Mültïplé Réspönsé Qüéstïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#: instructor_tool.py mcq.py
+msgid "Rating Question"
+msgstr "Rätïng Qüéstïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: instructor_tool.py
+msgid "Could not find any of the specified usernames."
+msgstr ""
+"Çöüld nöt fïnd äný öf thé spéçïfïéd üsérnämés. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя α#"
+
+#: mcq.py message.py mrq.py step.py step_review.py
+msgid "Message"
+msgstr "Méssägé Ⱡ'σяєм ιρѕυм #"
+
+#: mcq.py
+msgid ""
+"General feedback provided when submitting. (This is not shown if there is a "
+"more specific feedback tip for the choice selected by the learner.)"
+msgstr ""
+"Généräl féédßäçk prövïdéd whén süßmïttïng. (Thïs ïs nöt shöwn ïf théré ïs ä "
+"möré spéçïfïç féédßäçk tïp för thé çhöïçé séléçtéd ßý thé léärnér.) Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α∂ιριѕι¢ιηg єłιт, ѕє∂ ∂σ єιυѕмσ∂ тємρσя "
+"ιη¢ι∂ι∂υηт υт łαвσяє єт ∂σłσяє мαgηα αłιqυα. υт єηιм α∂ мιηιм νєηιαм, qυιѕ "
+"ησѕтяυ∂ єχєя¢ιтαтιση υłłαм¢σ łαвσяιѕ ηιѕι υт αłιqυιρ єχ єα ¢σммσ∂σ "
+"¢σηѕєqυαт. ∂υιѕ αυтє ιяυяє ∂σłσя ιη яєρяєнєη∂єяιт ιη νσłυρтαтє νєłιт єѕѕє "
+"¢ιłłυм ∂σłσяє єυ ƒυgιαт ηυłłα ραяιαтυя. єχ¢єρтєυя ѕιηт σ¢¢αє¢αт ¢υρι∂αтαт "
+"ηση ρяσι∂єηт, ѕυηт ιη ¢υłρα qυι σƒƒι¢ια ∂єѕєяυηт мσłłιт αηιм ι∂ єѕ#"
+
+#: mcq.py
+msgid "Correct Choice[s]"
+msgstr "Çörréçt Çhöïçé[s] Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: mcq.py
+msgid ""
+"Specify the value[s] that students may select for this question to be "
+"considered correct."
+msgstr ""
+"Spéçïfý thé välüé[s] thät stüdénts mäý séléçt för thïs qüéstïön tö ßé "
+"çönsïdéréd çörréçt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#. Translators: This is an adjective, describing a choice as correct
+#: mcq.py templates/html/answer_editable.html templates/html/mcqblock.html
+#: templates/html/mentoring_with_steps.html templates/html/mrqblock.html
+#: templates/html/ratingblock.html templates/html/ratingblock.html
+msgid "Correct"
+msgstr "Çörréçt Ⱡ'σяєм ιρѕυм #"
+
+#: mcq.py
+msgid "Acceptable"
+msgstr "Àççéptäßlé Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: mcq.py
+msgid "Wrong"
+msgstr "Wröng Ⱡ'σяєм ιρѕ#"
+
+#: mcq.py mrq.py
+msgid "Not Acceptable"
+msgstr "Nöt Àççéptäßlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: mcq.py
+msgid ""
+"You must indicate the correct answer[s], or the student will always get this"
+" question wrong."
+msgstr ""
+"Ýöü müst ïndïçäté thé çörréçt änswér[s], ör thé stüdént wïll älwäýs gét thïs"
+" qüéstïön wröng. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢ση#"
+
+#: mcq.py
+msgid "Duplicate correct choices set"
+msgstr "Düplïçäté çörréçt çhöïçés sét Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: mcq.py
+#, python-brace-format
+msgid "A choice value listed as correct does not exist: {choice}"
+msgstr ""
+"À çhöïçé välüé lïstéd äs çörréçt döés nöt éxïst: {choice} Ⱡ'σяєм ιρѕυм ∂σłσя"
+" ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mcq.py slider.py
+msgid "Low"
+msgstr "Löw Ⱡ'σяєм#"
+
+#: mcq.py
+msgid "Label for low ratings"
+msgstr "Läßél för löw rätïngs Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: mcq.py
+msgid "Less"
+msgstr "Léss Ⱡ'σяєм ι#"
+
+#: mcq.py slider.py
+msgid "High"
+msgstr "Hïgh Ⱡ'σяєм ι#"
+
+#: mcq.py
+msgid "Label for high ratings"
+msgstr "Läßél för hïgh rätïngs Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢#"
+
+#: mcq.py
+msgid "More"
+msgstr "Möré Ⱡ'σяєм ι#"
+
+#: mcq.py
+msgid "Accepted Choice[s]"
+msgstr "Àççéptéd Çhöïçé[s] Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: mcq.py
+msgid ""
+"Specify the rating value[s] that students may select for this question to be"
+" considered correct."
+msgstr ""
+"Spéçïfý thé rätïng välüé[s] thät stüdénts mäý séléçt för thïs qüéstïön tö ßé"
+" çönsïdéréd çörréçt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: mentoring.py mixins.py
+msgid "Show title"
+msgstr "Shöw tïtlé Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: mentoring.py mixins.py
+msgid "Display the title?"
+msgstr "Dïspläý thé tïtlé? Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: mentoring.py
+msgid "Max. attempts allowed"
+msgstr "Mäx. ättémpts ällöwéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: mentoring.py
+msgid ""
+"Maximum number of times students are allowed to attempt the questions "
+"belonging to this block"
+msgstr ""
+"Mäxïmüm nümßér öf tïmés stüdénts äré ällöwéd tö ättémpt thé qüéstïöns "
+"ßélöngïng tö thïs ßlöçk Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: mentoring.py mixins.py
+msgid "Weight"
+msgstr "Wéïght Ⱡ'σяєм ιρѕυ#"
+
+#: mentoring.py
+msgid "Defines the maximum total grade of the block."
+msgstr ""
+"Défïnés thé mäxïmüm tötäl grädé öf thé ßlöçk. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: mentoring.py
+msgid "Followed by"
+msgstr "Föllöwéd ßý Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: mentoring.py
+msgid "url_name of the step after the current mentoring block in workflow."
+msgstr ""
+"ürl_nämé öf thé stép äftér thé çürrént méntörïng ßlöçk ïn wörkflöw. Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: mentoring.py
+msgid "Enforce Dependency"
+msgstr "Énförçé Dépéndénçý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: mentoring.py
+msgid "Should the next step be the current block to complete?"
+msgstr ""
+"Shöüld thé néxt stép ßé thé çürrént ßlöçk tö çömplété? Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mentoring.py
+msgid "Show Submit Button"
+msgstr "Shöw Süßmït Büttön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: mentoring.py
+msgid "Allow submission of the current block?"
+msgstr ""
+"Àllöw süßmïssïön öf thé çürrént ßlöçk? Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: mentoring.py
+msgid "XML content"
+msgstr "XML çöntént Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: mentoring.py
+msgid ""
+"Not used for version 2. This field is here only to preserve the data needed "
+"to upgrade from v1 to v2."
+msgstr ""
+"Nöt üséd för vérsïön 2. Thïs fïéld ïs héré önlý tö présérvé thé dätä néédéd "
+"tö üpgrädé fröm v1 tö v2. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: mentoring.py
+msgid "Problem Builder"
+msgstr "Prößlém Büïldér Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: mentoring.py
+msgid "Feedback Header"
+msgstr "Féédßäçk Héädér Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: mentoring.py
+msgid "Header for feedback messages"
+msgstr "Héädér för féédßäçk méssägés Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: mentoring.py
+msgid "Feedback"
+msgstr "Féédßäçk Ⱡ'σяєм ιρѕυм ∂#"
+
+#: mentoring.py
+msgid "Show extended feedback details when all attempts are used up."
+msgstr ""
+"Shöw éxténdéd féédßäçk détäïls whén äll ättémpts äré üséd üp. Ⱡ'σяєм ιρѕυм "
+"∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mentoring.py step.py
+msgid "Video"
+msgstr "Vïdéö Ⱡ'σяєм ιρѕ#"
+
+#: mentoring.py step.py
+msgid "Image Modal"
+msgstr "Ìmägé Mödäl Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: mentoring.py step.py
+msgid "Ooyala Player"
+msgstr "Ööýälä Pläýér Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
+
+#: mentoring.py step.py step_review.py
+msgid "HTML"
+msgstr "HTML Ⱡ'σяєм ι#"
+
+#: mentoring.py mentoring.py step.py
+msgid "Error: Unable to load child component."
+msgstr ""
+"Érrör: Ûnäßlé tö löäd çhïld çömpönént. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: mentoring.py
+#, python-brace-format
+msgid "There should only be one '{msg_type}' message component."
+msgstr ""
+"Théré shöüld önlý ßé öné '{msg_type}' méssägé çömpönént. Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mentoring.py
+msgid "A component inside this mentoring block has issues."
+msgstr ""
+"À çömpönént ïnsïdé thïs méntörïng ßlöçk häs ïssüés. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mentoring.py
+msgid "Extended feedback"
+msgstr "Éxténdéd féédßäçk Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: mentoring.py
+msgid "Show extended feedback when all attempts are used up?"
+msgstr ""
+"Shöw éxténdéd féédßäçk whén äll ättémpts äré üséd üp? Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт"
+" αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mentoring.py
+msgid "Title (display name)"
+msgstr "Tïtlé (dïspläý nämé) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: mentoring.py
+msgid "Step Builder"
+msgstr "Stép Büïldér Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: message.py
+msgid "Completed"
+msgstr "Çömplétéd Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: message.py message.py
+msgid "Message (Complete)"
+msgstr "Méssägé (Çömplété) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: message.py
+msgid "Message shown when complete"
+msgstr "Méssägé shöwn whén çömplété Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: message.py
+msgid "Great job!"
+msgstr "Gréät jöß! Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: message.py
+msgid "This message will be shown when the student achieves a perfect score. "
+msgstr ""
+"Thïs méssägé wïll ßé shöwn whén thé stüdént äçhïévés ä pérféçt sçöré.  "
+"Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: message.py
+msgid "Incomplete"
+msgstr "Ìnçömplété Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: message.py message.py
+msgid "Message (Incomplete)"
+msgstr "Méssägé (Ìnçömplété) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: message.py
+msgid "Message shown when incomplete"
+msgstr "Méssägé shöwn whén ïnçömplété Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: message.py
+msgid "Not quite! You can try again, though."
+msgstr ""
+"Nöt qüïté! Ýöü çän trý ägäïn, thöügh. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυ#"
+
+#: message.py
+msgid ""
+"This message will be shown when the student gets at least one question "
+"wrong, but is allowed to try again. "
+msgstr ""
+"Thïs méssägé wïll ßé shöwn whén thé stüdént géts ät léäst öné qüéstïön "
+"wröng, ßüt ïs ällöwéd tö trý ägäïn.  Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: message.py
+msgid "Reached max. # of attempts"
+msgstr "Réäçhéd mäx. # öf ättémpts Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#: message.py
+msgid "Message (Max # Attempts)"
+msgstr "Méssägé (Mäx # Àttémpts) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢ση#"
+
+#: message.py
+msgid "Message shown when student reaches max. # of attempts"
+msgstr ""
+"Méssägé shöwn whén stüdént réäçhés mäx. # öf ättémpts Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт"
+" αмєт, ¢σηѕє¢тєтυя α#"
+
+#: message.py
+msgid "Sorry, you have used up all of your allowed submissions."
+msgstr ""
+"Sörrý, ýöü hävé üséd üp äll öf ýöür ällöwéd süßmïssïöns. Ⱡ'σяєм ιρѕυм ∂σłσя "
+"ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: message.py
+msgid ""
+"This message will be shown when the student has used up all of their allowed"
+" attempts without achieving a perfect score. "
+msgstr ""
+"Thïs méssägé wïll ßé shöwn whén thé stüdént häs üséd üp äll öf théïr ällöwéd"
+" ättémpts wïthöüt äçhïévïng ä pérféçt sçöré.  Ⱡ'σяєм ιρѕυ#"
+
+#: message.py
+msgid "Study tips if this question was wrong"
+msgstr ""
+"Stüdý tïps ïf thïs qüéstïön wäs wröng Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυ#"
+
+#: message.py
+msgid "Study tips shown if question was answered incorrectly"
+msgstr ""
+"Stüdý tïps shöwn ïf qüéstïön wäs änswéréd ïnçörréçtlý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт"
+" αмєт, ¢σηѕє¢тєтυя α#"
+
+#: message.py
+msgid "Review ____."
+msgstr "Révïéw ____. Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: message.py
+msgid ""
+"This message will be shown when the student is reviewing their answers to "
+"the assessment, if the student got this specific question wrong and is "
+"allowed to try again."
+msgstr ""
+"Thïs méssägé wïll ßé shöwn whén thé stüdént ïs révïéwïng théïr änswérs tö "
+"thé ässéssmént, ïf thé stüdént göt thïs spéçïfïç qüéstïön wröng änd ïs "
+"ällöwéd tö trý ägäïn. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α∂ιριѕι¢ιηg "
+"єłιт, ѕє∂ ∂σ єιυѕмσ∂ тємρσя ιη¢ι∂ι∂υηт υт łαвσяє єт ∂σłσяє мαgηα αłιqυα. υт "
+"єηιм α∂ мιηιм νєηιαм, qυιѕ ησѕтяυ∂ єχєя¢ιтαтιση υłłαм¢σ łαвσяιѕ ηιѕι υт "
+"αłιqυιρ єχ єα ¢σммσ∂σ ¢σηѕєqυαт. ∂υιѕ αυтє ιяυяє ∂σłσя ιη яєρяєнєη∂єяιт ιη "
+"νσłυρтαтє νєłιт єѕѕє ¢ιłłυм ∂σłσяє єυ ƒυgιαт ηυłłα ραяιαтυя. єχ¢єρтєυя ѕιηт "
+"σ¢¢αє¢αт ¢υρι∂αтαт ηση ρяσι∂єηт, ѕυηт ιη ¢υłρα qυι σƒƒι¢ι#"
+
+#: message.py step_review.py
+msgid "Message to display upon completion"
+msgstr ""
+"Méssägé tö dïspläý üpön çömplétïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: message.py
+msgid "Type of message"
+msgstr "Týpé öf méssägé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: mixins.py
+msgid "Child"
+msgstr "Çhïld Ⱡ'σяєм ιρѕ#"
+
+#: mixins.py
+#, python-brace-format
+msgid "{child_caption} {number}"
+msgstr "{child_caption} {number} Ⱡ'σяєм ιρѕυм #"
+
+#: mixins.py
+msgid ""
+"The ID of this question (required). Should be unique within this mentoring "
+"component."
+msgstr ""
+"Thé ÌD öf thïs qüéstïön (réqüïréd). Shöüld ßé ünïqüé wïthïn thïs méntörïng "
+"çömpönént. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: mixins.py
+msgid "Question title"
+msgstr "Qüéstïön tïtlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: mixins.py
+msgid "Leave blank to use the default (\"Question 1\", \"Question 2\", etc.)"
+msgstr ""
+"Léävé ßlänk tö üsé thé défäült (\"Qüéstïön 1\", \"Qüéstïön 2\", étç.) Ⱡ'σяєм"
+" ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mixins.py
+msgid "Defines the maximum total grade of this question."
+msgstr ""
+"Défïnés thé mäxïmüm tötäl grädé öf thïs qüéstïön. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mixins.py
+msgid "This XBlock does not have any settings."
+msgstr ""
+"Thïs XBlöçk döés nöt hävé äný séttïngs. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: mrq.py
+msgid "Required Choices"
+msgstr "Réqüïréd Çhöïçés Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: mrq.py
+msgid ""
+"Specify the value[s] that students must select for this MRQ to be considered"
+" correct."
+msgstr ""
+"Spéçïfý thé välüé[s] thät stüdénts müst séléçt för thïs MRQ tö ßé çönsïdéréd"
+" çörréçt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: mrq.py
+msgid "Ignored Choices"
+msgstr "Ìgnöréd Çhöïçés Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: mrq.py
+msgid ""
+"Specify the value[s] that are neither correct nor incorrect. Any values not "
+"listed as required or ignored will be considered wrong."
+msgstr ""
+"Spéçïfý thé välüé[s] thät äré néïthér çörréçt nör ïnçörréçt. Àný välüés nöt "
+"lïstéd äs réqüïréd ör ïgnöréd wïll ßé çönsïdéréd wröng. Ⱡ#"
+
+#: mrq.py
+msgid "General feedback provided when submitting"
+msgstr ""
+"Généräl féédßäçk prövïdéd whén süßmïttïng Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: mrq.py
+msgid "Required"
+msgstr "Réqüïréd Ⱡ'σяєм ιρѕυм ∂#"
+
+#: mrq.py
+msgid "Ignored"
+msgstr "Ìgnöréd Ⱡ'σяєм ιρѕυм #"
+
+#: mrq.py
+msgid "Duplicate required choices set"
+msgstr "Düplïçäté réqüïréd çhöïçés sét Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢т#"
+
+#: mrq.py
+msgid "Duplicate ignored choices set"
+msgstr "Düplïçäté ïgnöréd çhöïçés sét Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: mrq.py
+msgid "A choice is listed as both required and ignored: {}"
+msgstr ""
+"À çhöïçé ïs lïstéd äs ßöth réqüïréd änd ïgnöréd: {} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mrq.py
+msgid "A choice value listed as required does not exist: {}"
+msgstr ""
+"À çhöïçé välüé lïstéd äs réqüïréd döés nöt éxïst: {} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: mrq.py
+msgid "A choice value listed as ignored does not exist: {}"
+msgstr ""
+"À çhöïçé välüé lïstéd äs ïgnöréd döés nöt éxïst: {} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: plot.py
+msgid "Plot"
+msgstr "Plöt Ⱡ'σяєм ι#"
+
+#: plot.py
+msgid "Plot title"
+msgstr "Plöt tïtlé Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: plot.py plot.py
+msgid "Plot label"
+msgstr "Plöt läßél Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: plot.py
+msgid ""
+"Label for default overlay that shows student's answers to scale questions"
+msgstr ""
+"Läßél för défäült övérläý thät shöws stüdént's änswérs tö sçälé qüéstïöns "
+"Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя#"
+
+#: plot.py
+msgid "Point color (default overlay)"
+msgstr "Pöïnt çölör (défäült övérläý) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: plot.py
+msgid "Point color to use for default overlay"
+msgstr ""
+"Pöïnt çölör tö üsé för défäült övérläý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: plot.py
+msgid "Point color (average overlay)"
+msgstr "Pöïnt çölör (ävérägé övérläý) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: plot.py
+msgid "Point color to use for average overlay"
+msgstr ""
+"Pöïnt çölör tö üsé för ävérägé övérläý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: plot.py
+msgid "Quadrant I"
+msgstr "Qüädränt Ì Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: plot.py
+msgid ""
+"Label for the first quadrant. Plot uses counter-clockwise numbering starting"
+" in the top right quadrant."
+msgstr ""
+"Läßél för thé fïrst qüädränt. Plöt üsés çöüntér-çlöçkwïsé nümßérïng stärtïng"
+" ïn thé töp rïght qüädränt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: plot.py
+msgid "Quadrant II"
+msgstr "Qüädränt ÌÌ Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: plot.py
+msgid ""
+"Label for the second quadrant. Plot uses counter-clockwise numbering "
+"starting in the top right quadrant."
+msgstr ""
+"Läßél för thé séçönd qüädränt. Plöt üsés çöüntér-çlöçkwïsé nümßérïng "
+"stärtïng ïn thé töp rïght qüädränt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: plot.py
+msgid "Quadrant III"
+msgstr "Qüädränt ÌÌÌ Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: plot.py
+msgid ""
+"Label for the third quadrant. Plot uses counter-clockwise numbering starting"
+" in the top right quadrant."
+msgstr ""
+"Läßél för thé thïrd qüädränt. Plöt üsés çöüntér-çlöçkwïsé nümßérïng stärtïng"
+" ïn thé töp rïght qüädränt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: plot.py
+msgid "Quadrant IV"
+msgstr "Qüädränt ÌV Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: plot.py
+msgid ""
+"Label for the fourth quadrant. Plot uses counter-clockwise numbering "
+"starting in the top right quadrant."
+msgstr ""
+"Läßél för thé föürth qüädränt. Plöt üsés çöüntér-çlöçkwïsé nümßérïng "
+"stärtïng ïn thé töp rïght qüädränt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: plot.py
+msgid "Claims and associated questions"
+msgstr "Çläïms änd ässöçïätéd qüéstïöns Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢т#"
+
+#: plot.py
+msgid ""
+"Claims and questions that should be included in the plot. Each line defines "
+"a triple of the form \"claim, q1, q2\", where \"claim\" is arbitrary text "
+"that represents a claim, and \"q1\" and \"q2\" are IDs of scale or rating "
+"questions. "
+msgstr ""
+"Çläïms änd qüéstïöns thät shöüld ßé ïnçlüdéd ïn thé plöt. Éäçh lïné défïnés "
+"ä trïplé öf thé förm \"çläïm, q1, q2\", whéré \"çläïm\" ïs ärßïträrý téxt "
+"thät réprésénts ä çläïm, änd \"q1\" änd \"q2\" äré ÌDs öf sçälé ör rätïng "
+"qüéstïöns.  Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α∂ιριѕι¢ιηg єłιт, ѕє∂ "
+"∂σ єιυѕмσ∂ тємρσя ιη¢ι∂ι∂υηт υт łαвσяє єт ∂σłσяє мαgηα αłιqυα. υт єηιм α∂ "
+"мιηιм νєηιαм, qυιѕ ησѕтяυ∂ єχєя¢ιтαтιση υłłαм¢σ łαвσяιѕ ηιѕι υт αłιqυιρ єχ "
+"єα ¢σммσ∂σ ¢σηѕєqυαт. ∂υιѕ αυтє ιяυяє ∂σłσя ιη яєρяєнєη∂єяιт ιη νσłυρтαтє "
+"νєłιт єѕѕє ¢ιłłυм ∂σłσяє єυ ƒυ#"
+
+#: plot.py
+msgid ""
+"In addition to the default and average overlays the plot includes the "
+"following overlays:"
+msgstr ""
+"Ìn äddïtïön tö thé défäült änd ävérägé övérläýs thé plöt ïnçlüdés thé "
+"föllöwïng övérläýs: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#: plot.py
+msgid "Plot Overlay"
+msgstr "Plöt Övérläý Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: plot.py
+msgid "Overlay title"
+msgstr "Övérläý tïtlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
+
+#: plot.py
+msgid "Label for button that allows to toggle visibility of this overlay"
+msgstr ""
+"Läßél för ßüttön thät ällöws tö tögglé vïsïßïlïtý öf thïs övérläý Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: plot.py
+msgid "Point color"
+msgstr "Pöïnt çölör Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: plot.py
+msgid "Point color to use for this overlay"
+msgstr ""
+"Pöïnt çölör tö üsé för thïs övérläý Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: plot.py
+msgid "Description of this overlay (optional)"
+msgstr ""
+"Désçrïptïön öf thïs övérläý (öptïönäl) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: plot.py
+msgid "Citation"
+msgstr "Çïtätïön Ⱡ'σяєм ιρѕυм ∂#"
+
+#: plot.py
+msgid "Source of data belonging to this overlay (optional)"
+msgstr ""
+"Söürçé öf dätä ßélöngïng tö thïs övérläý (öptïönäl) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: plot.py
+msgid "Claim data"
+msgstr "Çläïm dätä Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: plot.py
+msgid ""
+"Claim data to include in this overlay. Each line defines a tuple of the form"
+" \"q1, q2\", where \"q1\" is the value associated with the first scale or "
+"rating question, and \"q2\" is the value associated with the second scale or"
+" rating question. Note that data will be associated with claims in the order"
+" that they are defined in the parent plot."
+msgstr ""
+"Çläïm dätä tö ïnçlüdé ïn thïs övérläý. Éäçh lïné défïnés ä tüplé öf thé förm"
+" \"q1, q2\", whéré \"q1\" ïs thé välüé ässöçïätéd wïth thé fïrst sçälé ör "
+"rätïng qüéstïön, änd \"q2\" ïs thé välüé ässöçïätéd wïth thé séçönd sçälé ör"
+" rätïng qüéstïön. Nöté thät dätä wïll ßé ässöçïätéd wïth çläïms ïn thé ördér"
+" thät théý äré défïnéd ïn thé pärént plöt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя α∂ιριѕι¢ιηg єłιт, ѕє∂ ∂σ єιυѕмσ∂ тємρσя ιη¢ι∂ι#"
+
+#: plot.py
+msgid ""
+"No plot label set. Button for toggling visibility of this overlay will not "
+"have a label."
+msgstr ""
+"Nö plöt läßél sét. Büttön för tögglïng vïsïßïlïtý öf thïs övérläý wïll nöt "
+"hävé ä läßél. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: plot.py
+msgid "No point color set. This overlay will not work correctly."
+msgstr ""
+"Nö pöïnt çölör sét. Thïs övérläý wïll nöt wörk çörréçtlý. Ⱡ'σяєм ιρѕυм ∂σłσя"
+" ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: plot.py
+msgid "No claim data provided. This overlay will not work correctly."
+msgstr ""
+"Nö çläïm dätä prövïdéd. Thïs övérläý wïll nöt wörk çörréçtlý. Ⱡ'σяєм ιρѕυм "
+"∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: questionnaire.py
+msgid "A unique Question ID is required."
+msgstr ""
+"À ünïqüé Qüéstïön ÌD ïs réqüïréd. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тє#"
+
+#: questionnaire.py
+msgid "Question ID should not contain spaces."
+msgstr ""
+"Qüéstïön ÌD shöüld nöt çöntäïn späçés. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: questionnaire.py
+msgid "Some choice values are not unique."
+msgstr ""
+"Sömé çhöïçé välüés äré nöt ünïqüé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: questionnaire.py
+msgid "Multiple tips configured for the same choice."
+msgstr ""
+"Mültïplé tïps çönfïgüréd för thé sämé çhöïçé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: slider.py
+msgid "Ranged Value Slider"
+msgstr "Rängéd Välüé Slïdér Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт,#"
+
+#: slider.py
+msgid "Label for low end of the range"
+msgstr "Läßél för löw énd öf thé rängé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢т#"
+
+#: slider.py
+msgid "0%"
+msgstr "0% Ⱡ'σя#"
+
+#: slider.py
+msgid "Label for high end of the range"
+msgstr "Läßél för hïgh énd öf thé rängé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢т#"
+
+#: slider.py
+msgid "100%"
+msgstr "100% Ⱡ'σяєм ι#"
+
+#: slider.py
+msgid "Question to ask the student (optional)"
+msgstr ""
+"Qüéstïön tö äsk thé stüdént (öptïönäl) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: slider.py
+#, python-brace-format
+msgid "Select a value from {min_label} to {max_label}"
+msgstr ""
+"Séléçt ä välüé fröm {min_label} tö {max_label} Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢т#"
+
+#: step.py
+msgid "Step"
+msgstr "Stép Ⱡ'σяєм ι#"
+
+#: step.py
+msgid "Mentoring Step"
+msgstr "Méntörïng Stép Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: step.py
+msgid "Step Title"
+msgstr "Stép Tïtlé Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: step.py
+msgid "Leave blank to use sequential numbering"
+msgstr ""
+"Léävé ßlänk tö üsé séqüéntïäl nümßérïng Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: step.py
+msgid "Next Button Label"
+msgstr "Néxt Büttön Läßél Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: step.py
+msgid "Customize the text of the 'Next' button."
+msgstr ""
+"Çüstömïzé thé téxt öf thé 'Néxt' ßüttön. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: step.py templates/html/mentoring_with_steps.html
+msgid "Next Step"
+msgstr "Néxt Stép Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: step.py
+msgid "Feedback or instructional message which pops up after submitting."
+msgstr ""
+"Féédßäçk ör ïnstrüçtïönäl méssägé whïçh pöps üp äftér süßmïttïng. Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: step_review.py
+msgid "Conditional Message"
+msgstr "Çöndïtïönäl Méssägé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт,#"
+
+#: step_review.py
+msgid "Show only if student got a perfect score"
+msgstr ""
+"Shöw önlý ïf stüdént göt ä pérféçt sçöré Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: step_review.py
+msgid "Show only if student got at least one question wrong"
+msgstr ""
+"Shöw önlý ïf stüdént göt ät léäst öné qüéstïön wröng Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: step_review.py
+msgid "Show for any score"
+msgstr "Shöw för äný sçöré Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: step_review.py
+msgid "Score condition"
+msgstr "Sçöré çöndïtïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: step_review.py
+msgid "Show only if student can try again"
+msgstr ""
+"Shöw önlý ïf stüdént çän trý ägäïn Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: step_review.py
+msgid "Show only if student has used up all attempts"
+msgstr ""
+"Shöw önlý ïf stüdént häs üséd üp äll ättémpts Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: step_review.py
+msgid "Show whether student can try again or not"
+msgstr ""
+"Shöw whéthér stüdént çän trý ägäïn ör nöt Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: step_review.py
+msgid "Try again condition"
+msgstr "Trý ägäïn çöndïtïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт,#"
+
+#: step_review.py
+msgid "Always shown"
+msgstr "Àlwäýs shöwn Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: step_review.py
+msgid "Score Summary"
+msgstr "Sçöré Sümmärý Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
+
+#: step_review.py
+msgid "Per-Question Feedback"
+msgstr "Pér-Qüéstïön Féédßäçk Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: step_review.py
+msgid ""
+"(Example tip:) Since you got Question 1 wrong, review Chapter 12 of your "
+"textbook."
+msgstr ""
+"(Éxämplé tïp:) Sïnçé ýöü göt Qüéstïön 1 wröng, révïéw Çhäptér 12 öf ýöür "
+"téxtßöök. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тє#"
+
+#: step_review.py
+msgid "Review Step"
+msgstr "Révïéw Stép Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: swipe.py
+msgid "Swipeable Binary Choice Question"
+msgstr ""
+"Swïpéäßlé Bïnärý Çhöïçé Qüéstïön Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тє#"
+
+#: swipe.py
+msgid "Text"
+msgstr "Téxt Ⱡ'σяєм ι#"
+
+#: swipe.py
+msgid ""
+"Text to display on this card. The student must determine if this statement "
+"is true or false."
+msgstr ""
+"Téxt tö dïspläý ön thïs çärd. Thé stüdént müst détérmïné ïf thïs stätémént "
+"ïs trüé ör fälsé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢ση#"
+
+#: swipe.py
+msgid "Image"
+msgstr "Ìmägé Ⱡ'σяєм ιρѕ#"
+
+#: swipe.py
+msgid "Specify the URL of an image associated with this question."
+msgstr ""
+"Spéçïfý thé ÛRL öf än ïmägé ässöçïätéd wïth thïs qüéstïön. Ⱡ'σяєм ιρѕυм "
+"∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: swipe.py
+msgid "Correct Choice"
+msgstr "Çörréçt Çhöïçé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: swipe.py
+msgid "Specifies whether the card is correct."
+msgstr ""
+"Spéçïfïés whéthér thé çärd ïs çörréçt. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: swipe.py
+msgid "Correct Answer Feedback"
+msgstr "Çörréçt Ànswér Féédßäçk Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: swipe.py
+msgid "Feedback to display when student answers correctly."
+msgstr ""
+"Féédßäçk tö dïspläý whén stüdént änswérs çörréçtlý. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: swipe.py
+msgid "Incorrect Answer Feedback"
+msgstr "Ìnçörréçt Ànswér Féédßäçk Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕ#"
+
+#: swipe.py
+msgid "Feedback to display when student answers incorrectly."
+msgstr ""
+"Féédßäçk tö dïspläý whén stüdént änswérs ïnçörréçtlý. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт"
+" αмєт, ¢σηѕє¢тєтυя α#"
+
+#: swipe.py
+msgid "Last input submitted by the student."
+msgstr ""
+"Läst ïnpüt süßmïttéd ßý thé stüdént. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυ#"
+
+#: table.py
+msgid "Answer Recap Table"
+msgstr "Ànswér Réçäp Täßlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: table.py
+msgid "Display name"
+msgstr "Dïspläý nämé Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: table.py
+msgid "Title of the table"
+msgstr "Tïtlé öf thé täßlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: table.py
+msgid "Answers Table"
+msgstr "Ànswérs Täßlé Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
+
+#: table.py
+msgid "Special Mode"
+msgstr "Spéçïäl Mödé Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: table.py
+msgid "Variant of the table that will display a specific background image."
+msgstr ""
+"Värïänt öf thé täßlé thät wïll dïspläý ä spéçïfïç ßäçkgröünd ïmägé. Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: table.py
+msgid "Allow Download"
+msgstr "Àllöw Döwnlöäd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: table.py
+msgid "Allow students to download a copy of the table for themselves."
+msgstr ""
+"Àllöw stüdénts tö döwnlöäd ä çöpý öf thé täßlé för thémsélvés. Ⱡ'σяєм ιρѕυм "
+"∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: table.py
+msgid "Allow Sharing"
+msgstr "Àllöw Shärïng Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
+
+#: table.py
+msgid "Allow students to share their results with other students."
+msgstr ""
+"Àllöw stüdénts tö shäré théïr résülts wïth öthér stüdénts. Ⱡ'σяєм ιρѕυм "
+"∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: table.py
+msgid "You are not permitted to view this student's table."
+msgstr ""
+"Ýöü äré nöt pérmïttéd tö vïéw thïs stüdént's täßlé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: table.py
+msgid "Usernames not provided."
+msgstr "Ûsérnämés nöt prövïdéd. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: table.py
+msgid "Some users could not be shared with. Please check these usernames: {}"
+msgstr ""
+"Sömé üsérs çöüld nöt ßé shäréd wïth. Pléäsé çhéçk thésé üsérnämés: {} Ⱡ'σяєм"
+" ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: table.py
+msgid "Username not provided."
+msgstr "Ûsérnämé nöt prövïdéd. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢#"
+
+#: table.py
+msgid "Removed successfully."
+msgstr "Rémövéd süççéssfüllý. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: table.py
+msgid "Header"
+msgstr "Héädér Ⱡ'σяєм ιρѕυ#"
+
+#: table.py
+msgid "Header of this column"
+msgstr "Héädér öf thïs çölümn Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: templates/html/answer_editable.html templates/html/mcqblock.html
+#: templates/html/mentoring_with_steps.html templates/html/mrqblock.html
+#: templates/html/ratingblock.html templates/html/ratingblock.html
+msgid "Incorrect"
+msgstr "Ìnçörréçt Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: templates/html/answer_read_only.html
+msgid "No answer yet."
+msgstr "Nö änswér ýét. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: templates/html/completion.html templates/html/slider.html
+msgid "Complete"
+msgstr "Çömplété Ⱡ'σяєм ιρѕυм ∂#"
+
+#: templates/html/dashboard.html templates/html/mentoring-table-container.html
+msgid "Download report"
+msgstr "Döwnlöäd répört Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: templates/html/dashboard_report.html
+#: templates/html/mentoring-table-report.html
+msgid "Student"
+msgstr "Stüdént Ⱡ'σяєм ιρѕυм #"
+
+#: templates/html/dashboard_report.html
+#: templates/html/mentoring-table-report.html
+msgid "Course"
+msgstr "Çöürsé Ⱡ'σяєм ιρѕυ#"
+
+#: templates/html/dashboard_report.html
+#: templates/html/mentoring-table-report.html
+msgid "Date"
+msgstr "Däté Ⱡ'σяєм ι#"
+
+#: templates/html/instructor_tool.html
+msgid "Filters"
+msgstr "Fïltérs Ⱡ'σяєм ιρѕυм #"
+
+#: templates/html/instructor_tool.html
+msgid "Username[s]:"
+msgstr "Ûsérnämé[s]: Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: templates/html/instructor_tool.html
+msgid "Enter one or more usernames, comma separated."
+msgstr ""
+"Éntér öné ör möré üsérnämés, çömmä sépärätéd. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: templates/html/instructor_tool.html
+msgid "Text:"
+msgstr "Téxt: Ⱡ'σяєм ιρѕ#"
+
+#: templates/html/instructor_tool.html
+msgid "Section/Question:"
+msgstr "Séçtïön/Qüéstïön: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: templates/html/instructor_tool.html templates/html/instructor_tool.html
+msgid "All"
+msgstr "Àll Ⱡ'σяєм#"
+
+#: templates/html/instructor_tool.html
+msgid "Problem types:"
+msgstr "Prößlém týpés: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: templates/html/instructor_tool.html
+msgid "Search"
+msgstr "Séärçh Ⱡ'σяєм ιρѕυ#"
+
+#: templates/html/instructor_tool.html
+msgid "Section"
+msgstr "Séçtïön Ⱡ'σяєм ιρѕυм #"
+
+#: templates/html/instructor_tool.html
+msgid "Subsection"
+msgstr "Süßséçtïön Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: templates/html/instructor_tool.html
+msgid "Unit"
+msgstr "Ûnït Ⱡ'σяєм ι#"
+
+#: templates/html/instructor_tool.html
+msgid "Type"
+msgstr "Týpé Ⱡ'σяєм ι#"
+
+#: templates/html/instructor_tool.html
+msgid "Username"
+msgstr "Ûsérnämé Ⱡ'σяєм ιρѕυм ∂#"
+
+#: templates/html/instructor_tool.html
+msgid "First"
+msgstr "Fïrst Ⱡ'σяєм ιρѕ#"
+
+#: templates/html/instructor_tool.html
+msgid "Prev"
+msgstr "Prév Ⱡ'σяєм ι#"
+
+#: templates/html/instructor_tool.html
+msgid "Next"
+msgstr "Néxt Ⱡ'σяєм ι#"
+
+#: templates/html/instructor_tool.html
+msgid "Last"
+msgstr "Läst Ⱡ'σяєм ι#"
+
+#: templates/html/instructor_tool.html
+msgid "Download as CSV"
+msgstr "Döwnlöäd äs ÇSV Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: templates/html/instructor_tool.html
+msgid "Cancel search"
+msgstr "Çänçél séärçh Ⱡ'σяєм ιρѕυм ∂σłσя ѕι#"
+
+#: templates/html/instructor_tool.html
+msgid "Delete results"
+msgstr "Délété résülts Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: templates/html/mentoring-column-add-button.html
+msgid "Add HTML"
+msgstr "Àdd HTML Ⱡ'σяєм ιρѕυм ∂#"
+
+#: templates/html/mentoring-column-add-button.html
+msgid "Add Answer Recap"
+msgstr "Àdd Ànswér Réçäp Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: templates/html/mentoring-table-add-button.html
+msgid "Add Answer Recap Column"
+msgstr "Àdd Ànswér Réçäp Çölümn Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: templates/html/mentoring-table-container.html
+msgid "Display Map from:"
+msgstr "Dïspläý Mäp fröm: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: templates/html/mentoring-table-container.html
+#, python-format
+msgid "You (%(username)s)"
+msgstr "Ýöü (%(username)s) Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html
+msgid "Share"
+msgstr "Shäré Ⱡ'σяєм ιρѕ#"
+
+#: templates/html/mentoring-table-container.html
+msgid "Enter the username of another student you'd like to share this with:"
+msgstr ""
+"Éntér thé üsérnämé öf änöthér stüdént ýöü'd lïké tö shäré thïs wïth: Ⱡ'σяєм "
+"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: templates/html/mentoring-table-container.html
+msgid "Map added!"
+msgstr "Mäp äddéd! Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: templates/html/mentoring-table-container.html
+msgid "Another user has shared a map with you."
+msgstr ""
+"Ànöthér üsér häs shäréd ä mäp wïth ýöü. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: templates/html/mentoring-table-container.html
+msgid ""
+"You can change the user you're currently displaying using the drop-down "
+"selector above."
+msgstr ""
+"Ýöü çän çhängé thé üsér ýöü'ré çürréntlý dïspläýïng üsïng thé dröp-döwn "
+"séléçtör äßövé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: templates/html/mentoring-table-shared-list.html
+msgid "Shared with:"
+msgstr "Shäréd wïth: Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: templates/html/mentoring.html
+#, python-format
+msgid ""
+"\n"
+"    You need to complete %(link_start)sthe previous step%(link_end)s before\n"
+"    attempting this step.\n"
+"    "
+msgstr ""
+"\n"
+"    Ýöü nééd tö çömplété %(link_start)sthé prévïöüs stép%(link_end)s ßéföré\n"
+"    ättémptïng thïs stép.\n"
+"     Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє#"
+
+#: templates/html/mentoring.html templates/html/mentoring_with_steps.html
+msgid "Submit"
+msgstr "Süßmït Ⱡ'σяєм ιρѕυ#"
+
+#: templates/html/mentoring.html templates/html/mentoring_with_steps.html
+msgid "Review final grade"
+msgstr "Révïéw fïnäl grädé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт#"
+
+#: templates/html/mentoring.html templates/html/mentoring_with_steps.html
+msgid "APGLv3 license"
+msgstr "ÀPGLv3 lïçénsé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт#"
+
+#: templates/html/mentoring_url_name.html
+msgid "url_name for linking to this mentoring question set:"
+msgstr ""
+"ürl_nämé för lïnkïng tö thïs méntörïng qüéstïön sét: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт "
+"αмєт, ¢σηѕє¢тєтυя α#"
+
+#: templates/html/mentoring_with_steps.html
+msgid "Partially correct"
+msgstr "Pärtïällý çörréçt Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: templates/html/mentoring_with_steps.html
+msgid "Review grade"
+msgstr "Révïéw grädé Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: templates/html/mentoring_with_steps.html
+msgid "Try again"
+msgstr "Trý ägäïn Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: templates/html/overlay.html
+msgid "Overlay"
+msgstr "Övérläý Ⱡ'σяєм ιρѕυм #"
+
+#: templates/html/overlay.html templates/html/plot.html
+msgid "Description:"
+msgstr "Désçrïptïön: Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: templates/html/overlay.html
+msgid "No description provided"
+msgstr "Nö désçrïptïön prövïdéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σ#"
+
+#: templates/html/overlay.html templates/html/plot.html
+msgid "Source:"
+msgstr "Söürçé: Ⱡ'σяєм ιρѕυм #"
+
+#: templates/html/overlay.html
+msgid "No citation provided"
+msgstr "Nö çïtätïön prövïdéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, #"
+
+#: templates/html/overlay.html
+msgid "Data:"
+msgstr "Dätä: Ⱡ'σяєм ιρѕ#"
+
+#: templates/html/overlay.html
+msgid "No data provided"
+msgstr "Nö dätä prövïdéd Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: templates/html/plot.html
+msgid "Quadrant labels"
+msgstr "Qüädränt läßéls Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт α#"
+
+#: templates/html/plot.html
+msgid "Compare your plot to others!"
+msgstr "Çömpäré ýöür plöt tö öthérs! Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: templates/html/plot.html
+msgid "Plot info"
+msgstr "Plöt ïnfö Ⱡ'σяєм ιρѕυм ∂σł#"
+
+#: templates/html/plot_preview.html
+msgid ""
+"This block displays a plot that summarizes responses to the following "
+"claims:"
+msgstr ""
+"Thïs ßlöçk dïspläýs ä plöt thät sümmärïzés réspönsés tö thé föllöwïng "
+"çläïms: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: templates/html/plot_preview.html
+msgid "Claim"
+msgstr "Çläïm Ⱡ'σяєм ιρѕ#"
+
+#: templates/html/plot_preview.html
+msgid "Question 1"
+msgstr "Qüéstïön 1 Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: templates/html/plot_preview.html
+msgid "Question 2"
+msgstr "Qüéstïön 2 Ⱡ'σяєм ιρѕυм ∂σłσ#"
+
+#: templates/html/plot_preview.html
+msgid ""
+"This block displays a plot that summarizes responses to a set of claims."
+msgstr ""
+"Thïs ßlöçk dïspläýs ä plöt thät sümmärïzés réspönsés tö ä sét öf çläïms. "
+"Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя#"
+
+#: templates/html/questionnaire_add_buttons.html
+msgid "Add Custom Choice"
+msgstr "Àdd Çüstöm Çhöïçé Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: templates/html/questionnaire_add_buttons.html
+msgid "Add Tip"
+msgstr "Àdd Tïp Ⱡ'σяєм ιρѕυм #"
+
+#: templates/html/questionnaire_add_buttons.html
+msgid "Message (Review)"
+msgstr "Méssägé (Révïéw) Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αм#"
+
+#: templates/html/rating_edit_footer.html
+msgid "ID for referencing this rating block:"
+msgstr ""
+"ÌD för référénçïng thïs rätïng ßlöçk: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυ#"
+
+#: templates/html/ratingblock_edit_preview.html
+msgid "Built-in choices:"
+msgstr "Büïlt-ïn çhöïçés: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
+
+#: templates/html/ratingblock_edit_preview.html
+msgid "Additional custom choices and tips:"
+msgstr ""
+"Àddïtïönäl çüstöm çhöïçés änd tïps: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: templates/html/sb-review-per-question-feedback.html
+msgid ""
+"You might consider reviewing the following items before your next assessment"
+" attempt:"
+msgstr ""
+"Ýöü mïght çönsïdér révïéwïng thé föllöwïng ïtéms ßéföré ýöür néxt ässéssmént"
+" ättémpt: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢#"
+
+#: templates/html/sb-review-score.html
+#, python-format
+msgid "You scored %(score)s%% on this assessment. "
+msgstr ""
+"Ýöü sçöréd %(score)s%% ön thïs ässéssmént.  Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυ#"
+
+#: templates/html/sb-review-score.html
+msgid "Click a question to review feedback on your response."
+msgstr ""
+"Çlïçk ä qüéstïön tö révïéw féédßäçk ön ýöür réspönsé. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт"
+" αмєт, ¢σηѕє¢тєтυя α#"
+
+#: templates/html/sb-review-score.html
+msgid "Note: This is an example score, to show how the review step will look."
+msgstr ""
+"Nöté: Thïs ïs än éxämplé sçöré, tö shöw höw thé révïéw stép wïll löök. "
+"Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: templates/html/sb-review-score.html
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question correctly.\n"
+"        "
+msgid_plural ""
+"\n"
+"          You answered %(correct_answers)s questions correctly.\n"
+"        "
+msgstr[0] ""
+"\n"
+"          Ýöü änswéréd 1 qüéstïön çörréçtlý.\n"
+"         Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+msgstr[1] ""
+"\n"
+"          Ýöü änswéréd %(correct_answers)s qüéstïöns çörréçtlý.\n"
+"         Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: templates/html/sb-review-score.html templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html
+msgid "and"
+msgstr "änd Ⱡ'σяєм#"
+
+#: templates/html/sb-review-score.html templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html
+#, python-format
+msgid "Question %(number)s"
+msgstr "Qüéstïön %(number)s Ⱡ'σяєм ιρѕυм ∂σłσя ѕ#"
+
+#: templates/html/sb-review-score.html
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question partially correctly.\n"
+"        "
+msgid_plural ""
+"\n"
+"          You answered %(partially_correct_answers)s questions partially correctly.\n"
+"        "
+msgstr[0] ""
+"\n"
+"          Ýöü änswéréd 1 qüéstïön pärtïällý çörréçtlý.\n"
+"         Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+msgstr[1] ""
+"\n"
+"          Ýöü änswéréd %(partially_correct_answers)s qüéstïöns pärtïällý çörréçtlý.\n"
+"         Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя #"
+
+#: templates/html/sb-review-score.html
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question incorrectly.\n"
+"        "
+msgid_plural ""
+"\n"
+"          You answered %(incorrect_answers)s questions incorrectly.\n"
+"        "
+msgstr[0] ""
+"\n"
+"          Ýöü änswéréd 1 qüéstïön ïnçörréçtlý.\n"
+"         Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+msgstr[1] ""
+"\n"
+"          Ýöü änswéréd %(incorrect_answers)s qüéstïöns ïnçörréçtlý.\n"
+"         Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя α#"
+
+#: templates/html/slider_edit_footer.html
+msgid "ID for referencing this slider:"
+msgstr "ÌD för référénçïng thïs slïdér: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢т#"
+
+#: tip.py
+msgid "Content"
+msgstr "Çöntént Ⱡ'σяєм ιρѕυм #"
+
+#: tip.py
+msgid ""
+"Text of the tip to show if the student chooses this tip's associated "
+"choice[s]"
+msgstr ""
+"Téxt öf thé tïp tö shöw ïf thé stüdént çhöösés thïs tïp's ässöçïätéd "
+"çhöïçé[s] Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєт#"
+
+#: tip.py
+msgid "For Choices"
+msgstr "För Çhöïçés Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: tip.py
+msgid "List of choices for which to display this tip"
+msgstr ""
+"Lïst öf çhöïçés för whïçh tö dïspläý thïs tïp Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя #"
+
+#: tip.py
+msgid "Width"
+msgstr "Wïdth Ⱡ'σяєм ιρѕ#"
+
+#: tip.py
+msgid "Width of the tip popup (e.g. '400px')"
+msgstr ""
+"Wïdth öf thé tïp pöpüp (é.g. '400px') Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυ#"
+
+#: tip.py
+msgid "Height"
+msgstr "Héïght Ⱡ'σяєм ιρѕυ#"
+
+#: tip.py
+msgid "Height of the tip popup (e.g. '200px')"
+msgstr ""
+"Héïght öf thé tïp pöpüp (é.g. '200px') Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя#"
+
+#: tip.py
+#, python-brace-format
+msgid "Tip for {list_of_choices}"
+msgstr "Tïp för {list_of_choices} Ⱡ'σяєм ιρѕυм ∂σłσя #"
+
+#: tip.py
+msgid "A choice selected for this tip does not exist."
+msgstr ""
+"À çhöïçé séléçtéd för thïs tïp döés nöt éxïst. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
+"¢σηѕє¢тєтυя α#"

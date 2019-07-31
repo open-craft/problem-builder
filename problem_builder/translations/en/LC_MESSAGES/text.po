@@ -1,0 +1,1573 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:41+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: answer.py:146 instructor_tool.py:140
+msgid "Long Answer"
+msgstr ""
+
+#: answer.py:150 mixins.py:135
+msgid "Question ID (name)"
+msgstr ""
+
+#: answer.py:151
+msgid ""
+"The ID of this block. Should be unique unless you want the answer to be used "
+"in multiple places."
+msgstr ""
+
+#: answer.py:156
+msgid "Default From"
+msgstr ""
+
+#: answer.py:157
+msgid "If a question ID is specified, get the default value from this answer."
+msgstr ""
+
+#: answer.py:162
+msgid "Min. Allowed Characters"
+msgstr ""
+
+#: answer.py:163
+msgid "Minimum number of characters allowed for the answer"
+msgstr ""
+
+#: answer.py:168 completion.py:109 mixins.py:129 questionnaire.py:65
+#: slider.py:78 templates/html/instructor_tool.html:65
+msgid "Question"
+msgstr ""
+
+#: answer.py:169 questionnaire.py:66
+msgid "Question to ask the student"
+msgstr ""
+
+#: answer.py:286
+msgid "Long Answer Recap"
+msgstr ""
+
+#: answer.py:289
+msgid "Question ID"
+msgstr ""
+
+#: answer.py:290
+msgid "The ID of the question for which to display the student's answer."
+msgstr ""
+
+#: answer.py:294
+msgid "Title"
+msgstr ""
+
+#: answer.py:295
+msgid "Title of this answer recap section"
+msgstr ""
+
+#: answer.py:300 plot.py:423
+msgid "Description"
+msgstr ""
+
+#: answer.py:301
+msgid "Description of this answer (optional). Can include HTML."
+msgstr ""
+
+#: choice.py:51
+msgid "Value"
+msgstr ""
+
+#: choice.py:52
+msgid ""
+"Value of the choice when selected. Should be unique. Generally you do not "
+"need to edit this."
+msgstr ""
+
+#: choice.py:57
+msgid "Choice Text"
+msgstr ""
+
+#: choice.py:58
+msgid "Human-readable version of the choice value"
+msgstr ""
+
+#: choice.py:69
+msgid "Out of Context"
+msgstr ""
+
+#: choice.py:70
+#, python-brace-format
+msgid "Choice ({status})"
+msgstr ""
+
+#: choice.py:80
+#, python-brace-format
+msgid "Choice ({content})"
+msgstr ""
+
+#: choice.py:103
+msgid "No value set. This choice will not work correctly."
+msgstr ""
+
+#: choice.py:105
+msgid "No choice text set yet."
+msgstr ""
+
+#: choice.py:115
+msgid ""
+"This choice has a non-unique ID and won't work properly. This can happen if "
+"you duplicate a choice rather than use the Add Choice button."
+msgstr ""
+
+#: completion.py:103
+msgid "Completion"
+msgstr ""
+
+#: completion.py:110
+msgid ""
+"Mentions a specific activity and asks the student whether they completed it."
+msgstr ""
+
+#: completion.py:113
+msgid ""
+"Please indicate whether you attended the In Person Workshop session by "
+"(un-)checking the option below."
+msgstr ""
+
+#: completion.py:118 templates/html/instructor_tool.html:66
+msgid "Answer"
+msgstr ""
+
+#: completion.py:120
+msgid ""
+"Represents the answer that the student can (un-)check to indicate whether "
+"they completed the activity that the question mentions."
+msgstr ""
+
+#: completion.py:124
+msgid "Yes, I attended the session."
+msgstr ""
+
+#: completion.py:128
+msgid "Records student's answer."
+msgstr ""
+
+#: dashboard.py:196 table.py:305
+msgid "Display Name"
+msgstr ""
+
+#: dashboard.py:197
+msgid "Display name for this module"
+msgstr ""
+
+#: dashboard.py:199
+msgid "Self-Assessment Summary"
+msgstr ""
+
+#: dashboard.py:202
+msgid "Mentoring Blocks"
+msgstr ""
+
+#: dashboard.py:204
+#, python-brace-format
+msgid ""
+"This should be an ordered list of the url_names of each mentoring block "
+"whose multiple choice question values are to be shown on this dashboard. The "
+"list should be in JSON format. Example: {example_here}"
+msgstr ""
+
+#: dashboard.py:210
+msgid "Questions to be hidden"
+msgstr ""
+
+#: dashboard.py:212
+#, python-brace-format
+msgid ""
+"Optional rules to exclude specific questions both from displaying in "
+"dashboard and from the calculated average. Rules must start with the "
+"url_name of a mentoring block, followed by list of question numbers to "
+"exclude. Rule set must be in JSON format. Question numbers are one-based "
+"(the first question being number 1). Must be in JSON format. Examples: "
+"{examples_here}"
+msgstr ""
+
+#: dashboard.py:224
+msgid "Color Coding Rules"
+msgstr ""
+
+#: dashboard.py:226
+#, python-brace-format
+msgid ""
+"Optional rules to assign colors to possible answer values and average "
+"values. One rule per line. First matching rule will be used. Light colors "
+"are recommended. Examples: {examples_here}"
+msgstr ""
+
+#: dashboard.py:236 dashboard.py:245
+msgid "Visual Representation"
+msgstr ""
+
+#: dashboard.py:238
+msgid ""
+"Optional: Enter the JSON configuration of the visual representation desired "
+"(Advanced)."
+msgstr ""
+
+#: dashboard.py:244
+msgid "Visual Representation Title"
+msgstr ""
+
+#: dashboard.py:246
+msgid ""
+"This text is not displayed visually but is exposed to screen reader users "
+"who may not see the image."
+msgstr ""
+
+#: dashboard.py:250
+msgid "Visual Repr. Description"
+msgstr ""
+
+#: dashboard.py:251
+msgid "The data represented in this image is available in the tables below."
+msgstr ""
+
+#: dashboard.py:253
+msgid ""
+"This longer description is not displayed visually but is exposed to screen "
+"reader users who may not see the image."
+msgstr ""
+
+#: dashboard.py:259
+msgid "Label for average value"
+msgstr ""
+
+#: dashboard.py:261
+#, python-brace-format
+msgid ""
+"This settings allows overriding label for the calculated average per "
+"mentoring block. Must be in JSON format. Examples: {examples_here}."
+msgstr ""
+
+#: dashboard.py:269
+msgid "Display values"
+msgstr ""
+
+#: dashboard.py:271
+msgid "Toggles if numeric values are displayed"
+msgstr ""
+
+#: dashboard.py:275
+msgid "Header HTML"
+msgstr ""
+
+#: dashboard.py:277
+msgid "Custom text to include at the beginning of the report."
+msgstr ""
+
+#: dashboard.py:283
+msgid "Footer HTML"
+msgstr ""
+
+#: dashboard.py:285
+msgid "Custom text to include at the end of the report."
+msgstr ""
+
+#: dashboard.py:344
+#, python-brace-format
+msgid "Invalid color rule on line {line_number}"
+msgstr ""
+
+#: dashboard.py:391
+msgid "Not configured."
+msgstr ""
+
+#: dashboard.py:428 dashboard.py:440
+#, python-brace-format
+msgid "Score: {score}"
+msgstr ""
+
+#: dashboard.py:428
+msgid "No value yet"
+msgstr ""
+
+#: dashboard.py:443
+msgid "Average"
+msgstr ""
+
+#: dashboard.py:497
+#, python-brace-format
+msgid "Invalid block url_name given: \"{bad_url_name}\""
+msgstr ""
+
+#: dashboard.py:503
+#, python-brace-format
+msgid ""
+"'Questions to be hidden' is malformed: value for key {key} is {value}, "
+"expected list of integers"
+msgstr ""
+
+#: dashboard.py:510
+#, python-brace-format
+msgid ""
+"'Questions to be hidden' is malformed: mentoring url_name {url_name} is not "
+"added to Dashboard"
+msgstr ""
+
+#: dashboard.py:519
+#, python-brace-format
+msgid ""
+"'Label for average value' is malformed: value for key {key} is {value}, "
+"expected string"
+msgstr ""
+
+#: dashboard.py:525
+#, python-brace-format
+msgid ""
+"'Label for average value' is malformed: mentoring url_name {url_name} is not "
+"added to Dashboard"
+msgstr ""
+
+#: dashboard.py:540
+#, python-brace-format
+msgid "Visual rules contains an error: {error}"
+msgstr ""
+
+#: dashboard.py:543
+msgid "Visual rules should be a JSON dictionary/object: {...}"
+msgstr ""
+
+#: instructor_tool.py:56 mentoring.py:273
+msgid "Title (Display name)"
+msgstr ""
+
+#: instructor_tool.py:57 mentoring.py:274 mentoring.py:806
+msgid "Title to display"
+msgstr ""
+
+#: instructor_tool.py:58 templates/html/instructor_tool.html:2
+msgid "Instructor Tool"
+msgstr ""
+
+#: instructor_tool.py:137 mcq.py:53
+msgid "Multiple Choice Question"
+msgstr ""
+
+#: instructor_tool.py:138 mrq.py:51
+msgid "Multiple Response Question"
+msgstr ""
+
+#: instructor_tool.py:139 mcq.py:198
+msgid "Rating Question"
+msgstr ""
+
+#: instructor_tool.py:227
+msgid "Could not find any of the specified usernames."
+msgstr ""
+
+#: mcq.py:57 message.py:92 mrq.py:79 step.py:110 step_review.py:56
+msgid "Message"
+msgstr ""
+
+#: mcq.py:59
+msgid ""
+"General feedback provided when submitting. (This is not shown if there is a "
+"more specific feedback tip for the choice selected by the learner.)"
+msgstr ""
+
+#: mcq.py:73
+msgid "Correct Choice[s]"
+msgstr ""
+
+#: mcq.py:74
+msgid ""
+"Specify the value[s] that students may select for this question to be "
+"considered correct."
+msgstr ""
+
+#. Translators: This is an adjective, describing a choice as correct
+#: mcq.py:85 templates/html/answer_editable.html:12
+#: templates/html/mcqblock.html:14 templates/html/mentoring_with_steps.html:18
+#: templates/html/mrqblock.html:14 templates/html/ratingblock.html:13
+#: templates/html/ratingblock.html:36
+msgid "Correct"
+msgstr ""
+
+#: mcq.py:86
+msgid "Acceptable"
+msgstr ""
+
+#: mcq.py:89
+msgid "Wrong"
+msgstr ""
+
+#: mcq.py:90 mrq.py:95
+msgid "Not Acceptable"
+msgstr ""
+
+#: mcq.py:163
+msgid ""
+"You must indicate the correct answer[s], or the student will always get this "
+"question wrong."
+msgstr ""
+
+#: mcq.py:166
+msgid "Duplicate correct choices set"
+msgstr ""
+
+#: mcq.py:169
+#, python-brace-format
+msgid "A choice value listed as correct does not exist: {choice}"
+msgstr ""
+
+#: mcq.py:201 slider.py:65
+msgid "Low"
+msgstr ""
+
+#: mcq.py:202
+msgid "Label for low ratings"
+msgstr ""
+
+#: mcq.py:204
+msgid "Less"
+msgstr ""
+
+#: mcq.py:207 slider.py:71
+msgid "High"
+msgstr ""
+
+#: mcq.py:208
+msgid "Label for high ratings"
+msgstr ""
+
+#: mcq.py:210
+msgid "More"
+msgstr ""
+
+#: mcq.py:214
+msgid "Accepted Choice[s]"
+msgstr ""
+
+#: mcq.py:215
+msgid ""
+"Specify the rating value[s] that students may select for this question to be "
+"considered correct."
+msgstr ""
+
+#: mentoring.py:104 mixins.py:46
+msgid "Show title"
+msgstr ""
+
+#: mentoring.py:105 mixins.py:47
+msgid "Display the title?"
+msgstr ""
+
+#: mentoring.py:110
+msgid "Max. attempts allowed"
+msgstr ""
+
+#: mentoring.py:111
+msgid ""
+"Maximum number of times students are allowed to attempt the questions "
+"belonging to this block"
+msgstr ""
+
+#: mentoring.py:117 mixins.py:147
+msgid "Weight"
+msgstr ""
+
+#: mentoring.py:118
+msgid "Defines the maximum total grade of the block."
+msgstr ""
+
+#: mentoring.py:244
+msgid "Followed by"
+msgstr ""
+
+#: mentoring.py:245
+msgid "url_name of the step after the current mentoring block in workflow."
+msgstr ""
+
+#: mentoring.py:250
+msgid "Enforce Dependency"
+msgstr ""
+
+#: mentoring.py:251
+msgid "Should the next step be the current block to complete?"
+msgstr ""
+
+#: mentoring.py:257
+msgid "Show Submit Button"
+msgstr ""
+
+#: mentoring.py:258
+msgid "Allow submission of the current block?"
+msgstr ""
+
+#: mentoring.py:264
+msgid "XML content"
+msgstr ""
+
+#: mentoring.py:265
+msgid ""
+"Not used for version 2. This field is here only to preserve the data needed "
+"to upgrade from v1 to v2."
+msgstr ""
+
+#: mentoring.py:275
+msgid "Problem Builder"
+msgstr ""
+
+#: mentoring.py:279
+msgid "Feedback Header"
+msgstr ""
+
+#: mentoring.py:280
+msgid "Header for feedback messages"
+msgstr ""
+
+#: mentoring.py:281
+msgid "Feedback"
+msgstr ""
+
+#: mentoring.py:309
+msgid "Show extended feedback details when all attempts are used up."
+msgstr ""
+
+#: mentoring.py:341 step.py:140
+msgid "Video"
+msgstr ""
+
+#: mentoring.py:348 step.py:147
+msgid "Image Modal"
+msgstr ""
+
+#: mentoring.py:364 step.py:155
+msgid "Ooyala Player"
+msgstr ""
+
+#: mentoring.py:386 step.py:163 step_review.py:273
+msgid "HTML"
+msgstr ""
+
+#: mentoring.py:457 mentoring.py:970 step.py:270
+msgid "Error: Unable to load child component."
+msgstr ""
+
+#: mentoring.py:723
+#, python-brace-format
+msgid "There should only be one '{msg_type}' message component."
+msgstr ""
+
+#: mentoring.py:729
+msgid "A component inside this mentoring block has issues."
+msgstr ""
+
+#: mentoring.py:797
+msgid "Extended feedback"
+msgstr ""
+
+#: mentoring.py:798
+msgid "Show extended feedback when all attempts are used up?"
+msgstr ""
+
+#: mentoring.py:805
+msgid "Title (display name)"
+msgstr ""
+
+#: mentoring.py:807
+msgid "Step Builder"
+msgstr ""
+
+#: message.py:47
+msgid "Completed"
+msgstr ""
+
+#: message.py:48 message.py:173
+msgid "Message (Complete)"
+msgstr ""
+
+#: message.py:49
+msgid "Message shown when complete"
+msgstr ""
+
+#: message.py:50
+msgid "Great job!"
+msgstr ""
+
+#: message.py:52
+msgid "This message will be shown when the student achieves a perfect score. "
+msgstr ""
+
+#: message.py:56
+msgid "Incomplete"
+msgstr ""
+
+#: message.py:57 message.py:178
+msgid "Message (Incomplete)"
+msgstr ""
+
+#: message.py:58
+msgid "Message shown when incomplete"
+msgstr ""
+
+#: message.py:59
+msgid "Not quite! You can try again, though."
+msgstr ""
+
+#: message.py:61
+msgid ""
+"This message will be shown when the student gets at least one question "
+"wrong, but is allowed to try again. "
+msgstr ""
+
+#: message.py:66
+msgid "Reached max. # of attempts"
+msgstr ""
+
+#: message.py:67
+msgid "Message (Max # Attempts)"
+msgstr ""
+
+#: message.py:68
+msgid "Message shown when student reaches max. # of attempts"
+msgstr ""
+
+#: message.py:69
+msgid "Sorry, you have used up all of your allowed submissions."
+msgstr ""
+
+#: message.py:71
+msgid ""
+"This message will be shown when the student has used up all of their allowed "
+"attempts without achieving a perfect score. "
+msgstr ""
+
+#: message.py:76
+msgid "Study tips if this question was wrong"
+msgstr ""
+
+#: message.py:77
+msgid "Study tips shown if question was answered incorrectly"
+msgstr ""
+
+#: message.py:79
+msgid "Review ____."
+msgstr ""
+
+#: message.py:82
+msgid ""
+"This message will be shown when the student is reviewing their answers to "
+"the assessment, if the student got this specific question wrong and is "
+"allowed to try again."
+msgstr ""
+
+#: message.py:93 step_review.py:57
+msgid "Message to display upon completion"
+msgstr ""
+
+#: message.py:100
+msgid "Type of message"
+msgstr ""
+
+#: mixins.py:43
+msgid "Child"
+msgstr ""
+
+#: mixins.py:76
+#, python-brace-format
+msgid "{child_caption} {number}"
+msgstr ""
+
+#: mixins.py:136
+msgid ""
+"The ID of this question (required). Should be unique within this mentoring "
+"component."
+msgstr ""
+
+#: mixins.py:141
+msgid "Question title"
+msgstr ""
+
+#: mixins.py:142
+msgid "Leave blank to use the default (\"Question 1\", \"Question 2\", etc.)"
+msgstr ""
+
+#: mixins.py:148
+msgid "Defines the maximum total grade of this question."
+msgstr ""
+
+#: mixins.py:174
+msgid "This XBlock does not have any settings."
+msgstr ""
+
+#: mrq.py:60
+msgid "Required Choices"
+msgstr ""
+
+#: mrq.py:61
+msgid ""
+"Specify the value[s] that students must select for this MRQ to be considered "
+"correct."
+msgstr ""
+
+#: mrq.py:68
+msgid "Ignored Choices"
+msgstr ""
+
+#: mrq.py:70
+msgid ""
+"Specify the value[s] that are neither correct nor incorrect. Any values not "
+"listed as required or ignored will be considered wrong."
+msgstr ""
+
+#: mrq.py:80
+msgid "General feedback provided when submitting"
+msgstr ""
+
+#: mrq.py:92
+msgid "Required"
+msgstr ""
+
+#: mrq.py:94
+msgid "Ignored"
+msgstr ""
+
+#: mrq.py:200
+msgid "Duplicate required choices set"
+msgstr ""
+
+#: mrq.py:202
+msgid "Duplicate ignored choices set"
+msgstr ""
+
+#: mrq.py:204
+msgid "A choice is listed as both required and ignored: {}"
+msgstr ""
+
+#: mrq.py:206
+msgid "A choice value listed as required does not exist: {}"
+msgstr ""
+
+#: mrq.py:208
+msgid "A choice value listed as ignored does not exist: {}"
+msgstr ""
+
+#: plot.py:72
+msgid "Plot"
+msgstr ""
+
+#: plot.py:76
+msgid "Plot title"
+msgstr ""
+
+#: plot.py:82 plot.py:409
+msgid "Plot label"
+msgstr ""
+
+#: plot.py:83
+msgid ""
+"Label for default overlay that shows student's answers to scale questions"
+msgstr ""
+
+#: plot.py:89
+msgid "Point color (default overlay)"
+msgstr ""
+
+#: plot.py:90
+msgid "Point color to use for default overlay"
+msgstr ""
+
+#: plot.py:96
+msgid "Point color (average overlay)"
+msgstr ""
+
+#: plot.py:97
+msgid "Point color to use for average overlay"
+msgstr ""
+
+#: plot.py:103
+msgid "Quadrant I"
+msgstr ""
+
+#: plot.py:105
+msgid ""
+"Label for the first quadrant. Plot uses counter-clockwise numbering starting "
+"in the top right quadrant."
+msgstr ""
+
+#: plot.py:113
+msgid "Quadrant II"
+msgstr ""
+
+#: plot.py:115
+msgid ""
+"Label for the second quadrant. Plot uses counter-clockwise numbering "
+"starting in the top right quadrant."
+msgstr ""
+
+#: plot.py:123
+msgid "Quadrant III"
+msgstr ""
+
+#: plot.py:125
+msgid ""
+"Label for the third quadrant. Plot uses counter-clockwise numbering starting "
+"in the top right quadrant."
+msgstr ""
+
+#: plot.py:133
+msgid "Quadrant IV"
+msgstr ""
+
+#: plot.py:135
+msgid ""
+"Label for the fourth quadrant. Plot uses counter-clockwise numbering "
+"starting in the top right quadrant."
+msgstr ""
+
+#: plot.py:143
+msgid "Claims and associated questions"
+msgstr ""
+
+#: plot.py:145
+msgid ""
+"Claims and questions that should be included in the plot. Each line defines "
+"a triple of the form \"claim, q1, q2\", where \"claim\" is arbitrary text "
+"that represents a claim, and \"q1\" and \"q2\" are IDs of scale or rating "
+"questions. "
+msgstr ""
+
+#: plot.py:335
+msgid ""
+"In addition to the default and average overlays the plot includes the "
+"following overlays:"
+msgstr ""
+
+#: plot.py:399
+msgid "Plot Overlay"
+msgstr ""
+
+#: plot.py:403
+msgid "Overlay title"
+msgstr ""
+
+#: plot.py:410
+msgid "Label for button that allows to toggle visibility of this overlay"
+msgstr ""
+
+#: plot.py:416
+msgid "Point color"
+msgstr ""
+
+#: plot.py:417
+msgid "Point color to use for this overlay"
+msgstr ""
+
+#: plot.py:424
+msgid "Description of this overlay (optional)"
+msgstr ""
+
+#: plot.py:430
+msgid "Citation"
+msgstr ""
+
+#: plot.py:431
+msgid "Source of data belonging to this overlay (optional)"
+msgstr ""
+
+#: plot.py:437
+msgid "Claim data"
+msgstr ""
+
+#: plot.py:439
+msgid ""
+"Claim data to include in this overlay. Each line defines a tuple of the form "
+"\"q1, q2\", where \"q1\" is the value associated with the first scale or "
+"rating question, and \"q2\" is the value associated with the second scale or "
+"rating question. Note that data will be associated with claims in the order "
+"that they are defined in the parent plot."
+msgstr ""
+
+#: plot.py:464
+msgid ""
+"No plot label set. Button for toggling visibility of this overlay will not "
+"have a label."
+msgstr ""
+
+#: plot.py:466
+msgid "No point color set. This overlay will not work correctly."
+msgstr ""
+
+#: plot.py:471
+msgid "No claim data provided. This overlay will not work correctly."
+msgstr ""
+
+#: questionnaire.py:196
+msgid "A unique Question ID is required."
+msgstr ""
+
+#: questionnaire.py:198
+msgid "Question ID should not contain spaces."
+msgstr ""
+
+#: questionnaire.py:213
+msgid "Some choice values are not unique."
+msgstr ""
+
+#: questionnaire.py:219
+msgid "Multiple tips configured for the same choice."
+msgstr ""
+
+#: slider.py:59
+msgid "Ranged Value Slider"
+msgstr ""
+
+#: slider.py:66
+msgid "Label for low end of the range"
+msgstr ""
+
+#: slider.py:68
+msgid "0%"
+msgstr ""
+
+#: slider.py:72
+msgid "Label for high end of the range"
+msgstr ""
+
+#: slider.py:74
+msgid "100%"
+msgstr ""
+
+#: slider.py:79
+msgid "Question to ask the student (optional)"
+msgstr ""
+
+#: slider.py:114
+#, python-brace-format
+msgid "Select a value from {min_label} to {max_label}"
+msgstr ""
+
+#: step.py:83
+msgid "Step"
+msgstr ""
+
+#: step.py:84
+msgid "Mentoring Step"
+msgstr ""
+
+#: step.py:90
+msgid "Step Title"
+msgstr ""
+
+#: step.py:91
+msgid "Leave blank to use sequential numbering"
+msgstr ""
+
+#: step.py:104
+msgid "Next Button Label"
+msgstr ""
+
+#: step.py:105
+msgid "Customize the text of the 'Next' button."
+msgstr ""
+
+#: step.py:106 templates/html/mentoring_with_steps.html:21
+msgid "Next Step"
+msgstr ""
+
+#: step.py:111
+msgid "Feedback or instructional message which pops up after submitting."
+msgstr ""
+
+#: step_review.py:53
+msgid "Conditional Message"
+msgstr ""
+
+#: step_review.py:66
+msgid "Show only if student got a perfect score"
+msgstr ""
+
+#: step_review.py:67
+msgid "Show only if student got at least one question wrong"
+msgstr ""
+
+#: step_review.py:68
+msgid "Show for any score"
+msgstr ""
+
+#: step_review.py:71
+msgid "Score condition"
+msgstr ""
+
+#: step_review.py:78
+msgid "Show only if student can try again"
+msgstr ""
+
+#: step_review.py:79
+msgid "Show only if student has used up all attempts"
+msgstr ""
+
+#: step_review.py:80
+msgid "Show whether student can try again or not"
+msgstr ""
+
+#: step_review.py:83
+msgid "Try again condition"
+msgstr ""
+
+#: step_review.py:137
+msgid "Always shown"
+msgstr ""
+
+#: step_review.py:154
+msgid "Score Summary"
+msgstr ""
+
+#: step_review.py:206
+msgid "Per-Question Feedback"
+msgstr ""
+
+#: step_review.py:237
+msgid ""
+"(Example tip:) Since you got Question 1 wrong, review Chapter 12 of your "
+"textbook."
+msgstr ""
+
+#: step_review.py:254
+msgid "Review Step"
+msgstr ""
+
+#: swipe.py:55
+msgid "Swipeable Binary Choice Question"
+msgstr ""
+
+#: swipe.py:59
+msgid "Text"
+msgstr ""
+
+#: swipe.py:60
+msgid ""
+"Text to display on this card. The student must determine if this statement "
+"is true or false."
+msgstr ""
+
+#: swipe.py:67
+msgid "Image"
+msgstr ""
+
+#: swipe.py:68
+msgid "Specify the URL of an image associated with this question."
+msgstr ""
+
+#: swipe.py:74
+msgid "Correct Choice"
+msgstr ""
+
+#: swipe.py:75
+msgid "Specifies whether the card is correct."
+msgstr ""
+
+#: swipe.py:81
+msgid "Correct Answer Feedback"
+msgstr ""
+
+#: swipe.py:82
+msgid "Feedback to display when student answers correctly."
+msgstr ""
+
+#: swipe.py:87
+msgid "Incorrect Answer Feedback"
+msgstr ""
+
+#: swipe.py:88
+msgid "Feedback to display when student answers incorrectly."
+msgstr ""
+
+#: swipe.py:94
+msgid "Last input submitted by the student."
+msgstr ""
+
+#: table.py:65
+msgid "Answer Recap Table"
+msgstr ""
+
+#: table.py:68
+msgid "Display name"
+msgstr ""
+
+#: table.py:69
+msgid "Title of the table"
+msgstr ""
+
+#: table.py:70
+msgid "Answers Table"
+msgstr ""
+
+#: table.py:74
+msgid "Special Mode"
+msgstr ""
+
+#: table.py:75
+msgid "Variant of the table that will display a specific background image."
+msgstr ""
+
+#: table.py:86
+msgid "Allow Download"
+msgstr ""
+
+#: table.py:87
+msgid "Allow students to download a copy of the table for themselves."
+msgstr ""
+
+#: table.py:92
+msgid "Allow Sharing"
+msgstr ""
+
+#: table.py:93
+msgid "Allow students to share their results with other students."
+msgstr ""
+
+#: table.py:116
+msgid "You are not permitted to view this student's table."
+msgstr ""
+
+#: table.py:191
+msgid "Usernames not provided."
+msgstr ""
+
+#: table.py:211
+msgid "Some users could not be shared with. Please check these usernames: {}"
+msgstr ""
+
+#: table.py:221
+msgid "Username not provided."
+msgstr ""
+
+#: table.py:227
+msgid "Removed successfully."
+msgstr ""
+
+#: table.py:307
+msgid "Header"
+msgstr ""
+
+#: table.py:308
+msgid "Header of this column"
+msgstr ""
+
+#: templates/html/answer_editable.html:12 templates/html/mcqblock.html:15
+#: templates/html/mentoring_with_steps.html:18 templates/html/mrqblock.html:15
+#: templates/html/ratingblock.html:13 templates/html/ratingblock.html:36
+msgid "Incorrect"
+msgstr ""
+
+#: templates/html/answer_read_only.html:9
+msgid "No answer yet."
+msgstr ""
+
+#: templates/html/completion.html:15 templates/html/slider.html:15
+msgid "Complete"
+msgstr ""
+
+#: templates/html/dashboard.html:82
+#: templates/html/mentoring-table-container.html:49
+msgid "Download report"
+msgstr ""
+
+#: templates/html/dashboard_report.html:32
+#: templates/html/mentoring-table-report.html:18
+msgid "Student"
+msgstr ""
+
+#: templates/html/dashboard_report.html:33
+#: templates/html/mentoring-table-report.html:19
+msgid "Course"
+msgstr ""
+
+#: templates/html/dashboard_report.html:34
+#: templates/html/mentoring-table-report.html:20
+msgid "Date"
+msgstr ""
+
+#: templates/html/instructor_tool.html:6
+msgid "Filters"
+msgstr ""
+
+#: templates/html/instructor_tool.html:12
+msgid "Username[s]:"
+msgstr ""
+
+#: templates/html/instructor_tool.html:13
+msgid "Enter one or more usernames, comma separated."
+msgstr ""
+
+#: templates/html/instructor_tool.html:20
+msgid "Text:"
+msgstr ""
+
+#: templates/html/instructor_tool.html:30
+msgid "Section/Question:"
+msgstr ""
+
+#: templates/html/instructor_tool.html:32
+#: templates/html/instructor_tool.html:42
+msgid "All"
+msgstr ""
+
+#: templates/html/instructor_tool.html:40
+msgid "Problem types:"
+msgstr ""
+
+#: templates/html/instructor_tool.html:51
+msgid "Search"
+msgstr ""
+
+#: templates/html/instructor_tool.html:61
+msgid "Section"
+msgstr ""
+
+#: templates/html/instructor_tool.html:62
+msgid "Subsection"
+msgstr ""
+
+#: templates/html/instructor_tool.html:63
+msgid "Unit"
+msgstr ""
+
+#: templates/html/instructor_tool.html:64
+msgid "Type"
+msgstr ""
+
+#: templates/html/instructor_tool.html:67
+msgid "Username"
+msgstr ""
+
+#: templates/html/instructor_tool.html:74
+msgid "First"
+msgstr ""
+
+#: templates/html/instructor_tool.html:75
+msgid "Prev"
+msgstr ""
+
+#: templates/html/instructor_tool.html:77
+msgid "Next"
+msgstr ""
+
+#: templates/html/instructor_tool.html:78
+msgid "Last"
+msgstr ""
+
+#: templates/html/instructor_tool.html:85
+msgid "Download as CSV"
+msgstr ""
+
+#: templates/html/instructor_tool.html:86
+msgid "Cancel search"
+msgstr ""
+
+#: templates/html/instructor_tool.html:87
+msgid "Delete results"
+msgstr ""
+
+#: templates/html/mentoring-column-add-button.html:6
+msgid "Add HTML"
+msgstr ""
+
+#: templates/html/mentoring-column-add-button.html:7
+msgid "Add Answer Recap"
+msgstr ""
+
+#: templates/html/mentoring-table-add-button.html:6
+msgid "Add Answer Recap Column"
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:6
+msgid "Display Map from:"
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:8
+#, python-format
+msgid "You (%(username)s)"
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:15
+#: templates/html/mentoring-table-container.html:27
+msgid "Share"
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:20
+msgid "Enter the username of another student you'd like to share this with:"
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:33
+msgid "Map added!"
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:34
+msgid "Another user has shared a map with you."
+msgstr ""
+
+#: templates/html/mentoring-table-container.html:35
+msgid ""
+"You can change the user you're currently displaying using the drop-down "
+"selector above."
+msgstr ""
+
+#: templates/html/mentoring-table-shared-list.html:3
+msgid "Shared with:"
+msgstr ""
+
+#: templates/html/mentoring.html:5
+#, python-format
+msgid ""
+"\n"
+"    You need to complete %(link_start)sthe previous step%(link_end)s before\n"
+"    attempting this step.\n"
+"    "
+msgstr ""
+
+#: templates/html/mentoring.html:39 templates/html/mentoring_with_steps.html:20
+msgid "Submit"
+msgstr ""
+
+#: templates/html/mentoring.html:47 templates/html/mentoring_with_steps.html:31
+msgid "Review final grade"
+msgstr ""
+
+#: templates/html/mentoring.html:51 templates/html/mentoring_with_steps.html:35
+msgid "APGLv3 license"
+msgstr ""
+
+#: templates/html/mentoring_url_name.html:3
+msgid "url_name for linking to this mentoring question set:"
+msgstr ""
+
+#: templates/html/mentoring_with_steps.html:19
+msgid "Partially correct"
+msgstr ""
+
+#: templates/html/mentoring_with_steps.html:22
+msgid "Review grade"
+msgstr ""
+
+#: templates/html/mentoring_with_steps.html:23
+msgid "Try again"
+msgstr ""
+
+#: templates/html/overlay.html:4
+msgid "Overlay"
+msgstr ""
+
+#: templates/html/overlay.html:7 templates/html/plot.html:55
+msgid "Description:"
+msgstr ""
+
+#: templates/html/overlay.html:11
+msgid "No description provided"
+msgstr ""
+
+#: templates/html/overlay.html:15 templates/html/plot.html:60
+msgid "Source:"
+msgstr ""
+
+#: templates/html/overlay.html:19
+msgid "No citation provided"
+msgstr ""
+
+#: templates/html/overlay.html:23
+msgid "Data:"
+msgstr ""
+
+#: templates/html/overlay.html:27
+msgid "No data provided"
+msgstr ""
+
+#: templates/html/plot.html:6
+msgid "Quadrant labels"
+msgstr ""
+
+#: templates/html/plot.html:18
+msgid "Compare your plot to others!"
+msgstr ""
+
+#: templates/html/plot.html:48
+msgid "Plot info"
+msgstr ""
+
+#: templates/html/plot_preview.html:5
+msgid ""
+"This block displays a plot that summarizes responses to the following claims:"
+msgstr ""
+
+#: templates/html/plot_preview.html:9
+msgid "Claim"
+msgstr ""
+
+#: templates/html/plot_preview.html:10
+msgid "Question 1"
+msgstr ""
+
+#: templates/html/plot_preview.html:11
+msgid "Question 2"
+msgstr ""
+
+#: templates/html/plot_preview.html:25
+msgid ""
+"This block displays a plot that summarizes responses to a set of claims."
+msgstr ""
+
+#: templates/html/questionnaire_add_buttons.html:6
+msgid "Add Custom Choice"
+msgstr ""
+
+#: templates/html/questionnaire_add_buttons.html:7
+msgid "Add Tip"
+msgstr ""
+
+#: templates/html/questionnaire_add_buttons.html:9
+msgid "Message (Review)"
+msgstr ""
+
+#: templates/html/rating_edit_footer.html:3
+msgid "ID for referencing this rating block:"
+msgstr ""
+
+#: templates/html/ratingblock_edit_preview.html:4
+msgid "Built-in choices:"
+msgstr ""
+
+#: templates/html/ratingblock_edit_preview.html:14
+msgid "Additional custom choices and tips:"
+msgstr ""
+
+#: templates/html/sb-review-per-question-feedback.html:4
+msgid ""
+"You might consider reviewing the following items before your next assessment "
+"attempt:"
+msgstr ""
+
+#: templates/html/sb-review-score.html:5
+#, python-format
+msgid "You scored %(score)s%% on this assessment. "
+msgstr ""
+
+#: templates/html/sb-review-score.html:8
+msgid "Click a question to review feedback on your response."
+msgstr ""
+
+#: templates/html/sb-review-score.html:12
+msgid "Note: This is an example score, to show how the review step will look."
+msgstr ""
+
+#: templates/html/sb-review-score.html:20
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question correctly.\n"
+"        "
+msgid_plural ""
+"\n"
+"          You answered %(correct_answers)s questions correctly.\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/html/sb-review-score.html:30
+#: templates/html/sb-review-score.html:53
+#: templates/html/sb-review-score.html:76
+msgid "and"
+msgstr ""
+
+#: templates/html/sb-review-score.html:31
+#: templates/html/sb-review-score.html:54
+#: templates/html/sb-review-score.html:77
+#, python-format
+msgid "Question %(number)s"
+msgstr ""
+
+#: templates/html/sb-review-score.html:43
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question partially correctly.\n"
+"        "
+msgid_plural ""
+"\n"
+"          You answered %(partially_correct_answers)s questions partially "
+"correctly.\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/html/sb-review-score.html:66
+#, python-format
+msgid ""
+"\n"
+"          You answered 1 question incorrectly.\n"
+"        "
+msgid_plural ""
+"\n"
+"          You answered %(incorrect_answers)s questions incorrectly.\n"
+"        "
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/html/slider_edit_footer.html:3
+msgid "ID for referencing this slider:"
+msgstr ""
+
+#: tip.py:51
+msgid "Content"
+msgstr ""
+
+#: tip.py:52
+msgid ""
+"Text of the tip to show if the student chooses this tip's associated "
+"choice[s]"
+msgstr ""
+
+#: tip.py:57
+msgid "For Choices"
+msgstr ""
+
+#: tip.py:58
+msgid "List of choices for which to display this tip"
+msgstr ""
+
+#: tip.py:65
+msgid "Width"
+msgstr ""
+
+#: tip.py:66
+msgid "Width of the tip popup (e.g. '400px')"
+msgstr ""
+
+#: tip.py:71
+msgid "Height"
+msgstr ""
+
+#: tip.py:72
+msgid "Height of the tip popup (e.g. '200px')"
+msgstr ""
+
+#: tip.py:87
+#, python-brace-format
+msgid "Tip for {list_of_choices}"
+msgstr ""
+
+#: tip.py:131
+msgid "A choice selected for this tip does not exist."
+msgstr ""

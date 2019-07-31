@@ -1,0 +1,59 @@
+# #-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+# 
+# #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# willyedoo <willyedoo@gmail.com>, 2019
+# Omar Al-Ithawi <i@omardo.com>, 2019
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:04+0300\n"
+"PO-Revision-Date: 2019-07-27 14:08+0000\n"
+"Last-Translator: Omar Al-Ithawi <i@omardo.com>, 2019\n"
+"Language-Team: French (https://www.transifex.com/open-edx/teams/6205/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"#-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: templates/html/mentoring_attempts.underscore:5
+msgid "You have used {num_used} of 1 submission."
+msgid_plural "You have used {num_used} of {max_attempts} submissions."
+msgstr[0] ""
+msgstr[1] ""
+
+#: public/js/instructor_tool.js:349
+msgid "All"
+msgstr "Tout"
+
+#: public/js/instructor_tool.js:408
+msgid "Data export failed. Reason: <%= error %>"
+msgstr "Échec d'exportation des données. Motif : <%= error %>"
+
+#: public/js/instructor_tool.js:416
+msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
+msgid_plural ""
+"Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
+msgstr[0] ""
+"Résultats récupérés le <%= creation_time %> (<%= seconds %> seconde)."
+msgstr[1] ""
+"Résultats récupérés le <%= creation_time %> (<%= seconds %> secondes)."
+
+#: public/js/instructor_tool.js:429
+msgid "The report is currently being generated…"
+msgstr "Le rapport est en cours de production..."
