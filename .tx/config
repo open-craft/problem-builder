@@ -2,7 +2,13 @@
 host = https://www.transifex.com
 
 [xblocks.problem-builder]
-file_filter = problem_builder/translations/<lang>/LC_MESSAGES/django.po
-source_file = problem_builder/translations/en/LC_MESSAGES/django.po
+file_filter = problem_builder/translations/<lang>/LC_MESSAGES/text.po
+source_file = problem_builder/translations/en/LC_MESSAGES/text.po
+source_lang = en
+type = PO
+
+[xblocks.problem-builder-js]
+file_filter = problem_builder/translations/<lang>/LC_MESSAGES/textjs.po
+source_file = problem_builder/translations/en/LC_MESSAGES/textjs.po
 source_lang = en
 type = PO

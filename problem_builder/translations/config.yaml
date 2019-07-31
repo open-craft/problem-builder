@@ -7,9 +7,10 @@ locales:
     - pt_BR  # Portuguese
     - zh_CN  # Chinese
     - fr  # French
+    - fr_CA  # French (Canada)
     - de_DE  # German
     - ja_JP  # Japanese
-    - pl # Polish
+    - pl_PL # Polish
     # Add languages here as needed
 
 # The locales used for fake-accented English, for testing.
@@ -22,9 +23,5 @@ ignore_dirs:
     - mentoring/tests
     - public/js/translations
 
-# i18n_tools produces just "django-partial.po" by default, but we need "django.po":
-generate_merge:
-    django.po:
-        - django-partial.po
-    djangojs.po:
-        - djangojs-partial.po
+generate_merge: {}
+segment: {}

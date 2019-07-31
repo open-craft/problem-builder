@@ -144,50 +144,48 @@ To run only the integration tests run:
 $ PATH=/opt/firefox-38.0.5/firefox tox -e integration
 ```
 
-Translation (i18n)
--------------------------------
+Working with Translations
+-------------------------
 
-This repo offers multiple make targets to automate the translation tasks.
-First, install `requirements-dev.txt`:
+For information about working with translations, see the
+[Internationalization Support](http://edx.readthedocs.io/projects/xblock-tutorial/en/latest/edx_platform/edx_lms.html#internationalization-support)
+section of the [Open edX XBlock Tutorial](https://xblock-tutorial.readthedocs.io/en/latest/).
+
+[Prepare your virtualenv](#workbench-installation-and-settings) and ensure that the
+[Transifex authentication file](https://openedx.atlassian.net/wiki/display/OpenOPS/Running+Fullstack)
+(``~/.transifexrc``) is properly set up.
+
+Push new strings to Transifex:
 
 ```bash
-pip install -r requirements-dev.txt
+$ make extract_translations
+$ make push_translations
 ```
 
-Each make target will be explained below:
+To get the latest translations from Transifex:
 
-- `extract_translations`. Use [`i18n_tool` extract](https://github.com/edx/i18n-tools) to create `.po` files based on all the tagged strings in the python and javascript code.
-- `compile_translations`. Use [`i18n_tool` generate](https://github.com/edx/i18n-tools) to create `.mo` compiled files.
-- `detect_changed_source_translations`. Use [`i18n_tool` changed](https://github.com/edx/i18n-tools) to identify any updated translations.
-- `validate_translations`. Compile translations and check the source translations haven't changed.
+```bash
+$ make pull_translations
+$ make compile_translations
+```
+
+For testing purposes it's faster to avoid Transifex and work on dummy Esperanto translations:
+
+```bash
+$ make build_dummy_translations
+```
+
+The Transifex configuration is stored in `.tx`. For more information read
+[transifex's documentation](https://docs.transifex.com/client/client-configuration)
 
 If you want to add a new language:
   1. Add language to `problem_builder/translations/config.yaml`
-  2. Make sure all tagged strings have been extracted:
-  ```bash
-  make extract_translations
-  ```
-  3. Clone `en` directory to `problem_builder/translations/<lang_code>/` for example: `problem_builder/translations/fa_IR/`
-  4. Make necessary changes to translation files headers. Make sure you have proper `Language` and `Plural-Forms` lines.
-  5. When you finished your modification process, re-compile the translation messages.
-  ```bash
-  make compile_translations
-  ```
+  2. Make sure all tagged strings have been extracted and push to Transifex as described above.
+  3. Go to Transifex and translate both of the
+     [Problem Builder](https://www.transifex.com/open-edx/xblocks/problem-builder/) 
+     and the [Problem Builder JS](https://www.transifex.com/open-edx/xblocks/problem-builder-js/) resources.
+  4. When you're done with the translations pull from Transifex as described above.
 
-Transifex
----------
-
-This repo offers different make targets to automate interaction with transifex. To use these make targets first install `requirements-dev.txt`.
-```bash
-pip install -r requirements-dev.txt
-```
-
-These are the different make targets used to interact with transifex:
-
-- `pull_translations`. Pull translations from Transifex.
-- `push_translations`. Push translations to Transifex.
-
-The transifex configuration is stored in `.tx`. For more information read [transifex's documentation](https://docs.transifex.com/client/client-configuration)
 
 Adding custom scenarios to the workbench
 ----------------------------------------

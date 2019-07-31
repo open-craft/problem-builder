@@ -15,10 +15,12 @@ problem_builder.tests.*
 ### Internationalization artifacts
 *.prob
 *.dup
-!django.po
-!django.mo
-!djangojs.po
-!djangojs.mo
-problem_builder/locale/en/LC_MESSAGES/*.mo
-problem_builder/locale/fake*/LC_MESSAGES/*.po
-problem_builder/locale/fake*/LC_MESSAGES/*.mo
+*.mo
+*.po
+!text.po
+!text.mo
+!textjs.po
+!textjs.mo
+problem_builder/translations/en/LC_MESSAGES/*.mo
+problem_builder/translations/fake*/LC_MESSAGES/*.po
+problem_builder/translations/fake*/LC_MESSAGES/*.mo
