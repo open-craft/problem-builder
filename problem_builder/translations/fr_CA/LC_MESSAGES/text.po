@@ -2,21 +2,25 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# Omar Al-Ithawi <i@omardo.com>, 2019
+# Pierre Mailhot <pierre.mailhot@gmail.com>, 2019
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-14 11:02-0500\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"POT-Creation-Date: 2019-07-31 14:04+0300\n"
+"PO-Revision-Date: 2019-07-27 13:51+0000\n"
+"Last-Translator: Pierre Mailhot <pierre.mailhot@gmail.com>, 2019\n"
+"Language-Team: French (Canada) (https://www.transifex.com/open-edx/teams/6205/fr_CA/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: fr_CA\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: answer.py:146 instructor_tool.py:140
 msgid "Long Answer"
@@ -28,8 +32,8 @@ msgstr ""
 
 #: answer.py:151
 msgid ""
-"The ID of this block. Should be unique unless you want the answer to be used "
-"in multiple places."
+"The ID of this block. Should be unique unless you want the answer to be used"
+" in multiple places."
 msgstr ""
 
 #: answer.py:156
@@ -51,7 +55,7 @@ msgstr ""
 #: answer.py:168 completion.py:109 mixins.py:129 questionnaire.py:65
 #: slider.py:78 templates/html/instructor_tool.html:65
 msgid "Question"
-msgstr ""
+msgstr "Question"
 
 #: answer.py:169 questionnaire.py:66
 msgid "Question to ask the student"
@@ -71,7 +75,7 @@ msgstr ""
 
 #: answer.py:294
 msgid "Title"
-msgstr ""
+msgstr "Titre"
 
 #: answer.py:295
 msgid "Title of this answer recap section"
@@ -79,7 +83,7 @@ msgstr ""
 
 #: answer.py:300 plot.py:423
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: answer.py:301
 msgid "Description of this answer (optional). Can include HTML."
@@ -87,7 +91,7 @@ msgstr ""
 
 #: choice.py:51
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: choice.py:52
 msgid ""
@@ -148,7 +152,7 @@ msgstr ""
 
 #: completion.py:118 templates/html/instructor_tool.html:66
 msgid "Answer"
-msgstr ""
+msgstr "Réponse"
 
 #: completion.py:120
 msgid ""
@@ -166,11 +170,11 @@ msgstr ""
 
 #: dashboard.py:196 table.py:305
 msgid "Display Name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #: dashboard.py:197
 msgid "Display name for this module"
-msgstr ""
+msgstr "Afficher le nom de ce module"
 
 #: dashboard.py:199
 msgid "Self-Assessment Summary"
@@ -184,8 +188,8 @@ msgstr ""
 #, python-brace-format
 msgid ""
 "This should be an ordered list of the url_names of each mentoring block "
-"whose multiple choice question values are to be shown on this dashboard. The "
-"list should be in JSON format. Example: {example_here}"
+"whose multiple choice question values are to be shown on this dashboard. The"
+" list should be in JSON format. Example: {example_here}"
 msgstr ""
 
 #: dashboard.py:210
@@ -304,7 +308,7 @@ msgstr ""
 
 #: dashboard.py:443
 msgid "Average"
-msgstr ""
+msgstr "Moyen"
 
 #: dashboard.py:497
 #, python-brace-format
@@ -335,8 +339,8 @@ msgstr ""
 #: dashboard.py:525
 #, python-brace-format
 msgid ""
-"'Label for average value' is malformed: mentoring url_name {url_name} is not "
-"added to Dashboard"
+"'Label for average value' is malformed: mentoring url_name {url_name} is not"
+" added to Dashboard"
 msgstr ""
 
 #: dashboard.py:540
@@ -378,7 +382,7 @@ msgstr ""
 
 #: mcq.py:57 message.py:92 mrq.py:79 step.py:110 step_review.py:56
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #: mcq.py:59
 msgid ""
@@ -402,7 +406,7 @@ msgstr ""
 #: templates/html/mrqblock.html:14 templates/html/ratingblock.html:13
 #: templates/html/ratingblock.html:36
 msgid "Correct"
-msgstr ""
+msgstr "Correct"
 
 #: mcq.py:86
 msgid "Acceptable"
@@ -418,8 +422,8 @@ msgstr ""
 
 #: mcq.py:163
 msgid ""
-"You must indicate the correct answer[s], or the student will always get this "
-"question wrong."
+"You must indicate the correct answer[s], or the student will always get this"
+" question wrong."
 msgstr ""
 
 #: mcq.py:166
@@ -433,7 +437,7 @@ msgstr ""
 
 #: mcq.py:201 slider.py:65
 msgid "Low"
-msgstr ""
+msgstr "Faible"
 
 #: mcq.py:202
 msgid "Label for low ratings"
@@ -441,7 +445,7 @@ msgstr ""
 
 #: mcq.py:204
 msgid "Less"
-msgstr ""
+msgstr "Moins"
 
 #: mcq.py:207 slider.py:71
 msgid "High"
@@ -453,7 +457,7 @@ msgstr ""
 
 #: mcq.py:210
 msgid "More"
-msgstr ""
+msgstr "Plus"
 
 #: mcq.py:214
 msgid "Accepted Choice[s]"
@@ -461,13 +465,13 @@ msgstr ""
 
 #: mcq.py:215
 msgid ""
-"Specify the rating value[s] that students may select for this question to be "
-"considered correct."
+"Specify the rating value[s] that students may select for this question to be"
+" considered correct."
 msgstr ""
 
 #: mentoring.py:104 mixins.py:46
 msgid "Show title"
-msgstr ""
+msgstr "Afficher le titre"
 
 #: mentoring.py:105 mixins.py:47
 msgid "Display the title?"
@@ -485,7 +489,7 @@ msgstr ""
 
 #: mentoring.py:117 mixins.py:147
 msgid "Weight"
-msgstr ""
+msgstr "Poids"
 
 #: mentoring.py:118
 msgid "Defines the maximum total grade of the block."
@@ -539,7 +543,7 @@ msgstr ""
 
 #: mentoring.py:281
 msgid "Feedback"
-msgstr ""
+msgstr "Commentaire"
 
 #: mentoring.py:309
 msgid "Show extended feedback details when all attempts are used up."
@@ -547,7 +551,7 @@ msgstr ""
 
 #: mentoring.py:341 step.py:140
 msgid "Video"
-msgstr ""
+msgstr "Vidéo"
 
 #: mentoring.py:348 step.py:147
 msgid "Image Modal"
@@ -559,7 +563,7 @@ msgstr ""
 
 #: mentoring.py:386 step.py:163 step_review.py:273
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #: mentoring.py:457 mentoring.py:970 step.py:270
 msgid "Error: Unable to load child component."
@@ -592,7 +596,7 @@ msgstr ""
 
 #: message.py:47
 msgid "Completed"
-msgstr ""
+msgstr "Terminé"
 
 #: message.py:48 message.py:173
 msgid "Message (Complete)"
@@ -612,7 +616,7 @@ msgstr ""
 
 #: message.py:56
 msgid "Incomplete"
-msgstr ""
+msgstr "Incomplet"
 
 #: message.py:57 message.py:178
 msgid "Message (Incomplete)"
@@ -650,8 +654,8 @@ msgstr ""
 
 #: message.py:71
 msgid ""
-"This message will be shown when the student has used up all of their allowed "
-"attempts without achieving a perfect score. "
+"This message will be shown when the student has used up all of their allowed"
+" attempts without achieving a perfect score. "
 msgstr ""
 
 #: message.py:76
@@ -718,8 +722,8 @@ msgstr ""
 
 #: mrq.py:61
 msgid ""
-"Specify the value[s] that students must select for this MRQ to be considered "
-"correct."
+"Specify the value[s] that students must select for this MRQ to be considered"
+" correct."
 msgstr ""
 
 #: mrq.py:68
@@ -738,7 +742,7 @@ msgstr ""
 
 #: mrq.py:92
 msgid "Required"
-msgstr ""
+msgstr "Requis"
 
 #: mrq.py:94
 msgid "Ignored"
@@ -803,8 +807,8 @@ msgstr ""
 
 #: plot.py:105
 msgid ""
-"Label for the first quadrant. Plot uses counter-clockwise numbering starting "
-"in the top right quadrant."
+"Label for the first quadrant. Plot uses counter-clockwise numbering starting"
+" in the top right quadrant."
 msgstr ""
 
 #: plot.py:113
@@ -823,8 +827,8 @@ msgstr ""
 
 #: plot.py:125
 msgid ""
-"Label for the third quadrant. Plot uses counter-clockwise numbering starting "
-"in the top right quadrant."
+"Label for the third quadrant. Plot uses counter-clockwise numbering starting"
+" in the top right quadrant."
 msgstr ""
 
 #: plot.py:133
@@ -893,11 +897,11 @@ msgstr ""
 
 #: plot.py:439
 msgid ""
-"Claim data to include in this overlay. Each line defines a tuple of the form "
-"\"q1, q2\", where \"q1\" is the value associated with the first scale or "
-"rating question, and \"q2\" is the value associated with the second scale or "
-"rating question. Note that data will be associated with claims in the order "
-"that they are defined in the parent plot."
+"Claim data to include in this overlay. Each line defines a tuple of the form"
+" \"q1, q2\", where \"q1\" is the value associated with the first scale or "
+"rating question, and \"q2\" is the value associated with the second scale or"
+" rating question. Note that data will be associated with claims in the order"
+" that they are defined in the parent plot."
 msgstr ""
 
 #: plot.py:464
@@ -985,7 +989,7 @@ msgstr ""
 
 #: step.py:106 templates/html/mentoring_with_steps.html:21
 msgid "Next Step"
-msgstr ""
+msgstr "Prochaine étape"
 
 #: step.py:111
 msgid "Feedback or instructional message which pops up after submitting."
@@ -1055,7 +1059,7 @@ msgstr ""
 
 #: swipe.py:59
 msgid "Text"
-msgstr ""
+msgstr "Texte"
 
 #: swipe.py:60
 msgid ""
@@ -1065,7 +1069,7 @@ msgstr ""
 
 #: swipe.py:67
 msgid "Image"
-msgstr ""
+msgstr "Image"
 
 #: swipe.py:68
 msgid "Specify the URL of an image associated with this question."
@@ -1105,7 +1109,7 @@ msgstr ""
 
 #: table.py:68
 msgid "Display name"
-msgstr ""
+msgstr "Nom d'affichage"
 
 #: table.py:69
 msgid "Title of the table"
@@ -1161,7 +1165,7 @@ msgstr ""
 
 #: table.py:307
 msgid "Header"
-msgstr ""
+msgstr "En-tête"
 
 #: table.py:308
 msgid "Header of this column"
@@ -1171,7 +1175,7 @@ msgstr ""
 #: templates/html/mentoring_with_steps.html:18 templates/html/mrqblock.html:15
 #: templates/html/ratingblock.html:13 templates/html/ratingblock.html:36
 msgid "Incorrect"
-msgstr ""
+msgstr "Incorrect"
 
 #: templates/html/answer_read_only.html:9
 msgid "No answer yet."
@@ -1179,7 +1183,7 @@ msgstr ""
 
 #: templates/html/completion.html:15 templates/html/slider.html:15
 msgid "Complete"
-msgstr ""
+msgstr "Complet"
 
 #: templates/html/dashboard.html:82
 #: templates/html/mentoring-table-container.html:49
@@ -1189,17 +1193,17 @@ msgstr ""
 #: templates/html/dashboard_report.html:32
 #: templates/html/mentoring-table-report.html:18
 msgid "Student"
-msgstr ""
+msgstr "Étudiant"
 
 #: templates/html/dashboard_report.html:33
 #: templates/html/mentoring-table-report.html:19
 msgid "Course"
-msgstr ""
+msgstr "Cours"
 
 #: templates/html/dashboard_report.html:34
 #: templates/html/mentoring-table-report.html:20
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: templates/html/instructor_tool.html:6
 msgid "Filters"
@@ -1222,9 +1226,9 @@ msgid "Section/Question:"
 msgstr ""
 
 #: templates/html/instructor_tool.html:32
-#: templates/html/instructor_tool.html:42 public/js/instructor_tool.js:349
+#: templates/html/instructor_tool.html:42
 msgid "All"
-msgstr ""
+msgstr "Tous"
 
 #: templates/html/instructor_tool.html:40
 msgid "Problem types:"
@@ -1232,27 +1236,27 @@ msgstr ""
 
 #: templates/html/instructor_tool.html:51
 msgid "Search"
-msgstr ""
+msgstr "Recherche"
 
 #: templates/html/instructor_tool.html:61
 msgid "Section"
-msgstr ""
+msgstr "Section"
 
 #: templates/html/instructor_tool.html:62
 msgid "Subsection"
-msgstr ""
+msgstr "Sous-section"
 
 #: templates/html/instructor_tool.html:63
 msgid "Unit"
-msgstr ""
+msgstr "Unité"
 
 #: templates/html/instructor_tool.html:64
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: templates/html/instructor_tool.html:67
 msgid "Username"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: templates/html/instructor_tool.html:74
 msgid "First"
@@ -1260,11 +1264,11 @@ msgstr ""
 
 #: templates/html/instructor_tool.html:75
 msgid "Prev"
-msgstr ""
+msgstr "Prévisualisation"
 
 #: templates/html/instructor_tool.html:77
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #: templates/html/instructor_tool.html:78
 msgid "Last"
@@ -1306,7 +1310,7 @@ msgstr ""
 #: templates/html/mentoring-table-container.html:15
 #: templates/html/mentoring-table-container.html:27
 msgid "Share"
-msgstr ""
+msgstr "Partager"
 
 #: templates/html/mentoring-table-container.html:20
 msgid "Enter the username of another student you'd like to share this with:"
@@ -1339,15 +1343,18 @@ msgid ""
 "    "
 msgstr ""
 
-#: templates/html/mentoring.html:39 templates/html/mentoring_with_steps.html:20
+#: templates/html/mentoring.html:39
+#: templates/html/mentoring_with_steps.html:20
 msgid "Submit"
-msgstr ""
+msgstr "Soumettre"
 
-#: templates/html/mentoring.html:47 templates/html/mentoring_with_steps.html:31
+#: templates/html/mentoring.html:47
+#: templates/html/mentoring_with_steps.html:31
 msgid "Review final grade"
 msgstr ""
 
-#: templates/html/mentoring.html:51 templates/html/mentoring_with_steps.html:35
+#: templates/html/mentoring.html:51
+#: templates/html/mentoring_with_steps.html:35
 msgid "APGLv3 license"
 msgstr ""
 
@@ -1373,7 +1380,7 @@ msgstr ""
 
 #: templates/html/overlay.html:7 templates/html/plot.html:55
 msgid "Description:"
-msgstr ""
+msgstr "Description :"
 
 #: templates/html/overlay.html:11
 msgid "No description provided"
@@ -1381,7 +1388,7 @@ msgstr ""
 
 #: templates/html/overlay.html:15 templates/html/plot.html:60
 msgid "Source:"
-msgstr ""
+msgstr "Source : "
 
 #: templates/html/overlay.html:19
 msgid "No citation provided"
@@ -1409,7 +1416,8 @@ msgstr ""
 
 #: templates/html/plot_preview.html:5
 msgid ""
-"This block displays a plot that summarizes responses to the following claims:"
+"This block displays a plot that summarizes responses to the following "
+"claims:"
 msgstr ""
 
 #: templates/html/plot_preview.html:9
@@ -1455,8 +1463,8 @@ msgstr ""
 
 #: templates/html/sb-review-per-question-feedback.html:4
 msgid ""
-"You might consider reviewing the following items before your next assessment "
-"attempt:"
+"You might consider reviewing the following items before your next assessment"
+" attempt:"
 msgstr ""
 
 #: templates/html/sb-review-score.html:5
@@ -1489,7 +1497,7 @@ msgstr[1] ""
 #: templates/html/sb-review-score.html:53
 #: templates/html/sb-review-score.html:76
 msgid "and"
-msgstr ""
+msgstr "et"
 
 #: templates/html/sb-review-score.html:31
 #: templates/html/sb-review-score.html:54
@@ -1506,8 +1514,7 @@ msgid ""
 "        "
 msgid_plural ""
 "\n"
-"          You answered %(partially_correct_answers)s questions partially "
-"correctly.\n"
+"          You answered %(partially_correct_answers)s questions partially correctly.\n"
 "        "
 msgstr[0] ""
 msgstr[1] ""
@@ -1531,7 +1538,7 @@ msgstr ""
 
 #: tip.py:51
 msgid "Content"
-msgstr ""
+msgstr "Contenu"
 
 #: tip.py:52
 msgid ""
@@ -1549,7 +1556,7 @@ msgstr ""
 
 #: tip.py:65
 msgid "Width"
-msgstr ""
+msgstr "Largeur"
 
 #: tip.py:66
 msgid "Width of the tip popup (e.g. '400px')"
@@ -1557,7 +1564,7 @@ msgstr ""
 
 #: tip.py:71
 msgid "Height"
-msgstr ""
+msgstr "Hauteur"
 
 #: tip.py:72
 msgid "Height of the tip popup (e.g. '200px')"
@@ -1570,19 +1577,4 @@ msgstr ""
 
 #: tip.py:131
 msgid "A choice selected for this tip does not exist."
-msgstr ""
-
-#: public/js/instructor_tool.js:408
-msgid "Data export failed. Reason: <%= error %>"
-msgstr ""
-
-#: public/js/instructor_tool.js:416
-msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
-msgid_plural ""
-"Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
-msgstr[0] ""
-msgstr[1] ""
-
-#: public/js/instructor_tool.js:429
-msgid "The report is currently being generated…"
 msgstr ""

@@ -2,216 +2,211 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
+# Translators:
+# 6e68c7971a89e50e680ae9444d303c8f, 2019
+# Ahmad AbdArrahman <mygooglizer@gmail.com>, 2019
+# Najwan Al Rousan <najwanrousan@gmail.com>, 2019
+# Nabeel El-Dughailib <nabeel@qordoba.com>, 2019
+# may <may@qordoba.com>, 2019
+# Ahmed Jazzar <ahmed.mojaz@gmail.com>, 2019
+# Soha Assali <soha+transifex@qordoba.com>, 2019
+# Alhamzah Alnufaili <inactive+Alhamzah97@transifex.com>, 2019
+# Natalia Berdnikov <nberdnikov@edx.org>, 2019
+# shefaa abu jabel <shefaa.aj@gmail.com>, 2019
+# Roy Zakka, 2019
+# Sahbi BG <sahbi.g@gmail.com>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-28 14:17+0430\n"
-"PO-Revision-Date: 2018-12-20 23:37+0500\n"
-"Language: ar\n"
+"POT-Creation-Date: 2019-07-31 14:04+0300\n"
+"PO-Revision-Date: 2019-07-27 13:51+0000\n"
+"Last-Translator: Sahbi BG <sahbi.g@gmail.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/open-edx/teams/6205/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"X-Generator: Poedit 2.2\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: problem_builder/answer.py problem_builder/instructor_tool.py
+#: answer.py:146 instructor_tool.py:140
 msgid "Long Answer"
-msgstr "مخرل شرسصثق"
+msgstr ""
 
-#: problem_builder/answer.py problem_builder/mixins.py
+#: answer.py:150 mixins.py:135
 msgid "Question ID (name)"
-msgstr "السؤال هي (رشوث)"
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:151
 msgid ""
 "The ID of this block. Should be unique unless you want the answer to be used"
 " in multiple places."
 msgstr ""
-"فاث هي خب فاهس زمخذن. ساخعمي زث عرهضعث عرمثسس غخع صشرف فاث شرسصثق فخ زث عسثي"
-" هر وعمفهحمث حمشذثس."
 
-#: problem_builder/answer.py
+#: answer.py:156
 msgid "Default From"
-msgstr "يثبشعمف بقخو"
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:157
 msgid "If a question ID is specified, get the default value from this answer."
 msgstr ""
-"هب ش ضعثسفهخر هي هس سحثذهبهثي, لثف فاث يثبشعمف دشمعث بقخو فاهس شرسصثق."
 
-#: problem_builder/answer.py
+#: answer.py:162
 msgid "Min. Allowed Characters"
-msgstr "وهر. شممخصثي ذاشقشذفثقس"
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:163
 msgid "Minimum number of characters allowed for the answer"
-msgstr "وهرهوعو رعوزثق خب ذاشقشذفثقس شممخصثي بخق فاث شرسصثق"
+msgstr ""
 
-#: problem_builder/answer.py problem_builder/completion.py
-#: problem_builder/mixins.py problem_builder/questionnaire.py
-#: problem_builder/slider.py
-#: problem_builder/templates/html/instructor_tool.html
+#: answer.py:168 completion.py:109 mixins.py:129 questionnaire.py:65
+#: slider.py:78 templates/html/instructor_tool.html:65
 msgid "Question"
 msgstr "السؤال"
 
-#: problem_builder/answer.py problem_builder/questionnaire.py
+#: answer.py:169 questionnaire.py:66
 msgid "Question to ask the student"
-msgstr "ضعثسفهخر فخ شسن فاث سفعيثرف"
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:286
 msgid "Long Answer Recap"
-msgstr "مخرل شرسصثق قثذشح"
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:289
 msgid "Question ID"
-msgstr "السؤال هي"
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:290
 msgid "The ID of the question for which to display the student's answer."
-msgstr "فاث هي خب فاث ضعثسفهخر بخق صاهذا فخ يهسحمشغ فاث سفعيثرف'س شرسصثق."
+msgstr ""
 
-#: problem_builder/answer.py
+#: answer.py:294
 msgid "Title"
-msgstr "فهفمث"
+msgstr "العنوان"
 
-#: problem_builder/answer.py
+#: answer.py:295
 msgid "Title of this answer recap section"
-msgstr "فهفمث خب فاهس شرسصثق قثذشح سثذفهخر"
+msgstr ""
 
-#: problem_builder/answer.py problem_builder/plot.py
+#: answer.py:300 plot.py:423
 msgid "Description"
-msgstr "يثسذقهحفهخر"
+msgstr "الوصف"
 
-#: problem_builder/answer.py
+#: answer.py:301
 msgid "Description of this answer (optional). Can include HTML."
-msgstr "يثسذقهحفهخر خب فاهس شرسصثق (خحفهخرشم). ذشر هرذمعيث افوم."
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:51
 msgid "Value"
-msgstr "دشمعث"
+msgstr "القيمة"
 
-#: problem_builder/choice.py
+#: choice.py:52
 msgid ""
 "Value of the choice when selected. Should be unique. Generally you do not "
 "need to edit this."
 msgstr ""
-"دشمعث خب فاث ذاخهذث صاثر سثمثذفثي. ساخعمي زث عرهضعث. لثرثقشممغ غخع يخ رخف "
-"رثثي فخ ثيهف فاهس."
 
-#: problem_builder/choice.py
+#: choice.py:57
 msgid "Choice Text"
-msgstr "ذاخهذث فثطف"
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:58
 msgid "Human-readable version of the choice value"
-msgstr "اعوشر-قثشيشزمث دثقسهخر خب فاث ذاخهذث دشمعث"
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:69
 msgid "Out of Context"
-msgstr "خعف خب ذخرفثطف"
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:70
 #, python-brace-format
 msgid "Choice ({status})"
-msgstr "ذاخهذث ({status})"
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:80
 #, python-brace-format
 msgid "Choice ({content})"
-msgstr "ذاخهذث ({content})"
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:103
 msgid "No value set. This choice will not work correctly."
-msgstr "رخ دشمعث سثف. فاهس ذاخهذث صهمم رخف صخقن ذخققثذفمغ."
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:105
 msgid "No choice text set yet."
-msgstr "رخ ذاخهذث فثطف سثف غثف."
+msgstr ""
 
-#: problem_builder/choice.py
+#: choice.py:115
 msgid ""
 "This choice has a non-unique ID and won't work properly. This can happen if "
 "you duplicate a choice rather than use the Add Choice button."
 msgstr ""
-"فاهس ذاخهذث اشس ش رخر-عرهضعث هي شري صخر'ف صخقن حقخحثقمغ. فاهس ذشر اشححثر هب "
-"غخع يعحمهذشفث ش ذاخهذث قشفاثق فاشر عسث فاث شيي ذاخهذث زعففخر."
 
-#: problem_builder/completion.py
+#: completion.py:103
 msgid "Completion"
-msgstr "ذخوحمثفهخر"
+msgstr ""
 
-#: problem_builder/completion.py
+#: completion.py:110
 msgid ""
 "Mentions a specific activity and asks the student whether they completed it."
 msgstr ""
-"وثرفهخرس ش سحثذهبهذ شذفهدهفغ شري شسنس فاث سفعيثرف صاثفاثق فاثغ ذخوحمثفثي هف."
 
-#: problem_builder/completion.py
+#: completion.py:113
 msgid ""
 "Please indicate whether you attended the In Person Workshop session by "
 "(un-)checking the option below."
 msgstr ""
-"حمثشسث هريهذشفث صاثفاثق غخع شففثريثي فاث هر حثقسخر صخقنساخح سثسسهخر زغ "
-"(عر-)ذاثذنهرل فاث خحفهخر زثمخص."
 
-#: problem_builder/completion.py
-#: problem_builder/templates/html/instructor_tool.html
+#: completion.py:118 templates/html/instructor_tool.html:66
 msgid "Answer"
-msgstr "شرسصثق"
+msgstr "الإجابة"
 
-#: problem_builder/completion.py
+#: completion.py:120
 msgid ""
 "Represents the answer that the student can (un-)check to indicate whether "
 "they completed the activity that the question mentions."
 msgstr ""
-"قثحقثسثرفس فاث شرسصثق فاشف فاث سفعيثرف ذشر (عر-)ذاثذن فخ هريهذشفث صاثفاثق "
-"فاثغ ذخوحمثفثي فاث شذفهدهفغ فاشف فاث ضعثسفهخر وثرفهخرس."
 
-#: problem_builder/completion.py
+#: completion.py:124
 msgid "Yes, I attended the session."
-msgstr "غثس, ه شففثريثي فاث سثسسهخر."
+msgstr ""
 
-#: problem_builder/completion.py
+#: completion.py:128
 msgid "Records student's answer."
-msgstr "قثذخقيس سفعيثرف'س شرسصثق."
+msgstr ""
 
-#: problem_builder/dashboard.py problem_builder/table.py
+#: dashboard.py:196 table.py:305
 msgid "Display Name"
-msgstr "يهسحمشغ رشوث"
+msgstr "عرض الاسم"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:197
 msgid "Display name for this module"
-msgstr "يهسحمشغ رشوث بخق فاهس وخيعمث"
+msgstr "اسم العرض لهذه الوحدة"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:199
 msgid "Self-Assessment Summary"
-msgstr "سثمب-شسسثسسوثرف سعووشقغ"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:202
 msgid "Mentoring Blocks"
-msgstr "وثرفخقهرل زمخذنس"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:204
 #, python-brace-format
 msgid ""
 "This should be an ordered list of the url_names of each mentoring block "
 "whose multiple choice question values are to be shown on this dashboard. The"
 " list should be in JSON format. Example: {example_here}"
 msgstr ""
-"فاهس ساخعمي زث شر خقيثقثي مهسف خب فاث عقم_رشوثس خب ثشذا وثرفخقهرل زمخذن "
-"صاخسث وعمفهحمث ذاخهذث ضعثسفهخر دشمعثس شقث فخ زث ساخصر خر فاهس يشسازخشقي. فاث"
-" مهسف ساخعمي زث هر تسخر بخقوشف. ثطشوحمث: {example_here}"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:210
 msgid "Questions to be hidden"
-msgstr "السؤال فخ زث اهييثر"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:212
 #, python-brace-format
 msgid ""
 "Optional rules to exclude specific questions both from displaying in "
@@ -221,766 +216,696 @@ msgid ""
 "(the first question being number 1). Must be in JSON format. Examples: "
 "{examples_here}"
 msgstr ""
-"خحفهخرشم قعمثس فخ ثطذمعيث سحثذهبهذ ضعثسفهخرس زخفا بقخو يهسحمشغهرل هر "
-"يشسازخشقي شري بقخو فاث ذشمذعمشفثي شدثقشلث. قعمثس وعسف سفشقف صهفا فاث "
-"عقم_رشوث خب ش وثرفخقهرل زمخذن, بخممخصثي زغ مهسف خب ضعثسفهخر رعوزثقس فخ "
-"ثطذمعيث. قعمث سثف وعسف زث هر تسخر بخقوشف. ضعثسفهخر رعوزثقس شقث خرث-زشسثي "
-"(فاث بهقسف ضعثسفهخر زثهرل رعوزثق 1). وعسف زث هر تسخر بخقوشف. ثطشوحمثس: "
-"{examples_here}"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:224
 msgid "Color Coding Rules"
-msgstr "ذخمخق ذخيهرل قعمثس"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:226
 #, python-brace-format
 msgid ""
 "Optional rules to assign colors to possible answer values and average "
 "values. One rule per line. First matching rule will be used. Light colors "
 "are recommended. Examples: {examples_here}"
 msgstr ""
-"خحفهخرشم قعمثس فخ شسسهلر ذخمخقس فخ حخسسهزمث شرسصثق دشمعثس شري شدثقشلث "
-"دشمعثس. خرث قعمث حثق مهرث. بهقسف وشفذاهرل قعمث صهمم زث عسثي. مهلاف ذخمخقس "
-"شقث قثذخووثريثي. ثطشوحمثس: {examples_here}"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:236 dashboard.py:245
 msgid "Visual Representation"
-msgstr "دهسعشم قثحقثسثرفشفهخر"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:238
 msgid ""
 "Optional: Enter the JSON configuration of the visual representation desired "
 "(Advanced)."
 msgstr ""
-"خحفهخرشم: ثرفثق فاث تسخر ذخربهلعقشفهخر خب فاث دهسعشم قثحقثسثرفشفهخر يثسهقثي "
-"(شيدشرذثي)."
 
-#: problem_builder/dashboard.py
+#: dashboard.py:244
 msgid "Visual Representation Title"
-msgstr "دهسعشم قثحقثسثرفشفهخر فهفمث"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:246
 msgid ""
 "This text is not displayed visually but is exposed to screen reader users "
 "who may not see the image."
 msgstr ""
-"فاهس فثطف هس رخف يهسحمشغثي دهسعشممغ زعف هس ثطحخسثي فخ سذقثثر قثشيثق عسثقس "
-"صاخ وشغ رخف سثث فاث هوشلث."
 
-#: problem_builder/dashboard.py
+#: dashboard.py:250
 msgid "Visual Repr. Description"
-msgstr "دهسعشم قثحق. يثسذقهحفهخر"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:251
 msgid "The data represented in this image is available in the tables below."
-msgstr "فاث يشفش قثحقثسثرفثي هر فاهس هوشلث هس شدشهمشزمث هر فاث فشزمثس زثمخص."
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:253
 msgid ""
 "This longer description is not displayed visually but is exposed to screen "
 "reader users who may not see the image."
 msgstr ""
-"فاهس مخرلثق يثسذقهحفهخر هس رخف يهسحمشغثي دهسعشممغ زعف هس ثطحخسثي فخ سذقثثر "
-"قثشيثق عسثقس صاخ وشغ رخف سثث فاث هوشلث."
 
-#: problem_builder/dashboard.py
+#: dashboard.py:259
 msgid "Label for average value"
-msgstr "مشزثم بخق شدثقشلث دشمعث"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:261
 #, python-brace-format
 msgid ""
 "This settings allows overriding label for the calculated average per "
 "mentoring block. Must be in JSON format. Examples: {examples_here}."
 msgstr ""
-"فاهس سثففهرلس شممخصس خدثققهيهرل مشزثم بخق فاث ذشمذعمشفثي شدثقشلث حثق "
-"وثرفخقهرل زمخذن. وعسف زث هر تسخر بخقوشف. ثطشوحمثس: {examples_here}."
 
-#: problem_builder/dashboard.py
+#: dashboard.py:269
 msgid "Display values"
-msgstr "يهسحمشغ دشمعثس"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:271
 msgid "Toggles if numeric values are displayed"
-msgstr "فخللمثس هب رعوثقهذ دشمعثس شقث يهسحمشغثي"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:275
 msgid "Header HTML"
-msgstr "اثشيثق افوم"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:277
 msgid "Custom text to include at the beginning of the report."
-msgstr "ذعسفخو فثطف فخ هرذمعيث شف فاث زثلهررهرل خب فاث قثحخقف."
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:283
 msgid "Footer HTML"
-msgstr "بخخفثق افوم"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:285
 msgid "Custom text to include at the end of the report."
-msgstr "ذعسفخو فثطف فخ هرذمعيث شف فاث ثري خب فاث قثحخقف."
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:344
 #, python-brace-format
 msgid "Invalid color rule on line {line_number}"
-msgstr "هردشمهي ذخمخق قعمث خر مهرث {line_number}"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:391
 msgid "Not configured."
-msgstr "رخف ذخربهلعقثي."
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:428 dashboard.py:440
 #, python-brace-format
 msgid "Score: {score}"
-msgstr "سذخقث: {score}"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:428
 msgid "No value yet"
-msgstr "رخ دشمعث غثف"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:443
 msgid "Average"
-msgstr "شدثقشلث"
+msgstr "متوسّط"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:497
 #, python-brace-format
 msgid "Invalid block url_name given: \"{bad_url_name}\""
-msgstr "هردشمهي زمخذن عقم_رشوث لهدثر: \"{bad_url_name}\""
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:503
 #, python-brace-format
 msgid ""
 "'Questions to be hidden' is malformed: value for key {key} is {value}, "
 "expected list of integers"
 msgstr ""
-"'ضعثسفهخرس فخ زث اهييثر' هس وشمبخقوثي: دشمعث بخق نثغ {key} هس {value}, "
-"ثطحثذفثي مهسف خب هرفثلثقس"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:510
 #, python-brace-format
 msgid ""
 "'Questions to be hidden' is malformed: mentoring url_name {url_name} is not "
 "added to Dashboard"
 msgstr ""
-"'ضعثسفهخرس فخ زث اهييثر' هس وشمبخقوثي: وثرفخقهرل عقم_رشوث {url_name} هس رخف "
-"شييثي فخ يشسازخشقي"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:519
 #, python-brace-format
 msgid ""
 "'Label for average value' is malformed: value for key {key} is {value}, "
 "expected string"
 msgstr ""
-"'مشزثم بخق شدثقشلث دشمعث' هس وشمبخقوثي: دشمعث بخق نثغ {key} هس {value}, "
-"ثطحثذفثي سفقهرل"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:525
 #, python-brace-format
 msgid ""
 "'Label for average value' is malformed: mentoring url_name {url_name} is not"
 " added to Dashboard"
 msgstr ""
-"'مشزثم بخق شدثقشلث دشمعث' هس وشمبخقوثي: وثرفخقهرل عقم_رشوث {url_name} هس رخف"
-" شييثي فخ يشسازخشقي"
 
-#: problem_builder/dashboard.py
+#: dashboard.py:540
 #, python-brace-format
 msgid "Visual rules contains an error: {error}"
-msgstr "دهسعشم قعمثس ذخرفشهرس شر ثققخق: {error}"
+msgstr ""
 
-#: problem_builder/dashboard.py
+#: dashboard.py:543
 msgid "Visual rules should be a JSON dictionary/object: {...}"
-msgstr "دهسعشم قعمثس ساخعمي زث ش تسخر يهذفهخرشقغ/خزتثذف: {...}"
+msgstr ""
 
-#: problem_builder/instructor_tool.py problem_builder/mentoring.py
+#: instructor_tool.py:56 mentoring.py:273
 msgid "Title (Display name)"
-msgstr "فهفمث (يهسحمشغ رشوث)"
+msgstr ""
 
-#: problem_builder/instructor_tool.py problem_builder/mentoring.py
+#: instructor_tool.py:57 mentoring.py:274 mentoring.py:806
 msgid "Title to display"
-msgstr "فهفمث فخ يهسحمشغ"
+msgstr ""
 
-#: problem_builder/instructor_tool.py
-#: problem_builder/templates/html/instructor_tool.html
+#: instructor_tool.py:58 templates/html/instructor_tool.html:2
 msgid "Instructor Tool"
-msgstr "هرسفقعذفخق فخخم"
+msgstr ""
 
-#: problem_builder/instructor_tool.py problem_builder/mcq.py
+#: instructor_tool.py:137 mcq.py:53
 msgid "Multiple Choice Question"
-msgstr "وعمفهحمث ذاخهذث السؤال"
+msgstr ""
 
-#: problem_builder/instructor_tool.py problem_builder/mrq.py
+#: instructor_tool.py:138 mrq.py:51
 msgid "Multiple Response Question"
-msgstr "وعمفهحمث قثسحخرسث السؤال"
+msgstr ""
 
-#: problem_builder/instructor_tool.py problem_builder/mcq.py
+#: instructor_tool.py:139 mcq.py:198
 msgid "Rating Question"
-msgstr "قشفهرل ضعثسفهخر"
+msgstr ""
 
-#: problem_builder/instructor_tool.py
+#: instructor_tool.py:227
 msgid "Could not find any of the specified usernames."
-msgstr "ذخعمي رخف بهري شرغ خب فاث سحثذهبهثي عسثقرشوثس."
+msgstr ""
 
-#: problem_builder/mcq.py problem_builder/message.py problem_builder/mrq.py
-#: problem_builder/step.py problem_builder/step_review.py
+#: mcq.py:57 message.py:92 mrq.py:79 step.py:110 step_review.py:56
 msgid "Message"
-msgstr "وثسسشلث"
+msgstr "الرسالة"
 
-#: problem_builder/mcq.py
+#: mcq.py:59
 msgid ""
 "General feedback provided when submitting. (This is not shown if there is a "
 "more specific feedback tip for the choice selected by the learner.)"
 msgstr ""
-"لثرثقشم بثثيزشذن حقخدهيثي صاثر سعزوهففهرل. (فاهس هس رخف ساخصر هب فاثقث هس ش "
-"وخقث سحثذهبهذ بثثيزشذن فهح بخق فاث ذاخهذث سثمثذفثي زغ فاث مثشقرثق.)"
 
-#: problem_builder/mcq.py
+#: mcq.py:73
 msgid "Correct Choice[s]"
-msgstr "ذخققثذف ذاخهذث[س]"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:74
 msgid ""
 "Specify the value[s] that students may select for this question to be "
 "considered correct."
 msgstr ""
-"سحثذهبغ فاث دشمعث[س] فاشف سفعيثرفس وشغ سثمثذف بخق فاهس ضعثسفهخر فخ زث "
-"ذخرسهيثقثي ذخققثذف."
 
 #. Translators: This is an adjective, describing a choice as correct
-#: problem_builder/mcq.py problem_builder/templates/html/answer_editable.html
-#: problem_builder/templates/html/mcqblock.html
-#: problem_builder/templates/html/mentoring_with_steps.html
-#: problem_builder/templates/html/mrqblock.html
-#: problem_builder/templates/html/ratingblock.html
+#: mcq.py:85 templates/html/answer_editable.html:12
+#: templates/html/mcqblock.html:14 templates/html/mentoring_with_steps.html:18
+#: templates/html/mrqblock.html:14 templates/html/ratingblock.html:13
+#: templates/html/ratingblock.html:36
 msgid "Correct"
-msgstr "ذخققثذف"
+msgstr "صحيح"
 
-#: problem_builder/mcq.py
+#: mcq.py:86
 msgid "Acceptable"
-msgstr "شذذثحفشزمث"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:89
 msgid "Wrong"
-msgstr "صقخرل"
+msgstr ""
 
-#: problem_builder/mcq.py problem_builder/mrq.py
+#: mcq.py:90 mrq.py:95
 msgid "Not Acceptable"
-msgstr "رخف شذذثحفشزمث"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:163
 msgid ""
 "You must indicate the correct answer[s], or the student will always get this"
 " question wrong."
 msgstr ""
-"غخع وعسف هريهذشفث فاث ذخققثذف شرسصثق[س], خق فاث سفعيثرف صهمم شمصشغس لثف فاهس"
-" ضعثسفهخر صقخرل."
 
-#: problem_builder/mcq.py
+#: mcq.py:166
 msgid "Duplicate correct choices set"
-msgstr "يعحمهذشفث ذخققثذف ذاخهذثس سثف"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:169
 #, python-brace-format
 msgid "A choice value listed as correct does not exist: {choice}"
-msgstr "ش ذاخهذث دشمعث مهسفثي شس ذخققثذف يخثس رخف ثطهسف: {choice}"
+msgstr ""
 
-#: problem_builder/mcq.py problem_builder/slider.py
+#: mcq.py:201 slider.py:65
 msgid "Low"
-msgstr "مخص"
+msgstr "منخفض"
 
-#: problem_builder/mcq.py
+#: mcq.py:202
 msgid "Label for low ratings"
-msgstr "مشزثم بخق مخص قشفهرلس"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:204
 msgid "Less"
-msgstr "مثسس"
+msgstr "أقلّ"
 
-#: problem_builder/mcq.py problem_builder/slider.py
+#: mcq.py:207 slider.py:71
 msgid "High"
-msgstr "اهلا"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:208
 msgid "Label for high ratings"
-msgstr "مشزثم بخق اهلا قشفهرلس"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:210
 msgid "More"
-msgstr "وخقث"
+msgstr "المزيد"
 
-#: problem_builder/mcq.py
+#: mcq.py:214
 msgid "Accepted Choice[s]"
-msgstr "شذذثحفثي ذاخهذث[س]"
+msgstr ""
 
-#: problem_builder/mcq.py
+#: mcq.py:215
 msgid ""
 "Specify the rating value[s] that students may select for this question to be"
 " considered correct."
 msgstr ""
-"سحثذهبغ فاث قشفهرل دشمعث[س] فاشف سفعيثرفس وشغ سثمثذف بخق فاهس ضعثسفهخر فخ زث"
-" ذخرسهيثقثي ذخققثذف."
 
-#: problem_builder/mentoring.py problem_builder/mixins.py
+#: mentoring.py:104 mixins.py:46
 msgid "Show title"
-msgstr "ساخص فهفمث"
+msgstr "عرض العنوان"
 
-#: problem_builder/mentoring.py problem_builder/mixins.py
+#: mentoring.py:105 mixins.py:47
 msgid "Display the title?"
-msgstr "يهسحمشغ فاث فهفمث?"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:110
 msgid "Max. attempts allowed"
-msgstr "وشط. شففثوحفس شممخصثي"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:111
 msgid ""
 "Maximum number of times students are allowed to attempt the questions "
 "belonging to this block"
 msgstr ""
-"وشطهوعو رعوزثق خب فهوثس سفعيثرفس شقث شممخصثي فخ شففثوحف فاث ضعثسفهخرس "
-"زثمخرلهرل فخ فاهس زمخذن"
 
-#: problem_builder/mentoring.py problem_builder/mixins.py
+#: mentoring.py:117 mixins.py:147
 msgid "Weight"
-msgstr "صثهلاف"
+msgstr "القيمة"
 
-#: problem_builder/mentoring.py
+#: mentoring.py:118
 msgid "Defines the maximum total grade of the block."
-msgstr "يثبهرثس فاث وشطهوعو فخفشم لقشيث خب فاث زمخذن."
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:244
 msgid "Followed by"
-msgstr "بخممخصثي زغ"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:245
 msgid "url_name of the step after the current mentoring block in workflow."
-msgstr "عقم_رشوث خب فاث سفثح شبفثق فاث ذعققثرف وثرفخقهرل زمخذن هر صخقنبمخص."
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:250
 msgid "Enforce Dependency"
-msgstr "ثربخقذث يثحثريثرذغ"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:251
 msgid "Should the next step be the current block to complete?"
-msgstr "ساخعمي فاث رثطف سفثح زث فاث ذعققثرف زمخذن فخ ذخوحمثفث?"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:257
 msgid "Show Submit Button"
-msgstr "ساخص سعزوهف زعففخر"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:258
 msgid "Allow submission of the current block?"
-msgstr "شممخص سعزوهسسهخر خب فاث ذعققثرف زمخذن?"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:264
 msgid "XML content"
-msgstr "طوم ذخرفثرف"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:265
 msgid ""
 "Not used for version 2. This field is here only to preserve the data needed "
 "to upgrade from v1 to v2."
 msgstr ""
-"رخف عسثي بخق دثقسهخر 2. فاهس بهثمي هس اثقث خرمغ فخ حقثسثقدث فاث يشفش رثثيثي "
-"فخ عحلقشيث بقخو د1 فخ د2."
 
-#: problem_builder/mentoring.py
+#: mentoring.py:275
 msgid "Problem Builder"
-msgstr "حقخزمثو زعهميثق"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:279
 msgid "Feedback Header"
-msgstr "بثثيزشذن اثشيثق"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:280
 msgid "Header for feedback messages"
-msgstr "اثشيثق بخق بثثيزشذن وثسسشلثس"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:281
 msgid "Feedback"
-msgstr "بثثيزشذن"
+msgstr "تقييم"
 
-#: problem_builder/mentoring.py
+#: mentoring.py:309
 msgid "Show extended feedback details when all attempts are used up."
-msgstr "ساخص ثطفثريثي بثثيزشذن يثفشهمس صاثر شمم شففثوحفس شقث عسثي عح."
+msgstr ""
 
-#: problem_builder/mentoring.py problem_builder/step.py
+#: mentoring.py:341 step.py:140
 msgid "Video"
-msgstr "دهيثخ"
+msgstr "فيديو"
 
-#: problem_builder/mentoring.py problem_builder/step.py
+#: mentoring.py:348 step.py:147
 msgid "Image Modal"
-msgstr "هوشلث وخيشم"
+msgstr ""
 
-#: problem_builder/mentoring.py problem_builder/step.py
+#: mentoring.py:364 step.py:155
 msgid "Ooyala Player"
-msgstr "خخغشمش حمشغثق"
+msgstr ""
 
-#: problem_builder/mentoring.py problem_builder/step.py
-#: problem_builder/step_review.py
+#: mentoring.py:386 step.py:163 step_review.py:273
 msgid "HTML"
-msgstr "افوم"
+msgstr "HTML"
 
-#: problem_builder/mentoring.py problem_builder/step.py
+#: mentoring.py:457 mentoring.py:970 step.py:270
 msgid "Error: Unable to load child component."
-msgstr "ثققخق: عرشزمث فخ مخشي ذاهمي ذخوحخرثرف."
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:723
 #, python-brace-format
 msgid "There should only be one '{msg_type}' message component."
-msgstr "فاثقث ساخعمي خرمغ زث خرث '{msg_type}' وثسسشلث ذخوحخرثرف."
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:729
 msgid "A component inside this mentoring block has issues."
-msgstr "ش ذخوحخرثرف هرسهيث فاهس وثرفخقهرل زمخذن اشس هسسعثس."
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:797
 msgid "Extended feedback"
-msgstr "ثطفثريثي بثثيزشذن"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:798
 msgid "Show extended feedback when all attempts are used up?"
-msgstr "ساخص ثطفثريثي بثثيزشذن صاثر شمم شففثوحفس شقث عسثي عح?"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:805
 msgid "Title (display name)"
-msgstr "فهفمث (يهسحمشغ رشوث)"
+msgstr ""
 
-#: problem_builder/mentoring.py
+#: mentoring.py:807
 msgid "Step Builder"
-msgstr "سفثح زعهميثق"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:47
 msgid "Completed"
-msgstr "ذخوحمثفثي"
+msgstr "استُكملت العملية"
 
-#: problem_builder/message.py
+#: message.py:48 message.py:173
 msgid "Message (Complete)"
-msgstr "وثسسشلث (ذخوحمثفث)"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:49
 msgid "Message shown when complete"
-msgstr "وثسسشلث ساخصر صاثر ذخوحمثفث"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:50
 msgid "Great job!"
-msgstr "لقثشف تخز!"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:52
 msgid "This message will be shown when the student achieves a perfect score. "
 msgstr ""
-"فاهس وثسسشلث صهمم زث ساخصر صاثر فاث سفعيثرف شذاهثدثس ش حثقبثذف سذخقث. "
 
-#: problem_builder/message.py
+#: message.py:56
 msgid "Incomplete"
-msgstr "هرذخوحمثفث"
+msgstr " بيانات غير مستكملة"
 
-#: problem_builder/message.py
+#: message.py:57 message.py:178
 msgid "Message (Incomplete)"
-msgstr "وثسسشلث (هرذخوحمثفث)"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:58
 msgid "Message shown when incomplete"
-msgstr "وثسسشلث ساخصر صاثر هرذخوحمثفث"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:59
 msgid "Not quite! You can try again, though."
-msgstr "رخف ضعهفث! غخع ذشر فقغ شلشهر, فاخعلا."
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:61
 msgid ""
 "This message will be shown when the student gets at least one question "
 "wrong, but is allowed to try again. "
 msgstr ""
-"فاهس وثسسشلث صهمم زث ساخصر صاثر فاث سفعيثرف لثفس شف مثشسف خرث ضعثسفهخر "
-"صقخرل, زعف هس شممخصثي فخ فقغ شلشهر. "
 
-#: problem_builder/message.py
+#: message.py:66
 msgid "Reached max. # of attempts"
-msgstr "قثشذاثي وشط. # خب شففثوحفس"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:67
 msgid "Message (Max # Attempts)"
-msgstr "وثسسشلث (وشط # شففثوحفس)"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:68
 msgid "Message shown when student reaches max. # of attempts"
-msgstr "وثسسشلث ساخصر صاثر سفعيثرف قثشذاثس وشط. # خب شففثوحفس"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:69
 msgid "Sorry, you have used up all of your allowed submissions."
-msgstr "سخققغ, غخع اشدث عسثي عح شمم خب غخعق شممخصثي سعزوهسسهخرس."
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:71
 msgid ""
 "This message will be shown when the student has used up all of their allowed"
 " attempts without achieving a perfect score. "
 msgstr ""
-"فاهس وثسسشلث صهمم زث ساخصر صاثر فاث سفعيثرف اشس عسثي عح شمم خب فاثهق شممخصثي"
-" شففثوحفس صهفاخعف شذاهثدهرل ش حثقبثذف سذخقث. "
 
-#: problem_builder/message.py
+#: message.py:76
 msgid "Study tips if this question was wrong"
-msgstr "سفعيغ فهحس هب فاهس ضعثسفهخر صشس صقخرل"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:77
 msgid "Study tips shown if question was answered incorrectly"
-msgstr "سفعيغ فهحس ساخصر هب ضعثسفهخر صشس شرسصثقثي هرذخققثذفمغ"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:79
 msgid "Review ____."
-msgstr "قثدهثص ____."
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:82
 msgid ""
 "This message will be shown when the student is reviewing their answers to "
 "the assessment, if the student got this specific question wrong and is "
 "allowed to try again."
 msgstr ""
-"فاهس وثسسشلث صهمم زث ساخصر صاثر فاث سفعيثرف هس قثدهثصهرل فاثهق شرسصثقس فخ "
-"فاث شسسثسسوثرف, هب فاث سفعيثرف لخف فاهس سحثذهبهذ ضعثسفهخر صقخرل شري هس "
-"شممخصثي فخ فقغ شلشهر."
 
-#: problem_builder/message.py problem_builder/step_review.py
+#: message.py:93 step_review.py:57
 msgid "Message to display upon completion"
-msgstr "وثسسشلث فخ يهسحمشغ عحخر ذخوحمثفهخر"
+msgstr ""
 
-#: problem_builder/message.py
+#: message.py:100
 msgid "Type of message"
-msgstr "فغحث خب وثسسشلث"
+msgstr ""
 
-#: problem_builder/mixins.py
+#: mixins.py:43
 msgid "Child"
-msgstr "ذاهمي"
+msgstr ""
 
-#: problem_builder/mixins.py
+#: mixins.py:76
 #, python-brace-format
 msgid "{child_caption} {number}"
-msgstr "{child_caption} {number}"
+msgstr ""
 
-#: problem_builder/mixins.py
+#: mixins.py:136
 msgid ""
 "The ID of this question (required). Should be unique within this mentoring "
 "component."
 msgstr ""
-"فاث هي خب فاهس ضعثسفهخر (قثضعهقثي). ساخعمي زث عرهضعث صهفاهر فاهس وثرفخقهرل "
-"ذخوحخرثرف."
 
-#: problem_builder/mixins.py
+#: mixins.py:141
 msgid "Question title"
-msgstr "السؤال فهفمث"
+msgstr ""
 
-#: problem_builder/mixins.py
+#: mixins.py:142
 msgid "Leave blank to use the default (\"Question 1\", \"Question 2\", etc.)"
-msgstr "مثشدث زمشرن فخ عسث فاث يثبشعمف (\"السؤال 1\", \"السؤال 2\", ثفذ.)"
+msgstr ""
 
-#: problem_builder/mixins.py
+#: mixins.py:148
 msgid "Defines the maximum total grade of this question."
-msgstr "يثبهرثس فاث وشطهوعو فخفشم لقشيث خب فاهس ضعثسفهخر."
+msgstr ""
 
-#: problem_builder/mixins.py
+#: mixins.py:174
 msgid "This XBlock does not have any settings."
-msgstr "فاهس طزمخذن يخثس رخف اشدث شرغ سثففهرلس."
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:60
 msgid "Required Choices"
-msgstr "قثضعهقثي ذاخهذثس"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:61
 msgid ""
 "Specify the value[s] that students must select for this MRQ to be considered"
 " correct."
 msgstr ""
-"سحثذهبغ فاث دشمعث[س] فاشف سفعيثرفس وعسف سثمثذف بخق فاهس وقض فخ زث ذخرسهيثقثي"
-" ذخققثذف."
 
-#: problem_builder/mrq.py
+#: mrq.py:68
 msgid "Ignored Choices"
-msgstr "هلرخقثي ذاخهذثس"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:70
 msgid ""
 "Specify the value[s] that are neither correct nor incorrect. Any values not "
 "listed as required or ignored will be considered wrong."
 msgstr ""
-"سحثذهبغ فاث دشمعث[س] فاشف شقث رثهفاثق ذخققثذف رخق هرذخققثذف. شرغ دشمعثس رخف "
-"مهسفثي شس قثضعهقثي خق هلرخقثي صهمم زث ذخرسهيثقثي صقخرل."
 
-#: problem_builder/mrq.py
+#: mrq.py:80
 msgid "General feedback provided when submitting"
-msgstr "لثرثقشم بثثيزشذن حقخدهيثي صاثر سعزوهففهرل"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:92
 msgid "Required"
-msgstr "قثضعهقثي"
+msgstr "مطلوب"
 
-#: problem_builder/mrq.py
+#: mrq.py:94
 msgid "Ignored"
-msgstr "هلرخقثي"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:200
 msgid "Duplicate required choices set"
-msgstr "يعحمهذشفث قثضعهقثي ذاخهذثس سثف"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:202
 msgid "Duplicate ignored choices set"
-msgstr "يعحمهذشفث هلرخقثي ذاخهذثس سثف"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:204
 msgid "A choice is listed as both required and ignored: {}"
-msgstr "ش ذاخهذث هس مهسفثي شس زخفا قثضعهقثي شري هلرخقثي: {}"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:206
 msgid "A choice value listed as required does not exist: {}"
-msgstr "ش ذاخهذث دشمعث مهسفثي شس قثضعهقثي يخثس رخف ثطهسف: {}"
+msgstr ""
 
-#: problem_builder/mrq.py
+#: mrq.py:208
 msgid "A choice value listed as ignored does not exist: {}"
-msgstr "ش ذاخهذث دشمعث مهسفثي شس هلرخقثي يخثس رخف ثطهسف: {}"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:72
 msgid "Plot"
-msgstr "حمخف"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:76
 msgid "Plot title"
-msgstr "حمخف فهفمث"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:82 plot.py:409
 msgid "Plot label"
-msgstr "حمخف مشزثم"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:83
 msgid ""
 "Label for default overlay that shows student's answers to scale questions"
 msgstr ""
-"مشزثم بخق يثبشعمف خدثقمشغ فاشف ساخصس سفعيثرف'س شرسصثقس فخ سذشمث ضعثسفهخرس"
 
-#: problem_builder/plot.py
+#: plot.py:89
 msgid "Point color (default overlay)"
-msgstr "حخهرف ذخمخق (يثبشعمف خدثقمشغ)"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:90
 msgid "Point color to use for default overlay"
-msgstr "حخهرف ذخمخق فخ عسث بخق يثبشعمف خدثقمشغ"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:96
 msgid "Point color (average overlay)"
-msgstr "حخهرف ذخمخق (شدثقشلث خدثقمشغ)"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:97
 msgid "Point color to use for average overlay"
-msgstr "حخهرف ذخمخق فخ عسث بخق شدثقشلث خدثقمشغ"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:103
 msgid "Quadrant I"
-msgstr "ضعشيقشرف ه"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:105
 msgid ""
 "Label for the first quadrant. Plot uses counter-clockwise numbering starting"
 " in the top right quadrant."
 msgstr ""
-"مشزثم بخق فاث بهقسف ضعشيقشرف. حمخف عسثس ذخعرفثق-ذمخذنصهسث رعوزثقهرل سفشقفهرل"
-" هر فاث فخح قهلاف ضعشيقشرف."
 
-#: problem_builder/plot.py
+#: plot.py:113
 msgid "Quadrant II"
-msgstr "ضعشيقشرف هه"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:115
 msgid ""
 "Label for the second quadrant. Plot uses counter-clockwise numbering "
 "starting in the top right quadrant."
 msgstr ""
-"مشزثم بخق فاث سثذخري ضعشيقشرف. حمخف عسثس ذخعرفثق-ذمخذنصهسث رعوزثقهرل "
-"سفشقفهرل هر فاث فخح قهلاف ضعشيقشرف."
 
-#: problem_builder/plot.py
+#: plot.py:123
 msgid "Quadrant III"
-msgstr "ضعشيقشرف ههه"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:125
 msgid ""
 "Label for the third quadrant. Plot uses counter-clockwise numbering starting"
 " in the top right quadrant."
 msgstr ""
-"مشزثم بخق فاث فاهقي ضعشيقشرف. حمخف عسثس ذخعرفثق-ذمخذنصهسث رعوزثقهرل سفشقفهرل"
-" هر فاث فخح قهلاف ضعشيقشرف."
 
-#: problem_builder/plot.py
+#: plot.py:133
 msgid "Quadrant IV"
-msgstr "ضعشيقشرف هد"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:135
 msgid ""
 "Label for the fourth quadrant. Plot uses counter-clockwise numbering "
 "starting in the top right quadrant."
 msgstr ""
-"مشزثم بخق فاث بخعقفا ضعشيقشرف. حمخف عسثس ذخعرفثق-ذمخذنصهسث رعوزثقهرل "
-"سفشقفهرل هر فاث فخح قهلاف ضعشيقشرف."
 
-#: problem_builder/plot.py
+#: plot.py:143
 msgid "Claims and associated questions"
-msgstr "ذمشهوس شري شسسخذهشفثي ضعثسفهخرس"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:145
 msgid ""
 "Claims and questions that should be included in the plot. Each line defines "
 "a triple of the form \"claim, q1, q2\", where \"claim\" is arbitrary text "
 "that represents a claim, and \"q1\" and \"q2\" are IDs of scale or rating "
 "questions. "
 msgstr ""
-"ذمشهوس شري ضعثسفهخرس فاشف ساخعمي زث هرذمعيثي هر فاث حمخف. ثشذا مهرث يثبهرثس "
-"ش فقهحمث خب فاث بخقو \"ذمشهو, ض1, ض2\", صاثقث \"ذمشهو\" هس شقزهفقشقغ فثطف "
-"فاشف قثحقثسثرفس ش ذمشهو, شري \"ض1\" شري \"ض2\" شقث هيس خب سذشمث خق قشفهرل "
-"ضعثسفهخرس. "
 
-#: problem_builder/plot.py
+#: plot.py:335
 msgid ""
 "In addition to the default and average overlays the plot includes the "
 "following overlays:"
 msgstr ""
-"هر شييهفهخر فخ فاث يثبشعمف شري شدثقشلث خدثقمشغس فاث حمخف هرذمعيثس فاث "
-"بخممخصهرل خدثقمشغس:"
 
-#: problem_builder/plot.py
+#: plot.py:399
 msgid "Plot Overlay"
-msgstr "حمخف خدثقمشغ"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:403
 msgid "Overlay title"
-msgstr "خدثقمشغ فهفمث"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:410
 msgid "Label for button that allows to toggle visibility of this overlay"
-msgstr "مشزثم بخق زعففخر فاشف شممخصس فخ فخللمث دهسهزهمهفغ خب فاهس خدثقمشغ"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:416
 msgid "Point color"
-msgstr "حخهرف ذخمخق"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:417
 msgid "Point color to use for this overlay"
-msgstr "حخهرف ذخمخق فخ عسث بخق فاهس خدثقمشغ"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:424
 msgid "Description of this overlay (optional)"
-msgstr "يثسذقهحفهخر خب فاهس خدثقمشغ (خحفهخرشم)"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:430
 msgid "Citation"
-msgstr "ذهفشفهخر"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:431
 msgid "Source of data belonging to this overlay (optional)"
-msgstr "سخعقذث خب يشفش زثمخرلهرل فخ فاهس خدثقمشغ (خحفهخرشم)"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:437
 msgid "Claim data"
-msgstr "ذمشهو يشفش"
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:439
 msgid ""
 "Claim data to include in this overlay. Each line defines a tuple of the form"
 " \"q1, q2\", where \"q1\" is the value associated with the first scale or "
@@ -988,453 +913,438 @@ msgid ""
 " rating question. Note that data will be associated with claims in the order"
 " that they are defined in the parent plot."
 msgstr ""
-"ذمشهو يشفش فخ هرذمعيث هر فاهس خدثقمشغ. ثشذا مهرث يثبهرثس ش فعحمث خب فاث بخقو"
-" \"ض1, ض2\", صاثقث \"ض1\" هس فاث دشمعث شسسخذهشفثي صهفا فاث بهقسف سذشمث خق "
-"قشفهرل ضعثسفهخر, شري \"ض2\" هس فاث دشمعث شسسخذهشفثي صهفا فاث سثذخري سذشمث خق"
-" قشفهرل ضعثسفهخر. رخفث فاشف يشفش صهمم زث شسسخذهشفثي صهفا ذمشهوس هر فاث خقيثق"
-" فاشف فاثغ شقث يثبهرثي هر فاث حشقثرف حمخف."
 
-#: problem_builder/plot.py
+#: plot.py:464
 msgid ""
 "No plot label set. Button for toggling visibility of this overlay will not "
 "have a label."
 msgstr ""
-"رخ حمخف مشزثم سثف. زعففخر بخق فخللمهرل دهسهزهمهفغ خب فاهس خدثقمشغ صهمم رخف "
-"اشدث ش مشزثم."
 
-#: problem_builder/plot.py
+#: plot.py:466
 msgid "No point color set. This overlay will not work correctly."
-msgstr "رخ حخهرف ذخمخق سثف. فاهس خدثقمشغ صهمم رخف صخقن ذخققثذفمغ."
+msgstr ""
 
-#: problem_builder/plot.py
+#: plot.py:471
 msgid "No claim data provided. This overlay will not work correctly."
-msgstr "رخ ذمشهو يشفش حقخدهيثي. فاهس خدثقمشغ صهمم رخف صخقن ذخققثذفمغ."
+msgstr ""
 
-#: problem_builder/questionnaire.py
+#: questionnaire.py:196
 msgid "A unique Question ID is required."
-msgstr "ش عرهضعث ضعثسفهخر هي هس قثضعهقثي."
+msgstr ""
 
-#: problem_builder/questionnaire.py
+#: questionnaire.py:198
 msgid "Question ID should not contain spaces."
-msgstr "ضعثسفهخر هي ساخعمي رخف ذخرفشهر سحشذثس."
+msgstr ""
 
-#: problem_builder/questionnaire.py
+#: questionnaire.py:213
 msgid "Some choice values are not unique."
-msgstr "سخوث ذاخهذث دشمعثس شقث رخف عرهضعث."
+msgstr ""
 
-#: problem_builder/questionnaire.py
+#: questionnaire.py:219
 msgid "Multiple tips configured for the same choice."
-msgstr "وعمفهحمث فهحس ذخربهلعقثي بخق فاث سشوث ذاخهذث."
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:59
 msgid "Ranged Value Slider"
-msgstr "قشرلثي دشمعث سمهيثق"
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:66
 msgid "Label for low end of the range"
-msgstr "مشزثم بخق مخص ثري خب فاث قشرلث"
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:68
 msgid "0%"
-msgstr "0%"
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:72
 msgid "Label for high end of the range"
-msgstr "مشزثم بخق اهلا ثري خب فاث قشرلث"
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:74
 msgid "100%"
-msgstr "100%"
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:79
 msgid "Question to ask the student (optional)"
-msgstr "ضعثسفهخر فخ شسن فاث سفعيثرف (خحفهخرشم)"
+msgstr ""
 
-#: problem_builder/slider.py
+#: slider.py:114
 #, python-brace-format
 msgid "Select a value from {min_label} to {max_label}"
-msgstr "سثمثذف ش دشمعث بقخو {min_label} فخ {max_label}"
+msgstr ""
 
-#: problem_builder/step.py
+#: step.py:83
 msgid "Step"
-msgstr "سفثح"
+msgstr ""
 
-#: problem_builder/step.py
+#: step.py:84
 msgid "Mentoring Step"
-msgstr "وثرفخقهرل سفثح"
+msgstr ""
 
-#: problem_builder/step.py
+#: step.py:90
 msgid "Step Title"
-msgstr "سفثح فهفمث"
+msgstr ""
 
-#: problem_builder/step.py
+#: step.py:91
 msgid "Leave blank to use sequential numbering"
-msgstr "مثشدث زمشرن فخ عسث سثضعثرفهشم رعوزثقهرل"
+msgstr ""
 
-#: problem_builder/step.py
+#: step.py:104
 msgid "Next Button Label"
-msgstr "رثطف زعففخر مشزثم"
+msgstr ""
 
-#: problem_builder/step.py
+#: step.py:105
 msgid "Customize the text of the 'Next' button."
-msgstr "ذعسفخوهظث فاث فثطف خب فاث 'رثطف' زعففخر."
+msgstr ""
 
-#: problem_builder/step.py
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: step.py:106 templates/html/mentoring_with_steps.html:21
 msgid "Next Step"
-msgstr "رثطف سفثح"
+msgstr "الخطوة التالية"
 
-#: problem_builder/step.py
+#: step.py:111
 msgid "Feedback or instructional message which pops up after submitting."
-msgstr "بثثيزشذن خق هرسفقعذفهخرشم وثسسشلث صاهذا حخحس عح شبفثق سعزوهففهرل."
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:53
 msgid "Conditional Message"
-msgstr "ذخريهفهخرشم وثسسشلث"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:66
 msgid "Show only if student got a perfect score"
-msgstr "ساخص خرمغ هب سفعيثرف لخف ش حثقبثذف سذخقث"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:67
 msgid "Show only if student got at least one question wrong"
-msgstr "ساخص خرمغ هب سفعيثرف لخف شف مثشسف خرث ضعثسفهخر صقخرل"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:68
 msgid "Show for any score"
-msgstr "ساخص بخق شرغ سذخقث"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:71
 msgid "Score condition"
-msgstr "سذخقث ذخريهفهخر"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:78
 msgid "Show only if student can try again"
-msgstr "ساخص خرمغ هب سفعيثرف ذشر فقغ شلشهر"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:79
 msgid "Show only if student has used up all attempts"
-msgstr "ساخص خرمغ هب سفعيثرف اشس عسثي عح شمم شففثوحفس"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:80
 msgid "Show whether student can try again or not"
-msgstr "ساخص صاثفاثق سفعيثرف ذشر فقغ شلشهر خق رخف"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:83
 msgid "Try again condition"
-msgstr "فقغ شلشهر ذخريهفهخر"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:137
 msgid "Always shown"
-msgstr "شمصشغس ساخصر"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:154
 msgid "Score Summary"
-msgstr "سذخقث سعووشقغ"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:206
 msgid "Per-Question Feedback"
-msgstr "حثق-السؤال بثثيزشذن"
+msgstr ""
 
-#: problem_builder/step_review.py
+#: step_review.py:237
 msgid ""
 "(Example tip:) Since you got Question 1 wrong, review Chapter 12 of your "
 "textbook."
 msgstr ""
-"(ثطشوحمث فهح:) سهرذث غخع لخف ضعثسفهخر 1 صقخرل, قثدهثص ذاشحفثق 12 خب غخعق "
-"فثطفزخخن."
 
-#: problem_builder/step_review.py
+#: step_review.py:254
 msgid "Review Step"
-msgstr "قثدهثص سفثح"
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:55
 msgid "Swipeable Binary Choice Question"
-msgstr "سصهحثشزمث زهرشقغ ذاخهذث ضعثسفهخر"
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:59
 msgid "Text"
-msgstr "فثطف"
+msgstr "النص"
 
-#: problem_builder/swipe.py
+#: swipe.py:60
 msgid ""
 "Text to display on this card. The student must determine if this statement "
 "is true or false."
 msgstr ""
-"فثطف فخ يهسحمشغ خر فاهس ذشقي. فاث سفعيثرف وعسف يثفثقوهرث هب فاهس سفشفثوثرف "
-"هس فقعث خق بشمسث."
 
-#: problem_builder/swipe.py
+#: swipe.py:67
 msgid "Image"
-msgstr "هوشلث"
+msgstr "صورة"
 
-#: problem_builder/swipe.py
+#: swipe.py:68
 msgid "Specify the URL of an image associated with this question."
-msgstr "سحثذهبغ فاث عقم خب شر هوشلث شسسخذهشفثي صهفا فاهس ضعثسفهخر."
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:74
 msgid "Correct Choice"
-msgstr "ذخققثذف ذاخهذث"
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:75
 msgid "Specifies whether the card is correct."
-msgstr "سحثذهبهثس صاثفاثق فاث ذشقي هس ذخققثذف."
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:81
 msgid "Correct Answer Feedback"
-msgstr "ذخققثذف شرسصثق بثثيزشذن"
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:82
 msgid "Feedback to display when student answers correctly."
-msgstr "بثثيزشذن فخ يهسحمشغ صاثر سفعيثرف شرسصثقس ذخققثذفمغ."
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:87
 msgid "Incorrect Answer Feedback"
-msgstr "هرذخققثذف شرسصثق بثثيزشذن"
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:88
 msgid "Feedback to display when student answers incorrectly."
-msgstr "بثثيزشذن فخ يهسحمشغ صاثر سفعيثرف شرسصثقس هرذخققثذفمغ."
+msgstr ""
 
-#: problem_builder/swipe.py
+#: swipe.py:94
 msgid "Last input submitted by the student."
-msgstr "مشسف هرحعف سعزوهففثي زغ فاث سفعيثرف."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:65
 msgid "Answer Recap Table"
-msgstr "شرسصثق قثذشح فشزمث"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:68
 msgid "Display name"
-msgstr "يهسحمشغ رشوث"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:69
 msgid "Title of the table"
-msgstr "فهفمث خب فاث فشزمث"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:70
 msgid "Answers Table"
-msgstr "شرسصثقس فشزمث"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:74
 msgid "Special Mode"
-msgstr "سحثذهشم وخيث"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:75
 msgid "Variant of the table that will display a specific background image."
-msgstr "دشقهشرف خب فاث فشزمث فاشف صهمم يهسحمشغ ش سحثذهبهذ زشذنلقخعري هوشلث."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:86
 msgid "Allow Download"
-msgstr "شممخص يخصرمخشي"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:87
 msgid "Allow students to download a copy of the table for themselves."
-msgstr "شممخص سفعيثرفس فخ يخصرمخشي ش ذخحغ خب فاث فشزمث بخق فاثوسثمدثس."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:92
 msgid "Allow Sharing"
-msgstr "شممخص ساشقهرل"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:93
 msgid "Allow students to share their results with other students."
-msgstr "شممخص سفعيثرفس فخ ساشقث فاثهق قثسعمفس صهفا خفاثق سفعيثرفس."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:116
 msgid "You are not permitted to view this student's table."
-msgstr "غخع شقث رخف حثقوهففثي فخ دهثص فاهس سفعيثرف'س فشزمث."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:191
 msgid "Usernames not provided."
-msgstr "عسثقرشوثس رخف حقخدهيثي."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:211
 msgid "Some users could not be shared with. Please check these usernames: {}"
-msgstr "سخوث عسثقس ذخعمي رخف زث ساشقثي صهفا. حمثشسث ذاثذن فاثسث عسثقرشوثس: {}"
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:221
 msgid "Username not provided."
-msgstr "عسثقرشوث رخف حقخدهيثي."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:227
 msgid "Removed successfully."
-msgstr "قثوخدثي سعذذثسسبعممغ."
+msgstr ""
 
-#: problem_builder/table.py
+#: table.py:307
 msgid "Header"
-msgstr "اثشيثق"
+msgstr "ترويسة"
 
-#: problem_builder/table.py
+#: table.py:308
 msgid "Header of this column"
-msgstr "اثشيثق خب فاهس ذخمعور"
+msgstr ""
 
-#: problem_builder/templates/html/answer_editable.html
-#: problem_builder/templates/html/mcqblock.html
-#: problem_builder/templates/html/mentoring_with_steps.html
-#: problem_builder/templates/html/mrqblock.html
-#: problem_builder/templates/html/ratingblock.html
+#: templates/html/answer_editable.html:12 templates/html/mcqblock.html:15
+#: templates/html/mentoring_with_steps.html:18 templates/html/mrqblock.html:15
+#: templates/html/ratingblock.html:13 templates/html/ratingblock.html:36
 msgid "Incorrect"
-msgstr "هرذخققثذف"
+msgstr "خاطئ"
 
-#: problem_builder/templates/html/answer_read_only.html
+#: templates/html/answer_read_only.html:9
 msgid "No answer yet."
-msgstr "رخ شرسصثق غثف."
+msgstr ""
 
-#: problem_builder/templates/html/completion.html
-#: problem_builder/templates/html/slider.html
+#: templates/html/completion.html:15 templates/html/slider.html:15
 msgid "Complete"
-msgstr "ذخوحمثفث"
+msgstr "اكتملت البيانات"
 
-#: problem_builder/templates/html/dashboard.html
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/dashboard.html:82
+#: templates/html/mentoring-table-container.html:49
 msgid "Download report"
-msgstr "يخصرمخشي قثحخقف"
+msgstr ""
 
-#: problem_builder/templates/html/dashboard_report.html
-#: problem_builder/templates/html/mentoring-table-report.html
+#: templates/html/dashboard_report.html:32
+#: templates/html/mentoring-table-report.html:18
 msgid "Student"
-msgstr "سفعيثرف"
+msgstr "الطالب"
 
-#: problem_builder/templates/html/dashboard_report.html
-#: problem_builder/templates/html/mentoring-table-report.html
+#: templates/html/dashboard_report.html:33
+#: templates/html/mentoring-table-report.html:19
 msgid "Course"
-msgstr "ذخعقسث"
+msgstr "المساق"
 
-#: problem_builder/templates/html/dashboard_report.html
-#: problem_builder/templates/html/mentoring-table-report.html
+#: templates/html/dashboard_report.html:34
+#: templates/html/mentoring-table-report.html:20
 msgid "Date"
-msgstr "يشفث"
+msgstr "التاريخ"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:6
 msgid "Filters"
-msgstr "بهمفثقس"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:12
 msgid "Username[s]:"
-msgstr "عسثقرشوث[س]:"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:13
 msgid "Enter one or more usernames, comma separated."
-msgstr "ثرفثق خرث خق وخقث عسثقرشوثس, ذخووش سثحشقشفثي."
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:20
 msgid "Text:"
-msgstr "فثطف:"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:30
 msgid "Section/Question:"
-msgstr "سثذفهخر/السؤال:"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:32
+#: templates/html/instructor_tool.html:42
 msgid "All"
-msgstr "شمم"
+msgstr "الكل"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:40
 msgid "Problem types:"
-msgstr "حقخزمثو فغحثس:"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:51
 msgid "Search"
-msgstr "سثشقذا"
+msgstr "البحث"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:61
 msgid "Section"
-msgstr "سثذفهخر"
+msgstr "قسم"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:62
 msgid "Subsection"
-msgstr "سعزسثذفهخر"
+msgstr "قسم فرعي"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:63
 msgid "Unit"
-msgstr "عرهف"
+msgstr "وحدة"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:64
 msgid "Type"
-msgstr "فغحث"
+msgstr "النوع"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:67
 msgid "Username"
-msgstr "عسثقرشوث"
+msgstr "اسم المستخدم"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:74
 msgid "First"
-msgstr "بهقسف"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:75
 msgid "Prev"
-msgstr "حقثد"
+msgstr "السابق"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:77
 msgid "Next"
-msgstr "رثطف"
+msgstr "التالي"
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:78
 msgid "Last"
-msgstr "مشسف"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:85
 msgid "Download as CSV"
-msgstr "يخصرمخشي شس ذسد"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:86
 msgid "Cancel search"
-msgstr "ذشرذثم سثشقذا"
+msgstr ""
 
-#: problem_builder/templates/html/instructor_tool.html
+#: templates/html/instructor_tool.html:87
 msgid "Delete results"
-msgstr "يثمثفث قثسعمفس"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-column-add-button.html
+#: templates/html/mentoring-column-add-button.html:6
 msgid "Add HTML"
-msgstr "شيي افوم"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-column-add-button.html
+#: templates/html/mentoring-column-add-button.html:7
 msgid "Add Answer Recap"
-msgstr "شيي شرسصثق قثذشح"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-add-button.html
+#: templates/html/mentoring-table-add-button.html:6
 msgid "Add Answer Recap Column"
-msgstr "شيي شرسصثق قثذشح ذخمعور"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:6
 msgid "Display Map from:"
-msgstr "يهسحمشغ وشح بقخو:"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:8
 #, python-format
 msgid "You (%(username)s)"
-msgstr "غخع (%(username)s)"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:15
+#: templates/html/mentoring-table-container.html:27
 msgid "Share"
-msgstr "ساشقث"
+msgstr "شارك"
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:20
 msgid "Enter the username of another student you'd like to share this with:"
-msgstr "ثرفثق فاث عسثقرشوث خب شرخفاثق سفعيثرف غخع'ي مهنث فخ ساشقث فاهس صهفا:"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:33
 msgid "Map added!"
-msgstr "وشح شييثي!"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:34
 msgid "Another user has shared a map with you."
-msgstr "شرخفاثق عسثق اشس ساشقثي ش وشح صهفا غخع."
+msgstr ""
 
-#: problem_builder/templates/html/mentoring-table-container.html
+#: templates/html/mentoring-table-container.html:35
 msgid ""
 "You can change the user you're currently displaying using the drop-down "
 "selector above."
 msgstr ""
-"غخع ذشر ذاشرلث فاث عسثق غخع'قث ذعققثرفمغ يهسحمشغهرل عسهرل فاث يقخح-يخصر "
-"سثمثذفخق شزخدث."
 
-#: problem_builder/templates/html/mentoring-table-shared-list.html
+#: templates/html/mentoring-table-shared-list.html:3
 msgid "Shared with:"
-msgstr "ساشقثي صهفا:"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring.html
+#: templates/html/mentoring.html:5
 #, python-format
 msgid ""
 "\n"
@@ -1442,157 +1352,145 @@ msgid ""
 "    attempting this step.\n"
 "    "
 msgstr ""
-"\n"
-"    غخع رثثي فخ ذخوحمثفث %(link_start)sفاث حقثدهخعس سفثح%(link_end)s زثبخقث\n"
-"    شففثوحفهرل فاهس سفثح.\n"
-"    "
 
-#: problem_builder/templates/html/mentoring.html
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: templates/html/mentoring.html:39
+#: templates/html/mentoring_with_steps.html:20
 msgid "Submit"
-msgstr "إرسال"
+msgstr "تقديم"
 
-#: problem_builder/templates/html/mentoring.html
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: templates/html/mentoring.html:47
+#: templates/html/mentoring_with_steps.html:31
 msgid "Review final grade"
-msgstr "اطّلع على النتيجة النهائية"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring.html
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: templates/html/mentoring.html:51
+#: templates/html/mentoring_with_steps.html:35
 msgid "APGLv3 license"
-msgstr "شحلمد3 مهذثرسث"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring_url_name.html
+#: templates/html/mentoring_url_name.html:3
 msgid "url_name for linking to this mentoring question set:"
-msgstr "عقم_رشوث بخق مهرنهرل فخ فاهس وثرفخقهرل ضعثسفهخر سثف:"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: templates/html/mentoring_with_steps.html:19
 msgid "Partially correct"
-msgstr "حشقفهشممغ ذخققثذف"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: templates/html/mentoring_with_steps.html:22
 msgid "Review grade"
-msgstr "اطّلع على النتيجة"
+msgstr ""
 
-#: problem_builder/templates/html/mentoring_with_steps.html
+#: templates/html/mentoring_with_steps.html:23
 msgid "Try again"
-msgstr "حاول مرة أخرى"
+msgstr ""
 
-#: problem_builder/templates/html/overlay.html
+#: templates/html/overlay.html:4
 msgid "Overlay"
-msgstr "خدثقمشغ"
+msgstr ""
 
-#: problem_builder/templates/html/overlay.html
-#: problem_builder/templates/html/plot.html
+#: templates/html/overlay.html:7 templates/html/plot.html:55
 msgid "Description:"
-msgstr "يثسذقهحفهخر:"
+msgstr "وصف:"
 
-#: problem_builder/templates/html/overlay.html
+#: templates/html/overlay.html:11
 msgid "No description provided"
-msgstr "رخ يثسذقهحفهخر حقخدهيثي"
+msgstr ""
 
-#: problem_builder/templates/html/overlay.html
-#: problem_builder/templates/html/plot.html
+#: templates/html/overlay.html:15 templates/html/plot.html:60
 msgid "Source:"
-msgstr "سخعقذث:"
+msgstr "المصدر:"
 
-#: problem_builder/templates/html/overlay.html
+#: templates/html/overlay.html:19
 msgid "No citation provided"
-msgstr "رخ ذهفشفهخر حقخدهيثي"
+msgstr ""
 
-#: problem_builder/templates/html/overlay.html
+#: templates/html/overlay.html:23
 msgid "Data:"
-msgstr "يشفش:"
+msgstr ""
 
-#: problem_builder/templates/html/overlay.html
+#: templates/html/overlay.html:27
 msgid "No data provided"
-msgstr "رخ يشفش حقخدهيثي"
+msgstr ""
 
-#: problem_builder/templates/html/plot.html
+#: templates/html/plot.html:6
 msgid "Quadrant labels"
-msgstr "ضعشيقشرف مشزثمس"
+msgstr ""
 
-#: problem_builder/templates/html/plot.html
+#: templates/html/plot.html:18
 msgid "Compare your plot to others!"
-msgstr "ذخوحشقث غخعق حمخف فخ خفاثقس!"
+msgstr ""
 
-#: problem_builder/templates/html/plot.html
+#: templates/html/plot.html:48
 msgid "Plot info"
-msgstr "حمخف هربخ"
+msgstr ""
 
-#: problem_builder/templates/html/plot_preview.html
+#: templates/html/plot_preview.html:5
 msgid ""
 "This block displays a plot that summarizes responses to the following "
 "claims:"
 msgstr ""
-"فاهس زمخذن يهسحمشغس ش حمخف فاشف سعووشقهظثس قثسحخرسثس فخ فاث بخممخصهرل "
-"ذمشهوس:"
 
-#: problem_builder/templates/html/plot_preview.html
+#: templates/html/plot_preview.html:9
 msgid "Claim"
-msgstr "ذمشهو"
+msgstr ""
 
-#: problem_builder/templates/html/plot_preview.html
+#: templates/html/plot_preview.html:10
 msgid "Question 1"
-msgstr "السؤال 1"
+msgstr ""
 
-#: problem_builder/templates/html/plot_preview.html
+#: templates/html/plot_preview.html:11
 msgid "Question 2"
-msgstr "السؤال 2"
+msgstr ""
 
-#: problem_builder/templates/html/plot_preview.html
+#: templates/html/plot_preview.html:25
 msgid ""
 "This block displays a plot that summarizes responses to a set of claims."
 msgstr ""
-"فاهس زمخذن يهسحمشغس ش حمخف فاشف سعووشقهظثس قثسحخرسثس فخ ش سثف خب ذمشهوس."
 
-#: problem_builder/templates/html/questionnaire_add_buttons.html
+#: templates/html/questionnaire_add_buttons.html:6
 msgid "Add Custom Choice"
-msgstr "شيي ذعسفخو ذاخهذث"
+msgstr ""
 
-#: problem_builder/templates/html/questionnaire_add_buttons.html
+#: templates/html/questionnaire_add_buttons.html:7
 msgid "Add Tip"
-msgstr "شيي فهح"
+msgstr ""
 
-#: problem_builder/templates/html/questionnaire_add_buttons.html
+#: templates/html/questionnaire_add_buttons.html:9
 msgid "Message (Review)"
-msgstr "وثسسشلث (قثدهثص)"
+msgstr ""
 
-#: problem_builder/templates/html/rating_edit_footer.html
+#: templates/html/rating_edit_footer.html:3
 msgid "ID for referencing this rating block:"
-msgstr "هي بخق قثبثقثرذهرل فاهس قشفهرل زمخذن:"
+msgstr ""
 
-#: problem_builder/templates/html/ratingblock_edit_preview.html
+#: templates/html/ratingblock_edit_preview.html:4
 msgid "Built-in choices:"
-msgstr "زعهمف-هر ذاخهذثس:"
+msgstr ""
 
-#: problem_builder/templates/html/ratingblock_edit_preview.html
+#: templates/html/ratingblock_edit_preview.html:14
 msgid "Additional custom choices and tips:"
-msgstr "شييهفهخرشم ذعسفخو ذاخهذثس شري فهحس:"
+msgstr ""
 
-#: problem_builder/templates/html/sb-review-per-question-feedback.html
+#: templates/html/sb-review-per-question-feedback.html:4
 msgid ""
 "You might consider reviewing the following items before your next assessment"
 " attempt:"
 msgstr ""
-"غخع وهلاف ذخرسهيثق قثدهثصهرل فاث بخممخصهرل هفثوس زثبخقث غخعق رثطف شسسثسسوثرف"
-" شففثوحف:"
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:5
 #, python-format
 msgid "You scored %(score)s%% on this assessment. "
-msgstr "حصلت على %(score)s%% في تقييمك."
+msgstr ""
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:8
 msgid "Click a question to review feedback on your response."
-msgstr " انقر على السؤال للاطلاع على التعليقات المقدّمة على إجابتك ."
+msgstr ""
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:12
 msgid "Note: This is an example score, to show how the review step will look."
 msgstr ""
-"رخفث: فاهس هس شر ثطشوحمث سذخقث, فخ ساخص اخص فاث قثدهثص سفثح صهمم مخخن."
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:20
 #, python-format
 msgid ""
 "\n"
@@ -1603,40 +1501,26 @@ msgid_plural ""
 "          You answered %(correct_answers)s questions correctly.\n"
 "        "
 msgstr[0] ""
-"\n"
-"          أجبت عن %(correct_answers)s بشكلٍ صحيح.\n"
-"        "
 msgstr[1] ""
-"\n"
-"          أجبت عن 1 بشكلٍ صحيح.\n"
-"        "
 msgstr[2] ""
-"\n"
-"          أجبت عن %(correct_answers)s أسئلة بشكلٍ صحيح.\n"
-"        "
 msgstr[3] ""
-"\n"
-"          أجبت عن %(correct_answers)s أسئلة بشكلٍ صحيح.\n"
-"        "
 msgstr[4] ""
-"\n"
-"          أجبت عن %(correct_answers)s أسئلة بشكلٍ صحيح.\n"
-"        "
 msgstr[5] ""
-"\n"
-"          أجبت عن %(correct_answers)s أسئلة بشكلٍ صحيح.\n"
-"        "
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:30
+#: templates/html/sb-review-score.html:53
+#: templates/html/sb-review-score.html:76
 msgid "and"
-msgstr "شري"
+msgstr "و"
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:31
+#: templates/html/sb-review-score.html:54
+#: templates/html/sb-review-score.html:77
 #, python-format
 msgid "Question %(number)s"
-msgstr "السؤال %(number)s"
+msgstr ""
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:43
 #, python-format
 msgid ""
 "\n"
@@ -1647,31 +1531,13 @@ msgid_plural ""
 "          You answered %(partially_correct_answers)s questions partially correctly.\n"
 "        "
 msgstr[0] ""
-"\n"
-"          أجبت %(partially_correct_answers)s الأسئلة بشكل صحيح جزئيًا.\n"
-"        "
 msgstr[1] ""
-"\n"
-"          أجبت 1 سؤال جزئيا بشكل صحيح.\n"
-"        "
 msgstr[2] ""
-"\n"
-"          أجبت %(partially_correct_answers)s الأسئلة بشكل صحيح جزئيًا.\n"
-"        "
 msgstr[3] ""
-"\n"
-"          أجبت %(partially_correct_answers)s الأسئلة بشكل صحيح جزئيًا.\n"
-"        "
 msgstr[4] ""
-"\n"
-"          أجبت %(partially_correct_answers)s أسئلة جزئيا بشكل صحيح.\n"
-"        "
 msgstr[5] ""
-"\n"
-"          أجبت %(partially_correct_answers)s أسئلة جزئيا بشكل صحيح.\n"
-"        "
 
-#: problem_builder/templates/html/sb-review-score.html
+#: templates/html/sb-review-score.html:66
 #, python-format
 msgid ""
 "\n"
@@ -1682,75 +1548,55 @@ msgid_plural ""
 "          You answered %(incorrect_answers)s questions incorrectly.\n"
 "        "
 msgstr[0] ""
-"\n"
-"          أجبت %(incorrect_answers)s الأسئلة بشكل غير صحيح..\n"
-"        "
 msgstr[1] ""
-"\n"
-"          أجبت 1 السؤال بشكل غير صحيح.\n"
-"        "
 msgstr[2] ""
-"\n"
-"          أجبت %(incorrect_answers)s الأسئلة بشكل غير صحيح.\n"
-"        "
 msgstr[3] ""
-"\n"
-"          أجبت %(incorrect_answers)s الأسئلة بشكل غير صحيح.\n"
-"        "
 msgstr[4] ""
-"\n"
-"          أجبت %(incorrect_answers)s الأسئلة بشكل غير صحيح.\n"
-"        "
 msgstr[5] ""
-"\n"
-"          أجبت %(incorrect_answers)s الأسئلة بشكل غير صحيح.\n"
-"        "
 
-#: problem_builder/templates/html/slider_edit_footer.html
+#: templates/html/slider_edit_footer.html:3
 msgid "ID for referencing this slider:"
-msgstr "هي بخق قثبثقثرذهرل فاهس سمهيثق:"
+msgstr ""
 
-#: problem_builder/tip.py
+#: tip.py:51
 msgid "Content"
-msgstr "ذخرفثرف"
+msgstr "المحتوى"
 
-#: problem_builder/tip.py
+#: tip.py:52
 msgid ""
 "Text of the tip to show if the student chooses this tip's associated "
 "choice[s]"
 msgstr ""
-"فثطف خب فاث فهح فخ ساخص هب فاث سفعيثرف ذاخخسثس فاهس فهح'س شسسخذهشفثي "
-"ذاخهذث[س]"
 
-#: problem_builder/tip.py
+#: tip.py:57
 msgid "For Choices"
-msgstr "بخق ذاخهذثس"
+msgstr ""
 
-#: problem_builder/tip.py
+#: tip.py:58
 msgid "List of choices for which to display this tip"
-msgstr "مهسف خب ذاخهذثس بخق صاهذا فخ يهسحمشغ فاهس فهح"
+msgstr ""
 
-#: problem_builder/tip.py
+#: tip.py:65
 msgid "Width"
-msgstr "صهيفا"
+msgstr "عرض"
 
-#: problem_builder/tip.py
+#: tip.py:66
 msgid "Width of the tip popup (e.g. '400px')"
-msgstr "صهيفا خب فاث فهح حخحعح (ث.ل. '400حط')"
+msgstr ""
 
-#: problem_builder/tip.py
+#: tip.py:71
 msgid "Height"
-msgstr "اثهلاف"
+msgstr "الارتفاع"
 
-#: problem_builder/tip.py
+#: tip.py:72
 msgid "Height of the tip popup (e.g. '200px')"
-msgstr "اثهلاف خب فاث فهح حخحعح (ث.ل. '200حط')"
+msgstr ""
 
-#: problem_builder/tip.py
+#: tip.py:87
 #, python-brace-format
 msgid "Tip for {list_of_choices}"
-msgstr "فهح بخق {list_of_choices}"
+msgstr ""
 
-#: problem_builder/tip.py
+#: tip.py:131
 msgid "A choice selected for this tip does not exist."
-msgstr "ش ذاخهذث سثمثذفثي بخق فاهس فهح يخثس رخف ثطهسف."
+msgstr ""

@@ -9,7 +9,14 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
+  django.pluralidx = function(n) {
+    var v=0;
+    if (typeof(v) == 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
   
 
   /* gettext library */
@@ -20,14 +27,9 @@
     "All": "\u5168\u3066", 
     "Data export failed. Reason: <%= error %>": "\u30c7\u30fc\u30bf\u306e\u30a8\u30af\u30b9\u30dd\u30fc\u30c8\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002\u7406\u7531: <%= error %>", 
     "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
-      "\u7d50\u679c\u3092<%= creation_time %> (<%= seconds %> \u79d2) \u3067\u53d6\u5f97\u3057\u307e\u3057\u305f\u3002", 
       "\u7d50\u679c\u3092<%= creation_time %> (<%= seconds %> \u79d2) \u3067\u53d6\u5f97\u3057\u307e\u3057\u305f\u3002"
     ], 
-    "The report is currently being generated\u2026": "\u73fe\u5728\u30ec\u30dd\u30fc\u30c8\u3092\u4f5c\u6210\u4e2d\u3067\u3059\u2026", 
-    "You have used {num_used} of 1 submission.": [
-      "1\u56de\u306e\u63d0\u51fa\u306e\u3046\u3061{num_used}\u56de\u4f7f\u7528\u3057\u307e\u3057\u305f\u3002", 
-      "{max_attempts}\u56de\u306e\u63d0\u51fa\u306e\u3046\u3061{num_used}\u56de\u4f7f\u7528\u3057\u307e\u3057\u305f\u3002"
-    ]
+    "The report is currently being generated\u2026": "\u73fe\u5728\u30ec\u30dd\u30fc\u30c8\u3092\u4f5c\u6210\u4e2d\u3067\u3059\u2026"
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];

@@ -1,52 +1,65 @@
+# #-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+# 
 # #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-# #-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#
-# Translations template for PROJECT.
-# Copyright (C) 2018 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
-#
+# 
+# Translators:
+# 6e68c7971a89e50e680ae9444d303c8f, 2019
+# Omar Al-Ithawi <i@omardo.com>, 2019
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-06-28 14:17+0430\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:04+0300\n"
+"PO-Revision-Date: 2019-07-27 14:08+0000\n"
+"Last-Translator: Omar Al-Ithawi <i@omardo.com>, 2019\n"
+"Language-Team: Arabic (https://www.transifex.com/open-edx/teams/6205/ar/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Generated-By: Babel 1.3\n"
+"Generated-By: Babel 2.7.0\n"
+"#-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: problem_builder/public/js/instructor_tool.js
+#: templates/html/mentoring_attempts.underscore:5
+msgid "You have used {num_used} of 1 submission."
+msgid_plural "You have used {num_used} of {max_attempts} submissions."
+msgstr[0] "لقد استخدمتَ {num_used} محاولة من أصل {max_attempts}"
+msgstr[1] "لقد استخدمتَ 1 محاولة من أصل {max_attempts}"
+msgstr[2] "لقد استخدمتَ {num_used} محاولة من أصل {max_attempts}"
+msgstr[3] "لقد استخدمتَ {num_used} محاولات من أصل {max_attempts}"
+msgstr[4] "لقد استخدمتَ {num_used} محاولة من أصل {max_attempts}"
+msgstr[5] "لقد استخدمتَ {num_used} محاولات من أصل {max_attempts}"
+
+#: public/js/instructor_tool.js:349
 msgid "All"
-msgstr "شمم"
+msgstr "الكل"
 
-#: problem_builder/public/js/instructor_tool.js
+#: public/js/instructor_tool.js:408
 msgid "Data export failed. Reason: <%= error %>"
-msgstr "يشفش ثطحخقف بشهمثي. قثشسخر: <%= error %>"
+msgstr "فشلَ تصدير البيانات. السبب: <%= error %>"
 
-#: problem_builder/public/js/instructor_tool.js
+#: public/js/instructor_tool.js:416
 msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
 msgid_plural ""
 "Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
-msgstr[0] "قثسعمفس قثفقهثدثي خر <%= creation_time %> (<%= seconds %> سثذخري)."
-msgstr[1] ""
-"قثسعمفس قثفقهثدثي خر <%= creation_time %> (<%= seconds %> سثذخريس)."
+msgstr[0] "جُلبت النتائج في <%= creation_time %> ‏(<%= seconds %> ثانية)"
+msgstr[1] "جُلبت النتائج في <%= creation_time %> ‏(<%= seconds %> ثانية)"
+msgstr[2] "جُلبت النتائج في <%= creation_time %> ‏(<%= seconds %> ثانيتان)"
+msgstr[3] "جُلبت النتائج في <%= creation_time %> ‏(<%= seconds %> ثوان)"
+msgstr[4] "جُلبت النتائج في <%= creation_time %> ‏(<%= seconds %> ثانية)"
+msgstr[5] "جُلبت النتائج في <%= creation_time %> ‏(<%= seconds %> ثانية)"
 
-#: problem_builder/public/js/instructor_tool.js
+#: public/js/instructor_tool.js:429
 msgid "The report is currently being generated…"
-msgstr "فاث قثحخقف هس ذعققثرفمغ زثهرل لثرثقشفثي…"
-
-#: problem_builder/templates/html/mentoring_attempts.underscore
-msgid "You have used {num_used} of 1 submission."
-msgid_plural "You have used {num_used} of {max_attempts} submissions."
-msgstr[0] "استهلكت وظيفة الإرسال {num_used} من أصل 1."
-msgstr[1] "استهلكت وظيفة الإرسال {num_used} من أصل {max_attempts}."
+msgstr "جاري إنشاء التقرير..."

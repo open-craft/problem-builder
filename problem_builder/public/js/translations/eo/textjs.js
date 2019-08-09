@@ -9,12 +9,36 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
+  django.pluralidx = function(n) {
+    var v=(n != 1);
+    if (typeof(v) == 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
   
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
+  
+  var newcatalog = {
+    "All": "\u00c0ll \u2c60'\u03c3\u044f\u0454\u043c#", 
+    "Data export failed. Reason: <%= error %>": "D\u00e4t\u00e4 \u00e9xp\u00f6rt f\u00e4\u00efl\u00e9d. R\u00e9\u00e4s\u00f6n: <%= error %> \u2c60'\u03c3\u044f\u0454\u043c \u03b9\u03c1\u0455\u03c5\u043c \u2202\u03c3\u0142\u03c3\u044f \u0455\u03b9\u0442 \u03b1\u043c\u0454\u0442, \u00a2\u03c3\u03b7\u0455\u0454\u00a2\u0442#", 
+    "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
+      "R\u00e9s\u00fclts r\u00e9tr\u00ef\u00e9v\u00e9d \u00f6n <%= creation_time %> (<%= seconds %> s\u00e9\u00e7\u00f6nd). \u2c60'\u03c3\u044f\u0454\u043c \u03b9\u03c1\u0455\u03c5\u043c \u2202\u03c3\u0142\u03c3\u044f \u0455\u03b9\u0442 \u03b1\u043c\u0454\u0442, \u00a2\u03c3\u03b7\u0455\u0454\u00a2\u0442\u0454\u0442\u03c5\u044f#", 
+      "R\u00e9s\u00fclts r\u00e9tr\u00ef\u00e9v\u00e9d \u00f6n <%= creation_time %> (<%= seconds %> s\u00e9\u00e7\u00f6nds). \u2c60'\u03c3\u044f\u0454\u043c \u03b9\u03c1\u0455\u03c5\u043c \u2202\u03c3\u0142\u03c3\u044f \u0455\u03b9\u0442 \u03b1\u043c\u0454\u0442, \u00a2\u03c3\u03b7\u0455\u0454\u00a2\u0442\u0454\u0442\u03c5\u044f#"
+    ], 
+    "The report is currently being generated\u2026": "Th\u00e9 r\u00e9p\u00f6rt \u00efs \u00e7\u00fcrr\u00e9ntl\u00fd \u00df\u00e9\u00efng g\u00e9n\u00e9r\u00e4t\u00e9d\u2026 \u2c60'\u03c3\u044f\u0454\u043c \u03b9\u03c1\u0455\u03c5\u043c \u2202\u03c3\u0142\u03c3\u044f \u0455\u03b9\u0442 \u03b1\u043c\u0454\u0442, \u00a2\u03c3\u03b7\u0455\u0454\u00a2\u0442\u0454\u0442\u03c5\u044f#", 
+    "You have used {num_used} of 1 submission.": [
+      "\u00dd\u00f6\u00fc h\u00e4v\u00e9 \u00fcs\u00e9d {num_used} \u00f6f 1 s\u00fc\u00dfm\u00efss\u00ef\u00f6n. \u2c60'\u03c3\u044f\u0454\u043c \u03b9\u03c1\u0455\u03c5\u043c \u2202\u03c3\u0142\u03c3\u044f \u0455\u03b9\u0442 \u03b1\u043c\u0454\u0442, \u00a2\u03c3\u03b7\u0455\u0454\u00a2\u0442\u0454\u0442#", 
+      "\u00dd\u00f6\u00fc h\u00e4v\u00e9 \u00fcs\u00e9d {num_used} \u00f6f {max_attempts} s\u00fc\u00dfm\u00efss\u00ef\u00f6ns. \u2c60'\u03c3\u044f\u0454\u043c \u03b9\u03c1\u0455\u03c5\u043c \u2202\u03c3\u0142\u03c3\u044f \u0455\u03b9\u0442 \u03b1\u043c\u0454\u0442, \u00a2\u03c3\u03b7\u0455\u0454\u00a2\u0442\u0454\u0442\u03c5#"
+    ]
+  };
+  for (var key in newcatalog) {
+    django.catalog[key] = newcatalog[key];
+  }
   
 
   if (!django.jsi18n_initialized) {

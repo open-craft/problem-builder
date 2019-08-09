@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-06-14 11:02-0500\n"
+"POT-Creation-Date: 2019-07-31 14:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1485,7 +1485,6 @@ msgid "Section/Question:"
 msgstr "Séçtïön/Qüéstïön: Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмє#"
 
 #: templates/html/instructor_tool.html templates/html/instructor_tool.html
-#: public/js/instructor_tool.js
 msgid "All"
 msgstr "Àll Ⱡ'σяєм#"
 
@@ -1887,26 +1886,3 @@ msgid "A choice selected for this tip does not exist."
 msgstr ""
 "À çhöïçé séléçtéd för thïs tïp döés nöt éxïst. Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
 "¢σηѕє¢тєтυя α#"
-
-#: public/js/instructor_tool.js
-msgid "Data export failed. Reason: <%= error %>"
-msgstr ""
-"Dätä éxpört fäïléd. Réäsön: <%= error %> Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
-"¢σηѕє¢т#"
-
-#: public/js/instructor_tool.js
-msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
-msgid_plural ""
-"Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
-msgstr[0] ""
-"Résülts rétrïévéd ön <%= creation_time %> (<%= seconds %> séçönd). Ⱡ'σяєм "
-"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя#"
-msgstr[1] ""
-"Résülts rétrïévéd ön <%= creation_time %> (<%= seconds %> séçönds). Ⱡ'σяєм "
-"ιρѕυм ∂σłσя ѕιт αмєт, ¢σηѕє¢тєтυя#"
-
-#: public/js/instructor_tool.js
-msgid "The report is currently being generated…"
-msgstr ""
-"Thé répört ïs çürréntlý ßéïng générätéd… Ⱡ'σяєм ιρѕυм ∂σłσя ѕιт αмєт, "
-"¢σηѕє¢тєтυя#"

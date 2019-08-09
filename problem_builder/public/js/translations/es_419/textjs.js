@@ -9,7 +9,14 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
+  django.pluralidx = function(n) {
+    var v=(n != 1);
+    if (typeof(v) == 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
   
 
   /* gettext library */
@@ -23,11 +30,7 @@
       "Resultados obtenidos en <%= creation_time %> (<%= seconds %> second).", 
       "Resultados obtenidos en <%= creation_time %> (<%= seconds %> seconds)."
     ], 
-    "The report is currently being generated\u2026": "El informe se est\u00e1 generando...", 
-    "You have used {num_used} of 1 submission.": [
-      "Ha utilizado {num_used} de 1 presentaci\u00f3n.", 
-      "Ha utilizado {num_used} de {max_attempts} presentaciones."
-    ]
+    "The report is currently being generated\u2026": "El informe se est\u00e1 generando..."
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];

@@ -3,9 +3,6 @@
 WORKING_DIR := problem_builder
 JS_TARGET := $(WORKING_DIR)/public/js/translations
 EXTRACT_DIR := $(WORKING_DIR)/translations/en/LC_MESSAGES
-EXTRACTED_DJANGO := $(EXTRACT_DIR)/django-partial.po
-EXTRACTED_DJANGOJS := $(EXTRACT_DIR)/djangojs-partial.po
-EXTRACTED_TEXT := $(EXTRACT_DIR)/django.po
 
 help: ## display this help message
 	@echo "Please use \`make <target>' where <target> is one of"
@@ -16,11 +13,12 @@ upgrade:
 
 extract_translations: ## extract strings to be translated, outputting .po files
 	cd $(WORKING_DIR) && i18n_tool extract
-	msgcat $(EXTRACTED_DJANGO) $(EXTRACTED_DJANGOJS) -o $(EXTRACTED_TEXT)
-	rm $(EXTRACTED_DJANGO)
-	rm $(EXTRACTED_DJANGOJS)
-	sed -i'' -e 's/nplurals=INTEGER/nplurals=2/' $(EXTRACTED_TEXT)
-	sed -i'' -e 's/plural=EXPRESSION/plural=\(n != 1\)/' $(EXTRACTED_TEXT)
+	cd $(EXTRACT_DIR) && \
+		msgcat underscore.po djangojs-partial.po -o textjs.po && \
+		cat django-partial.po > text.po && \
+		sed -i'' -e 's/nplurals=INTEGER/nplurals=2/' -- text.po textjs.po && \
+		sed -i'' -e 's/plural=EXPRESSION/plural=\(n != 1\)/' -- text.po textjs.po && \
+		rm -fv django*.*o underscore.*o
 
 compile_translations: ## compile translation files, outputting .mo files for each supported language
 	cd $(WORKING_DIR) && i18n_tool generate

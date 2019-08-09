@@ -9,7 +9,14 @@
   var django = globals.django || (globals.django = {});
 
   
-  django.pluralidx = function(count) { return (count == 1) ? 0 : 1; };
+  django.pluralidx = function(n) {
+    var v=(n > 1);
+    if (typeof(v) == 'boolean') {
+      return v ? 1 : 0;
+    } else {
+      return v;
+    }
+  };
   
 
   /* gettext library */
@@ -23,11 +30,7 @@
       "R\u00e9sultats r\u00e9cup\u00e9r\u00e9s le <%= creation_time %> (<%= seconds %> seconde).", 
       "R\u00e9sultats r\u00e9cup\u00e9r\u00e9s le <%= creation_time %> (<%= seconds %> secondes)."
     ], 
-    "The report is currently being generated\u2026": "Le rapport est en cours de production...", 
-    "You have used {num_used} of 1 submission.": [
-      "Vous avez utilis\u00e9 {num_used} sur 1 envoi.", 
-      "Vous avez utilis\u00e9 {num_used} sur {max_attempts} envois."
-    ]
+    "The report is currently being generated\u2026": "Le rapport est en cours de production..."
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];

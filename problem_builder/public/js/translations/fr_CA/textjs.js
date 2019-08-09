@@ -24,13 +24,12 @@
   django.catalog = django.catalog || {};
   
   var newcatalog = {
-    "All": "Tudo", 
-    "Data export failed. Reason: <%= error %>": "Falha na exporta\u00e7\u00e3o de dados. Motivo: <%= error %>", 
-    "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
-      "Resultados recuperados em <%= creation_time %> (<%= segundos %> segundo).", 
-      "Resultados recuperados em <%= creation_time %> (<%= segundos %> segundos)."
-    ], 
-    "The report is currently being generated\u2026": "O relat\u00f3rio est\u00e1 sendo gerado..."
+    "All": "Tous", 
+    "The report is currently being generated\u2026": "Le rapport est en g\u00e9n\u00e9ration.", 
+    "You have used {num_used} of 1 submission.": [
+      "Vous avez utilis\u00e9 {num_used} de 1 soumissions.", 
+      "Vous avez utilis\u00e9 {num_used} de {max_attempts} soumissions."
+    ]
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];
@@ -86,41 +85,43 @@
     /* formatting library */
 
     django.formats = {
-    "DATETIME_FORMAT": "j \\d\\e F \\d\\e Y \u00e0\\s H:i", 
+    "DATETIME_FORMAT": "j F Y H:i", 
     "DATETIME_INPUT_FORMATS": [
       "%d/%m/%Y %H:%M:%S", 
       "%d/%m/%Y %H:%M:%S.%f", 
       "%d/%m/%Y %H:%M", 
       "%d/%m/%Y", 
-      "%d/%m/%y %H:%M:%S", 
-      "%d/%m/%y %H:%M:%S.%f", 
-      "%d/%m/%y %H:%M", 
-      "%d/%m/%y", 
+      "%d.%m.%Y %H:%M:%S", 
+      "%d.%m.%Y %H:%M:%S.%f", 
+      "%d.%m.%Y %H:%M", 
+      "%d.%m.%Y", 
       "%Y-%m-%d %H:%M:%S", 
       "%Y-%m-%d %H:%M:%S.%f", 
       "%Y-%m-%d %H:%M", 
       "%Y-%m-%d"
     ], 
-    "DATE_FORMAT": "j \\d\\e F \\d\\e Y", 
+    "DATE_FORMAT": "j F Y", 
     "DATE_INPUT_FORMATS": [
       "%d/%m/%Y", 
       "%d/%m/%y", 
+      "%d.%m.%Y", 
+      "%d.%m.%y", 
       "%Y-%m-%d"
     ], 
     "DECIMAL_SEPARATOR": ",", 
-    "FIRST_DAY_OF_WEEK": "0", 
-    "MONTH_DAY_FORMAT": "j \\d\\e F", 
+    "FIRST_DAY_OF_WEEK": "1", 
+    "MONTH_DAY_FORMAT": "j F", 
     "NUMBER_GROUPING": "3", 
-    "SHORT_DATETIME_FORMAT": "d/m/Y H:i", 
-    "SHORT_DATE_FORMAT": "d/m/Y", 
-    "THOUSAND_SEPARATOR": ".", 
+    "SHORT_DATETIME_FORMAT": "j N Y H:i", 
+    "SHORT_DATE_FORMAT": "j N Y", 
+    "THOUSAND_SEPARATOR": "\u00a0", 
     "TIME_FORMAT": "H:i", 
     "TIME_INPUT_FORMATS": [
       "%H:%M:%S", 
       "%H:%M:%S.%f", 
       "%H:%M"
     ], 
-    "YEAR_MONTH_FORMAT": "F \\d\\e Y"
+    "YEAR_MONTH_FORMAT": "F Y"
   };
 
     django.get_format = function(format_type) {
