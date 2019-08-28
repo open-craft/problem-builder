@@ -25,6 +25,11 @@
   
   var newcatalog = {
     "All": "Tous", 
+    "Data export failed. Reason: <%= error %>": "L'export de donn\u00e9es a \u00e9chou\u00e9. Raison : <%= error %>", 
+    "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
+      "R\u00e9sultats r\u00e9cup\u00e9r\u00e9s en <%= creation_time %> (<%= seconds %> seconde).", 
+      "R\u00e9sultats r\u00e9cup\u00e9r\u00e9s en <%= creation_time %> (<%= seconds %> secondes)."
+    ], 
     "The report is currently being generated\u2026": "Le rapport est en g\u00e9n\u00e9ration.", 
     "You have used {num_used} of 1 submission.": [
       "Vous avez utilis\u00e9 {num_used} de 1 soumissions.", 
