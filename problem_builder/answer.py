@@ -177,6 +177,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
         context = context.copy() if context else {}
+        context['answer_editable_id'] = uuid.uuid4().hex[:15]
         context['self'] = self
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
         html = loader.render_template('templates/html/answer_editable.html', context)
