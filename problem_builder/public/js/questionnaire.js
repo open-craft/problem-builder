@@ -245,7 +245,9 @@ function MRQBlock(runtime, element) {
                     mentoring.setContent(choiceTipsDOM, choice.tips);
 
                     choiceResultDOM.off('click').on('click', function() {
-                        messageView.showMessage(choiceTipsDOM);
+                        if (choiceTipsDOM.html() !== '') {
+                            messageView.showMessage(choiceTipsDOM);
+                        }
                     });
                 }
             });
