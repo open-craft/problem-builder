@@ -68,6 +68,13 @@
     margin: 5px 0;
 }
 
+.mentoring .questionnaire .choice-tips button,
+.mentoring .questionnaire .feedback button{
+    padding: 0;
+    background: 0 0;
+    font-size: inherit;
+    border: 0;
+}
 .mentoring .questionnaire .choice-tips p,
 .mentoring .questionnaire .feedback p {
     color: #3c3c3c;
