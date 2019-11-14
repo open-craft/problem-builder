@@ -8,11 +8,11 @@
   <div class="choices-list">
     {% for choice in custom_choices %}
     <div class="choice" aria-live="polite" aria-atomic="true">
-      <div class="choice-result fa icon-2x"
+      <button class="choice-result fa icon-2x"
            id="result_{{ self.html_id }}-{{ forloop.counter }}"
            aria-label=""
            data-label_correct="{% trans "Correct" %}"
-           data-label_incorrect="{% trans "Incorrect" %}"></div>
+           data-label_incorrect="{% trans "Incorrect" %}"></button>
       <label class="choice-label"
              for="{{ self.html_id }}_{{ forloop.counter }}"
              aria-describedby="feedback_{{ self.html_id }}
