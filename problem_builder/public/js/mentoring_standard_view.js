@@ -32,6 +32,7 @@ function MentoringStandardView(runtime, element, mentoring) {
             if (messagesDOM.html().trim()) {
                 messagesDOM.prepend('<div class="title1">' + mentoring.data.feedback_label + '</div>');
                 messagesDOM.show();
+                messagesDOM.focus();
             }
         }
 

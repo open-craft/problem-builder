@@ -28,9 +28,10 @@ from setuptools.command.install import install
 
 # Constants #########################################################
 
-VERSION = '3.4.0'
+VERSION = '3.4.1'
 
 # Functions #########################################################
+
 
 def package_data(pkg, root_list):
     """Generic function to find package_data for `pkg` under `root`."""
