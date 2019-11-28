@@ -1,8 +1,9 @@
-import ddt
 import unittest
-from mock import Mock
 
+import ddt
+from mock import Mock
 from xblock.field_data import DictFieldData
+
 from problem_builder.swipe import SwipeBlock
 
 

@@ -20,9 +20,9 @@
 
 # Imports ###########################################################
 
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
-from django.contrib.auth.models import User
 
 try:
     # workaround so we don't explicitly import the AnonymousUserId model from LMS
@@ -50,7 +50,7 @@ class Answer(models.Model):
         )
 
     name = models.CharField(max_length=50, db_index=True)
-    student_id = models.CharField(max_length=32, db_index=True)
+    student_id = models.CharField(max_length=50, db_index=True)
     course_key = models.CharField(max_length=255, db_index=True)
     student_input = models.TextField(blank=True, default='')
     created_on = models.DateTimeField('created on', auto_now_add=True)

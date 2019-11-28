@@ -20,9 +20,11 @@
 import json
 from functools import wraps
 from textwrap import dedent
+
 from mock import Mock, patch
-from .base_test import ProblemBuilderBaseTest
 from selenium.common.exceptions import NoSuchElementException
+
+from .base_test import ProblemBuilderBaseTest
 
 
 class MockSubmissionsAPI(object):
@@ -235,7 +237,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         and it the report. We allow minor differences here as the report
         screenshot is not a perfect match.
         """
-        self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image', threshold=100)
+        self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image', threshold=3000)
 
     @check_dashboard_and_report(SIMPLE_DASHBOARD, visual_rules=json.dumps({
         'background': ('//raw.githubusercontent.com/open-craft/problem-builder/master/'
@@ -247,7 +249,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         allow minor differences here as the report screenshot is not a perfect
         match.
         """
-        self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image', threshold=100)
+        self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image', threshold=3000)
 
     @check_dashboard_and_report(
         SIMPLE_DASHBOARD,
@@ -269,7 +271,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         """
         Test that image overlays are displayed correctly on the dashboard.
         """
-        self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image-overlay', threshold=100)
+        self.assertScreenshot('.pb-dashboard-visual svg', 'dashboard-image-overlay', threshold=3000)
 
     @check_dashboard_and_report(ALTERNATIVE_DASHBOARD)
     def test_dashboard_alternative(self):

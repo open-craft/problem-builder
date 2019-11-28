@@ -20,19 +20,20 @@
 """
 Test that we can upgrade from mentoring v1 to problem builder (v2).
 """
+import os.path
+import unittest
+
 import ddt
 from lxml import etree
-from problem_builder.mentoring import MentoringBlock
-from problem_builder.v1.xml_changes import convert_xml_to_v2
-import os.path
-from StringIO import StringIO
-import unittest
-from sample_xblocks.basic.content import HtmlBlock
+from six import StringIO
 from xblock.core import XBlock
 from xblock.fields import ScopeIds
 from xblock.runtime import DictKeyValueStore, KvsFieldData
 from xblock.test.tools import TestRuntime
 
+from problem_builder.mentoring import MentoringBlock
+from problem_builder.v1.xml_changes import convert_xml_to_v2
+from sample_xblocks.basic.content import HtmlBlock
 
 xml_path = os.path.join(os.path.dirname(__file__), "xml")
 

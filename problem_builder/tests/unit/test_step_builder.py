@@ -1,11 +1,12 @@
 import unittest
-from mock import Mock
 
+from mock import Mock
 from xblock.field_data import DictFieldData
 
 from problem_builder.mentoring import MentoringWithExplicitStepsBlock
 from problem_builder.step import MentoringStepBlock
-from problem_builder.step_review import ReviewStepBlock, ConditionalMessageBlock, ScoreSummaryBlock
+from problem_builder.step_review import (ConditionalMessageBlock,
+                                         ReviewStepBlock, ScoreSummaryBlock)
 
 from .utils import BlockWithChildrenTestMixin
 

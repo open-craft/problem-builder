@@ -20,20 +20,24 @@
 
 # Imports ###########################################################
 import logging
+import uuid
+
+import six
 from lazy import lazy
-
-from .models import Answer
-
 from xblock.core import XBlock
-from xblock.fields import Scope, Integer, String
+from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
-from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin, ExpandStaticURLMixin
-import uuid
+from xblockutils.studio_editable import (StudioEditableXBlockMixin,
+                                         XBlockWithPreviewMixin)
 
+from problem_builder.sub_api import SubmittingXBlockMixin, sub_api
+
+from .mixins import (ExpandStaticURLMixin, QuestionMixin,
+                     StudentViewUserStateMixin,
+                     XBlockWithTranslationServiceMixin)
+from .models import Answer
 
 # Globals ###########################################################
 
@@ -268,7 +272,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         """
         return {
             'id': self.name,
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
@@ -317,7 +321,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
             location = self.location.replace(branch=None, version=None)  # Standardize the key in case it isn't already
             target_key = {
                 'student_id': student_submissions_key,
-                'course_id': unicode(location.course_key),
+                'course_id': six.text_type(location.course_key),
                 'item_id': self.name,
                 'item_type': u'pb-answer',
             }
@@ -351,6 +355,6 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
             'name': self.name,  # For backwards compatibility; same as 'id'
             'display_name': self.display_name,
             'description': self.description,
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'type': self.CATEGORY
         }

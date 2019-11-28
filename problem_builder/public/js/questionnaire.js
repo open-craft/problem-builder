@@ -133,7 +133,7 @@ function MCQBlock(runtime, element) {
             if (choiceInputDOM.prop('checked')) {
                 display_message(result.message, messageView, options.checkmark);
                 if (result.status === "correct") {
-                    choiceInputDOM.addClass('correct');
+                    choiceDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                     choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
                 } else {

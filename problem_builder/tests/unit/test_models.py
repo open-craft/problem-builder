@@ -1,9 +1,8 @@
 """
 Unit tests for models.
 """
-from mock import MagicMock, PropertyMock
-
 from django.test import TestCase
+from mock import MagicMock, PropertyMock
 
 from problem_builder.models import Answer, delete_anonymous_user_answers
 

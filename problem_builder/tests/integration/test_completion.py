@@ -20,10 +20,13 @@
 
 # Imports ###########################################################
 
-from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest, GetChoices
+import time
 
+from .base_test import (GetChoices, MentoringAssessmentBaseTest,
+                        ProblemBuilderBaseTest)
 
 # Classes ###########################################################
+
 
 class CompletionBlockTestMixin(object):
     """
@@ -95,6 +98,8 @@ class CompletionBlockTest(CompletionBlockTestMixin, ProblemBuilderBaseTest):
         # The checkbox should be checked (since that's the value we submitted earlier),
         # and "Submit" should be disabled (to discourage submitting the same answer):
         self.expect_checkbox_checked(True)
+        # XXX: hack; use web driver wait correctly
+        time.sleep(3)
         self.expect_checkmark_visible(True)
         self.expect_submit_enabled(False)
 

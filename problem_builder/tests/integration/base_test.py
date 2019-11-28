@@ -17,8 +17,9 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-import mock
+import time
 
+import mock
 from xblock.fields import String
 from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
 from xblockutils.resources import ResourceLoader
@@ -27,6 +28,7 @@ from xblockutils.resources import ResourceLoader
 # Since we rely on it, we need to mock url_name support so it can be set via XML and
 # accessed like a normal field.
 from problem_builder.mentoring import MentoringBlock
+
 MentoringBlock.url_name = String()
 
 loader = ResourceLoader(__name__)
@@ -43,23 +45,35 @@ class PopupCheckMixin(object):
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
         for index, expected_feedback in enumerate(item_feedbacks):
+            # TODO: replace time.sleep with waiting for elements the selenium way
+            time.sleep(2)
+
             choice_wrapper = mentoring.find_elements_by_css_selector(prefix + " .choice")[index]
             if do_submit:
                 # clicking on actual radio button
                 choice_wrapper.find_element_by_css_selector(".choice-selector input").click()
                 submit.click()
             self.wait_until_disabled(submit)
+            # XXX: temporary workaround; replace sleep with selenium wait for element
+            time.sleep(3)
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
-            choice_wrapper.click()
+            # XXX: temporary workaround; replace sleep with selenium wait for element
+            time.sleep(3)
             item_feedback_icon.click()  # clicking on item feedback icon
+            # XXX: temporary workaround; replace sleep with selenium wait for element
+            time.sleep(3)
             item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
             self.assertTrue(item_feedback_popup.is_displayed())
             self.assertEqual(item_feedback_popup.text, expected_feedback)
 
             item_feedback_popup.click()
+            # XXX: temporary workaround; replace sleep with selenium wait for element
+            time.sleep(3)
             self.assertTrue(item_feedback_popup.is_displayed())
 
-            mentoring.click()
+            mentoring.find_element_by_css_selector('.title').click()
+            # XXX: temporary workaround; replace sleep with selenium wait for element
+            time.sleep(3)
             self.assertFalse(item_feedback_popup.is_displayed())
 
 

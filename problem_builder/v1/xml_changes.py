@@ -20,9 +20,11 @@
 """
 Each class in this file represents a change made to the XML schema between v1 and v2.
 """
-from lxml import etree
 import json
 import warnings
+
+import six
+from lxml import etree
 
 
 class Change(object):
@@ -153,7 +155,7 @@ class TableColumnHeader(Change):
                 if child.text:
                     header_html += child.text
                 for grandchild in list(child):
-                    header_html += etree.tostring(grandchild)
+                    header_html += etree.tostring(grandchild).decode('utf-8')
                 to_remove.append(child)
             elif child.tag == "pb-answer":
                 child.tag = "pb-answer-recap"
@@ -318,7 +320,7 @@ class CommaSeparatedListToJson(Change):
     APPLY_TO_ATTRIBUTES = ("values", "correct_choices", "required_choices", "ignored_choices")
 
     def _convert_value(self, raw_value):
-        return json.dumps([unicode(val).strip() for val in raw_value.split(',')])
+        return json.dumps([six.text_type(val).strip() for val in raw_value.split(',')])
 
     @staticmethod
     def applies_to(node):
@@ -343,26 +345,6 @@ class OptionalShowTitleDefaultToFalse(Change):
         self.node.attrib["show_title"] = "false"
 
 
-# An *ordered* list of all XML schema changes:
-xml_changes = [
-    RenameMentoringTag,
-    PrefixTags,
-    HideTitle,
-    RemoveTitle,
-    UnwrapHTML,
-    RenameTableTag,
-    TableColumnHeader,
-    QuizzToMCQ,
-    MCQToRating,
-    ReadOnlyAnswerToRecap,
-    QuestionToField,
-    QuestionSubmitMessageToField,
-    TipChanges,
-    SharedHeaderToHTML,
-    CommaSeparatedListToJson,
-]
-
-
 def convert_xml_to_v2(node, from_version="v1"):
     """
     Given an XML node, re-structure it as needed to convert it from v1 style to v2 style XML.
@@ -371,6 +353,26 @@ def convert_xml_to_v2(node, from_version="v1"):
     to False, for compatibility with old versions of the mentoring block that didn't have
     question titles at all.
     """
+
+    # An *ordered* list of all XML schema changes:
+    xml_changes = [
+        RenameMentoringTag,
+        PrefixTags,
+        HideTitle,
+        RemoveTitle,
+        UnwrapHTML,
+        RenameTableTag,
+        TableColumnHeader,
+        QuizzToMCQ,
+        MCQToRating,
+        ReadOnlyAnswerToRecap,
+        QuestionToField,
+        QuestionSubmitMessageToField,
+        TipChanges,
+        SharedHeaderToHTML,
+        CommaSeparatedListToJson,
+    ]
+
     if from_version == "v0":
         xml_changes.append(OptionalShowTitleDefaultToFalse)
 

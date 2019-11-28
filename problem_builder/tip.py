@@ -20,17 +20,18 @@
 
 # Imports ###########################################################
 
+import six
 from django.utils.html import strip_tags
 from lxml import etree
-
 from xblock.core import XBlock
-from xblock.fields import Scope, String, List
+from xblock.fields import List, Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 
-from problem_builder.mixins import XBlockWithTranslationServiceMixin, ExpandStaticURLMixin
+from problem_builder.mixins import (ExpandStaticURLMixin,
+                                    XBlockWithTranslationServiceMixin)
 
 loader = ResourceLoader(__name__)
 
@@ -111,7 +112,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
         Clean up the edits during studio_view save
         """
         if "values" in data:
-            data["values"] = list([unicode(v) for v in set(data["values"])])
+            data["values"] = list([six.text_type(v) for v in set(data["values"])])
 
     def validate_field_data(self, validation, data):
         """
@@ -141,7 +142,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
         block.width = node.get('width', '')
         block.height = node.get('height', '')
 
-        block.content = unicode(node.text or u"")
+        block.content = six.text_type(node.text or u"")
         for child in node:
             block.content += etree.tostring(child, encoding='unicode')
 
