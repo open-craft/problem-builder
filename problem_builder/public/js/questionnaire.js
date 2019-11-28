@@ -3,7 +3,7 @@
 function display_message(message, messageView, checkmark){
     if (message) {
         var msg = '<div class="message-content">' + message + '</div>' +
-                  '<div class="close icon-remove-sign fa-times-circle"></div>';
+                  '<button class="close icon-remove-sign fa-times-circle"></button>';
         messageView.showMessage(msg);
         if (checkmark) {
             checkmark.addClass('checkmark-clickable');
@@ -155,7 +155,7 @@ function MCQBlock(runtime, element) {
 
             if (_.isNull(result.submission)) {
                 messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
-                                        '<div class="close icon-remove-sign fa-times-circle"></div>');
+                                        '<button class="close icon-remove-sign fa-times-circle"></button>');
             }
         },
 
