@@ -110,38 +110,37 @@ Access it at [http://localhost:8000/](http://localhost:8000).
 Running tests
 -------------
 
-Install [Xvfb](https://en.wikipedia.org/wiki/Xvfb). For instance:
+The integration tests require a recent Firefox and geckodriver (CI
+uses Firefox 70 and geckodriver 0.26). These can be installed locally for
+testing if required. For example on Linux:
 
-```bash
-$ apt-get install xvfb
+```
+mkdir external
+cd external
+wget https://archive.mozilla.org/pub/firefox/releases/70.0.1/linux-x86_64/en-US/firefox-70.0.1.tar.bz2
+tar jxf firefox-70.0.1.tar.bz2
+wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
+tar xzf geckodriver-v0.26.0-linux64.tar.gz
+export PATH="$(pwd):$(pwd)/firefox/:$PATH"
+
+# now can run integration tests using this firefox version
+cd ..
+make test.integration
 ```
 
-Install [firefox
-38.0.5](https://ftp.mozilla.org/pub/firefox/releases/38.0.5) in
-`/opt/firefox-38.0.5`. For instance:
-
-```bash
-$ mkdir /opt/firefox-38.0.5
-$ cd /opt/firefox-38.0.5
-$ wget https://ftp.mozilla.org/pub/firefox/releases/38.0.5/linux-x86_64/en-US/firefox-38.0.5.tar.bz2
-$ tar -xvf firefox-38.0.5.tar.bz2
-```
-
-From the xblock-problem-builder repository root, run the tests with the
+From the problem-builder repository root, run the tests with the
 following command:
 
 ```bash
-$ PATH=/opt/firefox-38.0.5/firefox tox
+$ make test
 ```
 
-To run only the quality tests run:
-```bash
-$ PATH=/opt/firefox-38.0.5/firefox tox -e quality
-```
+See also the following for more scoped tests:
 
-To run only the integration tests run:
 ```bash
-$ PATH=/opt/firefox-38.0.5/firefox tox -e integration
+$ make quality
+$ make test.unit
+$ make test.integration
 ```
 
 Working with Translations

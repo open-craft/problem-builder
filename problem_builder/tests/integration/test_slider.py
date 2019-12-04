@@ -20,8 +20,8 @@
 
 # Imports ###########################################################
 
-from .base_test import ProblemBuilderBaseTest, MentoringAssessmentBaseTest, GetChoices
-
+from .base_test import (GetChoices, MentoringAssessmentBaseTest,
+                        ProblemBuilderBaseTest)
 
 # Classes ###########################################################
 

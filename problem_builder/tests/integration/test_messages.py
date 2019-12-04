@@ -17,9 +17,9 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-from .base_test import ProblemBuilderBaseTest
 import ddt
 
+from .base_test import ProblemBuilderBaseTest
 
 COMPLETED, INCOMPLETE, MAX_REACHED = "completed", "incomplete", "max_attempts_reached"
 MESSAGES = {

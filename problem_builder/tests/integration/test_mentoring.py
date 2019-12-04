@@ -17,10 +17,11 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-import mock
 import ddt
+import mock
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
+
 from .base_test import MentoringBaseTest, ProblemBuilderBaseTest
 
 

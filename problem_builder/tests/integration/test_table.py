@@ -21,11 +21,13 @@
 # Imports ###########################################################
 
 from mock import patch
+
 from workbench.runtime import WorkbenchRuntime
+
 from .base_test import MentoringBaseTest
 
-
 # Classes ###########################################################
+
 
 class MentoringTableBlockTest(MentoringBaseTest):
 

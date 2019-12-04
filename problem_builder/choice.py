@@ -20,16 +20,20 @@
 
 # Imports ###########################################################
 
-from lxml import etree
 import uuid
 
+import six
+from lxml import etree
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
-from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
+from xblockutils.studio_editable import (StudioEditableXBlockMixin,
+                                         XBlockWithPreviewMixin)
 
-from problem_builder.mixins import XBlockWithTranslationServiceMixin, StudentViewUserStateMixin, ExpandStaticURLMixin
+from problem_builder.mixins import (ExpandStaticURLMixin,
+                                    StudentViewUserStateMixin,
+                                    XBlockWithTranslationServiceMixin)
 
 
 # Make '_' a no-op so we can scrape strings
@@ -76,7 +80,7 @@ class ChoiceBlock(
         """
         # display_name_with_default gives out correctness - not adding it here
         return {
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'display_name': self.expand_static_url(self._(u"Choice ({content})").format(content=self.content)),
             'value': self.value,
             'content': self.expand_static_url(self.content),
@@ -141,7 +145,7 @@ class ChoiceBlock(
                 setattr(block, field_name, node.attrib[field_name])
 
         # HTML content:
-        block.content = unicode(node.text or u"")
+        block.content = six.text_type(node.text or u"")
         for child in node:
             block.content += etree.tostring(child, encoding='unicode')
 

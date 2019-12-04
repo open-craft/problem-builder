@@ -4,10 +4,9 @@ from datetime import datetime
 
 import pytz
 from mock import MagicMock, Mock
-
 from xblock.core import XBlock
 from xblock.field_data import DictFieldData
-from xblock.fields import String, Scope, Boolean, Integer, DateTime
+from xblock.fields import Boolean, DateTime, Integer, Scope, String
 
 from problem_builder.mixins import StudentViewUserStateMixin
 
@@ -94,7 +93,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
         other_fields = {"setting": "setting", "content": "content", "user_state_summary": "Something"}
         block_fields = self._merge_dicts(user_fields, other_fields)
         block = self._build_block(XBlockNoChildrenWithUserState, block_fields)
-        block.USER_STATE_FIELDS = user_fields.keys()
+        block.USER_STATE_FIELDS = list(user_fields.keys())
 
         self.assertEqual(block.build_user_state_data(), user_fields)
 
@@ -179,7 +178,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "user_info_1": "John",
             "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
-        block.USER_STATE_FIELDS = user_fields1.keys()
+        block.USER_STATE_FIELDS = list(user_fields1.keys())
 
         user_fields2 = {
             "answer_1": "BBBB",
@@ -215,7 +214,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         block = self._build_block(XBlockChildrenUserState, self._merge_dicts(user_fields, other_fields))
-        block.USER_STATE_FIELDS = user_fields.keys()
+        block.USER_STATE_FIELDS = list(user_fields.keys())
 
         nested_user_fields = {
             "answer_1": "AAAA",
@@ -252,7 +251,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
             "user_info_2": datetime(2017, 1, 2, 3, 4, 5, tzinfo=pytz.UTC)
         }
         block = self._build_block(XBlockChildrenUserState, self._merge_dicts(user_fields, other_fields))
-        block.USER_STATE_FIELDS = user_fields.keys()
+        block.USER_STATE_FIELDS = list(user_fields.keys())
 
         nested_user_fields = {
             "answer_1": "AAAA",
@@ -274,7 +273,7 @@ class TestStudentViewUserStateMixin(unittest.TestCase):
 
         block.USER_STATE_FIELDS = ['answer_1', 'answer_2', 'preference_1', 'preference_2', 'user_info_1', 'user_info_2']
         student_user_state_response = block.student_view_user_state()
-        student_user_state = json.loads(student_user_state_response.body)
+        student_user_state = json.loads(student_user_state_response.body.decode('utf-8'))
 
         expected = user_fields.copy()
         expected["user_info_2"] = expected["user_info_2"].isoformat()

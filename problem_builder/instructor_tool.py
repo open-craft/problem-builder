@@ -23,10 +23,12 @@ Instructor Tool: An XBlock for instructors to export student answers from a cour
 All processing is done offline.
 """
 import json
+
+import six
 from django.core.paginator import Paginator
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
-from xblock.fields import Scope, String, Dict, List
+from xblock.fields import Dict, List, Scope, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 
@@ -115,7 +117,7 @@ class InstructorToolBlock(XBlock):
                 self.last_export_result = {'error': u'Unexpected result: {}'.format(repr(task_result.result))}
                 self.display_data = None
         else:
-            self.last_export_result = {'error': unicode(task_result.result)}
+            self.last_export_result = {'error': six.text_type(task_result.result)}
             self.display_data = None
 
     @XBlock.json_handler
@@ -143,7 +145,7 @@ class InstructorToolBlock(XBlock):
         html = loader.render_template('templates/html/instructor_tool.html', {
             'block_choices': block_choices,
             'course_blocks_api': COURSE_BLOCKS_API,
-            'root_block_id': unicode(getattr(self.runtime, 'course_id', 'course_id')),
+            'root_block_id': six.text_type(getattr(self.runtime, 'course_id', 'course_id')),
         })
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
@@ -220,7 +222,7 @@ class InstructorToolBlock(XBlock):
             user_ids = []
             for username in usernames.split(','):
                 username = username.strip()
-                user_id = user_service.get_anonymous_user_id(username, unicode(self.runtime.course_id))
+                user_id = user_service.get_anonymous_user_id(username, six.text_type(self.runtime.course_id))
                 if user_id:
                     user_ids.append(user_id)
             if not user_ids:
@@ -229,7 +231,7 @@ class InstructorToolBlock(XBlock):
         if not root_block_id:
             root_block_id = self.scope_ids.usage_id
             # Block ID not in workbench runtime.
-            root_block_id = unicode(getattr(root_block_id, 'block_id', root_block_id))
+            root_block_id = six.text_type(getattr(root_block_id, 'block_id', root_block_id))
 
         # Launch task
         from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
@@ -238,7 +240,7 @@ class InstructorToolBlock(XBlock):
         self.save()
         async_result = export_data_task.delay(
             # course_id not available in workbench.
-            unicode(getattr(self.runtime, 'course_id', 'course_id')),
+            six.text_type(getattr(self.runtime, 'course_id', 'course_id')),
             root_block_id,
             block_types,
             user_ids,

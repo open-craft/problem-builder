@@ -3,7 +3,7 @@
 function display_message(message, messageView, checkmark){
     if (message) {
         var msg = '<div class="message-content">' + message + '</div>' +
-                  '<div class="close icon-remove-sign fa-times-circle"></div>';
+                  '<button class="close icon-remove-sign fa-times-circle"></button>';
         messageView.showMessage(msg);
         if (checkmark) {
             checkmark.addClass('checkmark-clickable');
@@ -133,7 +133,7 @@ function MCQBlock(runtime, element) {
             if (choiceInputDOM.prop('checked')) {
                 display_message(result.message, messageView, options.checkmark);
                 if (result.status === "correct") {
-                    choiceInputDOM.addClass('correct');
+                    choiceDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                     choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
                     choiceResultDOM.append('<span class="sr-only">'+gettext("Correct")+'</span>');
@@ -157,7 +157,7 @@ function MCQBlock(runtime, element) {
 
             if (_.isNull(result.submission)) {
                 messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
-                                        '<div class="close icon-remove-sign fa-times-circle"></div>');
+                                        '<button class="close icon-remove-sign fa-times-circle"></button>');
             }
         },
 
@@ -249,7 +249,9 @@ function MRQBlock(runtime, element) {
                     mentoring.setContent(choiceTipsDOM, choice.tips);
 
                     choiceResultDOM.off('click').on('click', function() {
-                        messageView.showMessage(choiceTipsDOM);
+                        if (choiceTipsDOM.html() !== '') {
+                            messageView.showMessage(choiceTipsDOM);
+                        }
                     });
                 }
             });

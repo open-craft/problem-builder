@@ -96,7 +96,7 @@ class TestAnswerMixin(unittest.TestCase):
         answer_mixin = self.make_answer_mixin(name=name)
         student_view_user_state = answer_mixin.student_view_user_state()
 
-        parsed_student_state = json.loads(student_view_user_state.body)
+        parsed_student_state = json.loads(student_view_user_state.body.decode('utf-8'))
 
         expected_user_state_data = {
             "student_input": existing_model.student_input,

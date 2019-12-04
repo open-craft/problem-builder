@@ -22,15 +22,16 @@
 
 import logging
 
+import six
 from xblock.core import XBlock
-from xblock.fields import JSONField, Scope, String, UNSET
+from xblock.fields import UNSET, JSONField, Scope, String
 from xblock.fragment import Fragment
-from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.resources import ResourceLoader
+from xblockutils.studio_editable import StudioEditableXBlockMixin
 
-from .mixins import QuestionMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin
-from .sub_api import sub_api, SubmittingXBlockMixin
-
+from .mixins import (QuestionMixin, StudentViewUserStateMixin,
+                     XBlockWithTranslationServiceMixin)
+from .sub_api import SubmittingXBlockMixin, sub_api
 
 # Globals ###########################################################
 
@@ -82,7 +83,7 @@ class NullableBoolean(JSONField):
             return None
         if isinstance(value, str):
             value = value.decode('ascii', errors='replace')
-        if isinstance(value, unicode):
+        if isinstance(value, six.text_type):
             return value.lower() == 'true'
         else:
             return bool(value)
@@ -160,7 +161,7 @@ class CompletionBlock(
         """
         return {
             'id': self.name,
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.question,

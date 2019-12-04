@@ -21,20 +21,20 @@
 import json
 import logging
 
+import six
 from lazy.lazy import lazy
-
 from xblock.core import XBlock
-from xblock.fields import String, Scope
+from xblock.fields import Scope, String
 from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import (
-    StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
-)
+from xblockutils.studio_editable import (StudioContainerWithNestedXBlocksMixin,
+                                         StudioEditableXBlockMixin,
+                                         XBlockWithPreviewMixin)
+
 from .mixins import StudentViewUserStateMixin
 from .sub_api import sub_api
-
 
 loader = ResourceLoader(__name__)
 
@@ -160,7 +160,7 @@ class PlotBlock(
     @lazy
     def course_key_str(self):
         location = _normalize_id(self.location)
-        return unicode(location.course_key)
+        return six.text_type(location.course_key)
 
     @property
     def default_claims(self):

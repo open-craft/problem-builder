@@ -22,22 +22,25 @@
 
 import errno
 import json
-from django.contrib.auth.models import User
 
+import six
+from django.contrib.auth.models import User
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
-from xblock.fields import Scope, String, Boolean
+from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
-
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, StudioContainerXBlockMixin, XBlockWithPreviewMixin
-
-# Globals ###########################################################
+from xblockutils.studio_editable import (StudioContainerXBlockMixin,
+                                         StudioEditableXBlockMixin,
+                                         XBlockWithPreviewMixin)
 
 from problem_builder.answer import AnswerRecapBlock
 from problem_builder.dashboard import ExportMixin
 from problem_builder.models import Share
 from problem_builder.sub_api import SubmittingXBlockMixin
+
+# Globals ###########################################################
+
 
 loader = ResourceLoader(__name__)
 
@@ -172,13 +175,13 @@ class MentoringTableBlock(
     @property
     def block_id(self):
         usage_id = self.scope_ids.usage_id
-        if isinstance(usage_id, basestring):
+        if isinstance(usage_id, six.string_types):
             return usage_id
         try:
-            return unicode(usage_id.replace(branch=None, version_guid=None))
+            return six.text_type(usage_id.replace(branch=None, version_guid=None))
         except AttributeError:
             pass
-        return unicode(usage_id)
+        return six.text_type(usage_id)
 
     @XBlock.json_handler
     def share_results(self, data, suffix=''):

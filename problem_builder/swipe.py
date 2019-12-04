@@ -22,14 +22,15 @@
 
 import logging
 
+import six
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin, XBlockWithPreviewMixin
+from xblockutils.studio_editable import (StudioEditableXBlockMixin,
+                                         XBlockWithPreviewMixin)
 
 from .mixins import QuestionMixin, StudentViewUserStateMixin
-
 
 # Globals ###########################################################
 
@@ -126,7 +127,7 @@ class SwipeBlock(
         """
         return {
             'id': self.name,
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'text': self.text,

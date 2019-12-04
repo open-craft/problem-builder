@@ -8,16 +8,19 @@
   <div class="choices-list">
     {% for choice in custom_choices %}
     <div class="choice" aria-live="polite" aria-atomic="true">
-      <div class="choice-result fa icon-2x"
+      <button class="choice-result fa icon-2x"
            id="result_{{ self.html_id }}-{{ forloop.counter }}"
            aria-label=""
            data-label_correct="{% trans "Correct" %}"
-           data-label_incorrect="{% trans "Incorrect" %}"></div>
-      <label class="choice-label" aria-describedby="feedback_{{ self.html_id }}
+           data-label_incorrect="{% trans "Incorrect" %}"></button>
+      <label class="choice-label"
+             for="{{ self.html_id }}_{{ forloop.counter }}"
+             aria-describedby="feedback_{{ self.html_id }}
                                                     result_{{ self.html_id }}-{{ forloop.counter }}
                                                     choice_tips_{{ self.html_id }}-{{ forloop.counter }}">
         <span class="choice-selector">
           <input type="checkbox" name="{{ self.name }}" value="{{ choice.value }}"
+             id="{{ self.html_id }}_{{ forloop.counter }}"
              {% if choice.value in self.student_choices and not hide_prev_answer %} checked{% endif %}
           />
         </span>

@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import unicode_literals
+
 import math
 import re
 import time
 
-from mock import patch, Mock
+from mock import Mock, patch
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 

@@ -2,7 +2,7 @@
 Helper methods for testing Problem Builder / Step Builder blocks
 """
 import json
-from datetime import datetime, date
+from datetime import date, datetime
 
 from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData

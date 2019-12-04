@@ -19,30 +19,32 @@
 #
 
 import logging
-from django import utils
+
 import pkg_resources
-
+import six
+from django import utils
 from lazy.lazy import lazy
-
 from xblock.core import XBlock
-from xblock.fields import String, List, Scope
+from xblock.fields import List, Scope, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import (
-    NestedXBlockSpec, StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin
-)
+from xblockutils.studio_editable import (NestedXBlockSpec,
+                                         StudioContainerWithNestedXBlocksMixin,
+                                         StudioEditableXBlockMixin,
+                                         XBlockWithPreviewMixin)
 
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
 from problem_builder.mcq import MCQBlock, RatingBlock
 from problem_builder.mixins import (
-    EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin, StudentViewUserStateResultsTransformerMixin)
+    EnumerableChildMixin, StepParentMixin, StudentViewUserStateMixin,
+    StudentViewUserStateResultsTransformerMixin)
 from problem_builder.mrq import MRQBlock
 from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
 from problem_builder.table import MentoringTableBlock
-from .utils import I18NService
 
+from .utils import I18NService
 
 log = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
@@ -308,7 +310,7 @@ class MentoringStepBlock(
                 components.append(child.student_view_data(context))
 
         return {
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'title': self.display_name_with_default,
