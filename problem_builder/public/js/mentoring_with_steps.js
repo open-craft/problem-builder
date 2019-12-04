@@ -36,7 +36,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     /**
-     * Calls a function for each registered step. The object passed to this function is a MentoringStepBlock. 
+     * Calls a function for each registered step. The object passed to this function is a MentoringStepBlock.
      *
      * @param func single arg function.
      */
@@ -45,7 +45,7 @@ function MentoringWithStepsBlock(runtime, element) {
             func(steps[idx]);
         }
     }
-    
+
     /**
      * Displays the active step
      */
@@ -83,12 +83,18 @@ function MentoringWithStepsBlock(runtime, element) {
         if (response.step_status === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
             checkmark.attr('aria-label', checkmark.data('label_correct'));
+            checkmark.find('span.sr-only').remove();
+            checkmark.append('<span class="sr-only">'+gettext("Correct")+'</span>')
         } else if (response.step_status === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
             checkmark.attr('aria-label', checkmark.data('label_partial'));
+            checkmark.find('span.sr-only').remove();
+            checkmark.append('<span class="sr-only">'+gettext("Partially correct")+'</span>')
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
             checkmark.attr('aria-label', checkmark.data('label_incorrect'));
+            checkmark.find('span.sr-only').remove();
+            checkmark.append('<span class="sr-only">'+gettext("Incorrect")+'</span>');
         }
         var step = getActiveStep();
         if (typeof step.showFeedback == 'function') {
@@ -266,7 +272,7 @@ function MentoringWithStepsBlock(runtime, element) {
      * blocks with embedded videos, that can be added to that step.
      *
      * NOTE: Review steps are handled differently than "normal" steps:
-     * the HTML contents of a review step are replaced with fresh 
+     * the HTML contents of a review step are replaced with fresh
      * contents in submit function.
      */
     function hideReviewStep() {

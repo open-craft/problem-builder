@@ -136,10 +136,12 @@ function MCQBlock(runtime, element) {
                     choiceInputDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                     choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
+                    choiceResultDOM.append('<span class="sr-only">'+gettext("Correct")+'</span>')
                 } else {
                     choiceDOM.addClass('incorrect');
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                     choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_incorrect'));
+                    choiceResultDOM.append('<span class="sr-only">'+gettext("Incorrect")+'</span>')
                 }
                 choiceResultDOM.off('click').on('click', function() {
                     if (choiceTipsDOM.html() !== '') {
