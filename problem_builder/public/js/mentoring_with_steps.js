@@ -80,20 +80,18 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function showFeedback(response) {
+        checkmark.find('span.sr-only').remove();
         if (response.step_status === 'correct') {
             checkmark.addClass('checkmark-correct icon-ok fa-check');
             checkmark.attr('aria-label', checkmark.data('label_correct'));
-            checkmark.find('span.sr-only').remove();
             checkmark.append('<span class="sr-only">'+gettext("Correct")+'</span>')
         } else if (response.step_status === 'partial') {
             checkmark.addClass('checkmark-partially-correct icon-ok fa-check');
             checkmark.attr('aria-label', checkmark.data('label_partial'));
-            checkmark.find('span.sr-only').remove();
             checkmark.append('<span class="sr-only">'+gettext("Partially correct")+'</span>')
         } else {
             checkmark.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
             checkmark.attr('aria-label', checkmark.data('label_incorrect'));
-            checkmark.find('span.sr-only').remove();
             checkmark.append('<span class="sr-only">'+gettext("Incorrect")+'</span>');
         }
         var step = getActiveStep();
