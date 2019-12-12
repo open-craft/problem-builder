@@ -169,6 +169,15 @@ function MentoringWithStepsBlock(runtime, element) {
         });
     }
 
+    function stopVideos() {
+        // Stop brightcove videos
+        if (typeof(videojs) !== 'undefined') {
+            $(element).find('video-js').each(function() {
+                videojs.getPlayer(this.id).pause();
+            });
+        }
+    }
+
     function cleanAll() {
         checkmark.removeClass('checkmark-correct icon-ok fa-check');
         checkmark.removeClass('checkmark-partially-correct icon-ok fa-check');
@@ -187,6 +196,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function updateDisplay() {
         cleanAll();
+        stopVideos();
 
         if (atReviewStep()) {
             // Tell supporting runtimes to enable navigation between units;
@@ -400,6 +410,7 @@ function MentoringWithStepsBlock(runtime, element) {
         notifyInteraction();
 
         cleanAll();
+        stopVideos();
         showReviewStep();
         showAttempts();
 
