@@ -170,12 +170,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function stopVideos() {
-        // Stop brightcove videos
-        if (typeof(videojs) !== 'undefined') {
-            $(element).find('video-js').each(function() {
-                videojs.getPlayer(this.id).pause();
-            });
-        }
+        $(element).find('video').trigger('pause')
     }
 
     function cleanAll() {
