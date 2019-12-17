@@ -170,7 +170,7 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     function stopVideos() {
-        $(element).find('video').trigger('pause')
+        $(element).find('video').trigger('pause');
     }
 
     function cleanAll() {
