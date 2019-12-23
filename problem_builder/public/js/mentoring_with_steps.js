@@ -424,6 +424,7 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function reviewNextStep() {
         jumpToReview(activeStepIndex+1);
+        stopVideos();
     }
 
     function handleTryAgain(result) {
