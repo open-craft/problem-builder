@@ -1,29 +1,24 @@
+import time
+
+from ddt import data, ddt, unpack
 from mock import patch
-from ddt import ddt, data, unpack
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
 from workbench.runtime import WorkbenchRuntime
-from .base_test import CORRECT, INCORRECT, PARTIAL, MentoringAssessmentBaseTest, GetChoices
+
+from .base_test import (CORRECT, INCORRECT, PARTIAL, GetChoices,
+                        MentoringAssessmentBaseTest)
 from .test_dashboard import MockSubmissionsAPI
 
 
 class HTMLColors(object):
-    GREEN = 'rgba(0, 128, 0, 1)'
-    BLUE = 'rgba(0, 0, 255, 1)'
-    RED = 'rgba(255, 0, 0, 1)'
-    GREY = 'rgba(237, 237, 237, 1)'
-    PURPLE = 'rgba(128, 0, 128, 1)'
-    ORANGE = 'rgba(255, 165, 0, 1)'
-    CORAL = 'rgba(255, 127, 80, 1)'
-    CORNFLOWERBLUE = 'rgba(100, 149, 237, 1)'
-    OLIVE = 'rgba(128, 128, 0, 1)'
-    CRIMSON = 'rgba(220, 20, 60, 1)'
-
-
-class PointColors(object):
-    ORANGE = 'rgb(255, 165, 0)'
+    GREEN = 'rgb(0, 128, 0)'
+    BLUE = 'rgb(0, 0, 255)'
+    RED = 'rgb(255, 0, 0)'
+    GREY = 'rgb(237, 237, 237)'
     PURPLE = 'rgb(128, 0, 128)'
+    ORANGE = 'rgb(255, 165, 0)'
     CORAL = 'rgb(255, 127, 80)'
     CORNFLOWERBLUE = 'rgb(100, 149, 237)'
     OLIVE = 'rgb(128, 128, 0)'
@@ -294,20 +289,28 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def popup_check(self, step_builder, item_feedbacks, prefix='', do_submit=True):
         for index, expected_feedback in enumerate(item_feedbacks):
+            # TODO: replace time.sleep with waiting for elements the selenium way
+            time.sleep(2)
+
             choice_wrapper = step_builder.find_elements_by_css_selector(prefix + " .choice")[index]
-            choice_wrapper.click()
+            choice_label = step_builder.find_elements_by_css_selector(prefix + " .choice .choice-label")[index]
+            choice_label.click()
+            time.sleep(2)
 
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
             item_feedback_icon.click()
+            time.sleep(2)
 
             item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
             self.assertTrue(item_feedback_popup.is_displayed())
             self.assertEqual(item_feedback_popup.text, expected_feedback)
 
             item_feedback_popup.click()
+            time.sleep(2)
             self.assertTrue(item_feedback_popup.is_displayed())
 
-            step_builder.click()
+            step_builder.find_elements_by_css_selector(prefix + ' .question-title')[0].click()
+            time.sleep(2)
             self.assertFalse(item_feedback_popup.is_displayed())
 
     def extended_feedback_checks(self, step_builder, controls, expected_results):
@@ -808,6 +811,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def click_overlay_button(self, overlay_button, overlay_on, color_on=None, color_off=HTMLColors.GREY):
         overlay_button.click()
+        # XXX: hack; actually wait for change
+        time.sleep(3)
         button_border_colors = [
             overlay_button.value_of_css_property('border-top-color'),
             overlay_button.value_of_css_property('border-right-color'),
@@ -815,9 +820,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             overlay_button.value_of_css_property('border-left-color'),
         ]
         if overlay_on:
-            self.assertTrue(all(bc == color_on for bc in button_border_colors))
+            for bc in button_border_colors:
+                self.assertEqual(bc, color_on)
         else:
-            self.assertTrue(all(bc == color_off for bc in button_border_colors))
+            for bc in button_border_colors:
+                self.assertEqual(bc, color_off)
 
     def click_default_button(self, plot_controls, overlay_on, color_on=HTMLColors.GREEN):
         self.click_overlay_button(plot_controls.default_button, overlay_on, color_on)
@@ -925,7 +932,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         default_overlay = {
             'selector': '.claim-default',
             'num_points': 2,
-            'point_color': PointColors.ORANGE,
+            'point_color': HTMLColors.ORANGE,
             'tooltips': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -935,7 +942,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         average_overlay = {
             'selector': '.claim-average',
             'num_points': 2,
-            'point_color': PointColors.PURPLE,
+            'point_color': HTMLColors.PURPLE,
             'tooltips': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -946,7 +953,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.check_overlays(step_builder, total_num_points=2, overlays=[default_overlay])
 
         # Check if plot shows correct overlay(s) (default overlay on, average overlay on)
-        self.click_average_button(plot_controls, overlay_on=True, color_on='rgba(128, 0, 128, 1)')  # purple
+        self.click_average_button(plot_controls, overlay_on=True, color_on=HTMLColors.PURPLE)
         self.check_overlays(step_builder, 4, overlays=[default_overlay, average_overlay])
 
         # Check if plot shows correct overlay(s) (default overlay off, average overlay on)
@@ -958,7 +965,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.plot_empty(step_builder)
 
         # Check if plot shows correct overlay(s) (default overlay on, average overlay off)
-        self.click_default_button(plot_controls, overlay_on=True, color_on='rgba(255, 165, 0, 1)')  # orange
+        self.click_default_button(plot_controls, overlay_on=True, color_on=HTMLColors.ORANGE)
         self.check_overlays(step_builder, 2, overlays=[default_overlay])
 
         # Check quadrant labels
@@ -1002,7 +1009,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         default_overlay = {
             'selector': '.claim-default',
             'num_points': 2,
-            'point_color': 'rgb(255, 165, 0)',  # orange
+            'point_color': HTMLColors.ORANGE,
             'tooltips': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('68', '68'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1012,7 +1019,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         average_overlay = {
             'selector': '.claim-average',
             'num_points': 2,
-            'point_color': 'rgb(128, 0, 128)',  # purple
+            'point_color': HTMLColors.PURPLE,
             'tooltips': ['2 + 2 = 5: 17, 83', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('68', '68'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1114,7 +1121,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         default_overlay = {
             'selector': '.claim-default',
             'num_points': 2,
-            'point_color': PointColors.ORANGE,
+            'point_color': HTMLColors.ORANGE,
             'tooltips': ['2 + 2 = 5: 1, 5', 'The answer to everything is 42: 5, 1'],
             'positions': [
                 ('4', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1124,7 +1131,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         teacher_overlay = {
             'selector': '.plot-overlay.plot-overlay-0',
             'num_points': 2,
-            'point_color': PointColors.CORAL,
+            'point_color': HTMLColors.CORAL,
             'tooltips': ['2 + 2 = 5: 2, 3', 'The answer to everything is 42: 4, 2'],
             'positions': [
                 ('8', '388'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1138,7 +1145,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         researchers_overlay = {
             'selector': '.plot-overlay.plot-overlay-1',
             'num_points': 2,
-            'point_color': PointColors.CORNFLOWERBLUE,
+            'point_color': HTMLColors.CORNFLOWERBLUE,
             'tooltips': ['2 + 2 = 5: 4, 4', 'The answer to everything is 42: 1, 5'],
             'positions': [
                 ('16', '384'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1152,7 +1159,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         sheldon_overlay = {
             'selector': '.plot-overlay.plot-overlay-2',
             'num_points': 2,
-            'point_color': PointColors.OLIVE,
+            'point_color': HTMLColors.OLIVE,
             'tooltips': ['2 + 2 = 5: 3, 5', 'The answer to everything is 42: 2, 4'],
             'positions': [
                 ('12', '380'),  # Values computed according to xScale and yScale (cf. plot.js)
@@ -1166,7 +1173,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         yoda_overlay = {
             'selector': '.plot-overlay.plot-overlay-3',
             'num_points': 2,
-            'point_color': PointColors.CRIMSON,
+            'point_color': HTMLColors.CRIMSON,
             'tooltips': ['2 + 2 = 5: 1, 2', 'The answer to everything is 42: 3, 3'],
             'positions': [
                 ('4', '392'),  # Values computed according to xScale and yScale (cf. plot.js)

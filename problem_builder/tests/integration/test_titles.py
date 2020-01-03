@@ -26,7 +26,6 @@ import ddt
 from mock import patch
 from xblockutils.base_test import SeleniumXBlockTest
 
-
 # Classes ###########################################################
 
 

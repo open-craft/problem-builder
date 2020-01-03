@@ -1,8 +1,10 @@
 import copy
-from problem_builder.mentoring import MentoringBlock
-from mock import MagicMock, Mock
 import unittest
+
+from mock import MagicMock, Mock
 from xblock.field_data import DictFieldData
+
+from problem_builder.mentoring import MentoringBlock
 
 
 class TestFieldMigration(unittest.TestCase):

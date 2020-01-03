@@ -1,11 +1,14 @@
 """
 Unit tests for Instructor Tool block
 """
-import ddt
 import unittest
+
+import ddt
 from mock import Mock, patch
 from xblock.field_data import DictFieldData
-from problem_builder.instructor_tool import InstructorToolBlock, COURSE_BLOCKS_API
+
+from problem_builder.instructor_tool import (COURSE_BLOCKS_API,
+                                             InstructorToolBlock)
 
 
 @ddt.ddt

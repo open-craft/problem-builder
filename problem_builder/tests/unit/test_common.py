@@ -1,10 +1,13 @@
 """
 Tests common to Problem Builder and Step Builder
 """
-import ddt
 import unittest
-from problem_builder.mentoring import MentoringBlock, MentoringWithExplicitStepsBlock
+
+import ddt
 from xblock.core import XBlock
+
+from problem_builder.mentoring import (MentoringBlock,
+                                       MentoringWithExplicitStepsBlock)
 
 from .utils import ScoresTestMixin, instantiate_block
 

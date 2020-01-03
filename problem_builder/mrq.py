@@ -22,14 +22,16 @@
 
 import logging
 
-from xblock.fields import List, Scope, Boolean, String
+import six
+from xblock.fields import Boolean, List, Scope, String
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
-from problem_builder.mixins import StudentViewUserStateMixin, ExpandStaticURLMixin
-from .questionnaire import QuestionnaireAbstractBlock
-from .sub_api import sub_api, SubmittingXBlockMixin
+from problem_builder.mixins import (ExpandStaticURLMixin,
+                                    StudentViewUserStateMixin)
 
+from .questionnaire import QuestionnaireAbstractBlock
+from .sub_api import SubmittingXBlockMixin, sub_api
 
 # Globals ###########################################################
 
@@ -214,7 +216,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         return {
             'id': self.name,
-            'block_id': unicode(self.scope_ids.usage_id),
+            'block_id': six.text_type(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'title': self.display_name,
             'type': self.CATEGORY,

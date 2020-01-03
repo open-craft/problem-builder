@@ -1,16 +1,15 @@
-import ddt
 import unittest
-
-from mock import MagicMock, Mock, PropertyMock, patch
 from random import random
 
+import ddt
+from mock import MagicMock, Mock, PropertyMock, patch
 from xblock.field_data import DictFieldData
 
 from problem_builder.answer import AnswerRecapBlock
 from problem_builder.mcq import MCQBlock
+from problem_builder.mentoring import (MentoringBlock, MentoringMessageBlock,
+                                       _default_options_config)
 from problem_builder.mrq import MRQBlock
-
-from problem_builder.mentoring import MentoringBlock, MentoringMessageBlock, _default_options_config
 
 from .utils import BlockWithChildrenTestMixin
 
@@ -23,12 +22,12 @@ class TestMRQBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         """
         block = MRQBlock(Mock(), DictFieldData({}), Mock())
 
-        self.assertItemsEqual(
-            block.student_view_data().keys(),
-            [
+        self.assertEqual(
+            sorted(block.student_view_data().keys()),
+            sorted([
                 'hide_results', 'tips', 'block_id', 'display_name',
                 'weight', 'title', 'question', 'message', 'type', 'id', 'choices'
-            ]
+            ])
         )
 
 
@@ -40,11 +39,11 @@ class TestAnswerRecapBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         """
         block = AnswerRecapBlock(Mock(), DictFieldData({}), Mock())
 
-        self.assertItemsEqual(
-            block.student_view_data().keys(),
-            [
+        self.assertEqual(
+            sorted(block.student_view_data().keys()),
+            sorted([
                 'block_id', 'display_name', 'type', 'id', 'name', 'description'
-            ]
+            ])
         )
 
 

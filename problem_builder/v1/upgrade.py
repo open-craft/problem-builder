@@ -30,13 +30,17 @@ You can add "--version=v0" at the end of the command to upgrade from the oldest 
 instance which was kept on gsehub's GitHub account.
 """
 import logging
-from lxml import etree
-from mentoring import MentoringBlock
-from problem_builder.mentoring import MentoringBlock as NewMentoringBlock
-from StringIO import StringIO
 import sys
 import warnings
+
+import six
+from lxml import etree
+from six import StringIO
+
 from courseware.models import StudentModule
+from mentoring import MentoringBlock
+from problem_builder.mentoring import MentoringBlock as NewMentoringBlock
+
 from .studio_xml_utils import studio_update_from_node
 from .xml_changes import convert_xml_to_v2
 
@@ -56,7 +60,7 @@ def upgrade_block(store, block, from_version="v1"):
         warnings.simplefilter("always")
         convert_xml_to_v2(root, from_version=from_version)
         for warning in warnings_caught:
-            print(u"    ➔ {}".format(unicode(warning.message)))
+            print(u"    ➔ {}".format(six.text_type(warning.message)))
 
     # We need some special-case handling to deal with HTML being an XModule and not a pure XBlock:
     try:
@@ -69,7 +73,7 @@ def upgrade_block(store, block, from_version="v1"):
             block = runtime.construct_xblock_from_class(cls, keys)
             block.data = node.text if node.text else ""
             for child in list(node):
-                if isinstance(child.tag, basestring):
+                if isinstance(child.tag, six.string_types):
                     block.data += etree.tostring(child)
             return block
         HtmlDescriptor.parse_xml = parse_xml_for_HtmlDescriptor
@@ -93,7 +97,7 @@ def upgrade_block(store, block, from_version="v1"):
         parent_children = parent.children
         index = parent_children.index(old_usage_id)
 
-        url_name = unicode(old_usage_id.block_id)
+        url_name = six.text_type(old_usage_id.block_id)
         if "url_name" in root.attrib:
             url_name_xml = root.attrib.pop("url_name")
             if url_name != url_name_xml:
@@ -153,7 +157,7 @@ if __name__ == '__main__':
     store = modulestore()
     course = store.get_course(course_id)
     if course is None:
-        sys.exit(u"Course '{}' not found.".format(unicode(course_id)))
+        sys.exit(u"Course '{}' not found.".format(six.text_type(course_id)))
     print(u" ➔ Found course: {}".format(course.display_name))
     print(u" ➔ Searching for mentoring blocks")
     blocks_found = []
@@ -188,7 +192,7 @@ if __name__ == '__main__':
             print(u'   To fix, you must delete the extra occurences.')
             stop = True
             continue
-        if block.url_name and block.url_name != unicode(block_id.block_id):
+        if block.url_name and block.url_name != six.text_type(block_id.block_id):
             print(u" ➔ Warning: Mentoring block {} has a different url_name set in the XML.".format(url_name))
             print(u"   If other blocks reference this block using the XML url_name '{}',".format(block.url_name))
             print(u"   those blocks will need to be updated.")

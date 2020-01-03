@@ -18,9 +18,9 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import six
 # Imports ###########################################################
 from lxml import etree
-
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
@@ -159,7 +159,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         Construct this XBlock from the given XML node.
         """
         block = runtime.construct_xblock_from_class(cls, keys)
-        block.content = unicode(node.text or u"")
+        block.content = six.text_type(node.text or u"")
         if 'type' in node.attrib:  # 'type' is optional - default is 'completed'
             block.type = node.attrib['type']
         for child in node:

@@ -14,7 +14,9 @@
     <hr/>
 
 
-    <span class="assessment-checkmark icon-2x checkmark-correct icon-ok fa fa-check fa-fw"></span>
+    <span class="assessment-checkmark icon-2x checkmark-correct icon-ok fa fa-check fa-fw">
+         <span class="sr-only">{% trans "Correct" %}</span>
+    </span>
     <div class="results-section">
       <p>
         {% blocktrans count correct_answers=correct_answers %}
@@ -37,7 +39,9 @@
     <div class="clear"></div>
 
 
-    <span class="assessment-checkmark icon-2x checkmark-partially-correct icon-ok fa fa-check fa-fw"></span>
+    <span class="assessment-checkmark icon-2x checkmark-partially-correct icon-ok fa fa-check fa-fw">
+        <span class="sr-only">{% trans "Partially correct" %}</span>
+    </span>
     <div class="results-section">
       <p>
         {% blocktrans count partially_correct_answers=partially_correct_answers %}
@@ -60,7 +64,9 @@
     <div class="clear"></div>
 
 
-    <span class="assessment-checkmark icon-2x checkmark-incorrect icon-exclamation fa fa-exclamation fa-fw"></span>
+    <span class="assessment-checkmark icon-2x checkmark-incorrect icon-exclamation fa fa-exclamation fa-fw">
+         <span class="sr-only">{% trans "Incorrect" %}</span>
+    </span>
     <div class="results-section">
       <p>
         {% blocktrans count incorrect_answers=incorrect_answers %}

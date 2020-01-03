@@ -1,14 +1,15 @@
 import json
 
+import six
 import webob
 from lazy import lazy
-from problem_builder.tests.unit.utils import DateTimeEncoder
 from xblock.core import XBlock
-from xblock.fields import String, Boolean, Float, Scope, UNIQUE_ID
+from xblock.fields import UNIQUE_ID, Boolean, Float, Scope, String
 from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 
+from problem_builder.tests.unit.utils import DateTimeEncoder
 
 loader = ResourceLoader(__name__)
 
@@ -202,7 +203,7 @@ class StudentViewUserStateMixin(object):
 
         result = {}
         transforms = self.transforms()
-        for _, field in self.fields.iteritems():
+        for _, field in six.iteritems(self.fields):
             # Only insert fields if their scopes and field names match
             if field.scope in self.INCLUDE_SCOPES and field.name in self.USER_STATE_FIELDS:
                 transformer = transforms.get(field.name, lambda value: value)
@@ -227,7 +228,10 @@ class StudentViewUserStateMixin(object):
         result = self.build_user_state_data(context)
         json_result = json.dumps(result, cls=DateTimeEncoder)
 
-        return webob.response.Response(body=json_result, content_type='application/json')
+        return webob.response.Response(
+            body=json_result.encode('utf-8'),
+            content_type='application/json'
+        )
 
 
 class StudentViewUserStateResultsTransformerMixin(object):

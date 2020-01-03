@@ -39,3 +39,19 @@ pull_translations: ## pull translations from transifex
 
 push_translations: ## push translations to transifex
 	cd $(WORKING_DIR) && i18n_tool transifex push
+
+isort: ## run isort on python source files
+	isort -rc problem_builder
+
+quality: ## run quality checkers on the codebase
+	pycodestyle problem_builder
+	pylint problem_builder
+
+test.unit: ## run python unit tests with coverage
+	coverage run run_tests.py problem_builder/v1/tests
+	coverage run run_tests.py problem_builder/tests/unit
+
+test.integration: ## run python selenium tests with coverage
+	coverage run run_tests.py problem_builder/tests/integration
+
+test: quality test.unit test.integration ## Run all tests

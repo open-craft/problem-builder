@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 
+
 def copy_course_id_to_course_key(apps, schema_editor):
     """
     Iterates over all Answer records for which course_key is not set

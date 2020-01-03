@@ -22,6 +22,11 @@
 
 .mentoring div[data-block-type=pb-mrq] .questionnaire .choice-result {
     display: inline-block;
+    padding: 0;
+    margin: 0 5px;
+    background: none;
+    border: none;
+    outline: none;
 }
 
 .mentoring .questionnaire .choice {
@@ -68,6 +73,13 @@
     margin: 5px 0;
 }
 
+.mentoring .questionnaire .choice-tips button,
+.mentoring .questionnaire .feedback button{
+    padding: 0;
+    background: 0 0;
+    font-size: inherit;
+    border: 0;
+}
 .mentoring .questionnaire .choice-tips p,
 .mentoring .questionnaire .feedback p {
     color: #3c3c3c;

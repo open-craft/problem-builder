@@ -24,7 +24,6 @@ import ddt
 
 from .base_test import MentoringBaseTest
 
-
 # Classes ###########################################################
 
 
@@ -192,6 +191,16 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             "Nah, there aren\\'t any!"
         ]
         self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1_7"]')
+
+        for index, _ in enumerate(item_feedbacks):
+            choice_wrapper = mentoring.find_elements_by_css_selector('div[data-name="mrq_1_1_7"]' + " .choice")[index]
+            choice_wrapper.find_element_by_css_selector(".choice-selector input").click()
+            item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
+            item_feedback_icon.click()  # clicking on item feedback icon
+            item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
+
+            self.assertFalse(item_feedback_popup.is_displayed())
+            self.assertEqual(item_feedback_popup.text, "")
 
     def _get_questionnaire_options(self, questionnaire):
         result = []

@@ -3,7 +3,7 @@
 function display_message(message, messageView, checkmark){
     if (message) {
         var msg = '<div class="message-content">' + message + '</div>' +
-                  '<div class="close icon-remove-sign fa-times-circle"></div>';
+                  '<button class="close icon-remove-sign fa-times-circle"></button>';
         messageView.showMessage(msg);
         if (checkmark) {
             checkmark.addClass('checkmark-clickable');
@@ -133,13 +133,15 @@ function MCQBlock(runtime, element) {
             if (choiceInputDOM.prop('checked')) {
                 display_message(result.message, messageView, options.checkmark);
                 if (result.status === "correct") {
-                    choiceInputDOM.addClass('correct');
+                    choiceDOM.addClass('correct');
                     choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                     choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
+                    choiceResultDOM.append('<span class="sr-only">'+gettext("Correct")+'</span>');
                 } else {
                     choiceDOM.addClass('incorrect');
                     choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                     choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_incorrect'));
+                    choiceResultDOM.append('<span class="sr-only">'+gettext("Incorrect")+'</span>');
                 }
                 choiceResultDOM.off('click').on('click', function() {
                     if (choiceTipsDOM.html() !== '') {
@@ -155,7 +157,7 @@ function MCQBlock(runtime, element) {
 
             if (_.isNull(result.submission)) {
                 messageView.showMessage('<div class="message-content">You have not provided an answer.</div>' +
-                                        '<div class="close icon-remove-sign fa-times-circle"></div>');
+                                        '<button class="close icon-remove-sign fa-times-circle"></button>');
             }
         },
 
@@ -236,16 +238,20 @@ function MRQBlock(runtime, element) {
                         choiceDOM.addClass('correct');
                         choiceResultDOM.addClass('checkmark-correct icon-ok fa-check');
                         choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_correct'));
+                        choiceResultDOM.append('<span class="sr-only">'+gettext("Correct")+'</span>');
                     } else if (!choice.completed) {
                         choiceDOM.addClass('incorrect');
                         choiceResultDOM.addClass('checkmark-incorrect icon-exclamation fa-exclamation');
                         choiceResultDOM.attr('aria-label', choiceResultDOM.data('label_incorrect'));
+                        choiceResultDOM.append('<span class="sr-only">'+gettext("Incorrect")+'</span>');
                     }
 
                     mentoring.setContent(choiceTipsDOM, choice.tips);
 
                     choiceResultDOM.off('click').on('click', function() {
-                        messageView.showMessage(choiceTipsDOM);
+                        if (choiceTipsDOM.html() !== '') {
+                            messageView.showMessage(choiceTipsDOM);
+                        }
                     });
                 }
             });
