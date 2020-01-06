@@ -12,7 +12,9 @@
     width: 34px;
     vertical-align: top;
     cursor: pointer;
-    float: none;
+    border: 0;
+    padding: 0;
+    background: 0 0;
 }
 
 .mentoring .questionnaire .feedback {
