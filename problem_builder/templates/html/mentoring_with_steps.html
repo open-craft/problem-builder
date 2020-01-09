@@ -14,9 +14,9 @@
     {% endfor %}
 
     <div class="submit">
-      <span class="step-overall-checkmark fa icon-2x fa-fw" aria-label=""
+      <button class="step-overall-checkmark fa icon-2x fa-fw" aria-label=""
           data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"
-          data-label_partial="{% trans "Partially correct" %}"></span>
+          data-label_partial="{% trans "Partially correct" %}"></button>
       <input type="button" class="input-main" value="{% trans "Submit" %}" disabled="disabled" />
       <input type="button" class="input-next" value="{% trans "Next Step" %}" disabled="disabled" />
       <input type="button" class="input-review" value="{% trans "Review grade" %}" disabled="disabled" />
