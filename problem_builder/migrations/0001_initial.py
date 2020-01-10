@@ -17,9 +17,9 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=50, db_index=True)),
                 ('student_id', models.CharField(max_length=32, db_index=True)),
                 ('course_id', models.CharField(max_length=50, db_index=True)),
-                ('student_input', models.TextField(default=b'', blank=True)),
-                ('created_on', models.DateTimeField(auto_now_add=True, verbose_name=b'created on')),
-                ('modified_on', models.DateTimeField(auto_now=True, verbose_name=b'modified on')),
+                ('student_input', models.TextField(default=u'', blank=True)),
+                ('created_on', models.DateTimeField(auto_now_add=True, verbose_name=u'created on')),
+                ('modified_on', models.DateTimeField(auto_now=True, verbose_name=u'modified on')),
             ],
         ),
         migrations.AlterUniqueTogether(
