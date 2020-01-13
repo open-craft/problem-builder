@@ -68,7 +68,7 @@ jobs:
             sudo apt-get update
             virtualenv venv
             source venv/bin/activate
-            pip install coverage
+            pip install 'coverage<5'
       - attach_workspace:
           at: /tmp/workspace
       - run:
