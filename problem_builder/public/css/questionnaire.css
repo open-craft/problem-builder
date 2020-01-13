@@ -99,6 +99,12 @@
     font-family: FontAwesome;
     font-style: normal;
     text-align: center;
+    font-size: 0;
+}
+
+.mentoring .questionnaire .choice-tips .close:before,
+.mentoring .questionnaire .feedback .close:before {
+    font-size: 20px;
 }
 
 .mentoring .choices-list .choice-selector {
