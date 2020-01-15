@@ -154,3 +154,9 @@
     right: auto;
     left: 3px;
 }
+
+.assessment-question-block .submit button.step-overall-checkmark {
+    border: 0;
+    padding: 0;
+    background: 0 0;
+}
