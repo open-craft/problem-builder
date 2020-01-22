@@ -157,6 +157,7 @@
 .mentoring .choice.incorrect .choice-tips-container.active {
     border-color: #c1373f;
 }
+
 .mentoring .choice-result::before {
     content: "";
     display: block;
@@ -252,7 +253,6 @@
 }
 
 .mentoring .results-section {
-    /*margin-left: 50px;*/
     display: inline-block;
 }
 
