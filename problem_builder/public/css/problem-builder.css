@@ -139,8 +139,8 @@
 }
 
 .mentoring .choice-label {
-    display: table-cell;
-    vertical-align: middle;
+    /*display: table-cell;*/
+    /*vertical-align: middle;*/
 }
 
 .mentoring .choice-label span.low {
@@ -162,7 +162,6 @@
 .mentoring .choice.incorrect .choice-tips-container.active {
     border-color: #c1373f;
 }
-
 .mentoring .choice-result::before {
     content: "";
     display: block;
@@ -170,9 +169,14 @@
 }
 
 .mentoring .choice-result {
-    display: block;
-    float: left;
+    display: none !important;
     height: 33.33px;
+}
+
+.mentoring .checkmark-correct,
+.mentoring .checkmark-incorrect{
+    display: inline-block !important;
+    margin: -11px 0 0 -35px;
 }
 
 .mentoring .checkmark-correct::before {
