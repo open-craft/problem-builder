@@ -10,7 +10,7 @@
 .mentoring .questionnaire .choice-result {
     display: inline-block;
     width: 34px;
-    vertical-align: top;
+    vertical-align: middle;
     cursor: pointer;
     border: 0;
     padding: 0;
@@ -35,6 +35,7 @@
 .mentoring .questionnaire .choice {
     padding: 0 0 0 30px;
     line-height: 0.5;
+    clear: both;
 }
 
 .mentoring .questionnaire .choice-result.checkmark-correct,
@@ -110,7 +111,7 @@
 
 .mentoring .choices-list .choice-selector {
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
 }
 
 .mentoring .choices-list .choice-label-text {
@@ -123,7 +124,7 @@
 .mentoring .choice-tips-container,
 .mentoring .choice-label {
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     width: 50%;
 }
 
