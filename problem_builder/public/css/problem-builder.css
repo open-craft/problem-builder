@@ -144,6 +144,7 @@
 
 .mentoring .choice-tips-container .choice-tips {
     position: absolute;
+    top: 0;
 }
 
 .mentoring .choice .choice-tips-container.with-tips {
