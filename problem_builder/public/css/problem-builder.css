@@ -138,17 +138,8 @@
     vertical-align: top;
 }
 
-.mentoring .choice-label {
-    display: table-cell;
-    vertical-align: middle;
-}
-
 .mentoring .choice-label span.low {
     line-height: inherit;
-}
-
-.mentoring .choice-tips-container .choice-tips {
-    position: relative;
 }
 
 .mentoring .choice .choice-tips-container.with-tips {
@@ -170,9 +161,24 @@
 }
 
 .mentoring .choice-result {
-    display: block;
-    float: left;
-    height: 33.33px;
+    display: none !important;
+    height: 17px;
+}
+
+.mentoring .checkmark-correct,
+.mentoring .checkmark-incorrect,
+.mentoring .checkmark-partially-correct {
+    display: inline-block !important;
+    margin: -7px 0 0 -35px;
+}
+
+.mentoring .sb-review-score .checkmark-correct,
+.mentoring .sb-review-score .checkmark-incorrect,
+.mentoring .sb-review-score .checkmark-partially-correct,
+.mentoring  .submit .checkmark-correct,
+.mentoring  .submit .checkmark-incorrect,
+.mentoring  .submit .checkmark-partially-correct{
+    margin: 0;
 }
 
 .mentoring .checkmark-correct::before {
@@ -243,7 +249,7 @@
 }
 
 .mentoring .results-section {
-    margin-left: 50px;
+    display: inline-block;
 }
 
 .mentoring .results-section p {

@@ -8,11 +8,14 @@
 }
 
 .mentoring .questionnaire .choice-result {
-    display: table-cell;
+    display: inline-block;
     width: 34px;
-    vertical-align: top;
+    vertical-align: middle;
     cursor: pointer;
-    float: none;
+    border: 0;
+    padding: 0;
+    background: 0 0;
+    box-shadow: none !important;
 }
 
 .mentoring .questionnaire .feedback {
@@ -23,15 +26,15 @@
 .mentoring div[data-block-type=pb-mrq] .questionnaire .choice-result {
     display: inline-block;
     padding: 0;
-    margin: 0 5px;
     background: none;
     border: none;
     outline: none;
 }
 
 .mentoring .questionnaire .choice {
-    overflow-y: hidden;
-    display: table-row;
+    padding: 0 0 0 30px;
+    /*line-height: 0.5;*/
+    clear: both;
 }
 
 .mentoring .questionnaire .choice-result.checkmark-correct,
@@ -44,7 +47,7 @@
 .mentoring .questionnaire .feedback {
     display: none;
     color: #3c3c3c;
-    position: absolute;
+    position: static;
     top: 0;
     right: 0;
     background: transparent;
@@ -52,7 +55,7 @@
     font-size: 14px;
     padding: 0 20px;
     width: 300px;
-    min-height: 40px;
+    min-height: 33px;
     max-height: 180px;
     z-index: 10000;
 }
@@ -83,6 +86,7 @@
 .mentoring .questionnaire .choice-tips p,
 .mentoring .questionnaire .feedback p {
     color: #3c3c3c;
+    margin: 5px 0;
 }
 
 .mentoring .questionnaire .choice-tips .close,
@@ -106,21 +110,30 @@
 }
 
 .mentoring .choices-list .choice-selector {
-    display: table-cell;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .mentoring .choices-list .choice-label-text {
-    display: table-cell;
+    display: inline-block;
+    vertical-align: middle;
     padding-left: 0.4em;
     padding-right: 0.4em;
+    width: calc(100% - 47px);
 }
-
+.mentoring .choice-tips-container{
+    width: calc(50% - 10px) !important;
+}
 .mentoring .choice-tips-container,
 .mentoring .choice-label {
-    display: table-cell;
-    vertical-align: top;
+    display: inline-block;
+    vertical-align: middle;
     width: 50%;
+    min-height: 33px;
 }
+
+.mentoring  .choice-tips{ top: 0 !important;}
+
 
 /*RTL Specified CSS*/
 
