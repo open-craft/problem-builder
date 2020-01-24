@@ -86,6 +86,7 @@
 .mentoring .questionnaire .choice-tips p,
 .mentoring .questionnaire .feedback p {
     color: #3c3c3c;
+    margin: 5px 0;
 }
 
 .mentoring .questionnaire .choice-tips .close,
