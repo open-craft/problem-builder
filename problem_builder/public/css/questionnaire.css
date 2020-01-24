@@ -33,7 +33,7 @@
 
 .mentoring .questionnaire .choice {
     padding: 0 0 0 30px;
-    line-height: 0.5;
+    /*line-height: 0.5;*/
     clear: both;
 }
 
@@ -47,7 +47,7 @@
 .mentoring .questionnaire .feedback {
     display: none;
     color: #3c3c3c;
-    position: absolute;
+    position: static;
     top: 0;
     right: 0;
     background: transparent;
@@ -55,7 +55,7 @@
     font-size: 14px;
     padding: 0 20px;
     width: 300px;
-    min-height: 40px;
+    min-height: 33px;
     max-height: 180px;
     z-index: 10000;
 }
@@ -120,12 +120,15 @@
     padding-right: 0.4em;
     width: calc(100% - 47px);
 }
-
+.mentoring .choice-tips-container{
+    width: calc(50% - 10px) !important;
+}
 .mentoring .choice-tips-container,
 .mentoring .choice-label {
     display: inline-block;
     vertical-align: middle;
     width: 50%;
+    min-height: 33px;
 }
 
 .mentoring  .choice-tips{ top: 0 !important;}

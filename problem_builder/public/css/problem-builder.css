@@ -142,11 +142,6 @@
     line-height: inherit;
 }
 
-.mentoring .choice-tips-container .choice-tips {
-    position: absolute;
-    top: 0;
-}
-
 .mentoring .choice .choice-tips-container.with-tips {
     border-left: 2px solid #ddd;
 }
