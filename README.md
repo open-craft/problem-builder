@@ -77,7 +77,7 @@ create its migrations:
 
 ```bash
 (venv) ~/xblock_development/problem-builder $ cd ../venv/src/xblock-sdk
-(venv) ~/xblock_development/venv/src/xblock-sdk $ make pip
+(venv) ~/xblock_development/venv/src/xblock-sdk $ make install
 (venv) ~/xblock_development/venv/src/xblock-sdk $ python manage.py makemigrations workbench
 ```
 
