@@ -66,6 +66,23 @@
     display: none;
 }
 
+.assessment-question-block .submit{
+    padding-left: 30px;
+    position: relative;
+}
+
+.assessment-question-block .submit .step-overall-checkmark {
+    background: transparent !important;
+    display: none;
+    position: absolute;
+    left: -4px;
+    top: -2px;
+}
+.assessment-question-block .submit .step-overall-checkmark:before {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .mentoring legend {
     white-space: normal;
     display: table; /* Enable line-wrapping in IE8 */
