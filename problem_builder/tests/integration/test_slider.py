@@ -19,6 +19,7 @@
 #
 
 # Imports ###########################################################
+import time
 
 from .base_test import (GetChoices, MentoringAssessmentBaseTest,
                         ProblemBuilderBaseTest)
@@ -64,6 +65,7 @@ class SliderBlockTest(SliderBlockTestMixins, ProblemBuilderBaseTest):
         self.wait_for_init()
         # Now the initial value should be 75 and submit should be disabled (to discourage submitting the same answer):
         self.assertEqual(self.get_slider_value(), 75)
+        time.sleep(3)
         self.expect_checkmark_visible(True)
         self.expect_submit_enabled(False)
 

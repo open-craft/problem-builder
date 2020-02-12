@@ -19,6 +19,7 @@
 #
 
 # Imports ###########################################################
+import time
 
 import ddt
 
@@ -192,15 +193,10 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         ]
         self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1_7"]')
 
-        for index, _ in enumerate(item_feedbacks):
-            choice_wrapper = mentoring.find_elements_by_css_selector('div[data-name="mrq_1_1_7"]' + " .choice")[index]
-            choice_wrapper.find_element_by_css_selector(".choice-selector input").click()
-            item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
-            item_feedback_icon.click()  # clicking on item feedback icon
-            item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
-
-            self.assertFalse(item_feedback_popup.is_displayed())
-            self.assertEqual(item_feedback_popup.text, "")
+        time.sleep(0.2)
+        # Reload the page
+        self.load_root_xblock()
+        self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1_7"]', do_submit=False)
 
     def _get_questionnaire_options(self, questionnaire):
         result = []
@@ -264,7 +260,7 @@ class QuestionnaireBlockTest(MentoringBaseTest):
 
     @ddt.unpack
     @ddt.data(
-        ('yes', 40),
+        ('yes', 33),
         ('maybenot', 60),
         ('understand', 600)
     )

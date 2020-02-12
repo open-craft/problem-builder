@@ -17,6 +17,8 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
+import time
+
 import ddt
 import mock
 from selenium.common.exceptions import NoSuchElementException
@@ -136,10 +138,12 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     def _assert_feedback_hidden(self, questionnaire, choice_index):
         choice = self._get_choice(questionnaire, choice_index)
         choice_result = choice.find_element_by_css_selector('.choice-result')
+        choice_input = choice.find_element_by_css_selector('input')
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
         result_classes = choice_result.get_attribute('class').split()
 
-        self.assertTrue(choice_result.is_displayed())
+        if choice_input.is_selected():
+            self.assertTrue(choice_result.is_displayed())
         self.assertFalse(feedback_popup.is_displayed())
         self.assertNotIn('checkmark-correct', result_classes)
         self.assertNotIn('checkmark-incorrect', result_classes)
@@ -334,6 +338,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
             # Now reload the page...
             mentoring = self.reload_student_view()
+            time.sleep(3)
             answer, mcq, mrq, rating, completion = self._get_controls(mentoring)
             messages = self._get_messages_element(mentoring)
             submit = self._get_submit(mentoring)
