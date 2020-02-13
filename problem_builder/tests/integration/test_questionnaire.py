@@ -193,7 +193,6 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         ]
         self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1_7"]')
 
-        time.sleep(0.2)
         # Reload the page
         self.load_root_xblock()
         self.popup_check(mentoring, item_feedbacks, prefix='div[data-name="mrq_1_1_7"]', do_submit=False)
