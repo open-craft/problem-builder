@@ -19,13 +19,13 @@
 #
 
 # Imports ###########################################################
-import logging
+
 import ddt
 
 from .base_test import MentoringBaseTest
 
 # Classes ###########################################################
-log = logging.getLogger(__name__)
+
 
 @ddt.ddt
 class QuestionnaireBlockTest(MentoringBaseTest):
