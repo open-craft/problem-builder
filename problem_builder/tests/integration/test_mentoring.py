@@ -127,6 +127,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         choice_result = choice.find_element_by_css_selector('.choice-result')
         if click_choice_result:
             self.wait_until_clickable(choice_result)
+            choice_result.scrollIntoView()
             choice_result.click()
 
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")

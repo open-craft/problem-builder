@@ -197,6 +197,7 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             choice_wrapper.find_element_by_css_selector(".choice-selector input").click()
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
             if item_feedback_icon.is_displayed():
+                item_feedback_icon.scrollIntoView()
                 item_feedback_icon.click()  # clicking on item feedback icon
             item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
 
