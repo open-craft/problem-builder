@@ -307,8 +307,8 @@ class InstructorToolTest(SeleniumXBlockTest):
 
         start_button.click()
 
+        time.sleep(3)  # Allow some time for result block to fully fade in.
         self.wait_until_visible(result_block)
-        time.sleep(1)  # Allow some time for result block to fully fade in
 
         for contents in [
                 'Test section', 'Test subsection', 'Test unit',
