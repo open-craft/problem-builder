@@ -19,6 +19,7 @@
 #
 
 # Imports ###########################################################
+import time
 
 import ddt
 
@@ -197,7 +198,7 @@ class QuestionnaireBlockTest(MentoringBaseTest):
             choice_wrapper.find_element_by_css_selector(".choice-selector input").click()
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
             if item_feedback_icon.is_displayed():
-                item_feedback_icon.scrollIntoView()
+                time.sleep(3)  # HACK: Replace with Selenium `wait`
                 item_feedback_icon.click()  # clicking on item feedback icon
             item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
 
@@ -266,7 +267,7 @@ class QuestionnaireBlockTest(MentoringBaseTest):
 
     @ddt.unpack
     @ddt.data(
-        ('yes', 33),
+        ('yes', 40),
         ('maybenot', 60),
         ('understand', 600)
     )

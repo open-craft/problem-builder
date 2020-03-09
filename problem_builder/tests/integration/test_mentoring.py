@@ -17,6 +17,8 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
+import time
+
 import ddt
 import mock
 from selenium.common.exceptions import NoSuchElementException
@@ -127,7 +129,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         choice_result = choice.find_element_by_css_selector('.choice-result')
         if click_choice_result:
             self.wait_until_clickable(choice_result)
-            choice_result.scrollIntoView()
+            time.sleep(3)  # HACK: Replace with Selenium `wait`
             choice_result.click()
 
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
