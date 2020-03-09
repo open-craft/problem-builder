@@ -47,21 +47,14 @@ class CompletionBlockTestMixin(object):
 
     def expect_checkmarks_visible(self, first_visible, second_visible):
         first_checkmark, second_checkmark = self.checkmarks
-        self.wait_until_visible(first_checkmark) if first_visible else self.wait_until_hidden(first_checkmark)
-        self.wait_until_visible(second_checkmark) if second_visible else self.wait_until_hidden(second_checkmark)
-
         self.assertEqual(first_checkmark.is_displayed(), first_visible)
         self.assertEqual(second_checkmark.is_displayed(), second_visible)
 
     def expect_checkbox_checked(self, checked):
-        self.wait_until_exists(self.completion_checkbox)
         self.assertEqual(bool(self.completion_checkbox.get_attribute('checked')), checked)
 
     def expect_checkboxes_checked(self, first_checked, second_checked):
         first_checkbox, second_checkbox = self.completion_checkboxes
-        self.wait_until_exists(first_checkbox)
-        self.wait_until_exists(second_checkbox)
-
         self.assertEqual(bool(first_checkbox.get_attribute('checked')), first_checked)
         self.assertEqual(bool(second_checkbox.get_attribute('checked')), second_checked)
 
