@@ -11,13 +11,13 @@ from xblock.fields import Boolean, DateTime, Integer, Scope, String
 from problem_builder.mixins import StudentViewUserStateMixin
 
 
-class NoUserStateFieldsMixin(object):
+class NoUserStateFieldsMixin:
     scope_settings = String(name="Field1", scope=Scope.settings)
     scope_content = String(name="Field1", scope=Scope.content)
     user_state_summary = String(name="Not in the output", scope=Scope.user_state_summary)
 
 
-class UserStateFieldsMixin(object):
+class UserStateFieldsMixin:
     answer_1 = String(name="state1", scope=Scope.user_state)
     answer_2 = Boolean(name="state2", scope=Scope.user_state)
 
@@ -28,7 +28,7 @@ class UserStateFieldsMixin(object):
     user_info_2 = DateTime(name="info2", scope=Scope.user_info)
 
 
-class ChildrenMixin(object):
+class ChildrenMixin:
     # overriding children for ease of testing
     _children = []
     has_children = True

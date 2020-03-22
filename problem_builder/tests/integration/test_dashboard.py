@@ -27,7 +27,7 @@ from selenium.common.exceptions import NoSuchElementException
 from .base_test import ProblemBuilderBaseTest
 
 
-class MockSubmissionsAPI(object):
+class MockSubmissionsAPI:
     """
     Mock the submissions API, since it's not available in the test environment.
     """

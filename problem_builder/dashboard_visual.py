@@ -29,7 +29,7 @@ a specific Problem Builder block was at least 3.
 """
 
 
-class DashboardVisualData(object):
+class DashboardVisualData:
     """
     Data about the visual representation of a dashboard.
     """

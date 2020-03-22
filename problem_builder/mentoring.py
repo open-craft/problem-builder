@@ -609,7 +609,7 @@ class MentoringBlock(
         # server-side check that the user is allowed to submit:
         if self.max_attempts_reached:
             raise JsonHandlerError(403, "Maximum number of attempts already reached.")
-        elif self.has_missing_dependency:
+        if self.has_missing_dependency:
             raise JsonHandlerError(
                 403,
                 "You need to complete all previous steps before being able to complete the current one."
@@ -851,7 +851,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         added/deleted.
         """
         active_step = self.active_step
-        if active_step >= 0 and active_step < len(self.step_ids):
+        if 0 <= active_step < len(self.step_ids):
             return active_step
         if active_step == -1 and self.has_review_step:
             return active_step  # -1 indicates the review step

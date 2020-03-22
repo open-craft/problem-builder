@@ -36,7 +36,7 @@ loader = ResourceLoader(__name__)
 CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
 
 
-class PopupCheckMixin(object):
+class PopupCheckMixin:
     """
     Code used by MentoringBaseTest and MentoringAssessmentBaseTest
     """
@@ -190,7 +190,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         """ Navigates to assessment page """
         mentoring = self.go_to_view("student_view")
 
-        class Namespace(object):
+        class Namespace:
             pass
 
         controls = Namespace()
@@ -328,7 +328,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
             self.assertEqual(len(mentoring.find_elements_by_css_selector(".submit .checkmark-{}".format(name))), count)
 
 
-class GetChoices(object):
+class GetChoices:
     """ Helper class for interacting with MCQ options """
     def __init__(self, question, selector=".choices"):
         self._mcq = question.find_element_by_css_selector(selector)

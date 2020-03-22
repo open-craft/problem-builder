@@ -8,7 +8,7 @@ from mock import MagicMock, Mock, patch
 from xblock.field_data import DictFieldData
 
 
-class ScoresTestMixin(object):
+class ScoresTestMixin:
     """
     Mixin for tests that involve scores (grades)
     """
@@ -23,7 +23,7 @@ class ScoresTestMixin(object):
         self.assertIsInstance(block.max_score(), (int, float))
 
 
-class BlockWithChildrenTestMixin(object):
+class BlockWithChildrenTestMixin:
     """
     Mixin for tests targeting blocks that contain nested child blocks.
     """

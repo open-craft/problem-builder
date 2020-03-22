@@ -59,7 +59,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class ExportMixin(object):
+class ExportMixin:
     """
     Used by blocks which need to provide a downloadable export.
     """
@@ -92,7 +92,7 @@ class ExportMixin(object):
                 return ""
 
 
-class ColorRule(object):
+class ColorRule:
     """
     A rule used to conditionally set colors
 

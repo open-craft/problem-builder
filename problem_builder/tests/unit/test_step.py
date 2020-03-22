@@ -38,7 +38,7 @@ class Step(QuestionMixin):
         pass
 
 
-class NotAStep(object):
+class NotAStep:
     pass
 
 

@@ -74,7 +74,7 @@ class Share(models.Model):
     shared_with = models.ForeignKey(User, on_delete=models.CASCADE, related_name='problem_builder_shared_with')
     notified = models.BooleanField(default=False, db_index=True)
 
-    class Meta(object):
+    class Meta:
         # Since problem_builder isn't added to INSTALLED_APPS until it's imported,
         # specify the app_label here.
         app_label = 'problem_builder'
