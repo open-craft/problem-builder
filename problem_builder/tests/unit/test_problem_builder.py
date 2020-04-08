@@ -2,7 +2,7 @@ import unittest
 from random import random
 
 import ddt
-from mock import MagicMock, Mock, PropertyMock, patch
+from unittest.mock import MagicMock, Mock, PropertyMock, patch
 from xblock.field_data import DictFieldData
 
 from problem_builder.answer import AnswerRecapBlock

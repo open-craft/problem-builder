@@ -1,7 +1,7 @@
 import time
 
 from ddt import data, ddt, unpack
-from mock import patch
+from unittest.mock import patch
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 

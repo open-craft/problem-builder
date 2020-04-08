@@ -1,6 +1,5 @@
 XBlock>=1.2
 ddt
-mock
 unicodecsv==0.11.0
 edx-opaque-keys>=0.4
 -e git+https://github.com/edx/xblock-utils.git@2.0.0#egg=xblock-utils

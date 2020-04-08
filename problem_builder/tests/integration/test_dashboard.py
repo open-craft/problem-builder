@@ -21,7 +21,7 @@ import json
 from functools import wraps
 from textwrap import dedent
 
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 from selenium.common.exceptions import NoSuchElementException
 
 from .base_test import ProblemBuilderBaseTest

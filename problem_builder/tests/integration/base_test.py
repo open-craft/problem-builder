@@ -19,7 +19,7 @@
 #
 import time
 
-import mock
+from unittest import mock
 from xblock.fields import String
 from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
 from xblockutils.resources import ResourceLoader
