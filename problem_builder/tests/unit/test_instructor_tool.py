@@ -57,9 +57,9 @@ class TestInstructorToolBlock(unittest.TestCase):
         }
 
         with patch('problem_builder.instructor_tool.loader') as patched_loader:
-            patched_loader.render_template.return_value = u''
+            patched_loader.render_django_template.return_value = u''
             self.block.student_view()
-            patched_loader.render_template.assert_called_once_with('templates/html/instructor_tool.html', {
+            patched_loader.render_django_template.assert_called_once_with('templates/html/instructor_tool.html', {
                 'block_choices': block_choices,
                 'course_blocks_api': COURSE_BLOCKS_API,
                 'root_block_id': self.course_id,

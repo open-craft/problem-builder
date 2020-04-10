@@ -214,7 +214,7 @@ class BaseMentoringBlock(
         authors in Studio when not editing this block's children.
         """
         fragment = self.student_view(context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
@@ -742,7 +742,7 @@ class MentoringBlock(
         local_context = context.copy()
         local_context['author_edit_view'] = True
         fragment = super(MentoringBlock, self).author_edit_view(local_context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             'url_name': self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
@@ -1107,7 +1107,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         Add some HTML to the author view that allows authors to add child blocks.
         """
         fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))

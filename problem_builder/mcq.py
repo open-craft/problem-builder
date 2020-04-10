@@ -101,7 +101,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         formatted_tips = None
 
         if tips_html:
-            formatted_tips = loader.render_template('templates/html/tip_choice_group.html', {
+            formatted_tips = loader.render_django_template('templates/html/tip_choice_group.html', {
                 'tips_html': tips_html,
             })
 
@@ -239,7 +239,7 @@ class RatingBlock(MCQBlock):
         show them in the author edit view, for clarity.
         """
         fragment = Fragment()
-        fragment.add_content(loader.render_template('templates/html/ratingblock_edit_preview.html', {
+        fragment.add_content(loader.render_django_template('templates/html/ratingblock_edit_preview.html', {
             'question': self.question,
             'low': self.low,
             'high': self.high,
@@ -265,7 +265,7 @@ class RatingBlock(MCQBlock):
         if context:  # Workbench does not provide context
             rendering_for_studio = context.get('author_edit_view')
         if rendering_for_studio:
-            fragment.add_content(loader.render_template('templates/html/rating_edit_footer.html', {
+            fragment.add_content(loader.render_django_template('templates/html/rating_edit_footer.html', {
                 "url_name": self.url_name
             }))
         return fragment

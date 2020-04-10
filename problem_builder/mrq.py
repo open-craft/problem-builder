@@ -157,7 +157,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
 
                 loader = ResourceLoader(__name__)
                 choice_result['completed'] = choice_completed
-                choice_result['tips'] = loader.render_template('templates/html/tip_choice_group.html', {
+                choice_result['tips'] = loader.render_django_template('templates/html/tip_choice_group.html', {
                     'tips_html': choice_tips_html,
                 })
 

@@ -89,7 +89,7 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
         Given the name of an XML file in the xml_templates folder, load it into the workbench.
         """
         params = params or {}
-        scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
+        scenario = loader.render_django_template("xml_templates/{}".format(xml_file), params)
         self.set_scenario_xml(scenario)
         if load_immediately:
             return self.go_to_view("student_view")
@@ -182,7 +182,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
     def load_assessment_scenario(self, xml_file, params=None):
         """ Loads an assessment scenario from an XML template """
         params = params or {}
-        scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
+        scenario = loader.render_django_template("xml_templates/{}".format(xml_file), params)
         self.set_scenario_xml(scenario)
         return self.go_to_assessment()
 
