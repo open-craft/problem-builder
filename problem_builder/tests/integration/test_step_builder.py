@@ -1,7 +1,7 @@
 import time
 
 from ddt import data, ddt, unpack
-from mock import patch
+from unittest.mock import patch
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -12,7 +12,7 @@ from .base_test import (CORRECT, INCORRECT, PARTIAL, GetChoices,
 from .test_dashboard import MockSubmissionsAPI
 
 
-class HTMLColors(object):
+class HTMLColors:
     GREEN = 'rgb(0, 128, 0)'
     BLUE = 'rgb(0, 0, 255)'
     RED = 'rgb(255, 0, 0)'
@@ -757,7 +757,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
                 self.wait_until_disabled(controls.next_question)
 
     def plot_controls(self, step_builder):
-        class Namespace(object):
+        class Namespace:
             pass
 
         plot_controls = Namespace()
@@ -769,7 +769,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         return plot_controls
 
     def additional_plot_controls(self, step_builder):
-        class Namespace(object):
+        class Namespace:
             pass
 
         additional_plot_controls = Namespace()
@@ -893,14 +893,14 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             ]
             self.assertTrue(all(pc == overlay['point_color'] for pc in point_colors))
             # Check tooltips for points
-            tooltips = set([
+            tooltips = {
                 point.get_attribute('data-tooltip') for point in points
-            ])
+            }
             self.assertEquals(tooltips, set(overlay['tooltips']))
             # Check positions
-            point_positions = set([
+            point_positions = {
                 (point.get_attribute('cx'), point.get_attribute('cy')) for point in points
-            ])
+            }
             self.assertEquals(point_positions, set(overlay['positions']))
 
     def test_plot(self):

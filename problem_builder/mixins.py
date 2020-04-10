@@ -31,7 +31,7 @@ def _normalize_id(key):
     return key
 
 
-class XBlockWithTranslationServiceMixin(object):
+class XBlockWithTranslationServiceMixin:
     """
     Mixin providing access to i18n service
     """
@@ -80,7 +80,7 @@ class EnumerableChildMixin(XBlockWithTranslationServiceMixin):
         return self._(self.CAPTION)
 
 
-class StepParentMixin(object):
+class StepParentMixin:
     """
     An XBlock mixin for a parent block containing Step children
     """
@@ -100,7 +100,7 @@ class StepParentMixin(object):
         return [self.runtime.get_block(child_id) for child_id in self.step_ids]
 
 
-class MessageParentMixin(object):
+class MessageParentMixin:
     """
     An XBlock mixin for a parent block containing MentoringMessageBlock children
     """
@@ -167,7 +167,7 @@ class QuestionMixin(EnumerableChildMixin):
         return self.student_view(context)
 
 
-class NoSettingsMixin(object):
+class NoSettingsMixin:
     """ Mixin for an XBlock that has no settings """
 
     def studio_view(self, _context=None):
@@ -175,7 +175,7 @@ class NoSettingsMixin(object):
         return Fragment(u'<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
 
 
-class StudentViewUserStateMixin(object):
+class StudentViewUserStateMixin:
     """
     Mixin to provide student_view_user_state view.
 
@@ -234,7 +234,7 @@ class StudentViewUserStateMixin(object):
         )
 
 
-class StudentViewUserStateResultsTransformerMixin(object):
+class StudentViewUserStateResultsTransformerMixin:
     """
     A convenient way for MentoringBlock and MentoringStepBlock to share
     student_results transform code.
@@ -267,7 +267,7 @@ class StudentViewUserStateResultsTransformerMixin(object):
         return dictionary
 
 
-class ExpandStaticURLMixin(object):
+class ExpandStaticURLMixin:
 
     def expand_static_url(self, text):
         """

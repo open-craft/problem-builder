@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
                 ('submission_uid', models.CharField(max_length=32)),
                 ('block_id', models.CharField(max_length=255, db_index=True)),
                 ('notified', models.BooleanField(default=False, db_index=True)),
-                ('shared_by', models.ForeignKey(related_name='problem_builder_shared_by', to=settings.AUTH_USER_MODEL)),
-                ('shared_with', models.ForeignKey(related_name='problem_builder_shared_with', to=settings.AUTH_USER_MODEL)),
+                ('shared_by', models.ForeignKey(related_name='problem_builder_shared_by', on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('shared_with', models.ForeignKey(related_name='problem_builder_shared_with', on_delete=models.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
         migrations.AlterUniqueTogether(

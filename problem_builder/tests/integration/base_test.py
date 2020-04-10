@@ -19,7 +19,7 @@
 #
 import time
 
-import mock
+from unittest import mock
 from xblock.fields import String
 from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
 from xblockutils.resources import ResourceLoader
@@ -36,7 +36,7 @@ loader = ResourceLoader(__name__)
 CORRECT, INCORRECT, PARTIAL = "correct", "incorrect", "partially-correct"
 
 
-class PopupCheckMixin(object):
+class PopupCheckMixin:
     """
     Code used by MentoringBaseTest and MentoringAssessmentBaseTest
     """
@@ -89,7 +89,7 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
         Given the name of an XML file in the xml_templates folder, load it into the workbench.
         """
         params = params or {}
-        scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
+        scenario = loader.render_django_template("xml_templates/{}".format(xml_file), params)
         self.set_scenario_xml(scenario)
         if load_immediately:
             return self.go_to_view("student_view")
@@ -182,7 +182,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
     def load_assessment_scenario(self, xml_file, params=None):
         """ Loads an assessment scenario from an XML template """
         params = params or {}
-        scenario = loader.render_template("xml_templates/{}".format(xml_file), params)
+        scenario = loader.render_django_template("xml_templates/{}".format(xml_file), params)
         self.set_scenario_xml(scenario)
         return self.go_to_assessment()
 
@@ -190,7 +190,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         """ Navigates to assessment page """
         mentoring = self.go_to_view("student_view")
 
-        class Namespace(object):
+        class Namespace:
             pass
 
         controls = Namespace()
@@ -328,7 +328,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
             self.assertEqual(len(mentoring.find_elements_by_css_selector(".submit .checkmark-{}".format(name))), count)
 
 
-class GetChoices(object):
+class GetChoices:
     """ Helper class for interacting with MCQ options """
     def __init__(self, question, selector=".choices"):
         self._mcq = question.find_element_by_css_selector(selector)

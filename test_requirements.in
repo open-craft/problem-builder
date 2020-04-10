@@ -1,20 +1,21 @@
 -e xblock-sdk
 bok_choy==0.7.1
 ddt
-django_nose>=1.4.4
+django_nose>=1.4.6
 -e git+https://github.com/edx/acid-block.git@e46f9cda8a03e121a00c7e347084d142d22ebfb7#egg=acid-xblock
--e git+https://github.com/edx/django-pyfs.git@1.0.3#egg=django-pyfs==1.0.3
--e git+https://github.com/edx/xblock-utils.git@v1.2.2#egg=xblock-utils
+-e git+https://github.com/edx/django-pyfs.git@2.1#egg=django-pyfs==2.1
+-e git+https://github.com/edx/xblock-utils.git@2.0.0#egg=xblock-utils
 lazy
 lxml
 mock
 selenium==3.4.1
 webob
 XBlock>=1.2
-Django>=1.11,<2.0
+Django~=2.2.10
 pytest
-coverage<5
 pylint
 pycodestyle
+django-mysql
+mysqlclient
 -r xblock-sdk/requirements/base.txt
 -r xblock-sdk/requirements/test.txt

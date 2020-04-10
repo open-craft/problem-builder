@@ -115,7 +115,7 @@ class SliderBlock(
         context['instructions_string'] = self._("Select a value from {min_label} to {max_label}").format(
             min_label=self.min_label, max_label=self.max_label
         )
-        html = loader.render_template('templates/html/slider.html', context)
+        html = loader.render_django_template('templates/html/slider.html', context)
 
         fragment = Fragment(html)
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/slider.js'))
@@ -145,7 +145,7 @@ class SliderBlock(
         """
         context['hide_header'] = True  # Header is already shown in the Studio wrapper
         fragment = self.student_view(context)
-        fragment.add_content(loader.render_template('templates/html/slider_edit_footer.html', {
+        fragment.add_content(loader.render_django_template('templates/html/slider_edit_footer.html', {
             "url_name": self.url_name
         }))
         return fragment

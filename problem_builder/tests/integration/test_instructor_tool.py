@@ -6,14 +6,14 @@ import math
 import re
 import time
 
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 from selenium.common.exceptions import NoSuchElementException
 from xblockutils.base_test import SeleniumXBlockTest
 
 from problem_builder.instructor_tool import PAGE_SIZE, InstructorToolBlock
 
 
-class MockTasksModule(object):
+class MockTasksModule:
     """Mock for the tasks module, which can only be meaningfully import in the LMS."""
 
     def __init__(self, successful=True, display_data=[]):
@@ -36,7 +36,7 @@ class MockTasksModule(object):
         self.export_data.delay.return_value = async_result
 
 
-class MockInstructorTaskModelsModule(object):
+class MockInstructorTaskModelsModule:
 
     def __init__(self):
         self.ReportStore = Mock()

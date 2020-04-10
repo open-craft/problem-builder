@@ -213,7 +213,7 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
         """ Render the per-question feedback, if any. """
         review_tips = (context or {}).get("score_summary", {}).get("review_tips")
         if review_tips:
-            html = loader.render_template("templates/html/sb-review-per-question-feedback.html", {
+            html = loader.render_django_template("templates/html/sb-review-per-question-feedback.html", {
                 'tips': review_tips,
             })
         else:

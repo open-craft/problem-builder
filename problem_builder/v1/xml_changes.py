@@ -27,7 +27,7 @@ import six
 from lxml import etree
 
 
-class Change(object):
+class Change:
     @staticmethod
     def applies_to(node):
         """
