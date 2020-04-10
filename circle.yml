@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: <<parameters.docker_image>>
       - image: circleci/mysql:5.6
-        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --innodb-large-prefix=true --innodb-file-format=Barracuda --innodb-file-per-table=true
+        command: mysqld --character-set-server=latin1 --collation-server=latin1_swedish_ci
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
     parameters:
