@@ -7,8 +7,6 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: test_db
-          MYSQL_USER: user
-          MYSQL_PASSWORD: passw0rd
     parameters:
         test_command:
             type: string
@@ -16,7 +14,7 @@ jobs:
             type: string
     environment:
       MOZ_HEADLESS: 1
-      WORKBENCH_DATABASES: '{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "user", "PASSWORD": "passw0rd", "HOST": "127.0.0.1"}}'
+      WORKBENCH_DATABASES: '{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1"}}'
     steps:
       - checkout
       - run:
