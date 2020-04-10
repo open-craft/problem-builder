@@ -47,6 +47,7 @@ class CompletionBlockTestMixin:
 
     def expect_checkmarks_visible(self, first_visible, second_visible):
         first_checkmark, second_checkmark = self.checkmarks
+        time.sleep(3)
         self.assertEqual(first_checkmark.is_displayed(), first_visible)
         self.assertEqual(second_checkmark.is_displayed(), second_visible)
 
