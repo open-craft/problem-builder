@@ -15,5 +15,7 @@ Django~=2.2.10
 pytest
 pylint
 pycodestyle
+django-mysql
+mysqlclient
 -r xblock-sdk/requirements/base.txt
 -r xblock-sdk/requirements/test.txt
