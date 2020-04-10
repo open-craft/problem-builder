@@ -13,7 +13,7 @@ jobs:
             type: string
     environment:
       MOZ_HEADLESS: 1
-      WORKBENCH_DATABASES: '{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1"}}'
+      WORKBENCH_DATABASES: '{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "OPTIONS": {"charset": "utf8mb4"}}}'
     steps:
       - checkout
       - run:
