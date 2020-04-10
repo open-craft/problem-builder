@@ -6,4 +6,4 @@ transifex-client==0.12.1
 edx-i18n-tools==0.5.0
 pycodestyle==2.4.0
 pylint==0.28.0
--e git://github.com/edx/django-babel-underscore@37705f7377a4d0a4e673f1431895ce28a8860cd7#egg=xblock-sdk==0.6.0
+git+https://github.com/edx/django-babel-underscore.git@37705f7377a4d0a4e673f1431895ce28a8860cd7#egg=django-babel-underscore==0.6.0
