@@ -433,7 +433,7 @@ class MentoringBlock(
 
         return Score(
             float(score),
-            int((Decimal(score) * 100).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)),
+            int(Decimal(score * 100).quantize(Decimal('1.'), rounding=ROUND_HALF_UP)),
             correct,
             incorrect,
             partially_correct

@@ -64,6 +64,7 @@ class SliderBlockTest(SliderBlockTestMixins, ProblemBuilderBaseTest):
         self.wait_for_init()
         # Now the initial value should be 75 and submit should be disabled (to discourage submitting the same answer):
         self.assertEqual(self.get_slider_value(), 75)
+        self.wait_until_visible(self.checkmark)
         self.expect_checkmark_visible(True)
         self.expect_submit_enabled(False)
 

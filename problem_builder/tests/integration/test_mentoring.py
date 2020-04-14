@@ -126,6 +126,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
         choice = self._get_choice(questionnaire, choice_index)
         choice_result = choice.find_element_by_css_selector('.choice-result')
         if click_choice_result:
+            self.wait_until_clickable(choice_result)
             choice_result.click()
 
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
@@ -136,10 +137,12 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     def _assert_feedback_hidden(self, questionnaire, choice_index):
         choice = self._get_choice(questionnaire, choice_index)
         choice_result = choice.find_element_by_css_selector('.choice-result')
+        choice_input = choice.find_element_by_css_selector('input')
         feedback_popup = choice.find_element_by_css_selector(".choice-tips")
         result_classes = choice_result.get_attribute('class').split()
 
-        self.assertTrue(choice_result.is_displayed())
+        if choice_input.is_selected():
+            self.assertTrue(choice_result.is_displayed())
         self.assertFalse(feedback_popup.is_displayed())
         self.assertNotIn('checkmark-correct', result_classes)
         self.assertNotIn('checkmark-incorrect', result_classes)

@@ -13,7 +13,7 @@ webob
 XBlock>=1.2
 Django>=1.11,<2.0
 pytest
-coverage
+coverage<5
 pylint
 pycodestyle
 -r xblock-sdk/requirements/base.txt

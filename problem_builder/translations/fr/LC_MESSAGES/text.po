@@ -1492,7 +1492,7 @@ msgstr ""
 #: templates/html/mentoring.html:39
 #: templates/html/mentoring_with_steps.html:20
 msgid "Submit"
-msgstr "Envoyez"
+msgstr "Soumettre"
 
 #: templates/html/mentoring.html:47
 #: templates/html/mentoring_with_steps.html:31

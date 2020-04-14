@@ -8,11 +8,12 @@
     {% for i in '12345' %}
     <div class="choice" aria-live="polite" aria-atomic="true">
       <label class="choice-label"
+             for = "{{ i }}radio"
              aria-describedby="feedback_{{ self.html_id }} choice_tips_{{ self.html_id }}-{{ i }}">
-        <span class="choice-result fa icon-2x" aria-label=""
-              data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"></span>
+        <button class="choice-result fa icon-2x" aria-label=""
+              data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"></button>
         <span class="choice-selector">
-          <input type="radio" name="{{ self.name }}" value="{{i}}"
+          <input type="radio" id="{{ i }}radio" name="{{ self.name }}" value="{{i}}"
             {% if self.student_choice == i and not hide_prev_answer %} checked{%else%} data-student-choice='{{self.student_choice}}'{% endif %}
           />
         </span>
@@ -32,8 +33,8 @@
     <div class="choice" aria-live="polite" aria-atomic="true">
       <label class="choice-label"
              aria-describedby="feedback_{{ self.html_id }} choice_tips_{{ self.html_id }}-{{ forloop.counter }}">
-        <span class="choice-result fa icon-2x" aria-label=""
-              data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"></span>
+        <button class="choice-result fa icon-2x" aria-label=""
+              data-label_correct="{% trans "Correct" %}" data-label_incorrect="{% trans "Incorrect" %}"></button>
         <span class="choice-selector">
           <input type="radio" name="{{ self.name }}" value="{{ choice.value }}"
             {% if self.student_choice == choice.value and not hide_prev_answer %} checked{%else%} data-student-choice='{{self.student_choice}}'{% endif %}

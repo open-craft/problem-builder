@@ -10,10 +10,10 @@
       <label class="choice-label"
              for="{{ self.html_id }}_{{ forloop.counter }}"
              aria-describedby="feedback_{{ self.html_id }} choice_tips_{{ self.html_id }}-{{ forloop.counter }}">
-        <span class="choice-result fa icon-2x"
+        <button class="choice-result fa icon-2x"
               aria-label=""
               data-label_correct="{% trans "Correct" %}"
-              data-label_incorrect="{% trans "Incorrect" %}"></span>
+              data-label_incorrect="{% trans "Incorrect" %}"></button>
         <span class="choice-selector">
           <input type="radio" name="{{ self.name }}" value="{{ choice.value }}"
             id="{{ self.html_id }}_{{ forloop.counter }}"

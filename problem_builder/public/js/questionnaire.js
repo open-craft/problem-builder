@@ -131,6 +131,7 @@ function MCQBlock(runtime, element) {
 
             // We're showing previous answers, so go ahead and display results as well
             if (choiceInputDOM.prop('checked')) {
+                choiceResultDOM.find('span.sr-only').remove();
                 display_message(result.message, messageView, options.checkmark);
                 if (result.status === "correct") {
                     choiceDOM.addClass('correct');
@@ -230,7 +231,7 @@ function MRQBlock(runtime, element) {
                 var choiceDOM = choiceInputDOM.closest('.choice');
                 var choiceResultDOM = $('.choice-result', choiceDOM);
                 var choiceTipsDOM = $('.choice-tips', choiceDOM);
-
+                choiceResultDOM.find('span.sr-only').remove();
                 /* show hint if checked or max_attempts is disabled */
                 if (!hide_results &&
                     (result.completed || choiceInputDOM.prop('checked') || options.max_attempts <= 0)) {

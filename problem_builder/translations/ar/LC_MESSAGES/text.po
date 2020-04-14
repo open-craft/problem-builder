@@ -1378,7 +1378,7 @@ msgstr ""
 
 #: templates/html/mentoring_with_steps.html:22
 msgid "Review grade"
-msgstr ""
+msgstr "تصفح الصف"
 
 #: templates/html/mentoring_with_steps.html:23
 msgid "Try again"

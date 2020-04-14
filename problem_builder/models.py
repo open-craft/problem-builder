@@ -52,9 +52,9 @@ class Answer(models.Model):
     name = models.CharField(max_length=50, db_index=True)
     student_id = models.CharField(max_length=50, db_index=True)
     course_key = models.CharField(max_length=255, db_index=True)
-    student_input = models.TextField(blank=True, default='')
-    created_on = models.DateTimeField('created on', auto_now_add=True)
-    modified_on = models.DateTimeField('modified on', auto_now=True)
+    student_input = models.TextField(blank=True, default=u'')
+    created_on = models.DateTimeField(u'created on', auto_now_add=True)
+    modified_on = models.DateTimeField(u'modified on', auto_now=True)
 
     def save(self, *args, **kwargs):
         # Force validation of max_length

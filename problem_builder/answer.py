@@ -229,7 +229,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
     @property
     def status(self):
         answer_length_ok = self.student_input
-        if self.min_characters > 0:
+        if self.min_characters and self.min_characters > 0:
             answer_length_ok = len(self.student_input.strip()) >= self.min_characters
 
         return 'correct' if answer_length_ok else 'incorrect'
