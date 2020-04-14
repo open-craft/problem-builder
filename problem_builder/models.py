@@ -68,10 +68,10 @@ class Share(models.Model):
     to query for arbitrary anonymous user IDs. In order to make sharing work, we have
     to store them here.
     """
-    shared_by = models.ForeignKey(User, related_name='problem_builder_shared_by')
+    shared_by = models.ForeignKey(User, related_name='problem_builder_shared_by', on_delete=models.CASCADE)
     submission_uid = models.CharField(max_length=32)
     block_id = models.CharField(max_length=255, db_index=True)
-    shared_with = models.ForeignKey(User, related_name='problem_builder_shared_with')
+    shared_with = models.ForeignKey(User, related_name='problem_builder_shared_with', on_delete=models.CASCADE)
     notified = models.BooleanField(default=False, db_index=True)
 
     class Meta(object):
