@@ -255,7 +255,7 @@ class MentoringStepBlock(
             if len(language) == 2:
                 new_lang = language[0] + "_" + language[1].upper()
             else:
-                new_lang = languages
+                new_lang = language
             return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
                 lang=new_lang
             ))
