@@ -259,7 +259,7 @@ class MentoringStepBlock(
             else:
                 new_lang = language
             return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=utils.translation.get_language().split('-')
+                lang=new_lang
             ))
         except IOError:
             return self.resource_string('public/js/translations/en/textjs.js')
