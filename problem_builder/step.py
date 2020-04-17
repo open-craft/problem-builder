@@ -251,8 +251,15 @@ class MentoringStepBlock(
 
     def get_translation_content(self):
         try:
+            # here we need to split the lang code and need to change - to _ and post - characters to
+            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
+            language = utils.translation.get_language().split('-')
+            if len(language) == 2:
+                new_lang = language[0] + "_" + language[1].upper()
+            else:
+                new_lang = utils.translation.get_language()
             return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=utils.translation.get_language(),
+                lang=new_lang
             ))
         except IOError:
             return self.resource_string('public/js/translations/en/textjs.js')
