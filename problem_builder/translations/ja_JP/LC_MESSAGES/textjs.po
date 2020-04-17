@@ -33,7 +33,8 @@ msgstr ""
 #: templates/html/mentoring_attempts.underscore:5
 msgid "You have used {num_used} of 1 submission."
 msgid_plural "You have used {num_used} of {max_attempts} submissions."
-msgstr[0] ""
+msgstr[0] "上限1回のうち {num_used} 回提出しました。"
+msgstr[1] "上限{max_attempts}回のうち {num_used} 回提出しました。"
 
 #: public/js/instructor_tool.js:349
 msgid "All"
