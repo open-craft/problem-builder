@@ -1484,7 +1484,7 @@ msgstr "追加のカスタム選択肢とヒント:"
 msgid ""
 "You might consider reviewing the following items before your next assessment"
 " attempt:"
-msgstr "次のアセスメントに挑戦する前に、次の項目を見直すことを考慮してください:"
+msgstr "次回のアセスメントを受ける前に、以下の項目について見直しましょう:"
 
 #: templates/html/sb-review-score.html:5
 #, python-format

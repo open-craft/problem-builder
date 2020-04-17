@@ -195,7 +195,8 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
 
 
 @XBlock.needs("i18n")
-class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, NoSettingsMixin, XBlock):
+class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixin, NoSettingsMixin,
+                               XBlock, I18NService):
     """
     Display any on-assessment-review-question messages.
     These messages are defined within individual questions and are only displayed if the student
@@ -213,9 +214,9 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
         """ Render the per-question feedback, if any. """
         review_tips = (context or {}).get("score_summary", {}).get("review_tips")
         if review_tips:
-            html = loader.render_template("templates/html/sb-review-per-question-feedback.html", {
+            html = loader.render_django_template("templates/html/sb-review-per-question-feedback.html", {
                 'tips': review_tips,
-            })
+            }, i18n_service=self.i18n_service)
         else:
             html = u""
         return Fragment(html)
