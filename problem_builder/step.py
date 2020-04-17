@@ -251,8 +251,13 @@ class MentoringStepBlock(
 
     def get_translation_content(self):
         try:
+            language = utils.translation.get_language().split('-')
+            if len(language) == 2:
+                new_lang = language[0] + "_" + language[1].upper()
+            else:
+                new_lang = languages
             return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=utils.translation.get_language(),
+                lang=new_lang,
             ))
         except IOError:
             return self.resource_string('public/js/translations/en/textjs.js')
