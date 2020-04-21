@@ -289,28 +289,27 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def popup_check(self, step_builder, item_feedbacks, prefix='', do_submit=True):
         for index, expected_feedback in enumerate(item_feedbacks):
-            # TODO: replace time.sleep with waiting for elements the selenium way
-            time.sleep(2)
 
+            self.wait_until_exists(prefix + " .choice")
+            self.wait_until_exists(prefix + " .choice .choice-label")
             choice_wrapper = step_builder.find_elements_by_css_selector(prefix + " .choice")[index]
             choice_label = step_builder.find_elements_by_css_selector(prefix + " .choice .choice-label")[index]
             choice_label.click()
-            time.sleep(2)
 
+            self.wait_until_exists(".choice-result")
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
             item_feedback_icon.click()
-            time.sleep(2)
 
+            self.wait_until_exists(".choice-tips")
             item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
             self.assertTrue(item_feedback_popup.is_displayed())
             self.assertEqual(item_feedback_popup.text, expected_feedback)
 
             item_feedback_popup.click()
-            time.sleep(2)
             self.assertTrue(item_feedback_popup.is_displayed())
 
             step_builder.find_elements_by_css_selector(prefix + ' .question-title')[0].click()
-            time.sleep(2)
+            self.wait_until_hidden(item_feedback_popup)
             self.assertFalse(item_feedback_popup.is_displayed())
 
     def extended_feedback_checks(self, step_builder, controls, expected_results):
@@ -811,8 +810,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def click_overlay_button(self, overlay_button, overlay_on, color_on=None, color_off=HTMLColors.GREY):
         overlay_button.click()
-        # XXX: hack; actually wait for change
-        time.sleep(3)
+        time.sleep(3)  # give some time for changes
         button_border_colors = [
             overlay_button.value_of_css_property('border-top-color'),
             overlay_button.value_of_css_property('border-right-color'),
