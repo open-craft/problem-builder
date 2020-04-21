@@ -810,7 +810,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def click_overlay_button(self, overlay_button, overlay_on, color_on=None, color_off=HTMLColors.GREY):
         overlay_button.click()
-        time.sleep(3) # give some time for changes
+        time.sleep(3)  # give some time for changes
         button_border_colors = [
             overlay_button.value_of_css_property('border-top-color'),
             overlay_button.value_of_css_property('border-right-color'),
