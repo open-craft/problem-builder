@@ -19,6 +19,7 @@
 #
 
 # Imports ###########################################################
+import time
 
 from .base_test import (GetChoices, MentoringAssessmentBaseTest,
                         ProblemBuilderBaseTest)
