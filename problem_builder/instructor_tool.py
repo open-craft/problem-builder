@@ -142,7 +142,7 @@ class InstructorToolBlock(XBlock):
             _('Long Answer'): 'AnswerBlock',
         }
 
-        html = loader.render_template('templates/html/instructor_tool.html', {
+        html = loader.render_django_template('templates/html/instructor_tool.html', {
             'block_choices': block_choices,
             'course_blocks_api': COURSE_BLOCKS_API,
             'root_block_id': six.text_type(getattr(self.runtime, 'course_id', 'course_id')),

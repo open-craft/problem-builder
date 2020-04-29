@@ -214,7 +214,7 @@ class BaseMentoringBlock(
         authors in Studio when not editing this block's children.
         """
         fragment = self.student_view(context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
@@ -609,7 +609,7 @@ class MentoringBlock(
         # server-side check that the user is allowed to submit:
         if self.max_attempts_reached:
             raise JsonHandlerError(403, "Maximum number of attempts already reached.")
-        elif self.has_missing_dependency:
+        if self.has_missing_dependency:
             raise JsonHandlerError(
                 403,
                 "You need to complete all previous steps before being able to complete the current one."
@@ -742,7 +742,7 @@ class MentoringBlock(
         local_context = context.copy()
         local_context['author_edit_view'] = True
         fragment = super(MentoringBlock, self).author_edit_view(local_context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             'url_name': self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
@@ -851,7 +851,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         added/deleted.
         """
         active_step = self.active_step
-        if active_step >= 0 and active_step < len(self.step_ids):
+        if 0 <= active_step < len(self.step_ids):
             return active_step
         if active_step == -1 and self.has_review_step:
             return active_step  # -1 indicates the review step
@@ -1107,7 +1107,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         Add some HTML to the author view that allows authors to add child blocks.
         """
         fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
-        fragment.add_content(loader.render_template('templates/html/mentoring_url_name.html', {
+        fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))

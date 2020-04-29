@@ -2,8 +2,9 @@ import unittest
 from random import random
 
 import ddt
-from mock import MagicMock, Mock, PropertyMock, patch
+from unittest.mock import MagicMock, Mock, PropertyMock, patch
 from xblock.field_data import DictFieldData
+from xblock.runtime import NullI18nService
 
 from problem_builder.answer import AnswerRecapBlock
 from problem_builder.mcq import MCQBlock
@@ -56,6 +57,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         with patch.object(block, 'runtime') as patched_runtime:
             patched_runtime.publish = Mock()
+            patched_runtime.service = lambda _, service: NullI18nService() if service == 'i18n' else MagicMock()
 
             block.student_view(context={})
 
@@ -68,6 +70,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         with patch.object(block, 'runtime') as patched_runtime:
             patched_runtime.publish = Mock()
+            patched_runtime.service = lambda _, service: NullI18nService() if service == 'i18n' else MagicMock()
 
             block.student_view(context={})
 
@@ -95,7 +98,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         with patch.object(block, 'runtime') as patched_runtime:
             patched_runtime.publish = Mock()
-            patched_runtime.service().ugettext = lambda str: str
+            patched_runtime.service = lambda _, service: NullI18nService() if service == 'i18n' else MagicMock()
             patched_runtime.get_block = lambda block_id: None
             patched_runtime.load_block_type = lambda block_id: Mock
 

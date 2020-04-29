@@ -77,7 +77,7 @@ create its migrations:
 
 ```bash
 (venv) ~/xblock_development/problem-builder $ cd ../venv/src/xblock-sdk
-(venv) ~/xblock_development/venv/src/xblock-sdk $ make pip
+(venv) ~/xblock_development/venv/src/xblock-sdk $ make install
 (venv) ~/xblock_development/venv/src/xblock-sdk $ python manage.py makemigrations workbench
 ```
 
@@ -221,6 +221,9 @@ Problem Builder releases are tagged with a version number, e.g.
 [`v2.6.5`](https://github.com/open-craft/problem-builder/tree/v2.6.5).  We recommend installing the most recently tagged
 version, with the exception of the following compatibility issues:
 
+* `edx-platform` version `open-release/ironwood.2` and earlier must use
+  ≤[v3.4.14](https://github.com/open-craft/problem-builder/tree/v3.4.14).  See
+  [PR 262](https://github.com/open-craft/problem-builder/pull/262) for details.
 * `edx-platform` version `open-release/eucalyptus.2` and earlier must use
   ≤[v2.6.0](https://github.com/open-craft/problem-builder/tree/v2.6.0).  See
   [PR 128](https://github.com/open-craft/problem-builder/pull/128) for details.

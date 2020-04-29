@@ -184,7 +184,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         context['answer_editable_id'] = uuid.uuid4().hex[:15]
         context['self'] = self
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
-        html = loader.render_template('templates/html/answer_editable.html', context)
+        html = loader.render_django_template('templates/html/answer_editable.html', context)
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
@@ -332,7 +332,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
                 context['student_input'] = None
         else:
             context['student_input'] = self.student_input
-        html = loader.render_template('templates/html/answer_read_only.html', context)
+        html = loader.render_django_template('templates/html/answer_read_only.html', context)
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))

@@ -89,7 +89,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
-        html = loader.render_template("templates/html/tip.html", {
+        html = loader.render_django_template("templates/html/tip.html", {
             'content': self.content,
             'width': self.width,
             'height': self.height,
