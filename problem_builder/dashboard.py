@@ -59,7 +59,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class ExportMixin(object):
+class ExportMixin:
     """
     Used by blocks which need to provide a downloadable export.
     """
@@ -92,7 +92,7 @@ class ExportMixin(object):
                 return ""
 
 
-class ColorRule(object):
+class ColorRule:
     """
     A rule used to conditionally set colors
 
@@ -457,14 +457,14 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
                     blocks, rules_parsed, self.color_for_value, self.visual_title, self.visual_desc
                 )
 
-        report_template = loader.render_template('templates/html/dashboard_report.html', {
+        report_template = loader.render_django_template('templates/html/dashboard_report.html', {
             'title': self.display_name,
             'css': loader.load_unicode(self.css_path),
             'student_name': self._get_user_full_name(),
             'course_name': self._get_course_name(),
         })
 
-        html = loader.render_template('templates/html/dashboard.html', {
+        html = loader.render_django_template('templates/html/dashboard.html', {
             'blocks': blocks,
             'display_name': self.display_name,
             'visual_repr': visual_repr,

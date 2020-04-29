@@ -26,7 +26,7 @@ from .base_test import (GetChoices, MentoringAssessmentBaseTest,
 # Classes ###########################################################
 
 
-class CompletionBlockTestMixin(object):
+class CompletionBlockTestMixin:
     """
     Mixin for testing completion blocks.
     """
@@ -45,6 +45,7 @@ class CompletionBlockTestMixin(object):
 
     def expect_checkmarks_visible(self, first_visible, second_visible):
         first_checkmark, second_checkmark = self.checkmarks
+        time.sleep(3)
         self.assertEqual(first_checkmark.is_displayed(), first_visible)
         self.assertEqual(second_checkmark.is_displayed(), second_visible)
 

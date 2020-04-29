@@ -15,7 +15,7 @@ def ngettext_fallback(text_singular, text_plural, number):
         return text_plural
 
 
-class DummyTranslationService(object):
+class DummyTranslationService:
     """
     Dummy drop-in replacement for i18n XBlock service
     """
@@ -24,7 +24,7 @@ class DummyTranslationService(object):
     ngettext = ngettext_fallback
 
 
-class I18NService(object):
+class I18NService:
     """
     Add i18n_service attribute to XBlocks
     """

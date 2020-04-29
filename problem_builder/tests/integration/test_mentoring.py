@@ -18,7 +18,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 import ddt
-import mock
+from unittest import mock
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 

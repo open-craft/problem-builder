@@ -67,7 +67,7 @@ def _normalize_id(key):
     return key
 
 
-class Correctness(object):
+class Correctness:
     CORRECT = 'correct'
     PARTIAL = 'partial'
     INCORRECT = 'incorrect'

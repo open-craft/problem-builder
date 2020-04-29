@@ -26,7 +26,7 @@ from .base_test import (GetChoices, MentoringAssessmentBaseTest,
 # Classes ###########################################################
 
 
-class SliderBlockTestMixins(object):
+class SliderBlockTestMixins:
     """ Mixins for testing slider blocks. Assumes only one slider block is on the page. """
 
     def get_slider_value(self):
