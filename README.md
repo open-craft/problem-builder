@@ -64,6 +64,13 @@ Firstly, create a virtualenv:
 ~/xblock_development $ . venv/bin/activate
 ```
 
+The MySQL client library headers are required for the `mysqlclient` library used by `problem-builder`.
+On Ubuntu 16.04, it can be installed by running
+
+```bash
+sudo apt-get install libmysqlclient-dev
+```
+
 Now run the following commands from the problem builder repo
 root to install the problem builder dependencies:
 
@@ -91,8 +98,24 @@ DATABASES['default']['NAME'] = 'var/workbench.db'
 ```
 
 Because this XBlock uses a Django model, you need to sync the database
-before starting the workbench. Run this from the XBlock repository
-root:
+before starting the workbench. `problem-builder` uses MySQL 5.6 and hence you can quickly spin up
+an instance of MySQL 5.6 with docker. Run the following command to start a MySQL 5.6 server.
+
+```bash
+docker run --rm -it -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootpw -e MYSQL_DATABASE=db circleci/mysql:5.6 mysqld --character-set-server=latin1 --collation-server=latin1_swedish_ci
+```
+
+By default, the `xblock-sdk` uses the SQLite database by default but MySQL
+can be used by specifying an environment variable `WORKBENCH_DATABASES` in
+the following format.
+
+```bash
+export WORKBENCH_DATABASES='{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "OPTIONS": {"charset": "utf8mb4"}}}'
+```
+
+Ensure that the database name and credentials match the ones configured in the docker container.
+
+Run this from the XBlock repository root:
 
 ```bash
 $ ./manage.py migrate --settings=workbench.settings_pb
