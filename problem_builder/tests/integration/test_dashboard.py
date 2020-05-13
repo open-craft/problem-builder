@@ -21,13 +21,13 @@ import json
 from functools import wraps
 from textwrap import dedent
 
-from mock import Mock, patch
+from unittest.mock import Mock, patch
 from selenium.common.exceptions import NoSuchElementException
 
 from .base_test import ProblemBuilderBaseTest
 
 
-class MockSubmissionsAPI(object):
+class MockSubmissionsAPI:
     """
     Mock the submissions API, since it's not available in the test environment.
     """

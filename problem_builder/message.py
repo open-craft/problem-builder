@@ -168,12 +168,12 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         return block
 
 
-class CompletedMentoringMessageShim(object):
+class CompletedMentoringMessageShim:
     CATEGORY = 'pb-message'
     STUDIO_LABEL = _("Message (Complete)")
 
 
-class IncompleteMentoringMessageShim(object):
+class IncompleteMentoringMessageShim:
     CATEGORY = 'pb-message'
     STUDIO_LABEL = _("Message (Incomplete)")
 

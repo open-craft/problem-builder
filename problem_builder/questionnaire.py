@@ -171,7 +171,7 @@ class QuestionnaireAbstractBlock(
             self.get_parent().get_parent() if self.get_parent() else None,
             MentoringWithExplicitStepsBlock
         )
-        fragment.add_content(loader.render_template('templates/html/questionnaire_add_buttons.html', {
+        fragment.add_content(loader.render_django_template('templates/html/questionnaire_add_buttons.html', {
             'show_review': show_review
         }))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))

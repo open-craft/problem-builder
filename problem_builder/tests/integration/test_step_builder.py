@@ -1,7 +1,7 @@
 import time
 
 from ddt import data, ddt, unpack
-from mock import patch
+from unittest.mock import patch
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -12,7 +12,7 @@ from .base_test import (CORRECT, INCORRECT, PARTIAL, GetChoices,
 from .test_dashboard import MockSubmissionsAPI
 
 
-class HTMLColors(object):
+class HTMLColors:
     GREEN = 'rgb(0, 128, 0)'
     BLUE = 'rgb(0, 0, 255)'
     RED = 'rgb(255, 0, 0)'
@@ -289,28 +289,27 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def popup_check(self, step_builder, item_feedbacks, prefix='', do_submit=True):
         for index, expected_feedback in enumerate(item_feedbacks):
-            # TODO: replace time.sleep with waiting for elements the selenium way
-            time.sleep(2)
 
+            self.wait_until_exists(prefix + " .choice")
+            self.wait_until_exists(prefix + " .choice .choice-label")
             choice_wrapper = step_builder.find_elements_by_css_selector(prefix + " .choice")[index]
             choice_label = step_builder.find_elements_by_css_selector(prefix + " .choice .choice-label")[index]
             choice_label.click()
-            time.sleep(2)
 
+            self.wait_until_exists(".choice-result")
             item_feedback_icon = choice_wrapper.find_element_by_css_selector(".choice-result")
             item_feedback_icon.click()
-            time.sleep(2)
 
+            self.wait_until_exists(".choice-tips")
             item_feedback_popup = choice_wrapper.find_element_by_css_selector(".choice-tips")
             self.assertTrue(item_feedback_popup.is_displayed())
             self.assertEqual(item_feedback_popup.text, expected_feedback)
 
             item_feedback_popup.click()
-            time.sleep(2)
             self.assertTrue(item_feedback_popup.is_displayed())
 
             step_builder.find_elements_by_css_selector(prefix + ' .question-title')[0].click()
-            time.sleep(2)
+            self.wait_until_hidden(item_feedback_popup)
             self.assertFalse(item_feedback_popup.is_displayed())
 
     def extended_feedback_checks(self, step_builder, controls, expected_results):
@@ -757,7 +756,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
                 self.wait_until_disabled(controls.next_question)
 
     def plot_controls(self, step_builder):
-        class Namespace(object):
+        class Namespace:
             pass
 
         plot_controls = Namespace()
@@ -769,7 +768,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         return plot_controls
 
     def additional_plot_controls(self, step_builder):
-        class Namespace(object):
+        class Namespace:
             pass
 
         additional_plot_controls = Namespace()
@@ -811,8 +810,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def click_overlay_button(self, overlay_button, overlay_on, color_on=None, color_off=HTMLColors.GREY):
         overlay_button.click()
-        # XXX: hack; actually wait for change
-        time.sleep(3)
+        time.sleep(3)  # give some time for changes
         button_border_colors = [
             overlay_button.value_of_css_property('border-top-color'),
             overlay_button.value_of_css_property('border-right-color'),
@@ -893,14 +891,14 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             ]
             self.assertTrue(all(pc == overlay['point_color'] for pc in point_colors))
             # Check tooltips for points
-            tooltips = set([
+            tooltips = {
                 point.get_attribute('data-tooltip') for point in points
-            ])
+            }
             self.assertEquals(tooltips, set(overlay['tooltips']))
             # Check positions
-            point_positions = set([
+            point_positions = {
                 (point.get_attribute('cx'), point.get_attribute('cy')) for point in points
-            ])
+            }
             self.assertEquals(point_positions, set(overlay['positions']))
 
     def test_plot(self):

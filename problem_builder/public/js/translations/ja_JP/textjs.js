@@ -29,7 +29,11 @@
     "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
       "\u7d50\u679c\u3092<%= creation_time %> (<%= seconds %> \u79d2) \u3067\u53d6\u5f97\u3057\u307e\u3057\u305f\u3002"
     ], 
-    "The report is currently being generated\u2026": "\u73fe\u5728\u30ec\u30dd\u30fc\u30c8\u3092\u4f5c\u6210\u4e2d\u3067\u3059\u2026"
+    "The report is currently being generated\u2026": "\u73fe\u5728\u30ec\u30dd\u30fc\u30c8\u3092\u4f5c\u6210\u4e2d\u3067\u3059\u2026",
+    "You have used {num_used} of 1 submission.": [
+      "上限{max_attempts}回のうち {num_used} 回提出しました。",
+      "上限1回のうち {num_used} 回提出しました。"
+    ],
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];

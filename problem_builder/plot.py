@@ -327,7 +327,7 @@ class PlotBlock(
     def author_preview_view(self, context):
         context['self'] = self
         fragment = Fragment()
-        fragment.add_content(loader.render_template('templates/html/plot_preview.html', context))
+        fragment.add_content(loader.render_django_template('templates/html/plot_preview.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/plot-preview.css'))
         if self.overlay_ids:
             fragment.add_content(
@@ -349,7 +349,7 @@ class PlotBlock(
         context['hide_header'] = True
         context['self'] = self
         fragment = Fragment()
-        fragment.add_content(loader.render_template('templates/html/plot.html', context))
+        fragment.add_content(loader.render_django_template('templates/html/plot.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/plot.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/d3.min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/plot.js'))
@@ -481,6 +481,6 @@ class PlotOverlayBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlock
     def student_view(self, context):
         context['self'] = self
         fragment = Fragment()
-        fragment.add_content(loader.render_template('templates/html/overlay.html', context))
+        fragment.add_content(loader.render_django_template('templates/html/overlay.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/overlay.css'))
         return fragment

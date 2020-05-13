@@ -144,7 +144,7 @@ class CompletionBlock(
         context['title'] = self.display_name_with_default
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
-        html = loader.render_template('templates/html/completion.html', context)
+        html = loader.render_django_template('templates/html/completion.html', context)
 
         fragment = Fragment(html)
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/completion.js'))

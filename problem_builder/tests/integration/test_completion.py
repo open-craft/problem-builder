@@ -19,7 +19,6 @@
 #
 
 # Imports ###########################################################
-
 import time
 
 from .base_test import (GetChoices, MentoringAssessmentBaseTest,
@@ -28,7 +27,7 @@ from .base_test import (GetChoices, MentoringAssessmentBaseTest,
 # Classes ###########################################################
 
 
-class CompletionBlockTestMixin(object):
+class CompletionBlockTestMixin:
     """
     Mixin for testing completion blocks.
     """
@@ -47,6 +46,7 @@ class CompletionBlockTestMixin(object):
 
     def expect_checkmarks_visible(self, first_visible, second_visible):
         first_checkmark, second_checkmark = self.checkmarks
+        time.sleep(3)
         self.assertEqual(first_checkmark.is_displayed(), first_visible)
         self.assertEqual(second_checkmark.is_displayed(), second_visible)
 
@@ -98,8 +98,6 @@ class CompletionBlockTest(CompletionBlockTestMixin, ProblemBuilderBaseTest):
         # The checkbox should be checked (since that's the value we submitted earlier),
         # and "Submit" should be disabled (to discourage submitting the same answer):
         self.expect_checkbox_checked(True)
-        # XXX: hack; use web driver wait correctly
-        time.sleep(3)
         self.expect_checkmark_visible(True)
         self.expect_submit_enabled(False)
 

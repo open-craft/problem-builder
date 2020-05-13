@@ -30,7 +30,7 @@ except ImportError:
     sub_api = None  # We are probably in the workbench. Don't use the submissions API
 
 
-class SubmittingXBlockMixin(object):
+class SubmittingXBlockMixin:
     """
     Simplifies use of the submissions API by an XBlock.
     """

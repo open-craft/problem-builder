@@ -1,9 +1,9 @@
 # Internationalization and Localization requirements
--e git://github.com/edx/xblock-sdk.git@v0.1.4#egg=xblock-sdk==v0.1.4
-Django==1.11.23
+-e git://github.com/edx/xblock-sdk.git@v0.1.7#egg=xblock-sdk==v0.1.7
+Django~=2.2.10
 django-statici18n==1.8.2
 transifex-client==0.12.1
-edx-i18n-tools==0.4.7
+edx-i18n-tools==0.5.0
 pycodestyle==2.4.0
 pylint==0.28.0
-django-babel-underscore==0.5.2
+git+https://github.com/edx/django-babel-underscore.git@37705f7377a4d0a4e673f1431895ce28a8860cd7#egg=django-babel-underscore==0.6.0

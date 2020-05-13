@@ -1,6 +1,8 @@
-<div class="tip-choice-group">
-  {% for tip_html in tips_html %}
-    {{ tip_html|safe }}
-  {% endfor %}
-</div>
-<button aria-label="close" class="close icon-remove-sign fa fa-times-circle">&times;</button>
+{% if tips_html %}
+  <div class="tip-choice-group">
+    {% for tip_html in tips_html %}
+      {{ tip_html|safe }}
+    {% endfor %}
+  </div>
+  <button aria-label="close" class="close icon-remove-sign fa fa-times-circle">&times;</button>
+{% endif %}

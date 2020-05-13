@@ -3,6 +3,10 @@ jobs:
   build:
     docker:
       - image: <<parameters.docker_image>>
+      - image: circleci/mysql:5.6
+        command: mysqld --character-set-server=latin1 --collation-server=latin1_swedish_ci
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpw
     parameters:
         test_command:
             type: string
@@ -10,13 +14,14 @@ jobs:
             type: string
     environment:
       MOZ_HEADLESS: 1
+      WORKBENCH_DATABASES: '{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "OPTIONS": {"charset": "utf8mb4"}}}'
     steps:
       - checkout
       - run:
           name: Update system
           command: |
             sudo apt-get update
-            sudo apt-get install -y libgtk3.0-cil-dev libasound2 libasound2 libdbus-glib-1-2 libdbus-1-3 libgtk2.0-0
+            sudo apt-get install -y libgtk3.0-cil-dev libasound2 libasound2 libdbus-glib-1-2 libdbus-1-3 libgtk2.0-0 default-libmysqlclient-dev
       - run:
           name: Install geckodriver
           command: |
@@ -68,7 +73,7 @@ jobs:
             sudo apt-get update
             virtualenv venv
             source venv/bin/activate
-            pip install 'coverage<5'
+            pip install 'coverage==5.0.3'
       - attach_workspace:
           at: /tmp/workspace
       - run:
@@ -125,60 +130,6 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - build:
-          name: py27-quality
-          test_command: make quality
-          docker_image: circleci/python:2.7-buster-browsers
-          filters:
-            tags:
-              only: /.*/
-      - build:
-          name: py27-unit
-          test_command: make test.unit
-          docker_image: circleci/python:2.7-buster-browsers
-          filters:
-            tags:
-              only: /.*/
-      - build:
-          name: py27-integration
-          test_command: make test.integration
-          docker_image: circleci/python:2.7-buster-browsers
-          filters:
-            tags:
-              only: /.*/
-      - coverage:
-          name: py27-coverage
-          docker_image: circleci/python:2.7-buster
-          filters:
-            tags:
-              only: /.*/
-          requires:
-              - py27-quality
-              - py27-unit
-              - py27-integration
-      - deploy:
-          name: py27-deploy-sdist
-          docker_image: circleci/python:2.7-buster
-          dist_type: sdist
-          requires:
-            - py27-coverage
-          filters:
-            tags:
-              only: /v[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-      - deploy:
-          name: py27-deploy-bdist_wheel
-          docker_image: circleci/python:2.7-buster
-          dist_type: bdist_wheel
-          requires:
-            - py27-coverage
-          filters:
-            tags:
-              only: /v[0-9]+(\.[0-9]+)*/
-            branches:
-              ignore: /.*/
-
       - build:
           name: py35-quality
           test_command: make quality

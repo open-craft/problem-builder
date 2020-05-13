@@ -130,7 +130,7 @@ class MentoringTableBlock(
             content_values.append(child_frag.content)
         context['header_values'] = header_values if any(header_values) else None
         context['content_values'] = content_values
-        html = loader.render_template('templates/html/mentoring-table.html', context)
+        html = loader.render_django_template('templates/html/mentoring-table.html', context)
         return {'content': html}
 
     @property
@@ -147,7 +147,7 @@ class MentoringTableBlock(
         ).values_list('shared_with__username', flat=True)
         }
         return {
-            'content': loader.render_template('templates/html/mentoring-table-shared-list.html', context)
+            'content': loader.render_django_template('templates/html/mentoring-table-shared-list.html', context)
         }
 
     @XBlock.json_handler
@@ -266,14 +266,14 @@ class MentoringTableBlock(
                 else:
                     raise
 
-        report_template = loader.render_template('templates/html/mentoring-table-report.html', {
+        report_template = loader.render_django_template('templates/html/mentoring-table-report.html', {
             'title': self.display_name,
             'css': loader.load_unicode(AnswerRecapBlock.css_path) + loader.load_unicode(self.css_path),
             'student_name': self._get_user_full_name(),
             'course_name': self._get_course_name(),
         })
 
-        fragment.add_content(loader.render_template('templates/html/mentoring-table-container.html', context))
+        fragment.add_content(loader.render_django_template('templates/html/mentoring-table-container.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/mentoring-table.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/jquery-shorten.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, self.js_path))
@@ -295,7 +295,7 @@ class MentoringTableBlock(
         Add some HTML to the author view that allows authors to add choices and tips.
         """
         fragment = super(MentoringTableBlock, self).author_edit_view(context)
-        fragment.add_content(loader.render_template('templates/html/mentoring-table-add-button.html', {}))
+        fragment.add_content(loader.render_django_template('templates/html/mentoring-table-add-button.html', {}))
         # Share styles with the questionnaire edit CSS:
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         return fragment
@@ -345,7 +345,7 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
         """
         fragment = super(MentoringTableColumn, self).author_edit_view(context)
         fragment.content = u"<div style=\"font-weight: bold;\">{}</div>".format(self.header) + fragment.content
-        fragment.add_content(loader.render_template('templates/html/mentoring-column-add-button.html', {}))
+        fragment.add_content(loader.render_django_template('templates/html/mentoring-column-add-button.html', {}))
         # Share styles with the questionnaire edit CSS:
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
         return fragment
