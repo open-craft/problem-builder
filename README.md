@@ -1,5 +1,4 @@
-Problem Builder and Step Builder
---------------------------------
+## Problem Builder and Step Builder
 
 [![Circle CI](https://circleci.com/gh/open-craft/problem-builder.svg?style=svg)](https://circleci.com/gh/open-craft/problem-builder)
 
@@ -34,41 +33,46 @@ containing a free-form question, two MCQs and one MRQ:
 
 ![Problem Builder Example](doc/img/mentoring-example.png)
 
-Installation
-------------
+## Installation
 
 You can install Problem Builder from [PyPI](https://pypi.org/project/xblock-problem-builder/)
 using this command:
 
-```
+```bash
 pip install xblock-problem-builder
 ```
 
 For full details, see "Open edX Installation", below.
 
-Usage
------
+## Usage
 
 See [Usage Instructions](doc/Usage.md)
 
-Workbench installation and settings
------------------------------------
+## Workbench Installation and Settings
 
-For developers, you can install this XBlock into an XBlock SDK workbench's
-virtualenv.
+### Prerequisites
 
-Firstly, create a virtualenv:
+* Python 3.5+
+* Compiler/build tool chain
+* Python headers
+* MySQL development libraries and headers
+* Virtualenv
+
+On Ubuntu 16.04, these can be installed by running
 
 ```bash
-~/xblock_development $ virtualenv venv
-~/xblock_development $ . venv/bin/activate
+sudo apt-get install build-essential libpython3-dev libmysqlclient-dev virtualenv
 ```
 
-The MySQL client library headers are required for the `mysqlclient` library used by `problem-builder`.
-On Ubuntu 16.04, it can be installed by running
+### Developer Installation
+
+For developers, you can install this XBlock into an XBlock SDK workbench's virtualenv.
+
+First, create a Python3 virtualenv:
 
 ```bash
-sudo apt-get install libmysqlclient-dev
+~/xblock_development $ virtualenv -p python3 venv
+~/xblock_development $ . venv/bin/activate
 ```
 
 Now run the following commands from the problem builder repo
@@ -84,8 +88,7 @@ create its migrations:
 
 ```bash
 (venv) ~/xblock_development/problem-builder $ cd ../venv/src/xblock-sdk
-(venv) ~/xblock_development/venv/src/xblock-sdk $ make install
-(venv) ~/xblock_development/venv/src/xblock-sdk $ python manage.py makemigrations workbench
+(venv) ~/xblock_development/venv/src/xblock-sdk $ make requirements
 ```
 
 Create the following configuration file in `workbench/settings_pb.py`:
@@ -94,23 +97,21 @@ Create the following configuration file in `workbench/settings_pb.py`:
 from settings import *
 
 INSTALLED_APPS += ('problem_builder',)
-DATABASES['default']['NAME'] = 'var/workbench.db'
 ```
 
-Because this XBlock uses a Django model, you need to sync the database
-before starting the workbench. `problem-builder` uses MySQL 5.6 and hence you can quickly spin up
-an instance of MySQL 5.6 with docker. Run the following command to start a MySQL 5.6 server.
-
-```bash
-docker run --rm -it -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootpw -e MYSQL_DATABASE=db circleci/mysql:5.6 mysqld --character-set-server=latin1 --collation-server=latin1_swedish_ci
-```
-
-By default, the `xblock-sdk` uses the SQLite database by default but MySQL
+By default, the `xblock-sdk` uses the SQLite database but MySQL
 can be used by specifying an environment variable `WORKBENCH_DATABASES` in
 the following format.
 
 ```bash
-export WORKBENCH_DATABASES='{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "OPTIONS": {"charset": "utf8mb4"}}}'
+export WORKBENCH_DATABASES='{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "PORT": "3306"}}'
+```
+
+Testing `problem-builder` in the workbench requires MySQL instead of the standard SQLite configuration it uses. You can quickly spin up an instance of MySQL with Docker using the following command:
+
+```bash
+# -d for detach mode
+docker run --rm -it -p 3307:3306 -e MYSQL_ROOT_PASSWORD=rootpw -e MYSQL_DATABASE=db -d mysql:5.6
 ```
 
 Ensure that the database name and credentials match the ones configured in the docker container.
@@ -118,14 +119,14 @@ Ensure that the database name and credentials match the ones configured in the d
 Run this from the XBlock repository root:
 
 ```bash
-$ ./manage.py migrate --settings=workbench.settings_pb
+./manage.py migrate --settings=workbench.settings_pb
 ```
 
 Running the workbench
 ---------------------
 
 ```bash
-$ ./manage.py runserver 8000 --settings=workbench.settings_pb
+./manage.py runserver 8000 --settings=workbench.settings_pb
 ```
 
 Access it at [http://localhost:8000/](http://localhost:8000).
@@ -137,7 +138,7 @@ The integration tests require a recent Firefox and geckodriver (CI
 uses Firefox 70 and geckodriver 0.26). These can be installed locally for
 testing if required. For example on Linux:
 
-```
+```bash
 mkdir external
 cd external
 wget https://archive.mozilla.org/pub/firefox/releases/70.0.1/linux-x86_64/en-US/firefox-70.0.1.tar.bz2
@@ -155,15 +156,15 @@ From the problem-builder repository root, run the tests with the
 following command:
 
 ```bash
-$ make test
+make test
 ```
 
 See also the following for more scoped tests:
 
 ```bash
-$ make quality
-$ make test.unit
-$ make test.integration
+make quality
+make test.unit
+make test.integration
 ```
 
 Working with Translations
@@ -204,7 +205,7 @@ If you want to add a new language:
   1. Add language to `problem_builder/translations/config.yaml`
   2. Make sure all tagged strings have been extracted and push to Transifex as described above.
   3. Go to Transifex and translate both of the
-     [Problem Builder](https://www.transifex.com/open-edx/xblocks/problem-builder/) 
+     [Problem Builder](https://www.transifex.com/open-edx/xblocks/problem-builder/)
      and the [Problem Builder JS](https://www.transifex.com/open-edx/xblocks/problem-builder-js/) resources.
   4. When you're done with the translations pull from Transifex as described above.
 
@@ -244,8 +245,7 @@ Problem Builder releases are tagged with a version number, e.g.
 [`v2.6.5`](https://github.com/open-craft/problem-builder/tree/v2.6.5).  We recommend installing the most recently tagged
 version, with the exception of the following compatibility issues:
 
-* `edx-platform` version `open-release/ironwood.2` and earlier must use
-  ≤[v3.4.14](https://github.com/open-craft/problem-builder/tree/v3.4.14).  See
+* `edx-platform` version `open-release/ironwood.2` and earlier must use versions < 4.0.0. See
   [PR 262](https://github.com/open-craft/problem-builder/pull/262) for details.
 * `edx-platform` version `open-release/eucalyptus.2` and earlier must use
   ≤[v2.6.0](https://github.com/open-craft/problem-builder/tree/v2.6.0).  See
@@ -267,6 +267,7 @@ edxapp $ ./manage.py lms migrate --settings=aws  # or openstack, as appropriate
 ```
 
 Then, restart the edxapp services:
+
 ```bash
 $ sudo /edx/bin/supervisorctl restart edxapp:
 $ sudo /edx/bin/supervisorctl restart edxapp_workers:
@@ -274,7 +275,7 @@ $ sudo /edx/bin/supervisorctl restart edxapp_workers:
 
 To install old verions of Problem Builder (< v3.1.3) on an Open edX installation, choose the tag you wish to install, follow the above instructions but instead of the `pip install xblock-problem-builder` command, use:
 
-```
+```bash
 TAG='v2.6.5' pip install "git+https://github.com/open-craft/problem-builder.git@$TAG#egg=xblock-problem-builder==$TAG"
 ```
 
