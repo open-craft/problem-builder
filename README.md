@@ -99,19 +99,21 @@ from settings import *
 INSTALLED_APPS += ('problem_builder',)
 ```
 
+Testing `problem-builder` in the workbench requires MySQL instead of the standard SQLite
+configuration it uses. You can quickly spin up an instance of MySQL with Docker using the
+following command:
+
+```bash
+# -d for detach mode
+docker run --rm -it -p 3307:3306 -e MYSQL_ROOT_PASSWORD=rootpw -e MYSQL_DATABASE=db -d mysql:5.6
+```
+
 By default, the `xblock-sdk` uses the SQLite database but MySQL
 can be used by specifying an environment variable `WORKBENCH_DATABASES` in
 the following format.
 
 ```bash
 export WORKBENCH_DATABASES='{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "PORT": "3306"}}'
-```
-
-Testing `problem-builder` in the workbench requires MySQL instead of the standard SQLite configuration it uses. You can quickly spin up an instance of MySQL with Docker using the following command:
-
-```bash
-# -d for detach mode
-docker run --rm -it -p 3307:3306 -e MYSQL_ROOT_PASSWORD=rootpw -e MYSQL_DATABASE=db -d mysql:5.6
 ```
 
 Ensure that the database name and credentials match the ones configured in the docker container.
