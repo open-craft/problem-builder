@@ -1,0 +1,62 @@
+# #-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#
+# Translations template for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+# #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"#-#-#-#-#  underscore.po (PROJECT VERSION)  #-#-#-#-#\n"
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-07-31 14:41+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+"#-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-31 14:41+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/html/mentoring_attempts.underscore:5
+msgid "You have used {num_used} of 1 submission."
+msgid_plural "You have used {num_used} of {max_attempts} submissions."
+msgstr[0] "제출 횟수 1번 중 {num_used}번을 사용하셨습니다."
+msgstr[1] "최대 제출 횟수 {max_attempts}번 중 {num_used}번을 사용하셨습니다."
+
+#: public/js/instructor_tool.js:349
+msgid "All"
+msgstr "모두"
+
+#: public/js/instructor_tool.js:408
+msgid "Data export failed. Reason: <%= error %>"
+msgstr "데이터 내보내기에 실패했습니다. 이유: <%= error %>"
+
+#: public/js/instructor_tool.js:416
+msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
+msgid_plural "Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
+msgstr[0] "<%= creation_time %>(<%= seconds %>초)에 가져온 결과입니다."
+msgstr[1] "<%= creation_time %>(<%= seconds %>초)에 가져온 결과입니다."
+
+#: public/js/instructor_tool.js:429
+msgid "The report is currently being generated…"
+msgstr "현재 보고서를 생성하는 중..."

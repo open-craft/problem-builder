@@ -11,6 +11,7 @@ locales:
     - de_DE  # German
     - ja_JP  # Japanese
     - pl_PL # Polish
+    - ko_KR #Korean
     # Add languages here as needed
 
 # The locales used for fake-accented English, for testing.
