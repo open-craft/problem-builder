@@ -20,8 +20,10 @@
 
 # Imports ###########################################################
 
+import pkg_resources
 import uuid
 
+from django import utils
 from django.utils.safestring import mark_safe
 from lazy import lazy
 from xblock.core import XBlock
@@ -85,6 +87,20 @@ class QuestionnaireAbstractBlock(
         """
         return uuid.uuid4().hex[:20]
 
+    @staticmethod
+    def resource_string(path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
+
+    def get_translation_content(self):
+        try:
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
+                lang=utils.translation.to_locale(utils.translation.get_language()),
+            ))
+        except IOError:
+            return self.resource_string('public/js/translations/en/textjs.js')
+
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
 
@@ -95,7 +111,7 @@ class QuestionnaireAbstractBlock(
         context['custom_choices'] = self.custom_choices
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
-        fragment = Fragment(loader.render_django_template(template_path, context))
+        fragment = Fragment(loader.render_django_template(template_path, context, i18n_service=self.i18n_service))
         # If we use local_resource_url(self, ...) the runtime may insert many identical copies
         # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible.
         block_with_resources = self.get_parent()
@@ -105,6 +121,7 @@ class QuestionnaireAbstractBlock(
             block_with_resources = self
         fragment.add_css_url(self.runtime.local_resource_url(block_with_resources, 'public/css/questionnaire.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(block_with_resources, 'public/js/questionnaire.js'))
+        fragment.add_javascript(self.get_translation_content())
         fragment.initialize_js(name)
         return fragment
 
