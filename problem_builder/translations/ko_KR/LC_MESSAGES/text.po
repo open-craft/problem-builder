@@ -1465,7 +1465,7 @@ msgstr "다음 평가를 시도하기 전에 다음 아이템을 복습하는 �
 #: templates/html/sb-review-score.html:5
 #, python-format
 msgid "You scored %(score)s%% on this assessment. "
-msgstr "이 평가에서 %(score)s%%점을 받으셨습니다. "
+msgstr "이 평가에서 %(score)s%%를 받으셨습니다. "
 
 #: templates/html/sb-review-score.html:8
 msgid "Click a question to review feedback on your response."
