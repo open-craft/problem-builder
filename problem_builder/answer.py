@@ -22,8 +22,10 @@
 import logging
 import uuid
 
+import pkg_resources
 import six
 from lazy import lazy
+from django import utils
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
@@ -178,6 +180,20 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
 
     editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from', 'display_name', 'show_title')
 
+    @staticmethod
+    def resource_string(path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
+
+    def get_translation_content(self):
+        try:
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
+                lang=utils.translation.to_locale(utils.translation.get_language()),
+            ))
+        except IOError:
+            return self.resource_string('public/js/translations/en/textjs.js')
+
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
         context = context.copy() if context else {}
@@ -189,6 +205,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/answer.js'))
+        fragment.add_javascript(self.get_translation_content())
         fragment.initialize_js('AnswerBlock')
         return fragment
 
