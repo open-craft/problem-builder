@@ -40,6 +40,7 @@ from .mixins import (ExpandStaticURLMixin, QuestionMixin,
                      StudentViewUserStateMixin,
                      XBlockWithTranslationServiceMixin)
 from .models import Answer
+from .utils import I18NService
 
 # Globals ###########################################################
 
@@ -54,7 +55,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin):
+class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin, I18NService):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
@@ -200,7 +201,11 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         context['answer_editable_id'] = uuid.uuid4().hex[:15]
         context['self'] = self
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
-        html = loader.render_template('templates/html/answer_editable.html', context)
+        html = loader.render_django_template(
+            'templates/html/answer_editable.html',
+            context,
+            i18n_service=self.i18n_service
+        )
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
@@ -349,7 +354,11 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
                 context['student_input'] = None
         else:
             context['student_input'] = self.student_input
-        html = loader.render_template('templates/html/answer_read_only.html', context)
+        html = loader.render_django_template(
+            'templates/html/answer_read_only.html',
+            context,
+            i18n_service=self.i18n_service
+        )
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
