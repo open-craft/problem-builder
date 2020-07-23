@@ -22,8 +22,10 @@
 import logging
 import uuid
 
+import pkg_resources
 import six
 from lazy import lazy
+from django import utils
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
@@ -38,6 +40,7 @@ from .mixins import (ExpandStaticURLMixin, QuestionMixin,
                      StudentViewUserStateMixin,
                      XBlockWithTranslationServiceMixin)
 from .models import Answer
+from .utils import I18NService
 
 # Globals ###########################################################
 
@@ -52,7 +55,7 @@ def _(text):
 # Classes ###########################################################
 
 
-class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin):
+class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, StudentViewUserStateMixin, I18NService):
     """
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
@@ -178,17 +181,36 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
 
     editable_fields = ('question', 'name', 'min_characters', 'weight', 'default_from', 'display_name', 'show_title')
 
+    @staticmethod
+    def resource_string(path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
+
+    def get_translation_content(self):
+        try:
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
+                lang=utils.translation.to_locale(utils.translation.get_language()),
+            ))
+        except IOError:
+            return self.resource_string('public/js/translations/en/textjs.js')
+
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
         context = context.copy() if context else {}
         context['answer_editable_id'] = uuid.uuid4().hex[:15]
         context['self'] = self
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
-        html = loader.render_django_template('templates/html/answer_editable.html', context)
+        html = loader.render_django_template(
+            'templates/html/answer_editable.html',
+            context,
+            i18n_service=self.i18n_service
+        )
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/answer.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/answer.js'))
+        fragment.add_javascript(self.get_translation_content())
         fragment.initialize_js('AnswerBlock')
         return fragment
 
@@ -332,7 +354,11 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
                 context['student_input'] = None
         else:
             context['student_input'] = self.student_input
-        html = loader.render_django_template('templates/html/answer_read_only.html', context)
+        html = loader.render_django_template(
+            'templates/html/answer_read_only.html',
+            context,
+            i18n_service=self.i18n_service
+        )
 
         fragment = Fragment(html)
         fragment.add_css_url(self.runtime.local_resource_url(self, self.css_path))
