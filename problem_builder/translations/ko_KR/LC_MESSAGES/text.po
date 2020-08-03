@@ -1344,7 +1344,7 @@ msgstr "\n"
 
 #: templates/html/mentoring.html:39 templates/html/mentoring_with_steps.html:20
 msgid "Submit"
-msgstr "제출"
+msgstr "제출하기"
 
 #: templates/html/mentoring.html:47 templates/html/mentoring_with_steps.html:31
 msgid "Review final grade"
@@ -1364,7 +1364,7 @@ msgstr "부분 정답"
 
 #: templates/html/mentoring_with_steps.html:22
 msgid "Review grade"
-msgstr "등급 검토"
+msgstr "점수 검토"
 
 #: templates/html/mentoring_with_steps.html:23
 msgid "Try again"
