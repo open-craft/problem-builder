@@ -40,11 +40,17 @@ window.ProblemBuilderUtil = {
 
 var gettext;
 var ngettext;
+// create problem builder global translation variables to avoid the overriding of global edxapp translation
+var pb_gettext;
+var pb_ngettext;
+
 if ('ProblemBuilderXBlockI18N' in window) {
     // Use problem builder's local translations
-    gettext = window.ProblemBuilderXBlockI18N.gettext;
-    ngettext = window.ProblemBuilderXBlockI18N.ngettext;
-} else if ('gettext' in window) {
+    pb_gettext = window.ProblemBuilderXBlockI18N.gettext;
+    pb_ngettext = window.ProblemBuilderXBlockI18N.ngettext;
+}
+
+if ('gettext' in window) {
     // Use edxapp's global translations
     gettext = window.gettext;
     ngettext = window.ngettext;
