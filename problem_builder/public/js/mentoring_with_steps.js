@@ -1,11 +1,5 @@
 function MentoringWithStepsBlock(runtime, element) {
 
-    // Set up gettext in case it isn't available in the client runtime:
-    if (typeof gettext == "undefined") {
-        window.gettext = function gettext_stub(string) { return string; };
-        window.ngettext = function ngettext_stub(strA, strB, n) { return n == 1 ? strA : strB; };
-    }
-
     var children = runtime.children(element);
 
     var steps = [];

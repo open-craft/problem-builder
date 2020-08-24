@@ -214,11 +214,6 @@ function InstructorToolBlock(runtime, element) {
         el: $element.find('.data-export-status')
     });
 
-    // Set up gettext in case it isn't available in the client runtime:
-    if (typeof gettext == "undefined") {
-        window.gettext = function gettext_stub(string) { return string; };
-        window.ngettext = function ngettext_stub(strA, strB, n) { return n == 1 ? strA : strB; };
-    }
     var $startButton = $element.find('.data-export-start');
     var $cancelButton = $element.find('.data-export-cancel');
     var $downloadButton = $element.find('.data-export-download');
@@ -346,7 +341,7 @@ function InstructorToolBlock(runtime, element) {
         root = data.blocks[data.root];
 
         // Label the root block as "All"
-        root.name = gettext('All');
+        root.name = pb_gettext('All');
 
         // Remove any existing options
         $rootBlockId.empty();
@@ -405,14 +400,14 @@ function InstructorToolBlock(runtime, element) {
                 hideResults();
                 hideSpinner();
                 showStatusMessage(_.template(
-                    gettext('Data export failed. Reason: <%= error %>'),
+                    pb_gettext('Data export failed. Reason: <%= error %>'),
                     {'error': status.last_export_result.error}
                 ));
             } else {
                 startTime = new Date(status.last_export_result.start_timestamp * 1000);
                 showInfo(
                     _.template(
-                        ngettext(
+                        pb_ngettext(
                             'Results retrieved on <%= creation_time %> (<%= seconds %> second).',
                             'Results retrieved on <%= creation_time %> (<%= seconds %> seconds).',
                             status.last_export_result.generation_time_s.toFixed(1)
@@ -426,7 +421,7 @@ function InstructorToolBlock(runtime, element) {
             }
         } else {
             if (status.export_pending) {
-                showStatusMessage(gettext('The report is currently being generated…'));
+                showStatusMessage(pb_gettext('The report is currently being generated…'));
             } else {
                 hideSpinner();
             }

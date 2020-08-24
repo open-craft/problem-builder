@@ -119,9 +119,10 @@ class QuestionnaireAbstractBlock(
         # We use an inline import here to avoid a circular dependency with the .mentoring module.
         if not isinstance(block_with_resources, MentoringBlock):
             block_with_resources = self
+        fragment.add_javascript(self.get_translation_content())
+        fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))
         fragment.add_css_url(self.runtime.local_resource_url(block_with_resources, 'public/css/questionnaire.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(block_with_resources, 'public/js/questionnaire.js'))
-        fragment.add_javascript(self.get_translation_content())
         fragment.initialize_js(name)
         return fragment
 
