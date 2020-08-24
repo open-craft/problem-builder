@@ -5,7 +5,6 @@ import unittest
 
 import ddt
 from mock import Mock, patch
-from problem_builder.utils import DummyTranslationService
 from xblock.field_data import DictFieldData
 
 from problem_builder.instructor_tool import (COURSE_BLOCKS_API,
@@ -37,6 +36,8 @@ class TestInstructorToolBlock(unittest.TestCase):
     def setUp(self):
         self.course_id = 'course-v1:edX+DemoX+Demo_Course'
         self.runtime_mock = Mock()
+        self.service_mock = Mock()
+        self.runtime_mock.service = Mock(return_value=self.service_mock)
         self.runtime_mock.get_block = self._get_block
         self.runtime_mock.course_id = self.course_id
         scope_ids_mock = Mock()
@@ -44,7 +45,6 @@ class TestInstructorToolBlock(unittest.TestCase):
         self.block = InstructorToolBlock(
             self.runtime_mock, field_data=DictFieldData({}), scope_ids=scope_ids_mock
         )
-        self.i18n_mock = DummyTranslationService()
 
     def test_student_view_template_args(self):
         """
@@ -59,13 +59,14 @@ class TestInstructorToolBlock(unittest.TestCase):
         }
 
         with patch('problem_builder.instructor_tool.loader') as patched_loader:
-            patched_loader.render_template.return_value = u''
+            patched_loader.render_django_template.return_value = u''
             self.block.student_view()
+            self.service_mock.i18n_service = Mock(return_value=None)
             patched_loader.render_django_template.assert_called_once_with('templates/html/instructor_tool.html', {
                 'block_choices': block_choices,
                 'course_blocks_api': COURSE_BLOCKS_API,
                 'root_block_id': self.course_id,
-            }, i18n_service=self.i18n_mock)
+            }, i18n_service=self.service_mock)
 
     def test_author_view(self):
         """

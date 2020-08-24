@@ -176,9 +176,7 @@ class InstructorToolBlock(XBlock, I18NService):
                 new_lang = language[0] + "_" + language[1].upper()
             else:
                 new_lang = utils.translation.get_language()
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=new_lang
-            ))
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=new_lang))
         except IOError:
             return self.resource_string('public/js/translations/en/textjs.js')
 
