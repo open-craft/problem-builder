@@ -26,8 +26,10 @@ from collections import namedtuple
 from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain
 
+import pkg_resources
 import six
 from lazy.lazy import lazy
+from django import utils
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError, NoSuchViewError
 from xblock.fields import Boolean, Float, Integer, List, Scope, String
@@ -484,6 +486,7 @@ class MentoringBlock(
             'child_content': child_content,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }, i18n_service=self.i18n_service))
+        fragment.add_javascript(self.get_translation_content())
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
@@ -501,6 +504,25 @@ class MentoringBlock(
             self.runtime.publish(self, 'progress', {})
 
         return fragment
+
+    @staticmethod
+    def resource_string(path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
+
+    def get_translation_content(self):
+        try:
+            # here we need to split the lang code and need to change - to _ and post - characters to
+            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
+            language = utils.translation.get_language().split('-')
+            if len(language) == 2:
+                new_lang = language[0] + "_" + language[1].upper()
+            else:
+                new_lang = utils.translation.get_language()
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=new_lang))
+        except IOError:
+            return self.resource_string('public/js/translations/en/textjs.js')
 
     def migrate_fields(self):
         """
