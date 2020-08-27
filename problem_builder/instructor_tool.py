@@ -24,11 +24,10 @@ All processing is done offline.
 """
 import json
 
-import pkg_resources
 import six
-from django import utils
 from django.core.paginator import Paginator
 from problem_builder.utils import I18NService
+from .mixins import TranslationContentMixin
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Dict, List, Scope, String
@@ -52,7 +51,7 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class InstructorToolBlock(XBlock, I18NService):
+class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin):
     """
     InstructorToolBlock: An XBlock for instructors to export student answers from a course.
 
@@ -160,25 +159,6 @@ class InstructorToolBlock(XBlock, I18NService):
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/backbone.paginator.min.js'))
         fragment.initialize_js('InstructorToolBlock')
         return fragment
-
-    @staticmethod
-    def resource_string(path):
-        """Handy helper for getting resources from our kit."""
-        data = pkg_resources.resource_string(__name__, path)
-        return data.decode("utf8")
-
-    def get_translation_content(self):
-        try:
-            # here we need to split the lang code and need to change - to _ and post - characters to
-            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
-            language = utils.translation.get_language().split('-')
-            if len(language) == 2:
-                new_lang = language[0] + "_" + language[1].upper()
-            else:
-                new_lang = utils.translation.get_language()
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=new_lang))
-        except IOError:
-            return self.resource_string('public/js/translations/en/textjs.js')
 
     @property
     def download_url_for_last_report(self):

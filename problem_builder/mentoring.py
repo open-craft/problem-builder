@@ -26,10 +26,8 @@ from collections import namedtuple
 from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain
 
-import pkg_resources
 import six
 from lazy.lazy import lazy
-from django import utils
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError, NoSuchViewError
 from xblock.fields import Boolean, Float, Integer, List, Scope, String
@@ -55,7 +53,7 @@ from .message import MentoringMessageBlock, get_message_label
 from .mixins import (ExpandStaticURLMixin, MessageParentMixin, QuestionMixin,
                      StepParentMixin, StudentViewUserStateMixin,
                      StudentViewUserStateResultsTransformerMixin,
-                     XBlockWithTranslationServiceMixin, _normalize_id)
+                     XBlockWithTranslationServiceMixin, _normalize_id, TranslationContentMixin)
 from .step_review import ReviewStepBlock
 from .utils import I18NService
 
@@ -229,7 +227,7 @@ class BaseMentoringBlock(
 
 class MentoringBlock(
     StudentViewUserStateResultsTransformerMixin, I18NService,
-    BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin,
+    BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin, TranslationContentMixin
 ):
     """
     An XBlock providing mentoring capabilities
@@ -492,7 +490,6 @@ class MentoringBlock(
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.underscore'), "text/html")
 
         # Workbench doesn't have font awesome, so add it:
         if WorkbenchRuntime and isinstance(self.runtime, WorkbenchRuntime):
@@ -504,25 +501,6 @@ class MentoringBlock(
             self.runtime.publish(self, 'progress', {})
 
         return fragment
-
-    @staticmethod
-    def resource_string(path):
-        """Handy helper for getting resources from our kit."""
-        data = pkg_resources.resource_string(__name__, path)
-        return data.decode("utf8")
-
-    def get_translation_content(self):
-        try:
-            # here we need to split the lang code and need to change - to _ and post - characters to
-            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
-            language = utils.translation.get_language().split('-')
-            if len(language) == 2:
-                new_lang = language[0] + "_" + language[1].upper()
-            else:
-                new_lang = utils.translation.get_language()
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=new_lang))
-        except IOError:
-            return self.resource_string('public/js/translations/en/textjs.js')
 
     def migrate_fields(self):
         """
@@ -1018,7 +996,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.underscore'), "text/html")
         fragment.initialize_js('MentoringWithStepsBlock', {
             'show_extended_feedback': self.show_extended_feedback(),
         })

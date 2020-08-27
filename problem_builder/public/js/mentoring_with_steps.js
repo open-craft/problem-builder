@@ -15,7 +15,6 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     var activeStepIndex = $('.mentoring', element).data('active-step');
-    var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var message = $('.sb-step-message', element);
     var checkmark, submitDOM, nextDOM, reviewButtonDOM, tryAgainDOM,
         gradeDOM, attemptsDOM, reviewLinkDOM, submitXHR;
@@ -320,13 +319,12 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showAttempts() {
         var data = attemptsDOM.data();
-        if (data.max_attempts > 0) {
+        if (_.isNumber(data.max_attempts) && data.max_attempts > 0) {
            var message = _.template(
               ngettext("You have used {num_used} of 1 submission.", "You have used {num_used} of {max_attempts} submissions.", data.max_attempts),
               {num_used: _.min([data.num_attempts, data.max_attempts]), max_attempts: data.max_attempts}, {interpolate: /\{(.+?)\}/g}
-            )
-           data.message = message
-           attemptsDOM.html(attemptsTemplate(data));
+            );
+           attemptsDOM.html("<span>" + message + "</span>");
         } // Don't show attempts if unlimited attempts available (max_attempts === 0)
     }
 
