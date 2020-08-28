@@ -1,7 +1,9 @@
 import json
 
+import pkg_resources
 import six
 import webob
+from django import utils
 from lazy import lazy
 from xblock.core import XBlock
 from xblock.fields import UNIQUE_ID, Boolean, Float, Scope, String
@@ -290,3 +292,27 @@ class ExpandStaticURLMixin(object):
             except ImportError:
                 pass
         return text
+
+
+class TranslationContentMixin(object):
+    """
+    Mixin to provide the translation content
+    """
+    @staticmethod
+    def resource_string(path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
+
+    def get_translation_content(self):
+        try:
+            # here we need to split the lang code and need to change - to _ and post - characters to
+            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
+            language = utils.translation.get_language().split('-')
+            if len(language) == 2:
+                new_lang = language[0] + "_" + language[1].upper()
+            else:
+                new_lang = utils.translation.get_language()
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=new_lang))
+        except IOError:
+            return self.resource_string('public/js/translations/en/textjs.js')

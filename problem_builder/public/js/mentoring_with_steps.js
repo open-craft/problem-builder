@@ -1,11 +1,7 @@
 function MentoringWithStepsBlock(runtime, element) {
-
-    // Set up gettext in case it isn't available in the client runtime:
-    if (typeof gettext == "undefined") {
-        window.gettext = function gettext_stub(string) { return string; };
-        window.ngettext = function ngettext_stub(strA, strB, n) { return n == 1 ? strA : strB; };
-    }
-
+    // Use problem_builder translations
+    var gettext = window.ProblemBuilderXBlockI18N.gettext;
+    var ngettext = window.ProblemBuilderXBlockI18N.ngettext;
     var children = runtime.children(element);
 
     var steps = [];
@@ -19,7 +15,6 @@ function MentoringWithStepsBlock(runtime, element) {
     }
 
     var activeStepIndex = $('.mentoring', element).data('active-step');
-    var attemptsTemplate = _.template($('#xblock-attempts-template').html());
     var message = $('.sb-step-message', element);
     var checkmark, submitDOM, nextDOM, reviewButtonDOM, tryAgainDOM,
         gradeDOM, attemptsDOM, reviewLinkDOM, submitXHR;
@@ -324,8 +319,12 @@ function MentoringWithStepsBlock(runtime, element) {
 
     function showAttempts() {
         var data = attemptsDOM.data();
-        if (data.max_attempts > 0) {
-            attemptsDOM.html(attemptsTemplate(data));
+        if (_.isNumber(data.max_attempts) && data.max_attempts > 0) {
+           var message = _.template(
+              ngettext("You have used {num_used} of 1 submission.", "You have used {num_used} of {max_attempts} submissions.", data.max_attempts),
+              {num_used: _.min([data.num_attempts, data.max_attempts]), max_attempts: data.max_attempts}, {interpolate: /\{(.+?)\}/g}
+            );
+           attemptsDOM.html("<span>" + message + "</span>");
         } // Don't show attempts if unlimited attempts available (max_attempts === 0)
     }
 
