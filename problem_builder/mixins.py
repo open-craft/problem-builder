@@ -294,7 +294,7 @@ class ExpandStaticURLMixin:
         return text
 
 
-class TranslationContentMixin(object):
+class TranslationContentMixin:
     """
     Mixin to provide the translation content
     """
