@@ -28,7 +28,7 @@ from setuptools.command.install import install
 
 # Constants #########################################################
 
-VERSION = '4.0.6'
+VERSION = '4.1.0'
 
 # Functions #########################################################
 

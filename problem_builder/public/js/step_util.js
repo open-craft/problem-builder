@@ -117,25 +117,3 @@
 
     };
 })();
-
-var gettext;
-var ngettext;
-// create problem builder global translation variables to avoid the overriding of global edxapp translation
-var pb_gettext;
-var pb_ngettext;
-if ('ProblemBuilderXBlockI18N' in window) {
-    // Use problem builder's local translations
-    pb_gettext = window.ProblemBuilderXBlockI18N.gettext;
-    pb_ngettext = window.ProblemBuilderXBlockI18N.ngettext;
-}
-
-if ('gettext' in window) {
-    // Use edxapp's global translations
-    gettext = window.gettext;
-    ngettext = window.ngettext;
-}
-if (typeof gettext == "undefined") {
-    // No translations -- used by test environment
-    gettext = function(string) { return string; };
-    ngettext = function(strA, strB, n) { return n == 1 ? strA : strB; };
-}
