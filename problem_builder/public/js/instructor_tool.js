@@ -1,6 +1,8 @@
 function InstructorToolBlock(runtime, element) {
     'use strict';
     var $element = $(element);
+    var gettext = window.ProblemBuilderXBlockI18N.gettext;
+    var ngettext = window.ProblemBuilderXBlockI18N.ngettext;
 
     // Pagination
 
