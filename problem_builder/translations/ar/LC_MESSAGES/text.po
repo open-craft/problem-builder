@@ -1189,7 +1189,7 @@ msgstr "خاطئ"
 
 #: templates/html/answer_read_only.html:9
 msgid "No answer yet."
-msgstr ""
+msgstr "لا إجابات حتى الآن"
 
 #: templates/html/completion.html:15 templates/html/slider.html:15
 msgid "Complete"
@@ -1382,7 +1382,7 @@ msgstr "تصفح الصف"
 
 #: templates/html/mentoring_with_steps.html:23
 msgid "Try again"
-msgstr ""
+msgstr "أعد المحاولة مرة أخرى"
 
 #: templates/html/overlay.html:4
 msgid "Overlay"
