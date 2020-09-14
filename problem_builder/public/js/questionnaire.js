@@ -94,6 +94,7 @@ function MessageView(element, mentoring) {
 }
 
 function MCQBlock(runtime, element) {
+    var gettext = window.ProblemBuilderXBlockI18N.gettext;
     return {
         mentoring: null,
         init: function(options) {
@@ -182,6 +183,8 @@ function SwipeBlock(runtime, element) {
 }
 
 function MRQBlock(runtime, element) {
+    var gettext = window.ProblemBuilderXBlockI18N.gettext;
+    var ngettext = window.ProblemBuilderXBlockI18N.ngettext;
     return {
         mentoring: null,
         init: function(options) {

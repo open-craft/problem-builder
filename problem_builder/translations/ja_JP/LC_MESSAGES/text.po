@@ -1387,7 +1387,7 @@ msgstr "部分的に正解"
 
 #: templates/html/mentoring_with_steps.html:22
 msgid "Review grade"
-msgstr "成績チェッ"
+msgstr "成績チェック"
 
 #: templates/html/mentoring_with_steps.html:23
 msgid "Try again"
