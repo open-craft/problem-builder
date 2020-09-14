@@ -1,11 +1,8 @@
 function MentoringBlock(runtime, element) {
-    // Set up gettext in case it isn't available in the client runtime:
-    if (typeof gettext == "undefined") {
-        window.gettext = function gettext_stub(string) { return string; };
-        window.ngettext = function ngettext_stub(strA, strB, n) { return n == 1 ? strA : strB; };
-    }
 
-    var attemptsTemplate = _.template($('#xblock-attempts-template').html());
+    var gettext = window.ProblemBuilderXBlockI18N.gettext;
+    var ngettext = window.ProblemBuilderXBlockI18N.ngettext;
+
     var data = $('.mentoring', element).data();
     var children = runtime.children(element);
     var step = data.step;
@@ -69,7 +66,13 @@ function MentoringBlock(runtime, element) {
 
     function renderAttempts() {
         var data = $('.attempts', element).data();
-        $('.attempts', element).html(attemptsTemplate(data));
+        if (data != undefined && _.isNumber(data.max_attempts) && data.max_attempts > 0) {
+           var message = _.template(
+              ngettext("You have used {num_used} of 1 submission.", "You have used {num_used} of {max_attempts} submissions.", data.max_attempts),
+              {num_used: _.min([data.num_attempts, data.max_attempts]), max_attempts: data.max_attempts}, {interpolate: /\{(.+?)\}/g}
+            );
+           $('.attempts', element).html("<span>" + message + "</span>");
+        }
     }
 
     function renderDependency() {

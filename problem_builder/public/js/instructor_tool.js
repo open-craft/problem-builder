@@ -1,9 +1,10 @@
 function InstructorToolBlock(runtime, element) {
     'use strict';
     var $element = $(element);
+    var gettext = window.ProblemBuilderXBlockI18N.gettext;
+    var ngettext = window.ProblemBuilderXBlockI18N.ngettext;
 
     // Pagination
-
     $(document).ajaxSend(function(event, jqxhr, options) {
         if (options.url.indexOf('get_result_page') !== -1) {
             options.data = JSON.stringify(options.data);

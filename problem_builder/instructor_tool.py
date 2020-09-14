@@ -26,11 +26,14 @@ import json
 
 import six
 from django.core.paginator import Paginator
+from problem_builder.utils import I18NService
+from .mixins import TranslationContentMixin
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Dict, List, Scope, String
 from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
+
 
 loader = ResourceLoader(__name__)
 
@@ -48,7 +51,7 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class InstructorToolBlock(XBlock):
+class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin):
     """
     InstructorToolBlock: An XBlock for instructors to export student answers from a course.
 
@@ -142,12 +145,13 @@ class InstructorToolBlock(XBlock):
             _('Long Answer'): 'AnswerBlock',
         }
 
-        html = loader.render_template('templates/html/instructor_tool.html', {
+        html = loader.render_django_template('templates/html/instructor_tool.html', {
             'block_choices': block_choices,
             'course_blocks_api': COURSE_BLOCKS_API,
             'root_block_id': six.text_type(getattr(self.runtime, 'course_id', 'course_id')),
-        })
+        }, i18n_service=self.i18n_service)
         fragment = Fragment(html)
+        fragment.add_javascript(self.get_translation_content())
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/instructor_tool.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/instructor_tool.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
