@@ -49,7 +49,8 @@ msgstr "数据导出失败。原因：<%= error %>"
 msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
 msgid_plural ""
 "Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
-msgstr[0] "<%= creation_time %> (<%= seconds %> second) 时检索到的结果。"
+msgstr[0] "<%= creation_time %> (<%= seconds %> 秒) 时检索到的结果。"
+msgstr[1] "<%= creation_time %> (<%= seconds %> 秒) 时检索到的结果。"
 
 #: public/js/instructor_tool.js:429
 msgid "The report is currently being generated…"

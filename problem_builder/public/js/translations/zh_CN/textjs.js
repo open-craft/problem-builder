@@ -27,7 +27,8 @@
     "All": "\u5168\u90e8", 
     "Data export failed. Reason: <%= error %>": "\u6570\u636e\u5bfc\u51fa\u5931\u8d25\u3002\u539f\u56e0\uff1a<%= error %>", 
     "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
-      "<%= creation_time %> (<%= seconds %> second) \u65f6\u68c0\u7d22\u5230\u7684\u7ed3\u679c\u3002"
+      "<%= creation_time %> (<%= seconds %> \u79d2) \u65f6\u68c0\u7d22\u5230\u7684\u7ed3\u679c\u3002", 
+      "<%= creation_time %> (<%= seconds %> \u79d2) \u65f6\u68c0\u7d22\u5230\u7684\u7ed3\u679c\u3002"
     ], 
     "The report is currently being generated\u2026": "\u76ee\u524d\u6b63\u5728\u751f\u6210\u62a5\u544a\u2026", 
     "You have used {num_used} of 1 submission.": [
