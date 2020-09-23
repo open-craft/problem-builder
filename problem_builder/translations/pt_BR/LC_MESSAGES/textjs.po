@@ -3,17 +3,17 @@
 # Copyright (C) 2019 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
-# 
+#
 # #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # Matheus Gomes Correia, 2019
 # Omar Al-Ithawi <i@omardo.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -50,9 +50,9 @@ msgid "Results retrieved on <%= creation_time %> (<%= seconds %> second)."
 msgid_plural ""
 "Results retrieved on <%= creation_time %> (<%= seconds %> seconds)."
 msgstr[0] ""
-"Resultados recuperados em <%= creation_time %> (<%= segundos %> segundo)."
+"Resultados recuperados em <%= creation_time %> (<%= seconds %> segundo)."
 msgstr[1] ""
-"Resultados recuperados em <%= creation_time %> (<%= segundos %> segundos)."
+"Resultados recuperados em <%= creation_time %> (<%= seconds %> segundos)."
 
 #: public/js/instructor_tool.js:429
 msgid "The report is currently being generated…"
