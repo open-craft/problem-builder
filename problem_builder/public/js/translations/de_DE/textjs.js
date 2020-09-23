@@ -30,7 +30,11 @@
       "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen", 
       "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen."
     ], 
-    "The report is currently being generated\u2026": "Der Report wird gerade zusammengestellt\u2026"
+    "The report is currently being generated\u2026": "Der Report wird gerade zusammengestellt\u2026", 
+    "You have used {num_used} of 1 submission.": [
+      "Sie haben {num_used} von einer Einreichung verwendet.", 
+      "Sie haben {num_used} von {max_attempts} Einreichungen verwendet.        "
+    ]
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];

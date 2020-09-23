@@ -32,7 +32,11 @@
       "Rezultaty pobrano <%= creation_time %> (<%= seconds %> sekund).", 
       "Rezultaty pobrano <%= creation_time %> (<%= seconds %> sekund)."
     ], 
-    "The report is currently being generated\u2026": "Generujemy raport..."
+    "The report is currently being generated\u2026": "Generujemy raport...", 
+    "You have used {num_used} of 1 submission.": [
+      "Wykorzysta\u0142e\u015b {num_used} z 1 zg\u0142oszenia.", 
+      "Wykorzysta\u0142e\u015b {num_used} z {max_attempts} zg\u0142osze\u0144. "
+    ]
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];
