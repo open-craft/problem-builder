@@ -20,9 +20,7 @@
 
 import logging
 
-import pkg_resources
 import six
-from django import utils
 from lazy.lazy import lazy
 from xblock.core import XBlock
 from xblock.fields import List, Scope, String
@@ -44,6 +42,7 @@ from problem_builder.plot import PlotBlock
 from problem_builder.slider import SliderBlock
 from problem_builder.table import MentoringTableBlock
 
+from .mixins import TranslationContentMixin
 from .utils import I18NService
 
 log = logging.getLogger(__name__)
@@ -77,7 +76,7 @@ class Correctness:
 class MentoringStepBlock(
     StudioEditableXBlockMixin, StudioContainerWithNestedXBlocksMixin, XBlockWithPreviewMixin,
     EnumerableChildMixin, StepParentMixin, StudentViewUserStateResultsTransformerMixin,
-    StudentViewUserStateMixin, XBlock, I18NService
+    StudentViewUserStateMixin, XBlock, I18NService, TranslationContentMixin
 ):
     """
     An XBlock for a step.
@@ -242,27 +241,6 @@ class MentoringStepBlock(
     def mentoring_view(self, context=None):
         """ Mentoring View """
         return self._render_view(context, 'mentoring_view')
-
-    @staticmethod
-    def resource_string(path):
-        """Handy helper for getting resources from our kit."""
-        data = pkg_resources.resource_string(__name__, path)
-        return data.decode("utf8")
-
-    def get_translation_content(self):
-        try:
-            # here we need to split the lang code and need to change - to _ and post - characters to
-            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
-            language = utils.translation.get_language().split('-')
-            if len(language) == 2:
-                new_lang = language[0] + "_" + language[1].upper()
-            else:
-                new_lang = utils.translation.get_language()
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=new_lang
-            ))
-        except IOError:
-            return self.resource_string('public/js/translations/en/textjs.js')
 
     def _render_view(self, context, view):
         """ Actually renders a view """
