@@ -15,6 +15,20 @@ from problem_builder.tests.unit.utils import DateTimeEncoder
 
 loader = ResourceLoader(__name__)
 
+PB_LANGUAGE_JS_DIRECTORY_MAP = {
+    'ar': 'ar',
+    'de-de': 'de_DE',
+    'en': 'en',
+    'es-419': 'es_419',
+    'fr': 'fr',
+    'fr-ca': 'fr_CA',
+    'ja-jp': 'ja_JP',
+    'pl': 'pl_PL',
+    'pt-br': 'pt_BR',
+    'zh-cn': 'zh_CN',
+    'ko-kr': 'ko_KR'
+}
+
 
 # Make '_' a no-op so we can scrape strings
 def _(text):
@@ -305,14 +319,14 @@ class TranslationContentMixin(object):
         return data.decode("utf8")
 
     def get_translation_content(self):
+
         try:
-            # here we need to split the lang code and need to change - to _ and post - characters to
-            # upper case since we have local directories like ja_JP, etc instead of ja-jp, etc
-            language = utils.translation.get_language().split('-')
-            if len(language) == 2:
-                new_lang = language[0] + "_" + language[1].upper()
-            else:
-                new_lang = utils.translation.get_language()
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=new_lang))
+            language = utils.translation.get_language()
+            # the language code for some languages are not consistent
+            # with the js directory structure of problem builder
+            # i.e for polish language code is pl but js directory is pl_PL
+            # to coup this behaviour PB_LANGUAGES_JS_DIRECTORY_MAP is added to get the desired directory.
+            js_directory = PB_LANGUAGE_JS_DIRECTORY_MAP.get(language, 'en')
+            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=js_directory))
         except IOError:
             return self.resource_string('public/js/translations/en/textjs.js')

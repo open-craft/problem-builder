@@ -27,7 +27,7 @@ import json
 import six
 from django.core.paginator import Paginator
 from problem_builder.utils import I18NService
-from .mixins import TranslationContentMixin
+from .mixins import TranslationContentMixin, XBlockWithTranslationServiceMixin
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Dict, List, Scope, String
@@ -51,7 +51,8 @@ def _(text):
 
 @XBlock.needs("i18n")
 @XBlock.wants('user')
-class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin):
+class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWithTranslationServiceMixin):
+
     """
     InstructorToolBlock: An XBlock for instructors to export student answers from a course.
 
@@ -139,10 +140,10 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin):
         if not self.user_is_staff():
             return Fragment(u'<p>This interface can only be used by course staff.</p>')
         block_choices = {
-            _('Multiple Choice Question'): 'MCQBlock',
-            _('Multiple Response Question'): 'MRQBlock',
-            _('Rating Question'): 'RatingBlock',
-            _('Long Answer'): 'AnswerBlock',
+            self._('Multiple Choice Question'): 'MCQBlock',
+            self._('Multiple Response Question'): 'MRQBlock',
+            self._('Rating Question'): 'RatingBlock',
+            self._('Long Answer'): 'AnswerBlock',
         }
 
         html = loader.render_django_template('templates/html/instructor_tool.html', {
@@ -230,7 +231,7 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin):
                 if user_id:
                     user_ids.append(user_id)
             if not user_ids:
-                self.raise_error(404, _("Could not find any of the specified usernames."))
+                self.raise_error(404, self._("Could not find any of the specified usernames."))
 
         if not root_block_id:
             root_block_id = self.scope_ids.usage_id
