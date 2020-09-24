@@ -47,15 +47,25 @@ class TestInstructorToolBlock(unittest.TestCase):
         )
 
     def test_student_view_template_args(self):
+
+        mcq_mock = Mock(return_value='Multiple Choice Question')
+        # mcq_mock.ugettext()
+        mrq_mock = Mock(return_value='Multiple Response Question')
+        # mrq_mock.ugettext = Mock(return_value='Multiple Response Question')
+        rq_mock = Mock(return_value='Rating Question')
+        # rq_mock.ugettext = Mock(return_value='Rating Question')
+        la_mock = Mock(return_value='Long Answer')
+        # la_mock.ugettext = Mock(return_value='Long Answer')
+
         """
         Check if `student_view` calls rendering method of template loader
         with correct arguments.
         """
         block_choices = {
-            'Multiple Choice Question': 'MCQBlock',
-            'Multiple Response Question': 'MRQBlock',
-            'Rating Question': 'RatingBlock',
-            'Long Answer': 'AnswerBlock',
+            mcq_mock.ugettext(): 'MCQBlock',
+            mrq_mock.ugettext(): 'MRQBlock',
+            rq_mock.ugettext(): 'RatingBlock',
+            la_mock.ugettext(): 'AnswerBlock',
         }
 
         with patch('problem_builder.instructor_tool.loader') as patched_loader:
