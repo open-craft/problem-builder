@@ -53,7 +53,7 @@ from .message import MentoringMessageBlock, get_message_label
 from .mixins import (ExpandStaticURLMixin, MessageParentMixin, QuestionMixin,
                      StepParentMixin, StudentViewUserStateMixin,
                      StudentViewUserStateResultsTransformerMixin,
-                     XBlockWithTranslationServiceMixin, _normalize_id)
+                     XBlockWithTranslationServiceMixin, _normalize_id, TranslationContentMixin)
 from .step_review import ReviewStepBlock
 from .utils import I18NService
 
@@ -227,7 +227,7 @@ class BaseMentoringBlock(
 
 class MentoringBlock(
     StudentViewUserStateResultsTransformerMixin, I18NService,
-    BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin,
+    BaseMentoringBlock, StudioContainerWithNestedXBlocksMixin, StepParentMixin, TranslationContentMixin
 ):
     """
     An XBlock providing mentoring capabilities
@@ -484,12 +484,12 @@ class MentoringBlock(
             'child_content': child_content,
             'missing_dependency_url': self.has_missing_dependency and self.next_step_url,
         }, i18n_service=self.i18n_service))
+        fragment.add_javascript(self.get_translation_content())
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/vendor/underscore-min.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_standard_view.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring.js'))
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.underscore'), "text/html")
 
         # Workbench doesn't have font awesome, so add it:
         if WorkbenchRuntime and isinstance(self.runtime, WorkbenchRuntime):
@@ -996,7 +996,6 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/step_util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/mentoring_with_steps.js'))
 
-        fragment.add_resource(loader.load_unicode('templates/html/mentoring_attempts.underscore'), "text/html")
         fragment.initialize_js('MentoringWithStepsBlock', {
             'show_extended_feedback': self.show_extended_feedback(),
         })
