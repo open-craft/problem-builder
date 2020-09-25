@@ -45,25 +45,26 @@ class TestInstructorToolBlock(unittest.TestCase):
         self.block = InstructorToolBlock(
             self.runtime_mock, field_data=DictFieldData({}), scope_ids=scope_ids_mock
         )
+        self.block._ = Mock(return_values=None)
+        self.block_choices = {
+            self.block._("Multiple Choice Question'"): 'MCQBlock',
+            self.block._("Multiple Response Question"): 'MRQBlock',
+            self.block._("Rating Question"): 'RatingBlock',
+            self.block._("Long Answer"): 'AnswerBlock'
+        }
 
     def test_student_view_template_args(self):
         """
         Check if `student_view` calls rendering method of template loader
         with correct arguments.
         """
-        block_choices = {
-            'Multiple Choice Question': 'MCQBlock',
-            'Multiple Response Question': 'MRQBlock',
-            'Rating Question': 'RatingBlock',
-            'Long Answer': 'AnswerBlock',
-        }
 
         with patch('problem_builder.instructor_tool.loader') as patched_loader:
             patched_loader.render_django_template.return_value = u''
             self.block.student_view()
             self.service_mock.i18n_service = Mock(return_value=None)
             patched_loader.render_django_template.assert_called_once_with('templates/html/instructor_tool.html', {
-                'block_choices': block_choices,
+                'block_choices': self.block_choices,
                 'course_blocks_api': COURSE_BLOCKS_API,
                 'root_block_id': self.course_id,
             }, i18n_service=self.service_mock)
