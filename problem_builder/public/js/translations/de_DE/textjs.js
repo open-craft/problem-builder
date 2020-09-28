@@ -24,16 +24,16 @@
   django.catalog = django.catalog || {};
   
   var newcatalog = {
-    "All": "Alle", 
-    "Data export failed. Reason: <%= error %>": "Export der Daten ist fehlgeschlagen. Grund: <%= error %>", 
+    "All": "Alle",
+    "Data export failed. Reason: <%= error %>": "Export der Daten ist fehlgeschlagen. Grund: <%= error %>",
     "Results retrieved on <%= creation_time %> (<%= seconds %> second).": [
-      "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen", 
+      "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen",
       "Ergebnisse am <%= creation_time %> (<%= seconds %> second) abgerufen."
-    ], 
-    "The report is currently being generated\u2026": "Der Report wird gerade zusammengestellt\u2026", 
+    ],
+    "The report is currently being generated\u2026": "Der Report wird gerade zusammengestellt\u2026",
     "You have used {num_used} of 1 submission.": [
-      "Sie haben {num_used} von einer Einreichung verwendet.", 
-      "Sie haben {num_used} von {max_attempts} Einreichungen verwendet.        "
+      "Sie haben {num_used} von einer Einreichung verwendet.",
+      "Sie haben {num_used} von {max_attempts} Einreichungen verwendet."
     ]
   };
   for (var key in newcatalog) {
@@ -56,7 +56,7 @@
       if (typeof(value) == 'undefined') {
         return (count == 1) ? singular : plural;
       } else {
-        return value[django.pluralidx(count)];
+        return value.constructor === Array ? value[django.pluralidx(count)] : value;
       }
     };
 
@@ -90,36 +90,36 @@
     /* formatting library */
 
     django.formats = {
-    "DATETIME_FORMAT": "j. F Y H:i", 
+    "DATETIME_FORMAT": "j. F Y H:i",
     "DATETIME_INPUT_FORMATS": [
-      "%d.%m.%Y %H:%M:%S", 
-      "%d.%m.%Y %H:%M:%S.%f", 
-      "%d.%m.%Y %H:%M", 
-      "%d.%m.%Y", 
-      "%Y-%m-%d %H:%M:%S", 
-      "%Y-%m-%d %H:%M:%S.%f", 
-      "%Y-%m-%d %H:%M", 
+      "%d.%m.%Y %H:%M:%S",
+      "%d.%m.%Y %H:%M:%S.%f",
+      "%d.%m.%Y %H:%M",
+      "%d.%m.%Y",
+      "%Y-%m-%d %H:%M:%S",
+      "%Y-%m-%d %H:%M:%S.%f",
+      "%Y-%m-%d %H:%M",
       "%Y-%m-%d"
-    ], 
-    "DATE_FORMAT": "j. F Y", 
+    ],
+    "DATE_FORMAT": "j. F Y",
     "DATE_INPUT_FORMATS": [
-      "%d.%m.%Y", 
-      "%d.%m.%y", 
+      "%d.%m.%Y",
+      "%d.%m.%y",
       "%Y-%m-%d"
-    ], 
-    "DECIMAL_SEPARATOR": ",", 
-    "FIRST_DAY_OF_WEEK": "1", 
-    "MONTH_DAY_FORMAT": "j. F", 
-    "NUMBER_GROUPING": "3", 
-    "SHORT_DATETIME_FORMAT": "d.m.Y H:i", 
-    "SHORT_DATE_FORMAT": "d.m.Y", 
-    "THOUSAND_SEPARATOR": ".", 
-    "TIME_FORMAT": "H:i", 
+    ],
+    "DECIMAL_SEPARATOR": ",",
+    "FIRST_DAY_OF_WEEK": 1,
+    "MONTH_DAY_FORMAT": "j. F",
+    "NUMBER_GROUPING": 3,
+    "SHORT_DATETIME_FORMAT": "d.m.Y H:i",
+    "SHORT_DATE_FORMAT": "d.m.Y",
+    "THOUSAND_SEPARATOR": ".",
+    "TIME_FORMAT": "H:i",
     "TIME_INPUT_FORMATS": [
-      "%H:%M:%S", 
-      "%H:%M:%S.%f", 
+      "%H:%M:%S",
+      "%H:%M:%S.%f",
       "%H:%M"
-    ], 
+    ],
     "YEAR_MONTH_FORMAT": "F Y"
   };
 

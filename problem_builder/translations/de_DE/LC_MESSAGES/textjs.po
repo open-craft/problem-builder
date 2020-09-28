@@ -34,7 +34,7 @@ msgstr ""
 msgid "You have used {num_used} of 1 submission."
 msgid_plural "You have used {num_used} of {max_attempts} submissions."
 msgstr[0] "Sie haben {num_used} von einer Einreichung verwendet."
-msgstr[1] "Sie haben {num_used} von {max_attempts} Einreichungen verwendet.        "
+msgstr[1] "Sie haben {num_used} von {max_attempts} Einreichungen verwendet."
 
 #: public/js/instructor_tool.js:349
 msgid "All"
