@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # 6e68c7971a89e50e680ae9444d303c8f, 2019
 # Ahmad AbdArrahman <mygooglizer@gmail.com>, 2019
@@ -16,7 +16,7 @@
 # shefaa abu jabel <shefaa.aj@gmail.com>, 2019
 # Roy Zakka, 2019
 # Sahbi BG <sahbi.g@gmail.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -372,15 +372,15 @@ msgstr ""
 
 #: instructor_tool.py:58 templates/html/instructor_tool.html:2
 msgid "Instructor Tool"
-msgstr ""
+msgstr "أداة المعلم"
 
 #: instructor_tool.py:137 mcq.py:53
 msgid "Multiple Choice Question"
-msgstr ""
+msgstr "سؤال متعدد الاختيارات"
 
 #: instructor_tool.py:138 mrq.py:51
 msgid "Multiple Response Question"
-msgstr ""
+msgstr "سؤال متعدد الإجابات"
 
 #: instructor_tool.py:139 mcq.py:198
 msgid "Rating Question"
@@ -1221,19 +1221,19 @@ msgstr ""
 
 #: templates/html/instructor_tool.html:12
 msgid "Username[s]:"
-msgstr ""
+msgstr "اسم المستخدم (أسماء المستخدمين):"
 
 #: templates/html/instructor_tool.html:13
 msgid "Enter one or more usernames, comma separated."
-msgstr ""
+msgstr "أدخل اسم مستخدم واحد أو أكثر، مفصولاً بفاصلة."
 
 #: templates/html/instructor_tool.html:20
 msgid "Text:"
-msgstr ""
+msgstr "النص:"
 
 #: templates/html/instructor_tool.html:30
 msgid "Section/Question:"
-msgstr ""
+msgstr "القسم/السؤال:"
 
 #: templates/html/instructor_tool.html:32
 #: templates/html/instructor_tool.html:42
@@ -1242,7 +1242,7 @@ msgstr "الكل"
 
 #: templates/html/instructor_tool.html:40
 msgid "Problem types:"
-msgstr ""
+msgstr "أنواع المشكلة:"
 
 #: templates/html/instructor_tool.html:51
 msgid "Search"
@@ -1270,7 +1270,7 @@ msgstr "اسم المستخدم"
 
 #: templates/html/instructor_tool.html:74
 msgid "First"
-msgstr ""
+msgstr "الأول"
 
 #: templates/html/instructor_tool.html:75
 msgid "Prev"
@@ -1282,19 +1282,19 @@ msgstr "التالي"
 
 #: templates/html/instructor_tool.html:78
 msgid "Last"
-msgstr ""
+msgstr "الأخير"
 
 #: templates/html/instructor_tool.html:85
 msgid "Download as CSV"
-msgstr ""
+msgstr "تنزيل بتنسيق CSV"
 
 #: templates/html/instructor_tool.html:86
 msgid "Cancel search"
-msgstr ""
+msgstr "إلغاء البحث"
 
 #: templates/html/instructor_tool.html:87
 msgid "Delete results"
-msgstr ""
+msgstr "حذف النتائج"
 
 #: templates/html/mentoring-column-add-button.html:6
 msgid "Add HTML"
@@ -1361,7 +1361,7 @@ msgstr "تقديم"
 #: templates/html/mentoring.html:47
 #: templates/html/mentoring_with_steps.html:31
 msgid "Review final grade"
-msgstr ""
+msgstr "راجع الدرجة الأخيرة"
 
 #: templates/html/mentoring.html:51
 #: templates/html/mentoring_with_steps.html:35
@@ -1475,16 +1475,16 @@ msgstr ""
 msgid ""
 "You might consider reviewing the following items before your next assessment"
 " attempt:"
-msgstr ""
+msgstr "ربما عليك التفكير في مراجعة العناصر التالية قبل محاولة التقييم التالية:"
 
 #: templates/html/sb-review-score.html:5
 #, python-format
 msgid "You scored %(score)s%% on this assessment. "
-msgstr ""
+msgstr "أحرزت نتيجة %(score)s%% في هذا التقييم."
 
 #: templates/html/sb-review-score.html:8
 msgid "Click a question to review feedback on your response."
-msgstr ""
+msgstr "انقر على سؤال لمراجعة التعليقات على إجابتك."
 
 #: templates/html/sb-review-score.html:12
 msgid "Note: This is an example score, to show how the review step will look."
@@ -1501,11 +1501,13 @@ msgid_plural ""
 "          You answered %(correct_answers)s questions correctly.\n"
 "        "
 msgstr[0] ""
+"\n"
+"          جاوبت عن سؤال واحد بشكل صحيح.\n"
+"        "
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+"\n"
+"          جاوبت عن %(correct_answers)s من الأسئلة بشكل صحيح.\n"
+"        "
 
 #: templates/html/sb-review-score.html:30
 #: templates/html/sb-review-score.html:53
@@ -1518,7 +1520,7 @@ msgstr "و"
 #: templates/html/sb-review-score.html:77
 #, python-format
 msgid "Question %(number)s"
-msgstr ""
+msgstr "السؤال %(number)s"
 
 #: templates/html/sb-review-score.html:43
 #, python-format
@@ -1531,11 +1533,13 @@ msgid_plural ""
 "          You answered %(partially_correct_answers)s questions partially correctly.\n"
 "        "
 msgstr[0] ""
+"\n"
+"          جاوبت عن سؤال واحد بشكل صحيح جزئيًا.\n"
+"        "
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+"\n"
+"          جاوبت عن %(partially_correct_answers)s من الأسئلة بشكل صحيح جزئيًا.\n"
+"        "
 
 #: templates/html/sb-review-score.html:66
 #, python-format
@@ -1548,11 +1552,13 @@ msgid_plural ""
 "          You answered %(incorrect_answers)s questions incorrectly.\n"
 "        "
 msgstr[0] ""
+"\n"
+"          جاوبت عن سؤال واحد بشكل غير صحيح.\n"
+"        "
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+"\n"
+"          جاوبت عن %(incorrect_answers)s من الأسئلة بشكل غير صحيح.\n"
+"        "
 
 #: templates/html/slider_edit_footer.html:3
 msgid "ID for referencing this slider:"
