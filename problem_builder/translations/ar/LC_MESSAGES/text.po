@@ -34,7 +34,7 @@ msgstr ""
 
 #: answer.py:146 instructor_tool.py:140
 msgid "Long Answer"
-msgstr ""
+msgstr "إجابة طويلة"
 
 #: answer.py:150 mixins.py:135
 msgid "Question ID (name)"
@@ -384,7 +384,7 @@ msgstr "سؤال متعدد الإجابات"
 
 #: instructor_tool.py:139 mcq.py:198
 msgid "Rating Question"
-msgstr ""
+msgstr "سؤال التقييم"
 
 #: instructor_tool.py:227
 msgid "Could not find any of the specified usernames."
@@ -1498,7 +1498,7 @@ msgid ""
 "        "
 msgid_plural ""
 "\n"
-"          You answered %(correct_answers)s questions correctly.\n"
+"          You answered %(correct_answers) questions correctly.\n"
 "        "
 msgstr[0] ""
 "\n"
@@ -1506,7 +1506,7 @@ msgstr[0] ""
 "        "
 msgstr[1] ""
 "\n"
-"          جاوبت عن %(correct_answers)s من الأسئلة بشكل صحيح.\n"
+"          جاوبت عن (correct_answers)% من الأسئلة بشكل صحيح.\n"
 "        "
 
 #: templates/html/sb-review-score.html:30
@@ -1530,7 +1530,7 @@ msgid ""
 "        "
 msgid_plural ""
 "\n"
-"          You answered %(partially_correct_answers)s questions partially correctly.\n"
+"          You answered %(partially_correct_answers) questions partially correctly.\n"
 "        "
 msgstr[0] ""
 "\n"
@@ -1538,7 +1538,7 @@ msgstr[0] ""
 "        "
 msgstr[1] ""
 "\n"
-"          جاوبت عن %(partially_correct_answers)s من الأسئلة بشكل صحيح جزئيًا.\n"
+"          جاوبت عن (partially_correct_answers)% من الأسئلة بشكل صحيح جزئيًا.\n"
 "        "
 
 #: templates/html/sb-review-score.html:66
@@ -1557,7 +1557,7 @@ msgstr[0] ""
 "        "
 msgstr[1] ""
 "\n"
-"          جاوبت عن %(incorrect_answers)s من الأسئلة بشكل غير صحيح.\n"
+"          جاوبت عن (incorrect_answers)% من الأسئلة بشكل غير صحيح.\n"
 "        "
 
 #: templates/html/slider_edit_footer.html:3

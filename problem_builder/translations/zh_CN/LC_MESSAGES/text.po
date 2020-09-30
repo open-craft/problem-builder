@@ -2,7 +2,7 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # focusheart <focusheart@gmail.com>, 2019
 # Jerome Huang <canni3269@gmail.com>, 2019
@@ -19,7 +19,7 @@
 # 陈滢冲 <yc.chen@eliteu.cn>, 2019
 # 百杰 陈 <bj.chen@eliteu.com.cn>, 2019
 # Omar Al-Ithawi <i@omardo.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -1509,12 +1509,11 @@ msgid ""
 "\n"
 "          You answered 1 question correctly.\n"
 "        "
-msgid_plural ""
-"\n"
-"          You answered %(correct_answers)s questions correctly.\n"
+msgid_plural "\n          You answered %(correct_answers)s questions correctly.\n        "
+msgstr[0] "\n"
+"          您答对了 1 个问题。\n"
 "        "
-msgstr[0] ""
-"\n"
+msgstr[1] "\n"
 "          您答对了 %(correct_answers)s 个问题。\n"
 "        "
 
@@ -1537,12 +1536,11 @@ msgid ""
 "\n"
 "          You answered 1 question partially correctly.\n"
 "        "
-msgid_plural ""
-"\n"
-"          You answered %(partially_correct_answers)s questions partially correctly.\n"
+msgid_plural "\n          You answered %(partially_correct_answers)s questions partially correctly.\n        "
+msgstr[0] "\n"
+"          您回答了 1 个问题，但是只有部分正确。\n"
 "        "
-msgstr[0] ""
-"\n"
+msgstr[1] "\n"
 "          您回答了 %(partially_correct_answers)s 个问题，但是只有部分正确。\n"
 "        "
 
@@ -1552,12 +1550,11 @@ msgid ""
 "\n"
 "          You answered 1 question incorrectly.\n"
 "        "
-msgid_plural ""
-"\n"
-"          You answered %(incorrect_answers)s questions incorrectly.\n"
+msgid_plural "\n          You answered %(incorrect_answers)s questions incorrectly.\n        "
+msgstr[0] "\n"
+"          您答错了 1 个问题。\n"
 "        "
-msgstr[0] ""
-"\n"
+msgstr[1] "\n"
 "          您答错了 %(incorrect_answers)s 个问题。\n"
 "        "
 
