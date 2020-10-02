@@ -388,7 +388,7 @@ msgstr "سؤال التقييم"
 
 #: instructor_tool.py:227
 msgid "Could not find any of the specified usernames."
-msgstr ""
+msgstr "تعذر العثور على أي من أسماء المستخدمين المحددة"
 
 #: mcq.py:57 message.py:92 mrq.py:79 step.py:110 step_review.py:56
 msgid "Message"
@@ -1549,7 +1549,7 @@ msgid ""
 "        "
 msgid_plural ""
 "\n"
-"          You answered %(incorrect_answers)s questions incorrectly.\n"
+"          You answered %(incorrect_answers) questions incorrectly.\n"
 "        "
 msgstr[0] ""
 "\n"
