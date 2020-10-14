@@ -29,7 +29,7 @@ msgstr ""
 "Generated-By: Babel 2.7.0\n"
 "#-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#\n"
 "Language: zh_CN\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: templates/html/mentoring_attempts.underscore:5
 msgid "You have used {num_used} of 1 submission."
