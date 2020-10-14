@@ -3,17 +3,17 @@
 # Copyright (C) 2019 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
-# 
+#
 # #-#-#-#-#  djangojs-partial.po (PACKAGE VERSION)  #-#-#-#-#
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 # Translators:
 # willyedoo <willyedoo@gmail.com>, 2019
 # Omar Al-Ithawi <i@omardo.com>, 2019
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
@@ -34,8 +34,8 @@ msgstr ""
 #: templates/html/mentoring_attempts.underscore:5
 msgid "You have used {num_used} of 1 submission."
 msgid_plural "You have used {num_used} of {max_attempts} submissions."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vous avez utilisé {num_used} sur 1 envoi."
+msgstr[1] "Vous avez utilisé {num_used} sur {max_attempts} envois."
 
 #: public/js/instructor_tool.js:349
 msgid "All"
