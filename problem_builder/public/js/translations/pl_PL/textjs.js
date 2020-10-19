@@ -2,13 +2,13 @@
             (function(global){
                 var ProblemBuilderXBlockI18N = {
                   init: function() {
-                    
+
 
 (function(globals) {
 
   var django = globals.django || (globals.django = {});
 
-  
+
   django.pluralidx = function(n) {
     var v=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);
     if (typeof(v) == 'boolean') {
@@ -17,12 +17,12 @@
       return v;
     }
   };
-  
+
 
   /* gettext library */
 
   django.catalog = django.catalog || {};
-  
+
   var newcatalog = {
     "All": "Wszystkie",
     "Data export failed. Reason: <%= error %>": "Eksport danych nie powi\u00f3d\u0142 si\u0119. Przyczyna: <%= error %>",
@@ -36,14 +36,14 @@
     "You have used {num_used} of 1 submission.": [
       "Wykorzysta\u0142e\u015b {num_used} z 1 zg\u0142oszenia.",
       "Wykorzysta\u0142e\u015b {num_used} z {max_attempts} zg\u0142osze\u0144.",
-      "",
-      ""
+      "Wykorzysta\u0142e\u015b {num_used} z {max_attempts} zg\u0142osze\u0144.",
+      "Wykorzysta\u0142e\u015b {num_used} z {max_attempts} zg\u0142osze\u0144."
     ]
   };
   for (var key in newcatalog) {
     django.catalog[key] = newcatalog[key];
   }
-  
+
 
   if (!django.jsi18n_initialized) {
     django.gettext = function(msgid) {
@@ -158,4 +158,3 @@
                 ProblemBuilderXBlockI18N.init();
                 global.ProblemBuilderXBlockI18N = ProblemBuilderXBlockI18N;
             }(this));
-        
