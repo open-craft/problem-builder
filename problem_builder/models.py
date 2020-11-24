@@ -20,14 +20,21 @@
 
 # Imports ###########################################################
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 
 try:
     # workaround so we don't explicitly import the AnonymousUserId model from LMS
-    from student.models import AnonymousUserId
+    if "common.djangoapps.student.apps.StudentConfig" in settings.INSTALLED_APPS:
+        # Koa and beyond:
+        from common.djangoapps.student.models import AnonymousUserId
+    else:
+        # Juniper and earlier
+        from student.models import AnonymousUserId
 except ImportError:
+    # Not running the LMS (e.g. tests)
     AnonymousUserId = None
 
 
