@@ -136,9 +136,9 @@ class MentoringStepBlock(
         """
         additional_blocks = []
         try:
-            from xmodule.video_module.video_module import VideoDescriptor
+            from xmodule.video_module.video_module import VideoBlock
             additional_blocks.append(NestedXBlockSpec(
-                VideoDescriptor, category='video', label=_(u"Video")
+                VideoBlock, category='video', label=_(u"Video")
             ))
         except ImportError:
             pass
@@ -151,7 +151,7 @@ class MentoringStepBlock(
             pass
 
         try:
-            from ooyala_player import OoyalaPlayerBlock
+            from ooyala_player.ooyala_player import OoyalaPlayerBlock
             additional_blocks.append(NestedXBlockSpec(
                 OoyalaPlayerBlock, category='ooyala-player', label=_(u"Ooyala Player")
             ))
