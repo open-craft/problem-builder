@@ -68,7 +68,7 @@ class BlockWithChildrenTestMixin:
             'xmodule.video_module': xmodule_mock.video_module,
             'xmodule.video_module.video_module': xmodule_mock.video_module.video_module,
             'imagemodal': Mock(),
-            'ooyala_player': Mock(),
+            'ooyala_player.ooyala_player': Mock(),
         }
         with patch.dict(modules, fake_modules):
             self.assertEqual(
