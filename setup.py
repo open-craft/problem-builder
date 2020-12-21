@@ -103,7 +103,7 @@ setup(
     entry_points={
         'xblock.v1': BLOCKS,
     },
-    package_data=package_data("problem_builder", ["templates", "public", "migrations", "locale"]),
+    package_data=package_data("problem_builder", ["templates", "public", "migrations", "translations"]),
     cmdclass={
         'verify_tag': VerifyTagCommand,
     },
