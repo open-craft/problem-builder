@@ -20,22 +20,25 @@
 
 # Imports ###########################################################
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 
 try:
-    # workaround so we don't explicitly import the AnonymousUserId model from LMS
-    if "common.djangoapps.student.apps.StudentConfig" in settings.INSTALLED_APPS:
-        # Koa and beyond:
+    # Koa and earlier: use shortened import path.
+    # This will raise a warning in Koa, but that's OK.
+    from student.models import AnonymousUserId
+except Exception:  # pylint: disable=broad-except
+    # (catch broadly, since the exception could manifest as either an ImportError
+    #  or an EdxPlatformDeprecatedImportError, the latter of which is not a subclass
+    #  of the former, and only exists on edx-platform master between Koa and Lilac).
+    try:
+        # Post-Koa: we must use the full import path.
         from common.djangoapps.student.models import AnonymousUserId
-    else:
-        # Juniper and earlier
-        from student.models import AnonymousUserId
-except ImportError:
-    # Not running the LMS (e.g. tests)
-    AnonymousUserId = None
+    except ImportError:
+        # If we get here, we are not running within edx-platform
+        # (e.g., we are running problem-builder unit tests).
+        AnonymousUserId = None
 
 
 # Classes ###########################################################
