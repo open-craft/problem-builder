@@ -37,12 +37,16 @@ import six
 from lxml import etree
 from six import StringIO
 
-from courseware.models import StudentModule
 from mentoring import MentoringBlock
 from problem_builder.mentoring import MentoringBlock as NewMentoringBlock
 
+from .platform_dependencies import StudentModule
 from .studio_xml_utils import studio_update_from_node
 from .xml_changes import convert_xml_to_v2
+
+
+if not StudentModule:
+    raise ImportError("Could not import StudentModule from edx-platform courseware app.")
 
 
 def upgrade_block(store, block, from_version="v1"):

@@ -349,13 +349,11 @@ class MentoringBlock(
         except ImportError:
             pass
 
-        try:
-            from xblock_django.models import XBlockConfiguration
+        from .platform_dependencies import XBlockConfiguration
+        if XBlockConfiguration:
             opt = XBlockConfiguration.objects.filter(name="pb-swipe")
             if opt.count() and opt.first().enabled:
                 additional_blocks.append(SwipeBlock)
-        except ImportError:
-            pass
 
         try:
             from ooyala_player.ooyala_player import OoyalaPlayerBlock

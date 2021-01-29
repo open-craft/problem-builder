@@ -151,11 +151,9 @@ class SwipeBlock(
         elif hasattr(self.runtime, 'course_id'):
             # edX Studio uses a different runtime for 'studio_view' than 'student_view',
             # and the 'studio_view' runtime doesn't provide the replace_urls API.
-            try:
-                from static_replace import replace_static_urls  # pylint: disable=import-error
+            from .platform_dependencies import replace_static_urls
+            if replace_static_urls:
                 url = replace_static_urls('"{}"'.format(url), None, course_id=self.runtime.course_id)[1:-1]
-            except ImportError:
-                pass
         return url
 
     def mentoring_view(self, context=None):

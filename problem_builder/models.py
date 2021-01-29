@@ -24,21 +24,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import pre_delete
 
-try:
-    # Koa and earlier: use shortened import path.
-    # This will raise a warning in Koa, but that's OK.
-    from student.models import AnonymousUserId
-except Exception:  # pylint: disable=broad-except
-    # (catch broadly, since the exception could manifest as either an ImportError
-    #  or an EdxPlatformDeprecatedImportError, the latter of which is not a subclass
-    #  of the former, and only exists on edx-platform master between Koa and Lilac).
-    try:
-        # Post-Koa: we must use the full import path.
-        from common.djangoapps.student.models import AnonymousUserId
-    except ImportError:
-        # If we get here, we are not running within edx-platform
-        # (e.g., we are running problem-builder unit tests).
-        AnonymousUserId = None
+from .platform_dependencies import AnonymousUserId
 
 
 # Classes ###########################################################
