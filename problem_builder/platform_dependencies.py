@@ -30,9 +30,18 @@
 # pylint: disable=unused-import
 
 try:
+    from courseware.models import StudentModule
+except Exception:
+    try:
+        from lms.djangoapps.courseware.models import StudentModule
+    except ImportError:
+        # If we are not running within edx-platform
+        # (e.g., we are running problem-builder unit tests).
+        StudentModule = None
+
+try:
     # Koa and earlier: use shortened import path.
     # This will raise a warning in Koa, but that's OK.
-    from courseware.models import StudentModule
     from static_replace import replace_static_urls
     from student.models import AnonymousUserId
     from xblock_django.models import XBlockConfiguration
@@ -42,14 +51,12 @@ except Exception:  # pylint: disable=broad-except
     #  of the former, and only exists on edx-platform master between Koa and Lilac).
     try:
         # Post-Koa: we must use the full import path.
-        from lms.djangoapps.courseware.models import StudentModule
         from common.djangoapps.static_replace import replace_static_urls
         from common.djangoapps.student.models import AnonymousUserId
         from common.djangoapps.xblock_django.models import XBlockConfiguration
     except ImportError:
         # If we get here, we are not running within edx-platform
         # (e.g., we are running problem-builder unit tests).
-        StudentModule = None
         replace_static_urls = None
         AnonymousUserId = None
         XBlockConfiguration = None
