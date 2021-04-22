@@ -890,12 +890,15 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         for step in steps:
             for answer in step.student_results:
                 if answer[1]['status'] == answer_status:
-                    answer_map.append({
-                        'id': answer[0],
-                        'details': answer[1],
-                        'step': step.step_number,
-                        'number': self.get_question_number(answer[0]),
-                    })
+                    try:
+                        answer_map.append({
+                            'id': answer[0],
+                            'details': answer[1],
+                            'step': step.step_number,
+                            'number': self.get_question_number(answer[0]),
+                        })
+                    except ValueError:
+                        pass  # The question has been deleted since the student answered it.
         return answer_map
 
     @property
