@@ -29,6 +29,11 @@
 
 # pylint: disable=unused-import
 
+# TODO: It might make sense to handle imports seprately
+# implemention here that just segregates StudentModule import form others
+# to avoid conflicting 'studentmodule' models for juniper. Previously,
+# `RuntimeError` due to this, causes other modules to be imported as
+# full import path which juniper don't support.
 try:
     from courseware.models import StudentModule
 except Exception:
