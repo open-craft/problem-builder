@@ -116,15 +116,17 @@ def _extract_data(course_key_str, block, user_id, match_string):
     # - Get all of the most recent student submissions for this block:
     submissions = tuple(_get_submissions(course_key_str, block, user_id))
 
-    student_ids = [submission['student_id'] for submission in submissions]
+    # If the student ID key doesn't exist, we're dealing with a single student and know the ID already.
+    student_ids = [submission.get('student_id', user_id) for submission in submissions]
     users = get_users_by_anonymous_ids(student_ids)
 
     # - For each submission, look up student's username, email and answer:
     answer_cache = {}
     for submission in submissions:
+        student_id = submission.get('student_id', user_id)
         username, _user_id, user_email = users.get(
-            submission['student_id'],
-            (submission['student_id'], 'N/A', 'N/A')
+            student_id,
+            (student_id, 'N/A', 'N/A')
         )
         answer = _get_answer(block, submission, answer_cache)
 
