@@ -11,6 +11,8 @@ xblock-utils
 unicodecsv
 lazy
 lxml
+pypng
+mock            # xblock-sdk Workbench looks for this in all cases.
 
 # Django
 # --------------
@@ -18,3 +20,4 @@ Django
 django-statici18n
 django-mysql
 django-appconf
+django-pyfs

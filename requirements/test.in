@@ -7,7 +7,6 @@ codecov
 coverage
 diff-cover
 ddt
-mock
 pytest
 pylint
 pycodestyle
@@ -19,5 +18,5 @@ webob
 
 # edX
 # --------------
-xblock-sdk
+-e xblock-sdk
 acid-xblock

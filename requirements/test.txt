@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements/test.in
 #
+-e file:///Users/mcdaniel/github/engine/xblock_dev/problem-builder/xblock-sdk
+    # via -r requirements/test.in
 acid-xblock==0.2.1
     # via -r requirements/test.in
 appdirs==1.4.4
@@ -16,6 +18,15 @@ attrs==21.2.0
     # via pytest
 bok-choy==1.1.1
     # via -r requirements/test.in
+boto3==1.18.21
+    # via
+    #   -r requirements/base.txt
+    #   fs-s3fs
+botocore==1.21.21
+    # via
+    #   -r requirements/base.txt
+    #   boto3
+    #   s3transfer
 certifi==2021.5.30
     # via requests
 chardet==4.0.0
@@ -37,6 +48,7 @@ django==2.2.24
     #   -r requirements/base.txt
     #   django-appconf
     #   django-mysql
+    #   django-pyfs
     #   django-statici18n
     #   xblock-sdk
 django-appconf==1.0.4
@@ -45,6 +57,8 @@ django-appconf==1.0.4
     #   django-statici18n
 django-mysql==3.12.0
     # via -r requirements/base.txt
+django-pyfs==3.1.0
+    # via -r requirements/base.txt
 django-statici18n==2.0.1
     # via -r requirements/base.txt
 edx-opaque-keys==2.2.2
@@ -52,7 +66,13 @@ edx-opaque-keys==2.2.2
 fs==2.4.13
     # via
     #   -r requirements/base.txt
+    #   django-pyfs
+    #   fs-s3fs
     #   xblock
+fs-s3fs==1.1.1
+    # via
+    #   -r requirements/base.txt
+    #   django-pyfs
 idna==3.2
     # via requests
 inflect==5.3.0
@@ -67,6 +87,11 @@ jinja2==3.0.1
     #   jinja2-pluralize
 jinja2-pluralize==0.3.0
     # via diff-cover
+jmespath==0.10.0
+    # via
+    #   -r requirements/base.txt
+    #   boto3
+    #   botocore
 lazy==1.4
     # via
     #   -r requirements/base.txt
@@ -92,7 +117,7 @@ markupsafe==2.0.1
 mccabe==0.6.1
     # via pylint
 mock==4.0.3
-    # via -r requirements/test.in
+    # via -r requirements/base.txt
 packaging==21.0
     # via pytest
 pbr==5.6.0
@@ -117,11 +142,14 @@ pymongo==3.10.1
     #   edx-opaque-keys
 pyparsing==2.4.7
     # via packaging
+pypng==0.0.20
+    # via -r requirements/base.txt
 pytest==6.2.4
     # via -r requirements/test.in
 python-dateutil==2.4.0
     # via
     #   -r requirements/base.txt
+    #   botocore
     #   xblock
 pytz==2021.1
     # via
@@ -135,6 +163,10 @@ pyyaml==5.4.1
     #   xblock
 requests==2.26.0
     # via codecov
+s3transfer==0.5.0
+    # via
+    #   -r requirements/base.txt
+    #   boto3
 selenium==3.141.0
     # via
     #   -r requirements/test.in
@@ -148,6 +180,7 @@ six==1.16.0
     #   -r requirements/base.txt
     #   bok-choy
     #   fs
+    #   fs-s3fs
     #   python-dateutil
     #   stevedore
 sqlparse==0.4.1
@@ -166,6 +199,8 @@ unicodecsv==0.14.1
     # via -r requirements/base.txt
 urllib3==1.26.6
     # via
+    #   -r requirements/base.txt
+    #   botocore
     #   requests
     #   selenium
 web-fragments==1.1.0
@@ -185,8 +220,6 @@ xblock==1.5.0
     #   -r requirements/base.txt
     #   acid-xblock
     #   xblock-utils
-xblock-sdk==0.3.0
-    # via -r requirements/test.in
 xblock-utils==2.2.0
     # via -r requirements/base.txt
 

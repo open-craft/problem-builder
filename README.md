@@ -79,8 +79,8 @@ Now run the following commands from the problem builder repo
 root to install the problem builder dependencies:
 
 ```bash
-(venv) ~/xblock_development/problem-builder $ pip install -r requirements.txt
-(venv) ~/xblock_development/problem-builder $ pip install -r requirements-dev.txt
+(venv) ~/xblock_development/problem-builder $ pip install -r requirements/dev.txt
+(venv) ~/xblock_development/problem-builder $ pip install -r requirements/test.txt
 ```
 
 Switch to the created XBlock SDK repository, install its dependencies, and
