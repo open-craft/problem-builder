@@ -1,0 +1,22 @@
+# Internationalization and Localization requirements
+
+-r base.txt
+
+# Python
+# --------------
+Babel
+transifex-client
+pycodestyle
+pylint
+pip-tools
+
+# Django
+# --------------
+
+# edX
+# --------------
+xblock-sdk
+edx-lint
+edx-i18n-tools
+enmerkar
+enmerkar-underscore

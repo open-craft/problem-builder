@@ -1,0 +1,20 @@
+-c ../constraints.txt
+
+# edX
+# --------------
+XBlock
+edx-opaque-keys
+xblock-utils
+
+# python
+# --------------
+unicodecsv
+lazy
+lxml
+
+# Django
+# --------------
+Django
+django-statici18n
+django-mysql
+django-appconf

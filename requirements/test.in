@@ -1,0 +1,23 @@
+-r base.txt
+
+# Python
+# --------------
+bok_choy
+codecov
+coverage
+diff-cover
+ddt
+mock
+pytest
+pylint
+pycodestyle
+selenium
+webob
+
+# Django
+# --------------
+
+# edX
+# --------------
+xblock-sdk
+acid-xblock
