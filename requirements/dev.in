@@ -15,7 +15,7 @@ pip-tools
 
 # edX
 # --------------
--e xblock-sdk
+-e git://github.com/edx/xblock-sdk.git@0.1.9#egg=xblock-sdk==v0.1.9
 edx-lint
 edx-i18n-tools
 enmerkar

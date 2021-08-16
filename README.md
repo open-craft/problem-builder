@@ -94,7 +94,7 @@ create its migrations:
 Create the following configuration file in `workbench/settings_pb.py`:
 
 ```python
-from settings import *
+from workbench.settings import *
 
 INSTALLED_APPS += ('problem_builder',)
 ```
