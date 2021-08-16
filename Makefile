@@ -9,7 +9,9 @@ help: ## display this help message
 	@perl -nle'print $& if m{^[a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'
 
 upgrade:
-	pip-compile --upgrade --output-file test_requirements.txt test_requirements.in
+	pip-compile --upgrade requirements/base.in
+	pip-compile --upgrade requirements/dev.in
+	pip-compile --upgrade requirements/test.in
 
 extract_translations: ## extract strings to be translated, outputting .po files
 	cd $(WORKING_DIR) && i18n_tool extract
