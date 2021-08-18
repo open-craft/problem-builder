@@ -102,15 +102,25 @@ class QuestionnaireAbstractBlock(
             return self.resource_string('public/js/translations/en/textjs.js')
 
     def student_view(self, context=None):
-        name = getattr(self, "unmixed_class", self.__class__).__name__
-
-        template_path = 'templates/html/{}.html'.format(name.lower())
-
         context = context.copy() if context else {}
         context['self'] = self
         context['custom_choices'] = self.custom_choices
         context['hide_header'] = context.get('hide_header', False) or not self.show_title
 
+        # the html template_name must match the lower-case name of *this* class, AND, 
+        # the html needs to exist in this repository, meaning that *this* class needs
+        # to be a class in this repo that inherits QuestionnaireAbstractBlock, noting however
+        # that *we* could be anything that subclassed QuestionnaireAbstractBlock, within
+        # or outside of this repo.
+        # 
+        # We therefore need to filter the class hierarchy in order to disregard classes 
+        # that are not part of this repository. Fortunately, mro() presents the class hierarchy
+        # in the correct order, thus, the correct class name to use for the html
+        # template will be the first item in the filtered list.
+        class_hierarcy = [cls.__name__ for cls in list(type(self).__mro__) 
+                                if cls.__module__[0 : 15] == 'problem_builder']
+        name = class_hierarcy[0].lower()
+        template_path = 'templates/html/{}.html'.format(name.lower())
         fragment = Fragment(loader.render_django_template(template_path, context, i18n_service=self.i18n_service))
         # If we use local_resource_url(self, ...) the runtime may insert many identical copies
         # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible.
