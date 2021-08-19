@@ -131,42 +131,42 @@ workflows:
   build_and_deploy:
     jobs:
       - build:
-          name: py35-quality
+          name: py38-quality
           test_command: make quality
-          docker_image: circleci/python:3.5-buster-browsers
+          docker_image: circleci/python:3.8-browsers
           filters:
             tags:
               only: /.*/
       - build:
-          name: py35-unit
+          name: py38-unit
           test_command: make test.unit
-          docker_image: circleci/python:3.5-buster-browsers
+          docker_image: circleci/python:3.8-browsers
           filters:
             tags:
               only: /.*/
       - build:
-          name: py35-integration
+          name: py38-integration
           test_command: make test.integration
-          docker_image: circleci/python:3.5-buster-browsers
+          docker_image: circleci/python:3.8-browsers
           filters:
             tags:
               only: /.*/
       - coverage:
-          name: py35-coverage
-          docker_image: circleci/python:3.5-buster
+          name: py38-coverage
+          docker_image: circleci/python:3.8
           filters:
             tags:
               only: /.*/
           requires:
-              - py35-quality
-              - py35-unit
-              - py35-integration
+              - py38-quality
+              - py38-unit
+              - py38-integration
       - deploy:
-          name: py35-deploy-bdist_wheel
-          docker_image: circleci/python:3.5-buster
+          name: py38-deploy-bdist_wheel
+          docker_image: circleci/python:3.8
           dist_type: bdist_wheel
           requires:
-            - py35-coverage
+            - py38-coverage
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
