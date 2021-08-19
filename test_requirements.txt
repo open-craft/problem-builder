@@ -13,7 +13,7 @@
     #   -r test_requirements.in
     #   -r xblock-sdk/requirements/base.txt
     #   -r xblock-sdk/requirements/test.txt
--e file:///home/giovanni-opencraft/devstacks/master/src/problem-builder/xblock-sdk
+-e xblock-sdk
     # via -r test_requirements.in
 -e git+https://github.com/edx/xblock-utils.git@2.0.0#egg=xblock-utils
     # via -r test_requirements.in
