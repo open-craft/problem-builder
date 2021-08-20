@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -23,10 +22,10 @@ from .base_test import ProblemBuilderBaseTest
 
 COMPLETED, INCOMPLETE, MAX_REACHED = "completed", "incomplete", "max_attempts_reached"
 MESSAGES = {
-    COMPLETED: u"Great job! (completed message)",
-    INCOMPLETE: u"Not quite! You can try again, though. (incomplete message)",
+    COMPLETED: "Great job! (completed message)",
+    INCOMPLETE: "Not quite! You can try again, though. (incomplete message)",
     MAX_REACHED: (
-        u"Sorry, you have used up all of your allowed submissions. (max_attempts_reached message)"
+        "Sorry, you have used up all of your allowed submissions. (max_attempts_reached message)"
     ),
 }
 

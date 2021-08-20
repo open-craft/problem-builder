@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -22,7 +21,6 @@
 
 import logging
 
-import six
 from xblock.core import XBlock
 from xblock.fields import UNSET, JSONField, Scope, String
 from xblock.fragment import Fragment
@@ -88,7 +86,7 @@ class NullableBoolean(JSONField):
             return None
         if isinstance(value, str):
             value = value.decode('ascii', errors='replace')
-        if isinstance(value, six.text_type):
+        if isinstance(value, str):
             return value.lower() == 'true'
         else:
             return bool(value)
@@ -106,7 +104,7 @@ class CompletionBlock(
     The student's answer is always considered "correct".
     """
     CATEGORY = 'pb-completion'
-    STUDIO_LABEL = _(u'Completion')
+    STUDIO_LABEL = _('Completion')
     USER_STATE_FIELDS = ['student_value']
 
     answerable = True
@@ -166,7 +164,7 @@ class CompletionBlock(
         """
         return {
             'id': self.name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.question,
@@ -195,11 +193,11 @@ class CompletionBlock(
         """
         Persist answer submitted by student.
         """
-        log.debug(u'Received Completion submission: "%s"', value)
+        log.debug('Received Completion submission: "%s"', value)
         self.student_value = value
         if sub_api:
             # Also send to the submissions API:
             sub_api.create_submission(self.student_item_key, value)
         result = self.get_last_result()
-        log.debug(u'Completion submission result: %s', result)
+        log.debug('Completion submission result: %s', result)
         return result

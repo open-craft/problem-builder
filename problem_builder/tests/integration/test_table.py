@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -70,4 +69,4 @@ class MentoringTableBlockTest(MentoringBaseTest):
             table = self.go_to_page('Table 3', css_selector='.mentoring-table')
             patched_method.assert_called_once_with(original_contents)
             link = table.find_element_by_css_selector('a')
-            self.assertEquals(link.text, 'Updated link')
+            self.assertEqual(link.text, 'Updated link')

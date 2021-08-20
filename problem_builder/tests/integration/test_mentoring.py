@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -17,8 +16,9 @@
 # along with this program in a file in the toplevel directory called
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
-import ddt
 from unittest import mock
+
+import ddt
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -35,14 +35,14 @@ class MentoringTest(MentoringBaseTest):
 def _get_mentoring_theme_settings(theme):
     return {
         'package': 'problem_builder',
-        'locations': ['public/themes/{}.css'.format(theme)]
+        'locations': [f'public/themes/{theme}.css']
     }
 
 
 @ddt.ddt
 class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
     def _get_xblock(self, mentoring, name):
-        return mentoring.find_element_by_css_selector(".xblock-v1[data-name='{}']".format(name))
+        return mentoring.find_element_by_css_selector(f".xblock-v1[data-name='{name}']")
 
     def _get_choice(self, questionnaire, choice_index):
         return questionnaire.find_elements_by_css_selector(".choices-list .choice")[choice_index]
@@ -94,10 +94,10 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
 
             self.assertTrue(checkmark.is_displayed())
             self.assertIn(checkmark_class, result_classes)
-            self.assertEquals(checkmark_label, result_label)
+            self.assertEqual(checkmark_label, result_label)
         else:
             self.assertFalse(checkmark.is_displayed())
-            self.assertEquals('', result_label)
+            self.assertEqual('', result_label)
 
     def _assert_mcq(self, mcq, previous_answer_shown=True):
         if previous_answer_shown:
@@ -271,7 +271,7 @@ class ProblemBuilderQuestionnaireBlockTest(ProblemBuilderBaseTest):
             title = driver.find_element_by_css_selector('h1.title')
             return title and title.text == "XBlock scenarios"
 
-        wait.until(did_load_homepage, u"Workbench home page should have loaded")
+        wait.until(did_load_homepage, "Workbench home page should have loaded")
         mentoring = self.go_to_view("student_view")
         submit = self._get_submit(mentoring)
         self.wait_until_visible(submit)

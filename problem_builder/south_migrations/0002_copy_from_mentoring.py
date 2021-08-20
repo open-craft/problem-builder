@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 from django.db.utils import DatabaseError
-
 from south.db import db
 from south.v2 import DataMigration
 

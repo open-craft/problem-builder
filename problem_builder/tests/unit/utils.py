@@ -3,8 +3,8 @@ Helper methods for testing Problem Builder / Step Builder blocks
 """
 import json
 from datetime import date, datetime
-
 from unittest.mock import MagicMock, Mock, patch
+
 from xblock.field_data import DictFieldData
 
 

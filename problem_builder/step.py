@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -20,7 +19,6 @@
 
 import logging
 
-import six
 from lazy.lazy import lazy
 from xblock.core import XBlock
 from xblock.fields import List, Scope, String
@@ -81,8 +79,8 @@ class MentoringStepBlock(
     """
     An XBlock for a step.
     """
-    CAPTION = _(u"Step")
-    STUDIO_LABEL = _(u"Mentoring Step")
+    CAPTION = _("Step")
+    STUDIO_LABEL = _("Mentoring Step")
     CATEGORY = 'sb-step'
     USER_STATE_FIELDS = ['student_results']
 
@@ -138,14 +136,14 @@ class MentoringStepBlock(
         try:
             from xmodule.video_module.video_module import VideoBlock
             additional_blocks.append(NestedXBlockSpec(
-                VideoBlock, category='video', label=_(u"Video")
+                VideoBlock, category='video', label=_("Video")
             ))
         except ImportError:
             pass
         try:
             from imagemodal import ImageModal
             additional_blocks.append(NestedXBlockSpec(
-                ImageModal, category='imagemodal', label=_(u"Image Modal")
+                ImageModal, category='imagemodal', label=_("Image Modal")
             ))
         except ImportError:
             pass
@@ -153,7 +151,7 @@ class MentoringStepBlock(
         try:
             from ooyala_player.ooyala_player import OoyalaPlayerBlock
             additional_blocks.append(NestedXBlockSpec(
-                OoyalaPlayerBlock, category='ooyala-player', label=_(u"Ooyala Player")
+                OoyalaPlayerBlock, category='ooyala-player', label=_("Ooyala Player")
             ))
         except ImportError:
             pass
@@ -254,7 +252,7 @@ class MentoringStepBlock(
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_contents.append(u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component.")))
+                child_contents.append("<p>[{}]</p>".format(self._("Error: Unable to load child component.")))
             else:
                 if rendering_for_studio and isinstance(child, PlotBlock):
                     # Don't use view to render plot blocks in Studio.
@@ -263,7 +261,7 @@ class MentoringStepBlock(
                     #   which causes "SubmissionRequestError" in Studio.
                     # - author_preview_view does not supply JS code for plot that JS code for step depends on
                     #   (step calls "update" on plot to get latest data during rendering).
-                    child_contents.append(u"<p>{}</p>".format(child.display_name))
+                    child_contents.append(f"<p>{child.display_name}</p>")
                 else:
                     child_fragment = self._render_child_fragment(child, context, view)
                     fragment.add_frag_resources(child_fragment)
@@ -295,7 +293,7 @@ class MentoringStepBlock(
                 components.append(child.student_view_data(context))
 
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'title': self.display_name_with_default,

@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
 from django.conf import settings
 from django.db import migrations, models
 
@@ -26,6 +23,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='share',
-            unique_together=set([('shared_by', 'shared_with', 'block_id')]),
+            unique_together={('shared_by', 'shared_with', 'block_id')},
         ),
     ]

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -51,8 +50,8 @@ class VerifyTagCommand(install):
     def run(self):
         tag = os.getenv('CIRCLE_TAG')
 
-        if tag != 'v{}'.format(VERSION):
-            info = "Git tag: {0} does not match the version of this app: {1}".format(
+        if tag != f'v{VERSION}':
+            info = "Git tag: {} does not match the version of this app: {}".format(
                 tag, VERSION
             )
             sys.exit(info)

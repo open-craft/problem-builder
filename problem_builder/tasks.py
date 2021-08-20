@@ -3,18 +3,17 @@ Celery task for CSV student answer export.
 """
 import time
 
-import six
-from django.contrib.auth.models import User
-from django.db.models import F
-
 from celery.task import task
 from celery.utils.log import get_task_logger
+from django.contrib.auth.models import User
+from django.db.models import F
 from lms.djangoapps.instructor_task.models import ReportStore
 from opaque_keys import InvalidKeyError
 from opaque_keys.edx.keys import CourseKey, UsageKey
-from problem_builder.answer import AnswerBlock
 from xmodule.modulestore.django import modulestore
 from xmodule.modulestore.exceptions import ItemNotFoundError
+
+from problem_builder.answer import AnswerBlock
 
 from .mcq import MCQBlock, RatingBlock
 from .mrq import MRQBlock
@@ -39,7 +38,7 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
         raise ValueError("Could not find the specified Block ID.") from err
 
     src_block = modulestore().get_item(usage_key)
-    course_key_str = six.text_type(course_key)
+    course_key_str = str(course_key)
     type_map = {cls.__name__: cls for cls in [MCQBlock, MRQBlock, RatingBlock, AnswerBlock]}
 
     if not block_types:
@@ -81,12 +80,12 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
                 rows += results
 
     # Generate the CSV:
-    filename = u"pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))
+    filename = "pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))
     report_store = ReportStore.from_config(config_name='GRADES_DOWNLOAD')
     report_store.store_rows(course_key, filename, rows)
 
     generation_time_s = time.time() - start_timestamp
-    logger.debug("Done data export - took {} seconds".format(generation_time_s))
+    logger.debug(f"Done data export - took {generation_time_s} seconds")
 
     return {
         "error": None,
@@ -185,7 +184,7 @@ def _get_submissions(course_key_str, block, user_id):
     """
     # Load the actual student submissions for `block`.
     # Note this requires one giant query that retrieves all student submissions for `block` at once.
-    block_id = six.text_type(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
+    block_id = str(block.scope_ids.usage_id.replace(branch=None, version_guid=None))
     block_type = _get_type(block)
     if block_type == 'pb-answer':
         block_id = block.name  # item_id of Long Answer submission matches question ID and not block ID

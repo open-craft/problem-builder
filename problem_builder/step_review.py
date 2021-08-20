@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -20,7 +19,6 @@
 
 import logging
 
-import six
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.fragment import Fragment
@@ -113,7 +111,7 @@ class ConditionalMessageBlock(
 
     def student_view_data(self, context=None):
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'content': self.content,
@@ -123,7 +121,7 @@ class ConditionalMessageBlock(
 
     def student_view(self, _context=None):
         """ Render this message. """
-        html = u'<div class="review-conditional-message">{content}</div>'.format(
+        html = '<div class="review-conditional-message">{content}</div>'.format(
             content=self.content
         )
         return Fragment(html)
@@ -140,7 +138,7 @@ class ConditionalMessageBlock(
                 desc += self.SCORE_CONDITIONS_DESCRIPTIONS[self.score_condition] + "<br>"
             if self.num_attempts_condition != self.ATTEMPTS_ANY:
                 desc += self.NUM_ATTEMPTS_COND_DESCRIPTIONS[self.num_attempts_condition]
-        fragment.content = u'<div class="conditional-message-help"><p>{}</p></div>'.format(desc) + fragment.content
+        fragment.content = f'<div class="conditional-message-help"><p>{desc}</p></div>' + fragment.content
         return fragment
 
 
@@ -168,7 +166,7 @@ class ScoreSummaryBlock(XBlockWithTranslationServiceMixin, XBlockWithPreviewMixi
 
     def student_view_data(self, context=None):
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
         }
@@ -218,12 +216,12 @@ class PerQuestionFeedbackBlock(XBlockWithTranslationServiceMixin, XBlockWithPrev
                 'tips': review_tips,
             }, i18n_service=self.i18n_service)
         else:
-            html = u""
+            html = ""
         return Fragment(html)
 
     def student_view_data(self, context=None):
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
         }
@@ -286,15 +284,15 @@ class ReviewStepBlock(
         fragment = Fragment()
 
         if "score_summary" not in context:
-            fragment.add_content(u"Error: This block only works inside a Step Builder block.")
+            fragment.add_content("Error: This block only works inside a Step Builder block.")
         elif not context["score_summary"]:
             # Note: The following text should never be seen (in theory) so does not need to be translated.
-            fragment.add_content(u"Your score and review messages will appear here.")
+            fragment.add_content("Your score and review messages will appear here.")
         else:
             for child_id in self.children:
                 child = self.runtime.get_block(child_id)
                 if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                    fragment.add_content(u"<p>[{}]</p>".format(u"Error: Unable to load child component."))
+                    fragment.add_content("<p>[{}]</p>".format("Error: Unable to load child component."))
                 else:
                     if hasattr(child, 'is_applicable'):
                         if not child.is_applicable(context):
@@ -321,7 +319,7 @@ class ReviewStepBlock(
                 components.append(child.student_view_data(context))
 
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'type': self.CATEGORY,
             'title': self.display_name,

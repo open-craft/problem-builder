@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -26,7 +25,6 @@ from collections import namedtuple
 from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain
 
-import six
 from lazy.lazy import lazy
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError, NoSuchViewError
@@ -52,7 +50,8 @@ from problem_builder.table import MentoringTableBlock
 from .message import MentoringMessageBlock, get_message_label
 from .mixins import (ExpandStaticURLMixin, MessageParentMixin, QuestionMixin,
                      StepParentMixin, StudentViewUserStateMixin,
-                     StudentViewUserStateResultsTransformerMixin, TranslationContentMixin,
+                     StudentViewUserStateResultsTransformerMixin,
+                     TranslationContentMixin,
                      XBlockWithTranslationServiceMixin, _normalize_id)
 from .step_review import ReviewStepBlock
 from .utils import I18NService
@@ -144,7 +143,7 @@ class BaseMentoringBlock(
         try:
             return super().url_name
         except AttributeError:
-            return six.text_type(self.scope_ids.usage_id)
+            return str(self.scope_ids.usage_id)
 
     @property
     def review_tips_json(self):
@@ -337,14 +336,14 @@ class MentoringBlock(
         try:
             from xmodule.video_module.video_module import VideoBlock
             additional_blocks.append(NestedXBlockSpec(
-                VideoBlock, category='video', label=_(u"Video")
+                VideoBlock, category='video', label=_("Video")
             ))
         except ImportError:
             pass
         try:
             from imagemodal import ImageModal
             additional_blocks.append(NestedXBlockSpec(
-                ImageModal, category='imagemodal', label=_(u"Image Modal")
+                ImageModal, category='imagemodal', label=_("Image Modal")
             ))
         except ImportError:
             pass
@@ -358,7 +357,7 @@ class MentoringBlock(
         try:
             from ooyala_player.ooyala_player import OoyalaPlayerBlock
             additional_blocks.append(NestedXBlockSpec(
-                OoyalaPlayerBlock, category='ooyala-player', label=_(u"Ooyala Player")
+                OoyalaPlayerBlock, category='ooyala-player', label=_("Ooyala Player")
             ))
         except ImportError:
             pass
@@ -439,7 +438,8 @@ class MentoringBlock(
 
     @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context):
-        from .questionnaire import QuestionnaireAbstractBlock  # Import here to avoid circular dependency
+        from .questionnaire import \
+            QuestionnaireAbstractBlock  # Import here to avoid circular dependency
 
         # Migrate stored data if necessary
         self.migrate_fields()
@@ -449,14 +449,14 @@ class MentoringBlock(
         self.step = min(num_steps, self.step)
 
         fragment = Fragment()
-        child_content = u""
+        child_content = ""
 
         mcq_hide_previous_answer = self.get_option('pb_mcq_hide_previous_answer')
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+                child_content += "<p>[{}]</p>".format(self._("Error: Unable to load child component."))
             elif not isinstance(child, MentoringMessageBlock):
                 try:
                     if mcq_hide_previous_answer and isinstance(child, QuestionnaireAbstractBlock):
@@ -531,7 +531,7 @@ class MentoringBlock(
         """
         Returns the URL of the next step's page
         """
-        return '/jump_to_id/{}'.format(self.next_step)
+        return f'/jump_to_id/{self.next_step}'
 
     @property
     def hide_feedback(self):
@@ -722,13 +722,13 @@ class MentoringBlock(
                 if msg_type in message_types_present:
                     validation.add(ValidationMessage(
                         ValidationMessage.ERROR,
-                        self._(u"There should only be one '{msg_type}' message component.").format(msg_type=msg_type)
+                        self._("There should only be one '{msg_type}' message component.").format(msg_type=msg_type)
                     ))
                 message_types_present.add(msg_type)
         if a_child_has_issues:
             validation.add(ValidationMessage(
                 ValidationMessage.ERROR,
-                self._(u"A component inside this mentoring block has issues.")
+                self._("A component inside this mentoring block has issues.")
             ))
         return validation
 
@@ -770,7 +770,7 @@ class MentoringBlock(
                 components.append(block.student_view_data())
 
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'max_attempts': self.max_attempts,
             'extended_feedback': self.extended_feedback,
@@ -866,7 +866,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Get the usage_ids of all of this XBlock's children that are steps.
         """
-        from .step import MentoringStepBlock  # Import here to avoid circular dependency
+        from .step import \
+            MentoringStepBlock  # Import here to avoid circular dependency
         return [
             _normalize_id(child_id) for child_id in self.children if
             child_isinstance(self, child_id, MentoringStepBlock)
@@ -978,7 +979,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content = u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+                child_content = "<p>[{}]</p>".format(self._("Error: Unable to load child component."))
             else:
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
                 fragment.add_frag_resources(child_fragment)
@@ -1127,7 +1128,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
         return {
             'title': self.display_name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'show_title': self.show_title,
             'weight': self.weight,

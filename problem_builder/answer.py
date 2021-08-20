@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -23,9 +22,8 @@ import logging
 import uuid
 
 import pkg_resources
-import six
-from lazy import lazy
 from django import utils
+from lazy import lazy
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
 from xblock.fragment import Fragment
@@ -137,7 +135,7 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
 
         if not data.name:
-            add_error(u"A Question ID is required.")
+            add_error("A Question ID is required.")
 
 
 @XBlock.needs("i18n")
@@ -150,7 +148,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
     to make them searchable and referenceable across xblocks.
     """
     CATEGORY = 'pb-answer'
-    STUDIO_LABEL = _(u"Long Answer")
+    STUDIO_LABEL = _("Long Answer")
     answerable = True
 
     name = String(
@@ -192,7 +190,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
             return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
                 lang=utils.translation.to_locale(utils.translation.get_language()),
             ))
-        except IOError:
+        except OSError:
             return self.resource_string('public/js/translations/en/textjs.js')
 
     def mentoring_view(self, context=None):
@@ -294,7 +292,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         """
         return {
             'id': self.name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'type': self.CATEGORY,
             'weight': self.weight,
@@ -310,7 +308,7 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
     """
 
     CATEGORY = 'pb-answer-recap'
-    STUDIO_LABEL = _(u"Long Answer Recap")
+    STUDIO_LABEL = _("Long Answer Recap")
 
     name = String(
         display_name=_("Question ID"),
@@ -343,9 +341,9 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
             location = self.location.replace(branch=None, version=None)  # Standardize the key in case it isn't already
             target_key = {
                 'student_id': student_submissions_key,
-                'course_id': six.text_type(location.course_key),
+                'course_id': str(location.course_key),
                 'item_id': self.name,
-                'item_type': u'pb-answer',
+                'item_type': 'pb-answer',
             }
             submissions = sub_api.get_submissions(target_key, limit=1)
             try:
@@ -381,6 +379,6 @@ class AnswerRecapBlock(AnswerMixin, StudioEditableXBlockMixin, XBlock):
             'name': self.name,  # For backwards compatibility; same as 'id'
             'display_name': self.display_name,
             'description': self.description,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'type': self.CATEGORY
         }

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -22,7 +21,6 @@
 
 import logging
 
-import six
 from xblock.fields import Boolean, List, Scope, String
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
@@ -50,7 +48,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
     An XBlock used to ask multiple-response questions
     """
     CATEGORY = 'pb-mrq'
-    STUDIO_LABEL = _(u"Multiple Response Question")
+    STUDIO_LABEL = _("Multiple Response Question")
     USER_STATE_FIELDS = ['student_choices', ]
 
     student_choices = List(
@@ -91,10 +89,10 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
 
     def describe_choice_correctness(self, choice_value):
         if choice_value in self.required_choices:
-            return self._(u"Required")
+            return self._("Required")
         elif choice_value in self.ignored_choices:
-            return self._(u"Ignored")
-        return self._(u"Not Acceptable")
+            return self._("Ignored")
+        return self._("Not Acceptable")
 
     def get_results(self, previous_result):
         """
@@ -111,12 +109,12 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
             return {}
 
     def submit(self, submissions):
-        log.debug(u'Received MRQ submissions: "%s"', submissions)
+        log.debug('Received MRQ submissions: "%s"', submissions)
 
         result = self.calculate_results(submissions)
         self.student_choices = submissions
 
-        log.debug(u'MRQ submissions result: %s', result)
+        log.debug('MRQ submissions result: %s', result)
         return result
 
     def calculate_results(self, submissions):
@@ -199,15 +197,15 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         ignored = set(data.ignored_choices)
 
         if len(required) < len(data.required_choices):
-            add_error(self._(u"Duplicate required choices set"))
+            add_error(self._("Duplicate required choices set"))
         if len(ignored) < len(data.ignored_choices):
-            add_error(self._(u"Duplicate ignored choices set"))
+            add_error(self._("Duplicate ignored choices set"))
         for val in required.intersection(ignored):
-            add_error(self._(u"A choice is listed as both required and ignored: {}").format(choice_name(val)))
+            add_error(self._("A choice is listed as both required and ignored: {}").format(choice_name(val)))
         for val in (required - all_values):
-            add_error(self._(u"A choice value listed as required does not exist: {}").format(choice_name(val)))
+            add_error(self._("A choice value listed as required does not exist: {}").format(choice_name(val)))
         for val in (ignored - all_values):
-            add_error(self._(u"A choice value listed as ignored does not exist: {}").format(choice_name(val)))
+            add_error(self._("A choice value listed as ignored does not exist: {}").format(choice_name(val)))
 
     def student_view_data(self, context=None):
         """
@@ -216,7 +214,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         return {
             'id': self.name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'title': self.display_name,
             'type': self.CATEGORY,

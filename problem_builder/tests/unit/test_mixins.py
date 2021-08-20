@@ -1,9 +1,9 @@
 import json
 import unittest
 from datetime import datetime
+from unittest.mock import MagicMock, Mock
 
 import pytz
-from unittest.mock import MagicMock, Mock
 from xblock.core import XBlock
 from xblock.field_data import DictFieldData
 from xblock.fields import Boolean, DateTime, Integer, Scope, String

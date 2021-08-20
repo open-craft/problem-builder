@@ -32,7 +32,7 @@ class Command(BaseCommand):
         queryset = Answer.objects.filter(course_key__isnull=True)
 
         self.stdout.write(
-            "Copying Answer.course_id field into Answer.course_key in batches of {}".format(batch_size)
+            f"Copying Answer.course_id field into Answer.course_key in batches of {batch_size}"
         )
 
         idx = 0
@@ -44,7 +44,7 @@ class Command(BaseCommand):
             for answer in batch:
                 answer.course_key = answer.course_id
                 answer.save()
-            self.stdout.write("Processed batch {}".format(idx))
+            self.stdout.write(f"Processed batch {idx}")
             time.sleep(sleep_time)
 
         self.stdout.write("Successfully copied Answer.course_id into Answer.course_key")

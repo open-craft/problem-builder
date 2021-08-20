@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -81,7 +80,7 @@ class DashboardVisualData:
                 continue  # We only use blocks with numeric averages for the visual representation
             # Now we build the 'layer_data' information to pass on to the template:
             try:
-                layer_data = {"url": images[idx], "id": "layer{}".format(idx)}
+                layer_data = {"url": images[idx], "id": f"layer{idx}"}
             except IndexError:
                 break
 

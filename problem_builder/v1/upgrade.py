@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -33,17 +32,15 @@ import logging
 import sys
 import warnings
 
-import six
 from lxml import etree
+from mentoring import MentoringBlock
 from six import StringIO
 
-from mentoring import MentoringBlock
 from problem_builder.mentoring import MentoringBlock as NewMentoringBlock
 
 from .platform_dependencies import StudentModule
 from .studio_xml_utils import studio_update_from_node
 from .xml_changes import convert_xml_to_v2
-
 
 if not StudentModule:
     raise ImportError("Could not import StudentModule from edx-platform courseware app.")
@@ -64,7 +61,7 @@ def upgrade_block(store, block, from_version="v1"):
         warnings.simplefilter("always")
         convert_xml_to_v2(root, from_version=from_version)
         for warning in warnings_caught:
-            print(u"    ➔ {}".format(six.text_type(warning.message)))
+            print(f"    ➔ {str(warning.message)}")
 
     # We need some special-case handling to deal with HTML being an XModule and not a pure XBlock:
     try:
@@ -77,7 +74,7 @@ def upgrade_block(store, block, from_version="v1"):
             block = runtime.construct_xblock_from_class(cls, keys)
             block.data = node.text if node.text else ""
             for child in list(node):
-                if isinstance(child.tag, six.string_types):
+                if isinstance(child.tag, str):
                     block.data += etree.tostring(child)
             return block
         HtmlDescriptor.parse_xml = parse_xml_for_HtmlDescriptor
@@ -101,12 +98,12 @@ def upgrade_block(store, block, from_version="v1"):
         parent_children = parent.children
         index = parent_children.index(old_usage_id)
 
-        url_name = six.text_type(old_usage_id.block_id)
+        url_name = str(old_usage_id.block_id)
         if "url_name" in root.attrib:
             url_name_xml = root.attrib.pop("url_name")
             if url_name != url_name_xml:
-                print(u"    ➔ Two conflicting url_name values! Using the 'real' one : {}".format(url_name))
-                print(u"    ➔ References to the old url_name ({}) need to be updated manually.".format(url_name_xml))
+                print(f"    ➔ Two conflicting url_name values! Using the 'real' one : {url_name}")
+                print(f"    ➔ References to the old url_name ({url_name_xml}) need to be updated manually.")
         block = store.create_item(
             user_id=None,
             course_key=old_usage_id.course_key,
@@ -117,14 +114,14 @@ def upgrade_block(store, block, from_version="v1"):
         parent_children[index] = block.location
         parent.save()
         store.update_item(parent, user_id=None)
-        print(u"    ➔ problem-builder created: {}".format(url_name))
+        print(f"    ➔ problem-builder created: {url_name}")
 
         # Now we've changed the block's block_type but in doing so we've disrupted the student data.
         # Migrate it now:
         student_data = StudentModule.objects.filter(module_state_key=old_usage_id)
         num_entries = student_data.count()
         if num_entries > 0:
-            print(u"    ➔ Migrating {} student records to new block".format(num_entries))
+            print(f"    ➔ Migrating {num_entries} student records to new block")
             student_data.update(module_state_key=block.location)
 
     # Replace block with the new version and the new children:
@@ -142,9 +139,9 @@ if __name__ == '__main__':
     from opaque_keys.edx.keys import CourseKey
     from xmodule.modulestore.django import modulestore
 
-    print(u"┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
-    print(u"┃ Mentoring Upgrade Script ┃")
-    print(u"┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
+    print("┏━━━━━━━━━━━━━━━━━━━━━━━━━━┓")
+    print("┃ Mentoring Upgrade Script ┃")
+    print("┗━━━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
     try:
         course_id = CourseKey.from_string(sys.argv[1])
@@ -161,9 +158,9 @@ if __name__ == '__main__':
     store = modulestore()
     course = store.get_course(course_id)
     if course is None:
-        sys.exit(u"Course '{}' not found.".format(six.text_type(course_id)))
-    print(u" ➔ Found course: {}".format(course.display_name))
-    print(u" ➔ Searching for mentoring blocks")
+        sys.exit(f"Course '{str(course_id)}' not found.")
+    print(f" ➔ Found course: {course.display_name}")
+    print(" ➔ Searching for mentoring blocks")
     blocks_found = []
 
     def find_mentoring_blocks(block):
@@ -180,40 +177,40 @@ if __name__ == '__main__':
     find_mentoring_blocks(course)
 
     total = len(blocks_found)
-    print(u" ➔ Found {} mentoring blocks".format(total))
+    print(f" ➔ Found {total} mentoring blocks")
 
-    print(u" ➔ Doing a quick sanity check of the url_names")
+    print(" ➔ Doing a quick sanity check of the url_names")
     url_names = set()
     stop = False
     for block_id in blocks_found:
         url_name = block_id.block_id
         block = course.runtime.get_block(block_id)
         if url_name in url_names:
-            print(u" ➔ Mentoring block {} appears in the course in multiple places!".format(url_name))
-            print(u'   (display_name: "{}", parent {}: "{}")'.format(
+            print(f" ➔ Mentoring block {url_name} appears in the course in multiple places!")
+            print('   (display_name: "{}", parent {}: "{}")'.format(
                 block.display_name, block.parent, block.get_parent().display_name
             ))
-            print(u'   To fix, you must delete the extra occurences.')
+            print('   To fix, you must delete the extra occurences.')
             stop = True
             continue
-        if block.url_name and block.url_name != six.text_type(block_id.block_id):
-            print(u" ➔ Warning: Mentoring block {} has a different url_name set in the XML.".format(url_name))
-            print(u"   If other blocks reference this block using the XML url_name '{}',".format(block.url_name))
-            print(u"   those blocks will need to be updated.")
+        if block.url_name and block.url_name != str(block_id.block_id):
+            print(f" ➔ Warning: Mentoring block {url_name} has a different url_name set in the XML.")
+            print(f"   If other blocks reference this block using the XML url_name '{block.url_name}',")
+            print("   those blocks will need to be updated.")
             if "--force" not in sys.argv:
-                print(u"   In order to force this upgrade to continue, add --force to the end of the command.")
+                print("   In order to force this upgrade to continue, add --force to the end of the command.")
                 stop = True
         url_names.add(url_name)
 
     if stop:
-        sys.exit(u" ➔ Exiting due to errors preventing the upgrade.")
+        sys.exit(" ➔ Exiting due to errors preventing the upgrade.")
 
     with store.bulk_operations(course.location.course_key):
         count = 1
         for block_id in blocks_found:
             block = course.runtime.get_block(block_id)
-            print(u" ➔ Upgrading block {} of {} - \"{}\"".format(count, total, block.url_name))
+            print(f" ➔ Upgrading block {count} of {total} - \"{block.url_name}\"")
             count += 1
             upgrade_block(store, block, from_version)
 
-    print(u" ➔ Complete.")
+    print(" ➔ Complete.")

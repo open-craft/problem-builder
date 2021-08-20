@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -18,7 +17,7 @@
 # "AGPLv3".  If not, see <http://www.gnu.org/licenses/>.
 #
 
-import six
+
 # Imports ###########################################################
 from lxml import etree
 from xblock.core import XBlock
@@ -44,42 +43,42 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
     """
     MESSAGE_TYPES = {
         "completed": {
-            "display_name": _(u"Completed"),
-            "studio_label": _(u'Message (Complete)'),
-            "long_display_name": _(u"Message shown when complete"),
-            "default": _(u"Great job!"),
+            "display_name": _("Completed"),
+            "studio_label": _('Message (Complete)'),
+            "long_display_name": _("Message shown when complete"),
+            "default": _("Great job!"),
             "description": _(
-                u"This message will be shown when the student achieves a perfect score. "
+                "This message will be shown when the student achieves a perfect score. "
             ),
         },
         "incomplete": {
-            "display_name": _(u"Incomplete"),
-            "studio_label": _(u'Message (Incomplete)'),
-            "long_display_name": _(u"Message shown when incomplete"),
-            "default": _(u"Not quite! You can try again, though."),
+            "display_name": _("Incomplete"),
+            "studio_label": _('Message (Incomplete)'),
+            "long_display_name": _("Message shown when incomplete"),
+            "default": _("Not quite! You can try again, though."),
             "description": _(
-                u"This message will be shown when the student gets at least one question wrong, "
+                "This message will be shown when the student gets at least one question wrong, "
                 "but is allowed to try again. "
             ),
         },
         "max_attempts_reached": {
-            "display_name": _(u"Reached max. # of attempts"),
-            "studio_label": _(u'Message (Max # Attempts)'),
-            "long_display_name": _(u"Message shown when student reaches max. # of attempts"),
-            "default": _(u"Sorry, you have used up all of your allowed submissions."),
+            "display_name": _("Reached max. # of attempts"),
+            "studio_label": _('Message (Max # Attempts)'),
+            "long_display_name": _("Message shown when student reaches max. # of attempts"),
+            "default": _("Sorry, you have used up all of your allowed submissions."),
             "description": _(
-                u"This message will be shown when the student has used up "
+                "This message will be shown when the student has used up "
                 "all of their allowed attempts without achieving a perfect score. "
             ),
         },
         "on-assessment-review-question": {
-            "display_name": _(u"Study tips if this question was wrong"),
-            "long_display_name": _(u"Study tips shown if question was answered incorrectly"),
+            "display_name": _("Study tips if this question was wrong"),
+            "long_display_name": _("Study tips shown if question was answered incorrectly"),
             "default": _(
-                u"Review ____."
+                "Review ____."
             ),
             "description": _(
-                u"This message will be shown when the student is reviewing "
+                "This message will be shown when the student is reviewing "
                 "their answers to the assessment, if the student got this specific question "
                 "wrong and is allowed to try again."
             ),
@@ -114,7 +113,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
 
     def mentoring_view(self, context=None):
         """ Render this message for use by a mentoring block. """
-        html = u'<div class="submission-message {msg_type}">{content}</div>'.format(
+        html = '<div class="submission-message {msg_type}">{content}</div>'.format(
             msg_type=self.type,
             content=self.content
         )
@@ -126,7 +125,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
 
     def author_view(self, context=None):
         fragment = self.mentoring_view(context)
-        fragment.content += u'<div class="submission-message-help"><p>{}</p></div>'.format(self.help_text)
+        fragment.content += f'<div class="submission-message-help"><p>{self.help_text}</p></div>'
         return fragment
 
     @property
@@ -134,14 +133,14 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         try:
             return self._(self.MESSAGE_TYPES[self.type]["long_display_name"])
         except KeyError:
-            return u"INVALID MESSAGE"
+            return "INVALID MESSAGE"
 
     @property
     def help_text(self):
         try:
             return self._(self.MESSAGE_TYPES[self.type]["description"])
         except KeyError:
-            return u"This message is not a valid message type!"
+            return "This message is not a valid message type!"
 
     @classmethod
     def get_template(cls, template_id):
@@ -159,7 +158,7 @@ class MentoringMessageBlock(XBlock, StudioEditableXBlockMixin, XBlockWithTransla
         Construct this XBlock from the given XML node.
         """
         block = runtime.construct_xblock_from_class(cls, keys)
-        block.content = six.text_type(node.text or u"")
+        block.content = str(node.text or "")
         if 'type' in node.attrib:  # 'type' is optional - default is 'completed'
             block.type = node.attrib['type']
         for child in node:

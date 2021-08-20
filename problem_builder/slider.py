@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -23,7 +22,6 @@
 import logging
 import uuid
 
-import six
 from xblock.core import XBlock
 from xblock.fields import Float, Scope, String
 from xblock.fragment import Fragment
@@ -57,7 +55,7 @@ class SliderBlock(
     The student's answer is always considered "correct".
     """
     CATEGORY = 'pb-slider'
-    STUDIO_LABEL = _(u"Ranged Value Slider")
+    STUDIO_LABEL = _("Ranged Value Slider")
     USER_STATE_FIELDS = ['student_value']
 
     answerable = True
@@ -106,7 +104,7 @@ class SliderBlock(
         """ Main view of this block """
         context = context.copy() if context else {}
         context['question'] = self.question
-        context['slider_id'] = 'pb-slider-{}'.format(uuid.uuid4().hex[:20])
+        context['slider_id'] = f'pb-slider-{uuid.uuid4().hex[:20]}'
         context['initial_value'] = int(self.student_value*100) if self.student_value is not None else 50
         context['min_label'] = self.min_label
         context['max_label'] = self.max_label
@@ -128,7 +126,7 @@ class SliderBlock(
     def student_view_data(self, context=None):
         return {
             'id': self.name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.question,
@@ -167,7 +165,7 @@ class SliderBlock(
         return self.get_last_result()
 
     def submit(self, value):
-        log.debug(u'Received Slider submission: "%s"', value)
+        log.debug('Received Slider submission: "%s"', value)
         if value < 0 or value > 1:
             return {}  # Invalid
         self.student_value = value
@@ -175,7 +173,7 @@ class SliderBlock(
             # Also send to the submissions API:
             sub_api.create_submission(self.student_item_key, value)
         result = self.get_last_result()
-        log.debug(u'Slider submission result: %s', result)
+        log.debug('Slider submission result: %s', result)
         return result
 
     def get_submission_display(self, submission):

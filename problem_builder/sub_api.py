@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -21,7 +20,7 @@
 Integrations between these XBlocks and the edX Submissions API
 """
 
-import six
+
 from xblock.completable import XBlockCompletionMode
 
 try:
@@ -47,7 +46,7 @@ class SubmittingXBlockMixin:
         location = self.location.replace(branch=None, version=None)  # Standardize the key in case it isn't already
         return dict(
             student_id=self.runtime.anonymous_student_id,
-            course_id=six.text_type(location.course_key),
-            item_id=six.text_type(location),
+            course_id=str(location.course_key),
+            item_id=str(location),
             item_type=self.scope_ids.block_type,
         )

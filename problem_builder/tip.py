@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -20,7 +19,7 @@
 
 # Imports ###########################################################
 
-import six
+
 from django.utils.html import strip_tags
 from lxml import etree
 from xblock.core import XBlock
@@ -83,9 +82,9 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
             if entry["value"] in self.values:
                 display_name = strip_tags(entry["display_name"])  # Studio studio_view can't handle html in display_name
                 if len(display_name) > 20:
-                    display_name = display_name[:20] + u'…'
+                    display_name = display_name[:20] + '…'
                 values_list.append(display_name)
-        return self._(u"Tip for {list_of_choices}").format(list_of_choices=u", ".join(values_list))
+        return self._("Tip for {list_of_choices}").format(list_of_choices=", ".join(values_list))
 
     def mentoring_view(self, context=None):
         """ Render this XBlock within a mentoring block. """
@@ -112,7 +111,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
         Clean up the edits during studio_view save
         """
         if "values" in data:
-            data["values"] = list(six.text_type(v) for v in set(data["values"]))
+            data["values"] = list(str(v) for v in set(data["values"]))
 
     def validate_field_data(self, validation, data):
         """
@@ -129,7 +128,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
             pass
         else:
             for dummy in set(data.values) - valid_values:
-                add_error(self._(u"A choice selected for this tip does not exist."))
+                add_error(self._("A choice selected for this tip does not exist."))
 
     @classmethod
     def parse_xml(cls, node, runtime, keys, id_generator):
@@ -142,7 +141,7 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
         block.width = node.get('width', '')
         block.height = node.get('height', '')
 
-        block.content = six.text_type(node.text or u"")
+        block.content = str(node.text or "")
         for child in node:
             block.content += etree.tostring(child, encoding='unicode')
 

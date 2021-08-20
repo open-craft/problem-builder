@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Run tests for the Problem Builder XBlock
 
@@ -10,8 +9,6 @@ because the workbench SDK's settings file is not inside any python module.
 import os
 import sys
 import logging
-
-import six
 
 logging_level_overrides = {
     'workbench.views': logging.ERROR,
@@ -35,7 +32,7 @@ if __name__ == "__main__":
     from django.conf import settings
     settings.INSTALLED_APPS += ("problem_builder", )
 
-    for noisy_logger, log_level in six.iteritems(logging_level_overrides):
+    for noisy_logger, log_level in logging_level_overrides.items():
         logging.getLogger(noisy_logger).setLevel(log_level)
 
     from django.core.management import execute_from_command_line

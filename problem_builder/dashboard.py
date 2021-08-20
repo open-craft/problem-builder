@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -31,7 +30,6 @@ import json
 import logging
 import operator as op
 
-import six
 from django.template.defaultfilters import floatformat
 from lazy import lazy
 from xblock.core import XBlock
@@ -111,7 +109,7 @@ class ColorRule:
             # Once it's been parsed, also try evaluating it with a test value:
             self._safe_eval_expression(self._rule_parsed, x=0)
         except (TypeError, SyntaxError) as e:
-            raise ValueError("Invalid Expression: {}".format(e)) from e
+            raise ValueError(f"Invalid Expression: {e}") from e
         except ZeroDivisionError:
             pass  # This may depend on the value of 'x' which we set to zero but don't know yet.
         self.color_str = color_str
@@ -360,14 +358,14 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
         """
         return dict(
             student_id=self.runtime.anonymous_student_id,
-            course_id=six.text_type(usage_key.course_key),
-            item_id=six.text_type(usage_key),
+            course_id=str(usage_key.course_key),
+            item_id=str(usage_key),
             item_type=usage_key.block_type,
         )
 
     def color_for_value(self, value):
         """ Given a string value, get the color rule that matches, if any """
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             if value.isnumeric():
                 value = float(value)
             else:
@@ -389,7 +387,7 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
         Standard view of this XBlock.
         """
         if not self.mentoring_ids:
-            return Fragment(u"<h1>{}</h1><p>{}</p>".format(self.display_name, _("Not configured.")))
+            return Fragment("<h1>{}</h1><p>{}</p>".format(self.display_name, _("Not configured.")))
 
         blocks = []
         for mentoring_block in self.get_mentoring_blocks(self.mentoring_ids):
@@ -495,36 +493,36 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
         try:
             list(self.get_mentoring_blocks(data.mentoring_ids, ignore_errors=False))
         except InvalidUrlName as e:
-            add_error(_(u'Invalid block url_name given: "{bad_url_name}"').format(bad_url_name=six.text_type(e)))
+            add_error(_('Invalid block url_name given: "{bad_url_name}"').format(bad_url_name=str(e)))
 
         if data.exclude_questions:
-            for key, value in six.iteritems(data.exclude_questions):
+            for key, value in data.exclude_questions.items():
                 if not isinstance(value, list):
                     add_error(
-                        _(u"'Questions to be hidden' is malformed: value for key {key} is {value}, "
-                          u"expected list of integers")
+                        _("'Questions to be hidden' is malformed: value for key {key} is {value}, "
+                          "expected list of integers")
                         .format(key=key, value=value)
                     )
 
                 if key not in data.mentoring_ids:
                     add_error(
-                        _(u"'Questions to be hidden' is malformed: mentoring url_name {url_name} "
-                          u"is not added to Dashboard")
+                        _("'Questions to be hidden' is malformed: mentoring url_name {url_name} "
+                          "is not added to Dashboard")
                         .format(url_name=key)
                     )
 
         if data.average_labels:
-            for key, value in six.iteritems(data.average_labels):
-                if not isinstance(value, six.string_types):
+            for key, value in data.average_labels.items():
+                if not isinstance(value, str):
                     add_error(
-                        _(u"'Label for average value' is malformed: value for key {key} is {value}, expected string")
+                        _("'Label for average value' is malformed: value for key {key} is {value}, expected string")
                         .format(key=key, value=value)
                     )
 
                 if key not in data.mentoring_ids:
                     add_error(
-                        _(u"'Label for average value' is malformed: mentoring url_name {url_name} "
-                          u"is not added to Dashboard")
+                        _("'Label for average value' is malformed: mentoring url_name {url_name} "
+                          "is not added to Dashboard")
                         .format(url_name=key)
                     )
 
@@ -532,13 +530,13 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
             try:
                 self.parse_color_rules_str(data.color_rules, ignore_errors=False)
             except ValueError as e:
-                add_error(six.text_type(e))
+                add_error(str(e))
 
         if data.visual_rules:
             try:
                 rules = json.loads(data.visual_rules)
             except ValueError as e:
-                add_error(_(u"Visual rules contains an error: {error}").format(error=e))
+                add_error(_("Visual rules contains an error: {error}").format(error=e))
             else:
                 if not isinstance(rules, dict):
-                    add_error(_(u"Visual rules should be a JSON dictionary/object: {...}"))
+                    add_error(_("Visual rules should be a JSON dictionary/object: {...}"))
