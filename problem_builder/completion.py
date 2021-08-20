@@ -72,11 +72,16 @@ class NullableBoolean(JSONField):
     # We're OK redefining built-in `help`
     def __init__(self, help=None, default=UNSET, scope=Scope.content, display_name=None,
                  **kwargs):  # pylint: disable=redefined-builtin
-        super(NullableBoolean, self).__init__(help, default, scope, display_name,
-                                              values=({'display_name': "True", "value": True},
-                                                      {'display_name': "False", "value": False},
-                                                      {'display_name': "Null", "value": None}),
-                                              **kwargs)
+        super().__init__(
+            help,
+            default,
+            scope,
+            display_name,
+            values=({'display_name': "True", "value": True},
+                    {'display_name': "False", "value": False},
+                    {'display_name': "Null", "value": None}),
+            **kwargs
+        )
 
     def from_json(self, value):
         if value is None:

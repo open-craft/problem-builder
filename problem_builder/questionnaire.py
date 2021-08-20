@@ -172,7 +172,7 @@ class QuestionnaireAbstractBlock(
         return submission
 
     def get_author_edit_view_fragment(self, context):
-        fragment = super(QuestionnaireAbstractBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         return fragment
 
     def author_edit_view(self, context):
@@ -208,7 +208,7 @@ class QuestionnaireAbstractBlock(
         All of this XBlock's fields should be found in "data", even if they aren't being changed
         or aren't even set (i.e. are defaults).
         """
-        super(QuestionnaireAbstractBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
@@ -221,7 +221,7 @@ class QuestionnaireAbstractBlock(
         """
         Validates the state of this XBlock.
         """
-        validation = super(QuestionnaireAbstractBlock, self).validate()
+        validation = super().validate()
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))

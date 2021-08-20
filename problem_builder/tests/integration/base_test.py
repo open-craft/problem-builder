@@ -91,7 +91,7 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
 
     def go_to_view(self, view_name):
         """ Eliminate errors that come from the Workbench banner overlapping elements """
-        element = super(ProblemBuilderBaseTest, self).go_to_view(view_name)
+        element = super().go_to_view(view_name)
         self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
         return element
 
@@ -152,7 +152,7 @@ class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
 
     def go_to_page(self, page_title, **kwargs):
         """ Eliminate errors that come from the Workbench banner overlapping elements """
-        element = super(MentoringBaseTest, self).go_to_page(page_title, **kwargs)
+        element = super().go_to_page(page_title, **kwargs)
         self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
         return element
 

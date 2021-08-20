@@ -146,7 +146,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         Validate this block's field data.
         """
-        super(MCQBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
@@ -230,8 +230,9 @@ class RatingBlock(MCQBlock):
     def human_readable_choices(self):
         display_names = ["1 - {}".format(self.low), "2", "3", "4", "5 - {}".format(self.high)]
         return [
-            {"display_name": dn, "value": val} for val, dn in zip(self.FIXED_VALUES, display_names)
-        ] + super(RatingBlock, self).human_readable_choices
+                   {"display_name": dn, "value": val}
+                   for val, dn in zip(self.FIXED_VALUES, display_names)
+        ] + super().human_readable_choices
 
     def get_author_edit_view_fragment(self, context):
         """
@@ -255,12 +256,12 @@ class RatingBlock(MCQBlock):
         defer to super(). In the workbench or any other platform, we use the name.
         """
         try:
-            return super(RatingBlock, self).url_name
+            return super().url_name
         except AttributeError:
             return self.name
 
     def student_view(self, context):
-        fragment = super(RatingBlock, self).student_view(context)
+        fragment = super().student_view(context)
         rendering_for_studio = None
         if context:  # Workbench does not provide context
             rendering_for_studio = context.get('author_edit_view')

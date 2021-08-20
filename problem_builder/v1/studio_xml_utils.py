@@ -39,7 +39,7 @@ class TransientRuntime(Runtime):
     def __init__(self):
         id_manager = MemoryIdManager()
         field_data = KvsFieldData(DictKeyValueStore())
-        super(TransientRuntime, self).__init__(
+        super().__init__(
             id_reader=id_manager,
             id_generator=id_manager,
             field_data=field_data,

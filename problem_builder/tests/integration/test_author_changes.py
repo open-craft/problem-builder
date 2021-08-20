@@ -12,7 +12,7 @@ class AuthorChangesTest(ProblemBuilderBaseTest):
     Test various scenarios involving author changes made to a block already in use by students
     """
     def setUp(self):
-        super(AuthorChangesTest, self).setUp()
+        super().setUp()
         self.load_scenario("author_changes.xml", {}, load_immediately=False)
         self.refresh_page()
 

@@ -11,7 +11,7 @@ class AnswerDeleteSignalTest(TestCase):
     """ Unit tests for pre_delete signal receiver. """
 
     def setUp(self):
-        super(AnswerDeleteSignalTest, self).setUp()
+        super().setUp()
         self.course_id = 'course-v1:edX+DemoX+Demo_Course'
         self.anonymous_student_id = '123456789876543210'
         Answer.objects.create(

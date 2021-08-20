@@ -111,7 +111,7 @@ class ColorRule:
             # Once it's been parsed, also try evaluating it with a test value:
             self._safe_eval_expression(self._rule_parsed, x=0)
         except (TypeError, SyntaxError) as e:
-            raise ValueError("Invalid Expression: {}".format(e))
+            raise ValueError("Invalid Expression: {}".format(e)) from e
         except ZeroDivisionError:
             pass  # This may depend on the value of 'x' which we set to zero but don't know yet.
         self.color_str = color_str
@@ -312,11 +312,11 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
                 try:
                     mentoring_id = self.scope_ids.usage_id.course_key.make_usage_key('mentoring', url_name)
                     yield self.runtime.get_block(mentoring_id)
-                except Exception:
+                except Exception as err:
                     if ignore_errors:
                         yield None
                     else:
-                        raise InvalidUrlName(url_name)
+                        raise InvalidUrlName(url_name) from err
 
     def parse_color_rules_str(self, color_rules_str, ignore_errors=True):
         """
@@ -338,12 +338,12 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
                         condition = "1"  # Always true
                         value = line
                     rules.append(ColorRule(condition, value))
-                except ValueError:
+                except ValueError as err:
                     if ignore_errors:
                         continue
                     raise ValueError(
                         _("Invalid color rule on line {line_number}").format(line_number=lineno + 1)
-                    )
+                    ) from err
         return rules
 
     @lazy
@@ -487,7 +487,7 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
         """
         Validate this block's field data.
         """
-        super(DashboardBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))

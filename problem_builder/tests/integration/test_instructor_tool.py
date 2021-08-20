@@ -48,7 +48,7 @@ class MockInstructorTaskModelsModule:
 class InstructorToolTest(SeleniumXBlockTest):
 
     def setUp(self):
-        super(InstructorToolTest, self).setUp()
+        super().setUp()
         self.set_scenario_xml("""
         <vertical_demo>
           <pb-instructor-tool url_name="data_export"/>

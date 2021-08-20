@@ -118,7 +118,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     def setUp(self):
-        super(StepTitlesTest, self).setUp()
+        super().setUp()
         # Disable asides for this test since the acid aside seems to cause Database errors
         # When we test multiple scenarios in one test method.
         patcher = patch(

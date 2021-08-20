@@ -55,7 +55,7 @@ class Answer(models.Model):
     def save(self, *args, **kwargs):
         # Force validation of max_length
         self.full_clean()
-        super(Answer, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
 
 class Share(models.Model):

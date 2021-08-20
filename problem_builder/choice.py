@@ -98,7 +98,7 @@ class ChoiceBlock(
         """
         Validate this block's field data.
         """
-        super(ChoiceBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
@@ -112,7 +112,7 @@ class ChoiceBlock(
         """
         Validates the state of this XBlock.
         """
-        validation = super(ChoiceBlock, self).validate()
+        validation = super().validate()
         if self.get_parent().all_choice_values.count(self.value) > 1:
             validation.add(
                 ValidationMessage(ValidationMessage.ERROR, self._(

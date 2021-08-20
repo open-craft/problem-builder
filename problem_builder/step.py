@@ -121,7 +121,7 @@ class MentoringStepBlock(
     @property
     def is_last_step(self):
         parent = self.get_parent()
-        return self.step_number == len(parent.step_ids)
+        return self.step_number == len(parent.step_ids)  # pylint: disable=comparison-with-callable
 
     @property
     def allowed_nested_blocks(self):
@@ -229,7 +229,7 @@ class MentoringStepBlock(
         """
         local_context = dict(context)
         local_context['author_edit_view'] = True
-        fragment = super(MentoringStepBlock, self).author_edit_view(local_context)
+        fragment = super().author_edit_view(local_context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-tinymce-content.css'))

@@ -117,7 +117,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
     cleanup_on_success = True
 
     def setUp(self):
-        super(TestDashboardBlock, self).setUp()
+        super().setUp()
 
         # Apply a whole bunch of patches that are needed in lieu of the LMS/CMS runtime and edx-submissions:
 

@@ -142,7 +142,7 @@ class BaseMentoringBlock(
         defer to super(). In the workbench or any other platform, we use the usage_id.
         """
         try:
-            return super(BaseMentoringBlock, self).url_name
+            return super().url_name
         except AttributeError:
             return six.text_type(self.scope_ids.usage_id)
 
@@ -446,8 +446,7 @@ class MentoringBlock(
 
         # Validate self.step:
         num_steps = len(self.steps)
-        if self.step > num_steps:
-            self.step = num_steps
+        self.step = min(num_steps, self.step)
 
         fragment = Fragment()
         child_content = u""
@@ -709,7 +708,7 @@ class MentoringBlock(
         """
         Validates the state of this XBlock except for individual field values.
         """
-        validation = super(MentoringBlock, self).validate()
+        validation = super().validate()
         a_child_has_issues = False
         message_types_present = set()
         for child_id in self.children:
@@ -739,7 +738,7 @@ class MentoringBlock(
         """
         local_context = context.copy()
         local_context['author_edit_view'] = True
-        fragment = super(MentoringBlock, self).author_edit_view(local_context)
+        fragment = super().author_edit_view(local_context)
         fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             'url_name': self.url_name
         }))
@@ -822,7 +821,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     editable_fields = ('display_name', 'max_attempts', 'extended_feedback', 'weight')
 
     def build_user_state_data(self, context=None):
-        user_state_data = super(MentoringWithExplicitStepsBlock, self).build_user_state_data()
+        user_state_data = super().build_user_state_data()
         user_state_data['active_step'] = self.active_step_safe
         user_state_data['score_summary'] = self.get_score_summary()
         return user_state_data
@@ -1106,7 +1105,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))

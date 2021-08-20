@@ -98,7 +98,7 @@ class SliderBlock(
         defer to super(). In the workbench or any other platform, we use the name.
         """
         try:
-            return super(SliderBlock, self).url_name
+            return super().url_name
         except AttributeError:
             return self.name
 
@@ -188,4 +188,4 @@ class SliderBlock(
         """
         Validate this block's field data.
         """
-        super(SliderBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)

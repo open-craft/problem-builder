@@ -183,7 +183,7 @@ class MRQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         Validate this block's field data.
         """
-        super(MRQBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))

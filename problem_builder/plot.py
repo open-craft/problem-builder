@@ -244,7 +244,7 @@ class PlotBlock(
         return json.dumps(self.average_claims)
 
     def build_user_state_data(self, context=None):
-        user_state_data = super(PlotBlock, self).build_user_state_data()
+        user_state_data = super().build_user_state_data()
         user_state_data['default_claims'] = self.default_claims
         user_state_data['average_claims'] = self.average_claims
         return user_state_data
@@ -381,7 +381,7 @@ class PlotBlock(
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        fragment = super(PlotBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
@@ -455,7 +455,7 @@ class PlotOverlayBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlock
         """
         Validate this block's field data.
         """
-        super(PlotOverlayBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))

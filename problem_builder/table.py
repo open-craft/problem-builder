@@ -115,8 +115,8 @@ class MentoringTableBlock(
                     block_id=self.block_id,
                 )
                 context['student_submissions_key'] = share.submission_uid
-        except Share.DoesNotExist:
-            raise JsonHandlerError(403, _("You are not permitted to view this student's table."))
+        except Share.DoesNotExist as err:
+            raise JsonHandlerError(403, _("You are not permitted to view this student's table.")) from err
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
@@ -162,8 +162,8 @@ class MentoringTableBlock(
             raise JsonHandlerError(400, "No usernames sent.")
         try:
             isinstance(usernames, list)
-        except ValueError:
-            raise JsonHandlerError(400, "Usernames must be a list.")
+        except ValueError as err:
+            raise JsonHandlerError(400, "Usernames must be a list.") from err
         Share.objects.filter(
             shared_with__username=self.current_user_key,
             shared_by__username__in=usernames,
@@ -294,7 +294,7 @@ class MentoringTableBlock(
         """
         Add some HTML to the author view that allows authors to add choices and tips.
         """
-        fragment = super(MentoringTableBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.add_content(loader.render_django_template('templates/html/mentoring-table-add-button.html', {}))
         # Share styles with the questionnaire edit CSS:
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
@@ -343,7 +343,7 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
         """
         Add some HTML to the author view that allows authors to add choices and tips.
         """
-        fragment = super(MentoringTableColumn, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.content = u"<div style=\"font-weight: bold;\">{}</div>".format(self.header) + fragment.content
         fragment.add_content(loader.render_django_template('templates/html/mentoring-column-add-button.html', {}))
         # Share styles with the questionnaire edit CSS:

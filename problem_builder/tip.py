@@ -112,13 +112,13 @@ class TipBlock(StudioEditableXBlockMixin, XBlockWithTranslationServiceMixin, XBl
         Clean up the edits during studio_view save
         """
         if "values" in data:
-            data["values"] = list([six.text_type(v) for v in set(data["values"])])
+            data["values"] = list(six.text_type(v) for v in set(data["values"]))
 
     def validate_field_data(self, validation, data):
         """
         Validate this block's field data.
         """
-        super(TipBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))

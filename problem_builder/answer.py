@@ -60,7 +60,7 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
     Mixin to give an XBlock the ability to read/write data to the Answers DB table.
     """
     def build_user_state_data(self, context=None):
-        result = super(AnswerMixin, self).build_user_state_data()
+        result = super().build_user_state_data()
         result['student_input'] = self.student_input
         return result
 
@@ -131,7 +131,7 @@ class AnswerMixin(XBlockWithPreviewMixin, XBlockWithTranslationServiceMixin, Stu
         """
         Validate this block's field data.
         """
-        super(AnswerMixin, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
@@ -264,7 +264,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         """
         Replicate data changes on the related Django model used for sharing of data accross XBlocks
         """
-        super(AnswerBlock, self).save()
+        super().save()
 
         student_id = self._get_student_id()
         if not student_id:

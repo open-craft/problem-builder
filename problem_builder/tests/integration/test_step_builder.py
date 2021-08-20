@@ -52,7 +52,7 @@ class MultipleSliderBlocksTestMixins():
 class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixins):
 
     def setUp(self):
-        super(StepBuilderTest, self).setUp()
+        super().setUp()
 
         mock_submissions_api = ExtendedMockSubmissionsAPI()
         patches = (

@@ -35,8 +35,8 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
     try:
         course_key = CourseKey.from_string(course_id)
         usage_key = UsageKey.from_string(source_block_id_str)
-    except InvalidKeyError:
-        raise ValueError("Could not find the specified Block ID.")
+    except InvalidKeyError as err:
+        raise ValueError("Could not find the specified Block ID.") from err
 
     src_block = modulestore().get_item(usage_key)
     course_key_str = six.text_type(course_key)
