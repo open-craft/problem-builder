@@ -67,7 +67,7 @@ LOCALE_PATHS = [
 # http://django-statici18n.readthedocs.io/en/latest/settings.html
 
 with open(os.path.join(BASE_DIR, 'problem_builder/translations/config.yaml')) as locale_config_file:
-    locale_config = yaml.load(locale_config_file)
+    locale_config = yaml.safe_load(locale_config_file)
 
     LANGUAGES = [
         (code, code,)

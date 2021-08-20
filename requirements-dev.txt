@@ -1,5 +1,5 @@
 # Internationalization and Localization requirements
--e git://github.com/edx/xblock-sdk.git@0.1.9#egg=xblock-sdk==v0.1.9
+-e xblock-sdk
 Django~=2.2.24
 django-statici18n==2.0.1
 transifex-client==0.14.2

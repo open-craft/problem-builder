@@ -20,7 +20,7 @@
 Test that <span class="pb-clarification"> elements are transformed into LMS-like tooltips.
 """
 
-from cgi import escape
+from html import escape
 
 # Imports ###########################################################
 import ddt
