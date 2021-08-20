@@ -13,7 +13,7 @@
     #   -r test_requirements.in
     #   -r xblock-sdk/requirements/base.txt
     #   -r xblock-sdk/requirements/test.txt
--e file:///home/xitij/projects/edx/src/xblocks/problem-builder/xblock-sdk
+-e xblock-sdk
     # via -r test_requirements.in
 -e git+https://github.com/edx/xblock-utils.git@2.2.0#egg=xblock-utils
     # via -r test_requirements.in
