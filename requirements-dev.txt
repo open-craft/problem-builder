@@ -1,10 +1,10 @@
 # Internationalization and Localization requirements
 -e xblock-sdk
 Django~=2.2.24
-django-statici18n==2.0.1
-transifex-client==0.14.2
-edx-i18n-tools==0.5.3
-pycodestyle==2.7.0
-pylint==2.7.4
+django-statici18n
+transifex-client
+edx-i18n-tools
+pycodestyle
+pylint
 enmerkar-underscore==2.1.0
-mysqlclient==2.0.3
+mysqlclient

@@ -169,7 +169,7 @@ class MentoringStepBlock(
 
     def submit(self, submissions):
         """ Handle a student submission. This is called by the parent XBlock. """
-        log.info(u'Received submissions: {}'.format(submissions))
+        log.info('Received submissions: {}'.format(submissions))
 
         # Submit child blocks (questions) and gather results
         submit_results = []

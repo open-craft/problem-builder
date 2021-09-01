@@ -1,16 +1,12 @@
 -e xblock-sdk
-bok_choy==0.7.1
+bok_choy
 ddt
-django_nose>=1.4.6
--e git+https://github.com/edx/acid-block.git@af1e91745cc2a68e6ef1884242135f7be2f6e9ef#egg=acid-xblock
--e git+https://github.com/edx/django-pyfs.git@3.1.0#egg=django-pyfs==3.1
--e git+https://github.com/edx/xblock-utils.git@2.2.0#egg=xblock-utils
 lazy
 lxml
 mock
-selenium==3.4.1
+selenium<4
 webob
-XBlock>=1.2
+XBlock
 Django~=2.2.10
 pytest
 pylint

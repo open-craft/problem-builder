@@ -19,7 +19,7 @@ logging_level_overrides = {
 
 if __name__ == "__main__":
     # Use the workbench settings file:
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "workbench.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "problem_builder.settings")
     # Configure a range of ports in case the default port of 8081 is in use
     os.environ.setdefault("DJANGO_LIVE_TEST_SERVER_ADDRESS", "localhost:8081-8099")
 
@@ -28,9 +28,9 @@ if __name__ == "__main__":
     except OSError:
         # May already exist.
         pass
-
-    from django.conf import settings
-    settings.INSTALLED_APPS += ("problem_builder", )
+# 
+    # from django.conf import settings
+    # settings.INSTALLED_APPS += ("problem_builder", )
 
     for noisy_logger, log_level in logging_level_overrides.items():
         logging.getLogger(noisy_logger).setLevel(log_level)

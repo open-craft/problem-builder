@@ -59,7 +59,7 @@ class TestUpgrade(unittest.TestCase):
         """
         Convert a v1 mentoring block to v2 and then compare the resulting block to a pre-converted one.
         """
-        with open(f"{xml_path}/{file_name}_old.xml") as xmlfile:
+        with open(f"{xml_path}/{file_name}_old.xml", encoding='utf8') as xmlfile:
             temp_node = etree.parse(xmlfile).getroot()
             old_block = self.create_block_from_node(temp_node)
 
@@ -68,7 +68,7 @@ class TestUpgrade(unittest.TestCase):
         convert_xml_to_v2(xml_root)
         converted_block = self.create_block_from_node(xml_root)
 
-        with open(f"{xml_path}/{file_name}_new.xml") as xmlfile:
+        with open(f"{xml_path}/{file_name}_new.xml", encoding='utf8') as xmlfile:
             temp_node = etree.parse(xmlfile).getroot()
             new_block = self.create_block_from_node(temp_node)
 

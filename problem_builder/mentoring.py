@@ -602,7 +602,7 @@ class MentoringBlock(
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
-        log.info(u'Received submissions: {}'.format(submissions))
+        log.info('Received submissions: {}'.format(submissions))
         # server-side check that the user is allowed to submit:
         if self.max_attempts_reached:
             raise JsonHandlerError(403, "Maximum number of attempts already reached.")
@@ -950,7 +950,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             # Review tips are only shown if the student is allowed to try again.
             return []
         review_tips = []
-        status_cache = dict()
+        status_cache = {}
         steps = self.steps
         for step in steps:
             status_cache.update(dict(step.student_results))

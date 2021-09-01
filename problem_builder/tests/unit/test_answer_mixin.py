@@ -2,6 +2,7 @@
 Unit tests for AnswerMixin.
 """
 import json
+import pytest
 import unittest
 from collections import namedtuple
 from datetime import datetime
@@ -12,6 +13,7 @@ from problem_builder.answer import AnswerMixin
 from problem_builder.models import Answer
 
 
+@pytest.mark.django_db
 class TestAnswerMixin(unittest.TestCase):
     """ Unit tests for AnswerMixin. """
 

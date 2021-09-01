@@ -243,7 +243,7 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
             item_key['item_id'] = self.name
             sub_api.create_submission(item_key, self.student_input)
 
-        log.info(u'Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
+        log.info('Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
         return self.get_results()
 
     @property

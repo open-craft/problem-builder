@@ -35,11 +35,14 @@ jobs:
             mkdir -p /tmp/coverage/$CIRCLE_SHA1
             virtualenv venv
             source venv/bin/activate
+            mkdir var
+            pip -q install -r requirements.txt
+            pip -q install -r requirements-dev.txt
             pip -q install -r test_requirements.txt
             pip install -e .
             <<parameters.test_command>>
-            if [ -e .coverage.* ]; then
-                cp .coverage.* /tmp/coverage/$CIRCLE_SHA1/.
+            if [ -e .coverage* ]; then
+                cp .coverage* /tmp/coverage/$CIRCLE_SHA1/.
             fi
       - persist_to_workspace:
           root: /tmp
