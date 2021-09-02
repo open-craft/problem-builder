@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  browser-tools: circleci/browser-tools@1.2.1
 jobs:
   build:
     docker:
@@ -12,26 +14,26 @@ jobs:
             type: string
         docker_image:
             type: string
+        parallel:
+            default: 1
+            type: integer
+    parallelism: <<parameters.parallel>>
     environment:
       MOZ_HEADLESS: 1
       WORKBENCH_DATABASES: '{"default": {"ENGINE": "django.db.backends.mysql", "NAME": "db", "USER": "root", "PASSWORD": "rootpw", "HOST": "127.0.0.1", "OPTIONS": {"charset": "utf8mb4"}}}'
     steps:
       - checkout
-      - run:
-          name: Update system
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y libgtk3.0-cil-dev libasound2 libgtk2.0-0 default-libmysqlclient-dev libmysqlclient-dev firefox firefox-geckodriver
+      - browser-tools/install-firefox
+      - browser-tools/install-geckodriver
       - run:
           name: Sync submodules
           command: git submodule sync
       - run:
           name: Update submodules
-          command: git submodule update --init
+          command: git submodule update --init      
       - run:
           name: Run tests
           command: |
-            export PATH="$(pwd)/firefox/:$PATH"
             mkdir -p /tmp/coverage/$CIRCLE_SHA1
             virtualenv venv
             source venv/bin/activate
@@ -136,7 +138,11 @@ workflows:
               only: /.*/
       - build:
           name: py38-integration
-          test_command: make test.integration
+          parallel: 4
+          test_command: |
+            set -e
+            TEST_FILES=$(circleci tests glob "problem_builder/tests/integration/test_*.py" | circleci tests split --split-by=timings)
+            pytest --verbose  $TEST_FILES
           docker_image: cimg/python:3.8-browsers
           filters:
             tags:
