@@ -32,7 +32,7 @@ jobs:
           name: Run tests
           command: |
             export PATH="$(pwd)/firefox/:$PATH"
-            mkdir -p /tmp/coverage/$CIRCLE_SHA1
+            mkdir -p /tmp/workspace/coverage/$CIRCLE_SHA1
             virtualenv venv
             source venv/bin/activate
             mkdir var
@@ -42,7 +42,7 @@ jobs:
             pip install -e .
             <<parameters.test_command>>
             if [ -e .coverage* ]; then
-                cp .coverage* /tmp/coverage/$CIRCLE_SHA1/.
+                cp .coverage* /tmp/workspace/coverage/$CIRCLE_SHA1/.
             fi
       - persist_to_workspace:
           root: /tmp
