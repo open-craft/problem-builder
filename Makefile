@@ -48,10 +48,10 @@ quality: ## run quality checkers on the codebase
 	pylint problem_builder
 
 test.unit: ## run python unit tests with coverage
-	pytest problem_builder/v1/tests
-	pytest problem_builder/tests/unit
+	coverage run run_tests.py problem_builder/v1/tests
+	coverage run run_tests.py problem_builder/tests/unit
 
 test.integration: ## run python selenium tests with coverage
-	pytest problem_builder/tests/integration
+	coverage run run_tests.py problem_builder/tests/integration
 
 test: quality test.unit test.integration ## Run all tests
