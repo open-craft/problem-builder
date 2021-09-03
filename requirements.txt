@@ -1,5 +1,4 @@
 XBlock>=1.2
-ddt
 unicodecsv
 edx-opaque-keys>=0.4
 xblock-utils

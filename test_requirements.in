@@ -7,7 +7,7 @@ mock
 selenium<4
 webob
 XBlock
-Django~=2.2.10
+Django<3
 pytest
 pylint
 pycodestyle
