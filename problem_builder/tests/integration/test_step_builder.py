@@ -542,6 +542,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
     def review_mcq(self, step_builder, choice_index, expected_feedback, correct):
         correctness = 'correct' if correct else 'incorrect'
         mcq_link = step_builder.find_elements_by_css_selector(f'.{correctness}-list li a')[0]
+        time.sleep(1)  # give some time for changes
         mcq_link.click()
         mcq = step_builder.find_element_by_css_selector(".xblock-v1[data-name='mcq_1_1']")
         self.assert_choice_feedback(mcq, choice_index, expected_feedback, correct)
