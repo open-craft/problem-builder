@@ -1420,7 +1420,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             tolerance = 2
             return abs(scroll_top - step_builder_offset) <= tolerance
 
-        wait = WebDriverWait(self.browser, 5)
+        wait = WebDriverWait(self.browser, 10)
         wait.until(is_scrolled_to_top)
 
     def scroll_down(self):
