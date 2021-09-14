@@ -189,6 +189,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
 
         start_button.click()
+        time.sleep(1)
 
         self.wait_until_hidden(start_button)
         self.wait_until_hidden(result_block)
