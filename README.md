@@ -169,6 +169,54 @@ make test.unit
 make test.integration
 ```
 
+Debugging CI Failures
+---------------------
+
+Sometimes it can be hard to figure out why some tests fail in the CI.
+When Circle CI browser based tests fail for unknown reasons, it can be helpful to run them with VNC enabled
+so that you can observe the browser (or even interact with it) while the tests are running.
+
+To enable VNC on Circle CI, first re-run the failing test with SSH enabled: in the Circle CI UI,
+click the "Rerun" dropdown and select "Rerun Job with SSH". The job will be re-run with SSH enabled.
+You can find the IP/port combination that lets you log into the VM with your github SSH key under the "Enable SSH"
+step in the pipeline UI.
+
+SSH into the VM, forwarding the VNC port:
+
+```bash
+ssh -p <port> <ip-address> -L 5900:localhost:5900
+```
+
+Install the required packages:
+
+```bash
+sudo apt-get install -yq xvfb x11vnc fluxbox
+```
+
+Start up xvfb and the VNC server:
+
+```bash
+rm -f /tmp/.X$(echo ${DISPLAY:-:0} | cut -b2-)-lock
+Xvfb ${DISPLAY:-:0} -ac -listen tcp -screen 0 1440x900x24 &
+/usr/bin/fluxbox -display ${DISPLAY:-:0} -screen 0 &
+x11vnc -display ${DISPLAY:-:0} -forever -noxdamage -rfbport 5900 -quiet -passwd pass &
+```
+
+You should now be able to connect to the server via VNC. On macOS, you can use the built-in VNC viewer
+that you can launch by opening Finder and choosing the "Go -> Connect to Server.." from the menu.
+Type in `localhost:5900` and enter `pass` when asked for the password.
+
+You are all set up to run integration tests with screen sharing enabled.
+For some reason Firefox does not want to start in foreground mode when run as non-root,
+so you'll have to run the tests as root.
+
+```bash
+unset MOZ_HEADLESS
+cd /home/circleci/project
+source venv/bin/activate
+make test
+```
+
 Working with Translations
 -------------------------
 
