@@ -12,7 +12,7 @@ from problem_builder.instructor_tool import PAGE_SIZE, InstructorToolBlock
 class MockTasksModule:
     """Mock for the tasks module, which can only be meaningfully import in the LMS."""
 
-    def __init__(self, successful=True, display_data=[]):
+    def __init__(self, successful=True, display_data=[], delay=0):
         self.export_data = Mock()
         async_result = self.export_data.async_result
         async_result.ready.side_effect = [False, False, True, True]
@@ -28,8 +28,13 @@ class MockTasksModule:
             )
         else:
             async_result.result = 'error'
-        self.export_data.AsyncResult.return_value = async_result
-        self.export_data.delay.return_value = async_result
+
+        def produce_result(*args):
+            time.sleep(delay)
+            return async_result
+
+        self.export_data.AsyncResult.side_effect = produce_result
+        self.export_data.delay.side_effect = produce_result
 
 
 class MockInstructorTaskModelsModule:
@@ -113,6 +118,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
         delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
 
+        self.wait_until_clickable(start_button)
         start_button.click()
 
         self.wait_until_visible(result_block)
@@ -135,7 +141,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         'lms.djangoapps.instructor_task': True,
         'lms.djangoapps.instructor_task.models': MockInstructorTaskModelsModule(),
     })
-    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True))
+    @patch.object(InstructorToolBlock, 'user_is_staff', Mock(return_value=True, delay=1))
     def test_data_export_success(self):
         instructor_tool = self.go_to_view()
         start_button = instructor_tool.find_element_by_class_name('data-export-start')
@@ -146,6 +152,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
         delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
 
+        self.wait_until_clickable(start_button)
         start_button.click()
 
         self.wait_until_hidden(start_button)
@@ -171,7 +178,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         self.assertEqual('', status_area.text)
 
     @patch.dict('sys.modules', {
-        'problem_builder.tasks': MockTasksModule(successful=False),
+        'problem_builder.tasks': MockTasksModule(successful=False, delay=1),
         'lms': True,
         'lms.djangoapps': True,
         'lms.djangoapps.instructor_task': True,
@@ -188,8 +195,8 @@ class InstructorToolTest(SeleniumXBlockTest):
         cancel_button = instructor_tool.find_element_by_class_name('data-export-cancel')
         delete_button = instructor_tool.find_element_by_class_name('data-export-delete')
 
+        self.wait_until_clickable(start_button)
         start_button.click()
-        time.sleep(5)
 
         self.wait_until_hidden(start_button)
         self.wait_until_hidden(result_block)
@@ -224,6 +231,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         current_page_info = instructor_tool.find_element_by_id('current-page')
         total_pages_info = instructor_tool.find_element_by_id('total-pages')
 
+        self.wait_until_clickable(start_button)
         start_button.click()
 
         self.wait_until_visible(result_block)
@@ -260,6 +268,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         current_page_info = instructor_tool.find_element_by_id('current-page')
         total_pages_info = instructor_tool.find_element_by_id('total-pages')
 
+        self.wait_until_clickable(start_button)
         start_button.click()
 
         self.wait_until_visible(result_block)
@@ -302,6 +311,7 @@ class InstructorToolTest(SeleniumXBlockTest):
         current_page_info = instructor_tool.find_element_by_id('current-page')
         total_pages_info = instructor_tool.find_element_by_id('total-pages')
 
+        self.wait_until_clickable(start_button)
         start_button.click()
 
         self.wait_until_visible(result_block)
