@@ -34,7 +34,6 @@ jobs:
       - run:
           name: Run tests
           command: |
-            mkdir -p /tmp/coverage/$CIRCLE_SHA1
             virtualenv venv
             source venv/bin/activate
             mkdir var
@@ -43,36 +42,6 @@ jobs:
             pip -q install -r test_requirements.txt
             pip install -e .
             <<parameters.test_command>>
-            if [ -e .coverage* ]; then
-                cp .coverage* /tmp/coverage/$CIRCLE_SHA1/.
-            fi
-      - persist_to_workspace:
-          root: /tmp
-          paths:
-              - coverage
-
-  coverage:
-    docker:
-      - image: <<parameters.docker_image>>
-    parameters:
-        docker_image:
-            type: string
-    steps:
-      - checkout
-      - run:
-          name: Update system and install deps
-          command: |
-            sudo apt-get update
-            virtualenv venv
-            source venv/bin/activate
-            pip install 'coverage==5.0.3'
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          command: |
-              source venv/bin/activate
-              coverage combine /tmp/workspace/coverage/$CIRCLE_SHA1/
-              coverage report
 
   deploy:
     docker:
@@ -147,22 +116,14 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - coverage:
-          name: py38-coverage
-          docker_image: cimg/python:3.8
-          filters:
-            tags:
-              only: /.*/
-          requires:
-              - py38-quality
-              - py38-unit
-              - py38-integration
       - deploy:
           name: py38-deploy-bdist_wheel
           docker_image: cimg/python:3.8
           dist_type: bdist_wheel
           requires:
-            - py38-coverage
+            - py38-quality
+            - py38-unit
+            - py38-integration
           filters:
             tags:
               only: /v[0-9]+(\.[0-9]+)*/
