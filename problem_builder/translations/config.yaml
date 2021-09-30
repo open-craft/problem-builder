@@ -3,15 +3,15 @@
 locales:
     - en  # English - Source Language
     - ar  # Arabic
-    - es_419  # Spanish
-    - pt_BR  # Portuguese
-    - zh_CN  # Chinese
+    - es-419  # Spanish
+    - pt-br  # Portuguese
+    - zh-cn  # Chinese
     - fr  # French
-    - fr_CA  # French (Canada)
-    - de_DE  # German
-    - ja_JP  # Japanese
-    - pl_PL # Polish
-    - ko_KR #Korean
+    - fr-ca  # French (Canada)
+    - de-de  # German
+    - ja-jp  # Japanese
+    - pl-pl # Polish
+    - ko-kr #Korean
     # Add languages here as needed
 
 # The locales used for fake-accented English, for testing.
