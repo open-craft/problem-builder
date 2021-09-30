@@ -21,8 +21,8 @@
 
 import logging
 
+from web_fragments.fragment import Fragment
 from xblock.fields import List, Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 

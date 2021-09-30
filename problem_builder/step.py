@@ -20,9 +20,9 @@
 import logging
 
 from lazy.lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import List, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (NestedXBlockSpec,
                                          StudioContainerWithNestedXBlocksMixin,
@@ -264,7 +264,7 @@ class MentoringStepBlock(
                     child_contents.append(f"<p>{child.display_name}</p>")
                 else:
                     child_fragment = self._render_child_fragment(child, context, view)
-                    fragment.add_frag_resources(child_fragment)
+                    fragment.add_fragment_resources(child_fragment)
                     child_contents.append(child_fragment.content)
 
         fragment.add_content(loader.render_django_template('templates/html/step.html', {

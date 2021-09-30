@@ -24,9 +24,9 @@ import uuid
 import pkg_resources
 from django import utils
 from lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Integer, Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (StudioEditableXBlockMixin,

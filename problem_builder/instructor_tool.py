@@ -24,10 +24,10 @@ All processing is done offline.
 import json
 
 from django.core.paginator import Paginator
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Dict, List, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 
 from .mixins import TranslationContentMixin, XBlockWithTranslationServiceMixin

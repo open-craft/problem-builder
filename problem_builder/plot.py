@@ -21,9 +21,9 @@ import json
 import logging
 
 from lazy.lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
@@ -334,7 +334,7 @@ class PlotBlock(
                 ))
             for overlay in self.overlays:
                 overlay_fragment = self._render_child_fragment(overlay, context, view='mentoring_view')
-                fragment.add_frag_resources(overlay_fragment)
+                fragment.add_fragment_resources(overlay_fragment)
                 fragment.add_content(overlay_fragment.content)
         return fragment
 

@@ -23,10 +23,10 @@ import errno
 import json
 
 from django.contrib.auth.models import User
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Boolean, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (StudioContainerXBlockMixin,
                                          StudioEditableXBlockMixin,
@@ -235,7 +235,7 @@ class MentoringTableBlock(
             child = self.runtime.get_block(child_id)
             # Child should be an instance of MentoringTableColumn
             child_frag = child.render('mentoring_view', context)
-            fragment.add_frag_resources(child_frag)
+            fragment.add_fragment_resources(child_frag)
 
         context['allow_sharing'] = self.allow_sharing
         context['allow_download'] = self.allow_download
@@ -327,7 +327,7 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
             else:
                 child_frag = child.render('mentoring_view', context)
             fragment.add_content(child_frag.content)
-            fragment.add_frag_resources(child_frag)
+            fragment.add_fragment_resources(child_frag)
         return fragment
 
     def author_preview_view(self, context):

@@ -32,9 +32,9 @@ import operator as op
 
 from django.template.defaultfilters import floatformat
 from lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Boolean, Dict, List, Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader

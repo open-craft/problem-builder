@@ -19,9 +19,9 @@
 
 import logging
 
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (NestedXBlockSpec,
                                          StudioContainerWithNestedXBlocksMixin,
@@ -301,7 +301,7 @@ class ReviewStepBlock(
                     # that Studio doesn't wrap with with unwanted controls and the XBlock SDK
                     # workbench doesn't add the acid-aside to the fragment.
                     child_fragment = self._render_child_fragment(child, context, view="embedded_student_view")
-                    fragment.add_frag_resources(child_fragment)
+                    fragment.add_fragment_resources(child_fragment)
                     fragment.add_content(child_fragment.content)
 
         return fragment

@@ -26,10 +26,10 @@ from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain
 
 from lazy.lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError, NoSuchViewError
 from xblock.fields import Boolean, Float, Integer, List, Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
@@ -471,7 +471,7 @@ class MentoringBlock(
                         child_fragment = Fragment(child.data)
                     else:
                         child_fragment = child.render('student_view', context)
-                fragment.add_frag_resources(child_fragment)
+                fragment.add_fragment_resources(child_fragment)
                 child_content += child_fragment.content
 
         fragment.add_content(loader.render_django_template('templates/html/mentoring.html', {
@@ -982,7 +982,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
                 child_content = "<p>[{}]</p>".format(self._("Error: Unable to load child component."))
             else:
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
-                fragment.add_frag_resources(child_fragment)
+                fragment.add_fragment_resources(child_fragment)
                 child_content = child_fragment.content
             children_contents.append(child_content)
 

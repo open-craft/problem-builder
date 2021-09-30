@@ -22,9 +22,9 @@
 import logging
 import uuid
 
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Float, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 

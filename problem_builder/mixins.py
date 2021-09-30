@@ -4,9 +4,9 @@ import pkg_resources
 import webob
 from django import utils
 from lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import UNIQUE_ID, Boolean, Float, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 
