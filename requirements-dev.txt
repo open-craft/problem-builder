@@ -1,6 +1,6 @@
 # Internationalization and Localization requirements
 -e xblock-sdk
-Django<3
+Django<4
 django-statici18n
 transifex-client
 edx-i18n-tools

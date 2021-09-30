@@ -7,11 +7,10 @@ mock
 selenium<4
 webob
 XBlock
-Django<3
+Django<4
 pytest
 pylint
 pycodestyle
 django-mysql
 mysqlclient
--r xblock-sdk/requirements/base.txt
 -r xblock-sdk/requirements/test.txt
