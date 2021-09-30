@@ -90,7 +90,7 @@ class RemoveTitle(Change):
         old_display_name = p.get("display_name")
         if old_display_name and old_display_name != title:
             warnings.warn(
-                'Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title)
+                f'Replacing display_name="{p.attrib["display_name"]}" with <title> value "{title}"'
             )
         p.attrib["display_name"] = title
         p.remove(self.node)

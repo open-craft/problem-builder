@@ -121,9 +121,7 @@ class ConditionalMessageBlock(
 
     def student_view(self, _context=None):
         """ Render this message. """
-        html = '<div class="review-conditional-message">{content}</div>'.format(
-            content=self.content
-        )
+        html = f'<div class="review-conditional-message">{self.content}</div>'
         return Fragment(html)
 
     embedded_student_view = student_view
@@ -292,7 +290,7 @@ class ReviewStepBlock(
             for child_id in self.children:
                 child = self.runtime.get_block(child_id)
                 if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                    fragment.add_content("<p>[{}]</p>".format("Error: Unable to load child component."))
+                    fragment.add_content('<p>[Error: Unable to load child component.]</p>')
                 else:
                     if hasattr(child, 'is_applicable'):
                         if not child.is_applicable(context):

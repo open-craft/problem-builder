@@ -153,7 +153,7 @@ if __name__ == '__main__':
         if sys.argv[2] == "--version=v0":
             from_version = "v0"
         else:
-            sys.exit("invalid second argument: {}".format(' '.join(sys.argv[2:])))
+            sys.exit(f"invalid second argument: {' '.join(sys.argv[2:])}")
 
     store = modulestore()
     course = store.get_course(course_id)
@@ -187,9 +187,10 @@ if __name__ == '__main__':
         block = course.runtime.get_block(block_id)
         if url_name in url_names:
             print(f" ➔ Mentoring block {url_name} appears in the course in multiple places!")
-            print('   (display_name: "{}", parent {}: "{}")'.format(
-                block.display_name, block.parent, block.get_parent().display_name
-            ))
+            print(
+                f'   (display_name: "{block.display_name}", parent {block.parent}:'
+                f' "{block.get_parent().display_name)}")'
+            )
             print('   To fix, you must delete the extra occurences.')
             stop = True
             continue

@@ -456,7 +456,7 @@ class MentoringBlock(
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content += "<p>[{}]</p>".format(self._("Error: Unable to load child component."))
+                child_content += f'<p>[{self._("Error: Unable to load child component.")}]</p>'
             elif not isinstance(child, MentoringMessageBlock):
                 try:
                     if mcq_hide_previous_answer and isinstance(child, QuestionnaireAbstractBlock):
@@ -602,7 +602,8 @@ class MentoringBlock(
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
-        log.info('Received submissions: {}'.format(submissions))
+        log_message = f'Received submissions: {submissions}'
+        log.info(log_message)
         # server-side check that the user is allowed to submit:
         if self.max_attempts_reached:
             raise JsonHandlerError(403, "Maximum number of attempts already reached.")
@@ -979,7 +980,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content = "<p>[{}]</p>".format(self._("Error: Unable to load child component."))
+                child_content = f'<p>[{self._("Error: Unable to load child component.")}]</p>'
             else:
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
                 fragment.add_fragment_resources(child_fragment)

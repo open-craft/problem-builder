@@ -178,7 +178,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
     @staticmethod
     def question_text(number):
         if number:
-            return "Question %s" % number
+            return f"Question {number}"
         else:
             return "Question"
 

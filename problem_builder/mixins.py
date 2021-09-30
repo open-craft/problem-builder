@@ -122,7 +122,7 @@ class MessageParentMixin:
         if or_default:
             # Return the default value since no custom message is set.
             # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
-            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
+            return f'<p>{MentoringMessageBlock.MESSAGE_TYPES[message_type]["default"]}</p>'
 
 
 class QuestionMixin(EnumerableChildMixin):
@@ -176,7 +176,7 @@ class NoSettingsMixin:
 
     def studio_view(self, _context=None):
         """ Studio View """
-        return Fragment('<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
+        return Fragment(f'<p>{self._("This XBlock does not have any settings.")}</p>')
 
 
 class StudentViewUserStateMixin:

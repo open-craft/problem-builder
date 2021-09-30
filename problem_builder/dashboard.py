@@ -387,7 +387,7 @@ class DashboardBlock(StudioEditableXBlockMixin, ExportMixin, XBlock):
         Standard view of this XBlock.
         """
         if not self.mentoring_ids:
-            return Fragment("<h1>{}</h1><p>{}</p>".format(self.display_name, _("Not configured.")))
+            return Fragment(f'<h1>{self.display_name}</h1><p>{_("Not configured.")}</p>')
 
         blocks = []
         for mentoring_block in self.get_mentoring_blocks(self.mentoring_ids):

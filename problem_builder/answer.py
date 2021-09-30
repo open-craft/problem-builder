@@ -186,10 +186,9 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
         return data.decode("utf8")
 
     def get_translation_content(self):
+        lang = utils.translation.to_locale(utils.translation.get_language())
         try:
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=utils.translation.to_locale(utils.translation.get_language()),
-            ))
+            return self.resource_string(f'public/js/translations/{lang}/textjs.js')
         except OSError:
             return self.resource_string('public/js/translations/en/textjs.js')
 
@@ -243,7 +242,8 @@ class AnswerBlock(SubmittingXBlockMixin, AnswerMixin, QuestionMixin, StudioEdita
             item_key['item_id'] = self.name
             sub_api.create_submission(item_key, self.student_input)
 
-        log.info('Answer submitted for`{}`: "{}"'.format(self.name, self.student_input))
+        log_message = f'Answer submitted for`{self.name}`: "{self.student_input}"'
+        log.info(log_message)
         return self.get_results()
 
     @property

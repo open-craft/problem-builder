@@ -93,10 +93,9 @@ class QuestionnaireAbstractBlock(
         return data.decode("utf8")
 
     def get_translation_content(self):
+        lang = utils.translation.to_locale(utils.translation.get_language())
         try:
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=utils.translation.to_locale(utils.translation.get_language()),
-            ))
+            return self.resource_string(f'public/js/translations/{lang}/textjs.js')
         except OSError:
             return self.resource_string('public/js/translations/en/textjs.js')
 

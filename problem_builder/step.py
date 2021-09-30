@@ -169,7 +169,8 @@ class MentoringStepBlock(
 
     def submit(self, submissions):
         """ Handle a student submission. This is called by the parent XBlock. """
-        log.info('Received submissions: {}'.format(submissions))
+        log_message = f'Received submissions: {submissions}'
+        log.info(log_message)
 
         # Submit child blocks (questions) and gather results
         submit_results = []
@@ -252,7 +253,7 @@ class MentoringStepBlock(
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_contents.append("<p>[{}]</p>".format(self._("Error: Unable to load child component.")))
+                child_contents.append(f'<p>[{self._("Error: Unable to load child component.")}]</p>')
             else:
                 if rendering_for_studio and isinstance(child, PlotBlock):
                     # Don't use view to render plot blocks in Studio.

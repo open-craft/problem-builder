@@ -157,13 +157,8 @@ class SwipeBlock(
     def mentoring_view(self, context=None):
         """ Render the swipe image, text & whether it's correct within a mentoring block question. """
         return Fragment(
-            (
-                '<img src="{img_url}" style="max-width: 100%;" />'
-                '<p class="swipe-text">"{text}"</p>'
-            ).format(
-                img_url=self.expand_static_url(self.img_url),
-                text=self.text,
-            )
+            f'<img src="{self.expand_static_url(self.img_url)}" style="max-width: 100%;" />'
+            f'<p class="swipe-text">"{self.text}"</p>'
         )
 
     def student_view(self, context=None):

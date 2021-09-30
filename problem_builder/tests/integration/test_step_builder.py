@@ -218,23 +218,23 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.assertListEqual([msg.text for msg in messages], messages_expected)
 
     def peek_at_review(self, step_builder, controls, expected, extended_feedback=False):
-        self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), step_builder)
+        self.wait_until_text_in(f"You scored {expected['percentage']}% on this assessment.", step_builder)
 
         # Check grade breakdown
         if expected["correct"] == 1:
-            self.assertIn("You answered 1 question correctly.".format(**expected), step_builder.text)
+            self.assertIn("You answered 1 question correctly.", step_builder.text)
         else:
-            self.assertIn("You answered {correct} questions correctly.".format(**expected), step_builder.text)
+            self.assertIn(f"You answered {expected['correct']} questions correctly.", step_builder.text)
 
         if expected["partial"] == 1:
             self.assertIn("You answered 1 question partially correctly.", step_builder.text)
         else:
-            self.assertIn("You answered {partial} questions partially correctly.".format(**expected), step_builder.text)
+            self.assertIn(f"You answered {expected['partial']} questions partially correctly.", step_builder.text)
 
         if expected["incorrect"] == 1:
             self.assertIn("You answered 1 question incorrectly.", step_builder.text)
         else:
-            self.assertIn("You answered {incorrect} questions incorrectly.".format(**expected), step_builder.text)
+            self.assertIn(f"You answered {expected['incorrect']} questions incorrectly.", step_builder.text)
 
         # Check presence of review links
         # - If unlimited attempts: no review links, no explanation
@@ -262,7 +262,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             elif expected["num_attempts"] == expected["max_attempts"]:
                 if extended_feedback:
                     for correctness in ['correct', 'incorrect', 'partial']:
-                        review_items = step_builder.find_elements_by_css_selector('.%s-list li' % correctness)
+                        review_items = step_builder.find_elements_by_css_selector(f'.{correctness}-list li')
                         self.assertEqual(len(review_items), expected[correctness])
                     self.assertTrue(review_links_explained)
                 else:
@@ -271,12 +271,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         # Check if info about number of attempts used is correct
         if expected["max_attempts"] == 1:
-            self.assertIn("You have used {num_attempts} of 1 submission.".format(**expected), step_builder.text)
+            self.assertIn(f"You have used {expected['num_attempts']} of 1 submission.", step_builder.text)
         elif expected["max_attempts"] == 0:
             self.assertNotIn("You have used", step_builder.text)
         else:
             self.assertIn(
-                "You have used {num_attempts} of {max_attempts} submissions.".format(**expected),
+                f"You have used {expected['num_attempts']} of {expected['max_attempts']} submissions.",
                 step_builder.text
             )
 

@@ -328,10 +328,9 @@ class PlotBlock(
         fragment.add_content(loader.render_django_template('templates/html/plot_preview.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/plot-preview.css'))
         if self.overlay_ids:
+            message = _("In addition to the default and average overlays the plot includes the following overlays:")
             fragment.add_content(
-                "<p>{}</p>".format(
-                    _("In addition to the default and average overlays the plot includes the following overlays:")
-                ))
+                f'<p>{message}</p>')
             for overlay in self.overlays:
                 overlay_fragment = self._render_child_fragment(overlay, context, view='mentoring_view')
                 fragment.add_fragment_resources(overlay_fragment)

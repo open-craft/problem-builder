@@ -80,7 +80,8 @@ def export_data(course_id, source_block_id_str, block_types, user_ids, match_str
                 rows += results
 
     # Generate the CSV:
-    filename = "pb-data-export-{}.csv".format(time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp)))
+    timestamp = time.strftime("%Y-%m-%d-%H%M%S", time.gmtime(start_timestamp))
+    filename = f"pb-data-export-{timestamp}.csv"
     report_store = ReportStore.from_config(config_name='GRADES_DOWNLOAD')
     report_store.store_rows(course_key, filename, rows)
 
