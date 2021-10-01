@@ -137,16 +137,16 @@ Running tests
 -------------
 
 The integration tests require a recent Firefox and geckodriver (CI
-uses Firefox 70 and geckodriver 0.26). These can be installed locally for
+uses Firefox 92 and geckodriver 0.26). These can be installed locally for
 testing if required. For example on Linux:
 
 ```bash
 mkdir external
 cd external
-wget https://archive.mozilla.org/pub/firefox/releases/70.0.1/linux-x86_64/en-US/firefox-70.0.1.tar.bz2
-tar jxf firefox-70.0.1.tar.bz2
-wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
-tar xzf geckodriver-v0.26.0-linux64.tar.gz
+wget https://archive.mozilla.org/pub/firefox/releases/92.0.1/linux-x86_64/en-US/firefox-92.0.1.tar.bz2
+tar jxf firefox-92.0.1.tar.bz2
+wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz
+tar xzf geckodriver-v0.30.0-linux64.tar.gz
 export PATH="$(pwd):$(pwd)/firefox/:$PATH"
 
 # now can run integration tests using this firefox version
