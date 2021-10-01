@@ -1,6 +1,6 @@
 import unittest
-
 from unittest.mock import Mock
+
 from xblock.field_data import DictFieldData
 
 from problem_builder.mentoring import MentoringWithExplicitStepsBlock
@@ -50,7 +50,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         # Create top-level Step Builder block.
         step_builder_data = {
-            'display_name': u'My Step Builder',
+            'display_name': 'My Step Builder',
             'show_title': False,
             'weight': 5.0,
             'max_attempts': 3,
@@ -72,17 +72,17 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
         blocks_by_id['child_b'] = child_b
 
         step_data = {
-            'display_name': u'First Step',
+            'display_name': 'First Step',
             'show_title': True,
-            'next_button_label': u'Next Question',
-            'message': u'This is the message.',
+            'next_button_label': 'Next Question',
+            'message': 'This is the message.',
             'children': [child_a.scope_ids.usage_id, child_b.scope_ids.usage_id],
         }
         make_block(MentoringStepBlock, step_data, for_parent=step_builder)
 
         # Create a 'Step Review' block (as child of 'Step Builder').
         review_step_data = {
-            'display_name': u'My Review Step',
+            'display_name': 'My Review Step',
         }
         review_step = make_block(ReviewStepBlock, review_step_data, for_parent=step_builder)
 
@@ -91,14 +91,14 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
 
         # Create 'Conditional Message' block as child of 'Step Review'.
         conditional_message_data = {
-            'content': u'This message is conditional',
-            'score_condition': u'perfect',
-            'num_attempts_condition': u'can_try_again',
+            'content': 'This message is conditional',
+            'score_condition': 'perfect',
+            'num_attempts_condition': 'can_try_again',
         }
         make_block(ConditionalMessageBlock, conditional_message_data, for_parent=review_step)
 
         expected = {
-            'block_id': u'1',
+            'block_id': '1',
             'display_name': step_builder_data['display_name'],
             'title': step_builder_data['display_name'],
             'show_title': step_builder_data['show_title'],
@@ -107,7 +107,7 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
             'extended_feedback': step_builder_data['extended_feedback'],
             'components': [
                 {
-                    'block_id': u'2',
+                    'block_id': '2',
                     'type': 'sb-step',
                     'display_name': step_data['display_name'],
                     'title': step_data['display_name'],
@@ -117,18 +117,18 @@ class TestMentoringBlock(BlockWithChildrenTestMixin, unittest.TestCase):
                     'components': ['child_a_json'],
                 },
                 {
-                    'block_id': u'3',
+                    'block_id': '3',
                     'type': 'sb-review-step',
                     'display_name': review_step_data['display_name'],
                     'title': review_step_data['display_name'],
                     'components': [
                         {
-                            'block_id': u'4',
+                            'block_id': '4',
                             'display_name': "Score Summary",
                             'type': 'sb-review-score',
                         },
                         {
-                            'block_id': u'5',
+                            'block_id': '5',
                             'display_name': "Conditional Message",
                             'type': 'sb-conditional-message',
                             'content': conditional_message_data['content'],

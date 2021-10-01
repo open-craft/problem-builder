@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -21,11 +20,10 @@
 import json
 import logging
 
-import six
 from lazy.lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
@@ -69,7 +67,7 @@ class PlotBlock(
     """
 
     CATEGORY = 'sb-plot'
-    STUDIO_LABEL = _(u"Plot")
+    STUDIO_LABEL = _("Plot")
 
     # Settings
     display_name = String(
@@ -160,7 +158,7 @@ class PlotBlock(
     @lazy
     def course_key_str(self):
         location = _normalize_id(self.location)
-        return six.text_type(location.course_key)
+        return str(location.course_key)
 
     @property
     def default_claims(self):
@@ -244,7 +242,7 @@ class PlotBlock(
         return json.dumps(self.average_claims)
 
     def build_user_state_data(self, context=None):
-        user_state_data = super(PlotBlock, self).build_user_state_data()
+        user_state_data = super().build_user_state_data()
         user_state_data['default_claims'] = self.default_claims
         user_state_data['average_claims'] = self.average_claims
         return user_state_data
@@ -330,13 +328,12 @@ class PlotBlock(
         fragment.add_content(loader.render_django_template('templates/html/plot_preview.html', context))
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/plot-preview.css'))
         if self.overlay_ids:
+            message = _("In addition to the default and average overlays the plot includes the following overlays:")
             fragment.add_content(
-                u"<p>{}</p>".format(
-                    _(u"In addition to the default and average overlays the plot includes the following overlays:")
-                ))
+                f'<p>{message}</p>')
             for overlay in self.overlays:
                 overlay_fragment = self._render_child_fragment(overlay, context, view='mentoring_view')
-                fragment.add_frag_resources(overlay_fragment)
+                fragment.add_fragment_resources(overlay_fragment)
                 fragment.add_content(overlay_fragment.content)
         return fragment
 
@@ -381,7 +378,7 @@ class PlotBlock(
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        fragment = super(PlotBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/problem-builder-edit.css'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/util.js'))
         fragment.add_javascript_url(self.runtime.local_resource_url(self, 'public/js/container_edit.js'))
@@ -396,7 +393,7 @@ class PlotOverlayBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlock
     """
 
     CATEGORY = 'sb-plot-overlay'
-    STUDIO_LABEL = _(u"Plot Overlay")
+    STUDIO_LABEL = _("Plot Overlay")
 
     # Settings
     display_name = String(
@@ -455,20 +452,20 @@ class PlotOverlayBlock(StudioEditableXBlockMixin, XBlockWithPreviewMixin, XBlock
         """
         Validate this block's field data.
         """
-        super(PlotOverlayBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
 
         if not data.plot_label.strip():
-            add_error(_(u"No plot label set. Button for toggling visibility of this overlay will not have a label."))
+            add_error(_("No plot label set. Button for toggling visibility of this overlay will not have a label."))
         if not data.point_color.strip():
-            add_error(_(u"No point color set. This overlay will not work correctly."))
+            add_error(_("No point color set. This overlay will not work correctly."))
 
         # If parent plot is associated with one or more claims, prompt user to add claim data
         parent = self.get_parent()
         if parent.claims.strip() and not data.claim_data.strip():
-            add_error(_(u"No claim data provided. This overlay will not work correctly."))
+            add_error(_("No claim data provided. This overlay will not work correctly."))
 
     def author_preview_view(self, context):
         return self.student_view(context)

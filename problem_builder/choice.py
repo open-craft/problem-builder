@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -22,11 +21,10 @@
 
 import uuid
 
-import six
 from lxml import etree
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.studio_editable import (StudioEditableXBlockMixin,
                                          XBlockWithPreviewMixin)
@@ -70,8 +68,8 @@ class ChoiceBlock(
         try:
             status = self.get_parent().describe_choice_correctness(self.value)
         except Exception:
-            status = self._(u"Out of Context")  # Parent block should implement describe_choice_correctness()
-        return self._(u"Choice ({status})").format(status=status)
+            status = self._("Out of Context")  # Parent block should implement describe_choice_correctness()
+        return self._("Choice ({status})").format(status=status)
 
     def student_view_data(self, context=None):
         """
@@ -80,15 +78,15 @@ class ChoiceBlock(
         """
         # display_name_with_default gives out correctness - not adding it here
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
-            'display_name': self.expand_static_url(self._(u"Choice ({content})").format(content=self.content)),
+            'block_id': str(self.scope_ids.usage_id),
+            'display_name': self.expand_static_url(self._("Choice ({content})").format(content=self.content)),
             'value': self.value,
             'content': self.expand_static_url(self.content),
         }
 
     def mentoring_view(self, context=None):
         """ Render this choice string within a mentoring block question. """
-        return Fragment(u'<span class="choice-text">{}</span>'.format(self.content))
+        return Fragment(f'<span class="choice-text">{self.content}</span>')
 
     def student_view(self, context=None):
         """ Normal view of this XBlock, identical to mentoring_view """
@@ -98,25 +96,25 @@ class ChoiceBlock(
         """
         Validate this block's field data.
         """
-        super(ChoiceBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
 
         if not data.value.strip():
-            add_error(self._(u"No value set. This choice will not work correctly."))
+            add_error(self._("No value set. This choice will not work correctly."))
         if not data.content.strip():
-            add_error(self._(u"No choice text set yet."))
+            add_error(self._("No choice text set yet."))
 
     def validate(self):
         """
         Validates the state of this XBlock.
         """
-        validation = super(ChoiceBlock, self).validate()
+        validation = super().validate()
         if self.get_parent().all_choice_values.count(self.value) > 1:
             validation.add(
                 ValidationMessage(ValidationMessage.ERROR, self._(
-                    u"This choice has a non-unique ID and won't work properly. "
+                    "This choice has a non-unique ID and won't work properly. "
                     "This can happen if you duplicate a choice rather than use the Add Choice button."
                 ))
             )
@@ -145,7 +143,7 @@ class ChoiceBlock(
                 setattr(block, field_name, node.attrib[field_name])
 
         # HTML content:
-        block.content = six.text_type(node.text or u"")
+        block.content = str(node.text or "")
         for child in node:
             block.content += etree.tostring(child, encoding='unicode')
 

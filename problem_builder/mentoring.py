@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -26,12 +25,11 @@ from collections import namedtuple
 from decimal import ROUND_HALF_UP, Decimal
 from itertools import chain
 
-import six
 from lazy.lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError, NoSuchViewError
 from xblock.fields import Boolean, Float, Integer, List, Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
@@ -52,7 +50,8 @@ from problem_builder.table import MentoringTableBlock
 from .message import MentoringMessageBlock, get_message_label
 from .mixins import (ExpandStaticURLMixin, MessageParentMixin, QuestionMixin,
                      StepParentMixin, StudentViewUserStateMixin,
-                     StudentViewUserStateResultsTransformerMixin, TranslationContentMixin,
+                     StudentViewUserStateResultsTransformerMixin,
+                     TranslationContentMixin,
                      XBlockWithTranslationServiceMixin, _normalize_id)
 from .step_review import ReviewStepBlock
 from .utils import I18NService
@@ -142,9 +141,9 @@ class BaseMentoringBlock(
         defer to super(). In the workbench or any other platform, we use the usage_id.
         """
         try:
-            return super(BaseMentoringBlock, self).url_name
+            return super().url_name
         except AttributeError:
-            return six.text_type(self.scope_ids.usage_id)
+            return str(self.scope_ids.usage_id)
 
     @property
     def review_tips_json(self):
@@ -337,14 +336,14 @@ class MentoringBlock(
         try:
             from xmodule.video_module.video_module import VideoBlock
             additional_blocks.append(NestedXBlockSpec(
-                VideoBlock, category='video', label=_(u"Video")
+                VideoBlock, category='video', label=_("Video")
             ))
         except ImportError:
             pass
         try:
             from imagemodal import ImageModal
             additional_blocks.append(NestedXBlockSpec(
-                ImageModal, category='imagemodal', label=_(u"Image Modal")
+                ImageModal, category='imagemodal', label=_("Image Modal")
             ))
         except ImportError:
             pass
@@ -358,7 +357,7 @@ class MentoringBlock(
         try:
             from ooyala_player.ooyala_player import OoyalaPlayerBlock
             additional_blocks.append(NestedXBlockSpec(
-                OoyalaPlayerBlock, category='ooyala-player', label=_(u"Ooyala Player")
+                OoyalaPlayerBlock, category='ooyala-player', label=_("Ooyala Player")
             ))
         except ImportError:
             pass
@@ -439,25 +438,25 @@ class MentoringBlock(
 
     @XBlock.supports("multi_device")  # Mark as mobile-friendly
     def student_view(self, context):
-        from .questionnaire import QuestionnaireAbstractBlock  # Import here to avoid circular dependency
+        from .questionnaire import \
+            QuestionnaireAbstractBlock  # Import here to avoid circular dependency
 
         # Migrate stored data if necessary
         self.migrate_fields()
 
         # Validate self.step:
         num_steps = len(self.steps)
-        if self.step > num_steps:
-            self.step = num_steps
+        self.step = min(num_steps, self.step)
 
         fragment = Fragment()
-        child_content = u""
+        child_content = ""
 
         mcq_hide_previous_answer = self.get_option('pb_mcq_hide_previous_answer')
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content += u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+                child_content += f'<p>[{self._("Error: Unable to load child component.")}]</p>'
             elif not isinstance(child, MentoringMessageBlock):
                 try:
                     if mcq_hide_previous_answer and isinstance(child, QuestionnaireAbstractBlock):
@@ -472,7 +471,7 @@ class MentoringBlock(
                         child_fragment = Fragment(child.data)
                     else:
                         child_fragment = child.render('student_view', context)
-                fragment.add_frag_resources(child_fragment)
+                fragment.add_fragment_resources(child_fragment)
                 child_content += child_fragment.content
 
         fragment.add_content(loader.render_django_template('templates/html/mentoring.html', {
@@ -532,7 +531,7 @@ class MentoringBlock(
         """
         Returns the URL of the next step's page
         """
-        return '/jump_to_id/{}'.format(self.next_step)
+        return f'/jump_to_id/{self.next_step}'
 
     @property
     def hide_feedback(self):
@@ -603,7 +602,8 @@ class MentoringBlock(
 
     @XBlock.json_handler
     def submit(self, submissions, suffix=''):
-        log.info(u'Received submissions: {}'.format(submissions))
+        log_message = f'Received submissions: {submissions}'
+        log.info(log_message)
         # server-side check that the user is allowed to submit:
         if self.max_attempts_reached:
             raise JsonHandlerError(403, "Maximum number of attempts already reached.")
@@ -709,7 +709,7 @@ class MentoringBlock(
         """
         Validates the state of this XBlock except for individual field values.
         """
-        validation = super(MentoringBlock, self).validate()
+        validation = super().validate()
         a_child_has_issues = False
         message_types_present = set()
         for child_id in self.children:
@@ -723,13 +723,13 @@ class MentoringBlock(
                 if msg_type in message_types_present:
                     validation.add(ValidationMessage(
                         ValidationMessage.ERROR,
-                        self._(u"There should only be one '{msg_type}' message component.").format(msg_type=msg_type)
+                        self._("There should only be one '{msg_type}' message component.").format(msg_type=msg_type)
                     ))
                 message_types_present.add(msg_type)
         if a_child_has_issues:
             validation.add(ValidationMessage(
                 ValidationMessage.ERROR,
-                self._(u"A component inside this mentoring block has issues.")
+                self._("A component inside this mentoring block has issues.")
             ))
         return validation
 
@@ -739,7 +739,7 @@ class MentoringBlock(
         """
         local_context = context.copy()
         local_context['author_edit_view'] = True
-        fragment = super(MentoringBlock, self).author_edit_view(local_context)
+        fragment = super().author_edit_view(local_context)
         fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             'url_name': self.url_name
         }))
@@ -771,7 +771,7 @@ class MentoringBlock(
                 components.append(block.student_view_data())
 
         return {
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'max_attempts': self.max_attempts,
             'extended_feedback': self.extended_feedback,
@@ -822,7 +822,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
     editable_fields = ('display_name', 'max_attempts', 'extended_feedback', 'weight')
 
     def build_user_state_data(self, context=None):
-        user_state_data = super(MentoringWithExplicitStepsBlock, self).build_user_state_data()
+        user_state_data = super().build_user_state_data()
         user_state_data['active_step'] = self.active_step_safe
         user_state_data['score_summary'] = self.get_score_summary()
         return user_state_data
@@ -867,7 +867,8 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Get the usage_ids of all of this XBlock's children that are steps.
         """
-        from .step import MentoringStepBlock  # Import here to avoid circular dependency
+        from .step import \
+            MentoringStepBlock  # Import here to avoid circular dependency
         return [
             _normalize_id(child_id) for child_id in self.children if
             child_isinstance(self, child_id, MentoringStepBlock)
@@ -950,7 +951,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
             # Review tips are only shown if the student is allowed to try again.
             return []
         review_tips = []
-        status_cache = dict()
+        status_cache = {}
         steps = self.steps
         for step in steps:
             status_cache.update(dict(step.student_results))
@@ -979,10 +980,10 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
             if child is None:  # child should not be None but it can happen due to bugs or permission issues
-                child_content = u"<p>[{}]</p>".format(self._(u"Error: Unable to load child component."))
+                child_content = f'<p>[{self._("Error: Unable to load child component.")}]</p>'
             else:
                 child_fragment = self._render_child_fragment(child, context, view='mentoring_view')
-                fragment.add_frag_resources(child_fragment)
+                fragment.add_fragment_resources(child_fragment)
                 child_content = child_fragment.content
             children_contents.append(child_content)
 
@@ -1106,7 +1107,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
         """
         Add some HTML to the author view that allows authors to add child blocks.
         """
-        fragment = super(MentoringWithExplicitStepsBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.add_content(loader.render_django_template('templates/html/mentoring_url_name.html', {
             "url_name": self.url_name
         }))
@@ -1128,7 +1129,7 @@ class MentoringWithExplicitStepsBlock(BaseMentoringBlock, StudioContainerWithNes
 
         return {
             'title': self.display_name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name,
             'show_title': self.show_title,
             'weight': self.weight,

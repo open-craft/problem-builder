@@ -1,7 +1,7 @@
 import unittest
+from unittest.mock import Mock
 
 import ddt
-from unittest.mock import Mock
 from xblock.field_data import DictFieldData
 
 from problem_builder.swipe import SwipeBlock
@@ -14,7 +14,7 @@ class TestSwipeBlock(unittest.TestCase):
         Ensure that all expected fields are always returned with
         appropriate values.
         """
-        runtime = Mock(replace_urls=lambda url: '"{}"'.format(url))
+        runtime = Mock(replace_urls=lambda url: f'"{url}"')
         block = SwipeBlock(runtime, DictFieldData({"display_name": "Test"}), Mock())
 
         self.assertEqual(block.student_view_data()['correct'], False)

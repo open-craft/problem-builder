@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -21,7 +20,7 @@
 Test that <span class="pb-clarification"> elements are transformed into LMS-like tooltips.
 """
 
-from cgi import escape
+from html import escape
 
 # Imports ###########################################################
 import ddt
@@ -80,7 +79,7 @@ class ClarificationTest(SeleniumXBlockTest):
     """
 
     def prepare_xml_scenario(self, xml_template):
-        span = '<span class="pb-clarification">{}</span>'.format(self.clarification_text)
+        span = f'<span class="pb-clarification">{self.clarification_text}</span>'
         escaped_span = escape(span, quote=True)
         return xml_template.format(
             clarify=span,

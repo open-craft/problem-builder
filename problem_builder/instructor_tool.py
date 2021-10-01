@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -24,13 +23,13 @@ All processing is done offline.
 """
 import json
 
-import six
 from django.core.paginator import Paginator
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Dict, List, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
+
 from .mixins import TranslationContentMixin, XBlockWithTranslationServiceMixin
 from .utils import I18NService
 
@@ -90,18 +89,20 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
         """ Studio View """
         # Warn the user that this block will only work from the LMS. (Since the CMS uses
         # different celery queues; our task listener is waiting for tasks on the LMS queue)
-        return Fragment(u'<p>Instructor Tool Block</p><p>This block only works from the LMS.</p>')
+        return Fragment('<p>Instructor Tool Block</p><p>This block only works from the LMS.</p>')
 
     def studio_view(self, context=None):
         """ View for editing Instructor Tool block in Studio. """
         # Display friendly message explaining that the block is not editable.
-        return Fragment(u'<p>This is a preconfigured block. It is not editable.</p>')
+        return Fragment('<p>This is a preconfigured block. It is not editable.</p>')
 
     def check_pending_export(self):
         """
         If we're waiting for an export, see if it has finished, and if so, get the result.
         """
-        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
+        from .tasks import \
+            export_data as \
+            export_data_task  # Import here since this is edX LMS specific
         if self.active_export_task_id:
             async_result = export_data_task.AsyncResult(self.active_export_task_id)
             if async_result.ready():
@@ -116,10 +117,10 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
                 del task_result.result['display_data']
                 self.last_export_result = task_result.result
             else:
-                self.last_export_result = {'error': u'Unexpected result: {}'.format(repr(task_result.result))}
+                self.last_export_result = {'error': f'Unexpected result: {repr(task_result.result)}'}
                 self.display_data = None
         else:
-            self.last_export_result = {'error': six.text_type(task_result.result)}
+            self.last_export_result = {'error': str(task_result.result)}
             self.display_data = None
 
     @XBlock.json_handler
@@ -136,7 +137,7 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
     def student_view(self, context=None):
         """ Normal View """
         if not self.user_is_staff():
-            return Fragment(u'<p>This interface can only be used by course staff.</p>')
+            return Fragment('<p>This interface can only be used by course staff.</p>')
         block_choices = {
             self._('Multiple Choice Question'): 'MCQBlock',
             self._('Multiple Response Question'): 'MRQBlock',
@@ -147,7 +148,7 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
         html = loader.render_django_template('templates/html/instructor_tool.html', {
             'block_choices': block_choices,
             'course_blocks_api': COURSE_BLOCKS_API,
-            'root_block_id': six.text_type(getattr(self.runtime, 'course_id', 'course_id')),
+            'root_block_id': str(getattr(self.runtime, 'course_id', 'course_id')),
         }, i18n_service=self.i18n_service)
         fragment = Fragment(html)
         fragment.add_javascript(self.get_translation_content())
@@ -225,7 +226,7 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
             user_ids = []
             for username in usernames.split(','):
                 username = username.strip()
-                user_id = user_service.get_anonymous_user_id(username, six.text_type(self.runtime.course_id))
+                user_id = user_service.get_anonymous_user_id(username, str(self.runtime.course_id))
                 if user_id:
                     user_ids.append(user_id)
             if not user_ids:
@@ -234,16 +235,18 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
         if not root_block_id:
             root_block_id = self.scope_ids.usage_id
             # Block ID not in workbench runtime.
-            root_block_id = six.text_type(getattr(root_block_id, 'block_id', root_block_id))
+            root_block_id = str(getattr(root_block_id, 'block_id', root_block_id))
 
         # Launch task
-        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
+        from .tasks import \
+            export_data as \
+            export_data_task  # Import here since this is edX LMS specific
         self._delete_export()
         # Make sure we nail down our state before sending off an asynchronous task.
         self.save()
         async_result = export_data_task.delay(
             # course_id not available in workbench.
-            six.text_type(getattr(self.runtime, 'course_id', 'course_id')),
+            str(getattr(self.runtime, 'course_id', 'course_id')),
             root_block_id,
             block_types,
             user_ids,
@@ -264,7 +267,9 @@ class InstructorToolBlock(XBlock, I18NService, TranslationContentMixin, XBlockWi
 
     @XBlock.json_handler
     def cancel_export(self, request, suffix=''):
-        from .tasks import export_data as export_data_task  # Import here since this is edX LMS specific
+        from .tasks import \
+            export_data as \
+            export_data_task  # Import here since this is edX LMS specific
         if self.active_export_task_id:
             async_result = export_data_task.AsyncResult(self.active_export_task_id)
             async_result.revoke()

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -25,6 +24,7 @@ import unittest
 
 import ddt
 from lxml import etree
+from sample_xblocks.basic.content import HtmlBlock
 from six import StringIO
 from xblock.core import XBlock
 from xblock.fields import ScopeIds
@@ -33,7 +33,6 @@ from xblock.test.tools import TestRuntime
 
 from problem_builder.mentoring import MentoringBlock
 from problem_builder.v1.xml_changes import convert_xml_to_v2
-from sample_xblocks.basic.content import HtmlBlock
 
 xml_path = os.path.join(os.path.dirname(__file__), "xml")
 
@@ -60,7 +59,7 @@ class TestUpgrade(unittest.TestCase):
         """
         Convert a v1 mentoring block to v2 and then compare the resulting block to a pre-converted one.
         """
-        with open("{}/{}_old.xml".format(xml_path, file_name)) as xmlfile:
+        with open(f"{xml_path}/{file_name}_old.xml", encoding='utf8') as xmlfile:
             temp_node = etree.parse(xmlfile).getroot()
             old_block = self.create_block_from_node(temp_node)
 
@@ -69,7 +68,7 @@ class TestUpgrade(unittest.TestCase):
         convert_xml_to_v2(xml_root)
         converted_block = self.create_block_from_node(xml_root)
 
-        with open("{}/{}_new.xml".format(xml_path, file_name)) as xmlfile:
+        with open(f"{xml_path}/{file_name}_new.xml", encoding='utf8') as xmlfile:
             temp_node = etree.parse(xmlfile).getroot()
             new_block = self.create_block_from_node(temp_node)
 
@@ -77,7 +76,7 @@ class TestUpgrade(unittest.TestCase):
             self.assertBlocksAreEquivalent(converted_block, new_block)
         except AssertionError:
             xml_result = etree.tostring(xml_root, pretty_print=True, encoding="UTF-8")
-            print("Converted XML:\n{}".format(xml_result))
+            print(f"Converted XML:\n{xml_result}")
             raise
 
     def create_block_from_node(self, node):
@@ -132,5 +131,5 @@ class TestUpgrade(unittest.TestCase):
         """
         # We wrap it in <x></x> so that the given HTML string doesn't need a single root element.
         parser = etree.XMLParser(remove_blank_text=True)
-        parsed = etree.parse(StringIO(u"<x>{}</x>".format(html_str)), parser=parser).getroot()
+        parsed = etree.parse(StringIO(f"<x>{html_str}</x>"), parser=parser).getroot()
         return etree.tostring(parsed, pretty_print=False, encoding="UTF-8")[3:-3]

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -20,8 +19,8 @@
 import json
 from functools import wraps
 from textwrap import dedent
-
 from unittest.mock import Mock, patch
+
 from selenium.common.exceptions import NoSuchElementException
 
 from .base_test import ProblemBuilderBaseTest
@@ -117,7 +116,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
     cleanup_on_success = True
 
     def setUp(self):
-        super(TestDashboardBlock, self).setUp()
+        super().setUp()
 
         # Apply a whole bunch of patches that are needed in lieu of the LMS/CMS runtime and edx-submissions:
 
@@ -167,7 +166,7 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         self.assertEqual(screen_reader_text, expected_screen_reader_text)
 
     def _format_sr_text(self, visible_text):
-        return "Score: {value}".format(value=visible_text)
+        return f"Score: {visible_text}"
 
     def _set_mentoring_values(self):
         pbs = self.browser.find_elements_by_css_selector('.mentoring')
@@ -285,9 +284,9 @@ class TestDashboardBlock(ProblemBuilderBaseTest):
         """
         dashboard = self.browser.find_element_by_css_selector('.pb-dashboard')
         header_p = dashboard.find_element_by_id('header-paragraph')
-        self.assertEquals(header_p.text, 'Header')
+        self.assertEqual(header_p.text, 'Header')
         footer_p = dashboard.find_element_by_id('footer-paragraph')
-        self.assertEquals(footer_p.text, 'Footer')
+        self.assertEqual(footer_p.text, 'Footer')
         steps = dashboard.find_elements_by_css_selector('tbody')
         self.assertEqual(len(steps), 3)
 

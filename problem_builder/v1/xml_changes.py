@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -23,7 +22,6 @@ Each class in this file represents a change made to the XML schema between v1 an
 import json
 import warnings
 
-import six
 from lxml import etree
 
 
@@ -87,12 +85,12 @@ class RemoveTitle(Change):
         return node.tag == "title" and node.getparent().tag == "problem-builder"
 
     def apply(self):
-        title = self.node.text.strip() if self.node.text else u''
+        title = self.node.text.strip() if self.node.text else ''
         p = self.node.getparent()
         old_display_name = p.get("display_name")
         if old_display_name and old_display_name != title:
             warnings.warn(
-                u'Replacing display_name="{}" with <title> value "{}"'.format(p.attrib["display_name"], title)
+                f'Replacing display_name="{p.attrib["display_name"]}" with <title> value "{title}"'
             )
         p.attrib["display_name"] = title
         p.remove(self.node)
@@ -107,7 +105,7 @@ class UnwrapHTML(Change):
     def apply(self):
         p = self.node.getparent()
         if self.node.text:
-            p.text = (p.text if p.text else u"") + self.node.text
+            p.text = (p.text if p.text else "") + self.node.text
         index = list(p).index(self.node)
         for child in list(self.node):
             index += 1
@@ -148,7 +146,7 @@ class TableColumnHeader(Change):
         return node.tag == "pb-column" and node.getparent().tag == "pb-table"
 
     def apply(self):
-        header_html = u""
+        header_html = ""
         to_remove = []
         for child in list(self.node):
             if child.tag == "header":
@@ -162,7 +160,7 @@ class TableColumnHeader(Change):
                 if "read_only" in child.attrib:
                     del child.attrib["read_only"]
             elif child.tag != "html":
-                warnings.warn("Invalid <pb-column> element: Unexpected <{}>".format(child.tag))
+                warnings.warn(f"Invalid <pb-column> element: Unexpected <{child.tag}>")
                 return
         for child in to_remove:
             self.node.remove(child)
@@ -204,7 +202,7 @@ class ReadOnlyAnswerToRecap(Change):
         self.node.attrib.pop("read_only")
         for name in self.node.attrib:
             if name != "name":
-                warnings.warn("Invalid attribute found on <answer>: {}".format(name))
+                warnings.warn(f"Invalid attribute found on <answer>: {name}")
 
 
 class QuestionToField(Change):
@@ -270,7 +268,7 @@ class TipChanges(Change):
 
         def add_to_list(list_name, value):
             if list_name in p.attrib:
-                p.attrib[list_name] += ",{}".format(value)
+                p.attrib[list_name] += f",{value}"
             else:
                 p.attrib[list_name] = value
 
@@ -284,7 +282,7 @@ class TipChanges(Change):
             elif self.node.attrib.get("reject"):
                 value = self.node.attrib.pop("reject")
             else:
-                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
+                warnings.warn(f"Invalid <tip> element found: {etree.tostring(self.node)}")
                 return
         else:
             # This is an MCQ or Rating question:
@@ -296,9 +294,9 @@ class TipChanges(Change):
             elif self.node.attrib.get("require"):
                 value = self.node.attrib.pop("require")
                 add_to_list("correct_choices", value)
-                warnings.warn(u"<tip> element in an MCQ/Rating used 'require' rather than 'display'")
+                warnings.warn("<tip> element in an MCQ/Rating used 'require' rather than 'display'")
             else:
-                warnings.warn(u"Invalid <tip> element found: {}".format(etree.tostring(self.node)))
+                warnings.warn(f"Invalid <tip> element found: {etree.tostring(self.node)}")
                 return
         self.node.attrib["values"] = value
         if (self.node.text is None or self.node.text.strip() == "") and not list(self.node):
@@ -320,7 +318,7 @@ class CommaSeparatedListToJson(Change):
     APPLY_TO_ATTRIBUTES = ("values", "correct_choices", "required_choices", "ignored_choices")
 
     def _convert_value(self, raw_value):
-        return json.dumps([six.text_type(val).strip() for val in raw_value.split(',')])
+        return json.dumps([str(val).strip() for val in raw_value.split(',')])
 
     @staticmethod
     def applies_to(node):

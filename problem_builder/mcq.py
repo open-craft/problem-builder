@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -22,9 +21,8 @@
 
 import logging
 
-import six
+from web_fragments.fragment import Fragment
 from xblock.fields import List, Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.resources import ResourceLoader
 
@@ -52,7 +50,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
     An XBlock used to ask multiple-choice questions
     """
     CATEGORY = 'pb-mcq'
-    STUDIO_LABEL = _(u"Multiple Choice Question")
+    STUDIO_LABEL = _("Multiple Choice Question")
     USER_STATE_FIELDS = ['num_attempts', 'student_choice']
 
     message = String(
@@ -84,12 +82,12 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         if choice_value in self.correct_choices:
             if len(self.correct_choices) == 1:
                 # Translators: This is an adjective, describing a choice as correct
-                return self._(u"Correct")
-            return self._(u"Acceptable")
+                return self._("Correct")
+            return self._("Acceptable")
         else:
             if len(self.correct_choices) == 1:
-                return self._(u"Wrong")
-            return self._(u"Not Acceptable")
+                return self._("Wrong")
+            return self._("Not Acceptable")
 
     def calculate_results(self, submission):
         correct = submission in self.correct_choices
@@ -127,10 +125,10 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         return self.get_results({'submission': self.student_choice}) if self.student_choice else {}
 
     def submit(self, submission):
-        log.debug(u'Received MCQ submission: "%s"', submission)
+        log.debug('Received MCQ submission: "%s"', submission)
         result = self.calculate_results(submission['value'])
         self.student_choice = submission['value']
-        log.debug(u'MCQ submission result: %s', result)
+        log.debug('MCQ submission result: %s', result)
         return result
 
     def get_author_edit_view_fragment(self, context):
@@ -138,7 +136,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         The options for the 1-5 values of the Likert scale aren't child blocks but we want to
         show them in the author edit view, for clarity.
         """
-        fragment = Fragment(u"<p>{}</p>".format(self.question))
+        fragment = Fragment(f"<p>{self.question}</p>")
         self.render_children(context, fragment, can_reorder=True, can_add=False)
         return fragment
 
@@ -146,7 +144,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         Validate this block's field data.
         """
-        super(MCQBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
@@ -162,13 +160,13 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
 
         if all_values and not correct:
             add_error(
-                self._(u"You must indicate the correct answer[s], or the student will always get this question wrong.")
+                self._("You must indicate the correct answer[s], or the student will always get this question wrong.")
             )
         if len(correct) < len(data.correct_choices):
-            add_error(self._(u"Duplicate correct choices set"))
+            add_error(self._("Duplicate correct choices set"))
         for val in (correct - all_values):
             add_error(
-                self._(u"A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
+                self._("A choice value listed as correct does not exist: {choice}").format(choice=choice_name(val))
             )
 
     def student_view_data(self, context=None):
@@ -178,7 +176,7 @@ class MCQBlock(SubmittingXBlockMixin, StudentViewUserStateMixin, QuestionnaireAb
         """
         return {
             'id': self.name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'question': self.expand_static_url(self.question),
@@ -197,7 +195,7 @@ class RatingBlock(MCQBlock):
     An XBlock used to rate something on a five-point scale, e.g. Likert Scale
     """
     CATEGORY = 'pb-rating'
-    STUDIO_LABEL = _(u"Rating Question")
+    STUDIO_LABEL = _("Rating Question")
 
     low = String(
         display_name=_("Low"),
@@ -228,10 +226,11 @@ class RatingBlock(MCQBlock):
 
     @property
     def human_readable_choices(self):
-        display_names = ["1 - {}".format(self.low), "2", "3", "4", "5 - {}".format(self.high)]
+        display_names = [f"1 - {self.low}", "2", "3", "4", f"5 - {self.high}"]
         return [
-            {"display_name": dn, "value": val} for val, dn in zip(self.FIXED_VALUES, display_names)
-        ] + super(RatingBlock, self).human_readable_choices
+                   {"display_name": dn, "value": val}
+                   for val, dn in zip(self.FIXED_VALUES, display_names)
+        ] + super().human_readable_choices
 
     def get_author_edit_view_fragment(self, context):
         """
@@ -255,12 +254,12 @@ class RatingBlock(MCQBlock):
         defer to super(). In the workbench or any other platform, we use the name.
         """
         try:
-            return super(RatingBlock, self).url_name
+            return super().url_name
         except AttributeError:
             return self.name
 
     def student_view(self, context):
-        fragment = super(RatingBlock, self).student_view(context)
+        fragment = super().student_view(context)
         rendering_for_studio = None
         if context:  # Workbench does not provide context
             rendering_for_studio = context.get('author_edit_view')

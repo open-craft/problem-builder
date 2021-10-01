@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -23,12 +22,11 @@
 import errno
 import json
 
-import six
 from django.contrib.auth.models import User
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Boolean, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (StudioContainerXBlockMixin,
                                          StudioEditableXBlockMixin,
@@ -65,7 +63,7 @@ class MentoringTableBlock(
     Supports different types of formatting through the `type` parameter.
     """
     CATEGORY = 'pb-table'
-    STUDIO_LABEL = _(u"Answer Recap Table")
+    STUDIO_LABEL = _("Answer Recap Table")
 
     display_name = String(
         display_name=_("Display name"),
@@ -115,8 +113,8 @@ class MentoringTableBlock(
                     block_id=self.block_id,
                 )
                 context['student_submissions_key'] = share.submission_uid
-        except Share.DoesNotExist:
-            raise JsonHandlerError(403, _("You are not permitted to view this student's table."))
+        except Share.DoesNotExist as err:
+            raise JsonHandlerError(403, _("You are not permitted to view this student's table.")) from err
 
         for child_id in self.children:
             child = self.runtime.get_block(child_id)
@@ -162,8 +160,8 @@ class MentoringTableBlock(
             raise JsonHandlerError(400, "No usernames sent.")
         try:
             isinstance(usernames, list)
-        except ValueError:
-            raise JsonHandlerError(400, "Usernames must be a list.")
+        except ValueError as err:
+            raise JsonHandlerError(400, "Usernames must be a list.") from err
         Share.objects.filter(
             shared_with__username=self.current_user_key,
             shared_by__username__in=usernames,
@@ -175,13 +173,13 @@ class MentoringTableBlock(
     @property
     def block_id(self):
         usage_id = self.scope_ids.usage_id
-        if isinstance(usage_id, six.string_types):
+        if isinstance(usage_id, str):
             return usage_id
         try:
-            return six.text_type(usage_id.replace(branch=None, version_guid=None))
+            return str(usage_id.replace(branch=None, version_guid=None))
         except AttributeError:
             pass
-        return six.text_type(usage_id)
+        return str(usage_id)
 
     @XBlock.json_handler
     def share_results(self, data, suffix=''):
@@ -237,7 +235,7 @@ class MentoringTableBlock(
             child = self.runtime.get_block(child_id)
             # Child should be an instance of MentoringTableColumn
             child_frag = child.render('mentoring_view', context)
-            fragment.add_frag_resources(child_frag)
+            fragment.add_fragment_resources(child_frag)
 
         context['allow_sharing'] = self.allow_sharing
         context['allow_download'] = self.allow_download
@@ -256,11 +254,11 @@ class MentoringTableBlock(
 
         if self.type:
             # Load an optional background image:
-            context['bg_image_url'] = self.runtime.local_resource_url(self, 'public/img/{}-bg.png'.format(self.type))
+            context['bg_image_url'] = self.runtime.local_resource_url(self, f'public/img/{self.type}-bg.png')
             # Load an optional description for the background image, for accessibility
             try:
-                context['bg_image_description'] = loader.load_unicode('static/text/table-{}.txt'.format(self.type))
-            except IOError as e:
+                context['bg_image_description'] = loader.load_unicode(f'static/text/table-{self.type}.txt')
+            except OSError as e:
                 if e.errno == errno.ENOENT:
                     pass
                 else:
@@ -294,7 +292,7 @@ class MentoringTableBlock(
         """
         Add some HTML to the author view that allows authors to add choices and tips.
         """
-        fragment = super(MentoringTableBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         fragment.add_content(loader.render_django_template('templates/html/mentoring-table-add-button.html', {}))
         # Share styles with the questionnaire edit CSS:
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))
@@ -329,7 +327,7 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
             else:
                 child_frag = child.render('mentoring_view', context)
             fragment.add_content(child_frag.content)
-            fragment.add_frag_resources(child_frag)
+            fragment.add_fragment_resources(child_frag)
         return fragment
 
     def author_preview_view(self, context):
@@ -343,8 +341,8 @@ class MentoringTableColumn(StudioEditableXBlockMixin, StudioContainerXBlockMixin
         """
         Add some HTML to the author view that allows authors to add choices and tips.
         """
-        fragment = super(MentoringTableColumn, self).author_edit_view(context)
-        fragment.content = u"<div style=\"font-weight: bold;\">{}</div>".format(self.header) + fragment.content
+        fragment = super().author_edit_view(context)
+        fragment.content = f"<div style=\"font-weight: bold;\">{self.header}</div>" + fragment.content
         fragment.add_content(loader.render_django_template('templates/html/mentoring-column-add-button.html', {}))
         # Share styles with the questionnaire edit CSS:
         fragment.add_css_url(self.runtime.local_resource_url(self, 'public/css/questionnaire-edit.css'))

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -22,10 +21,9 @@
 
 import logging
 
-import six
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Boolean, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.resources import ResourceLoader
 from xblockutils.studio_editable import (StudioEditableXBlockMixin,
                                          XBlockWithPreviewMixin)
@@ -53,7 +51,7 @@ class SwipeBlock(
     An XBlock used to ask binary-choice questions with a swiping interface
     """
     CATEGORY = 'pb-swipe'
-    STUDIO_LABEL = _(u"Swipeable Binary Choice Question")
+    STUDIO_LABEL = _("Swipeable Binary Choice Question")
     USER_STATE_FIELDS = ['student_choice']
 
     text = String(
@@ -113,11 +111,11 @@ class SwipeBlock(
         return self.get_results({'submission': self.student_choice}) if self.student_choice else {}
 
     def submit(self, submission):
-        log.debug(u'Received Swipe submission: "%s"', submission)
+        log.debug('Received Swipe submission: "%s"', submission)
         # We expect to receive a boolean indicating the swipe the student made (left -> false, right -> true)
         self.student_choice = submission['value']
         result = self.calculate_results(self.student_choice)
-        log.debug(u'Swipe submission result: %s', result)
+        log.debug('Swipe submission result: %s', result)
         return result
 
     def student_view_data(self, context=None):
@@ -127,7 +125,7 @@ class SwipeBlock(
         """
         return {
             'id': self.name,
-            'block_id': six.text_type(self.scope_ids.usage_id),
+            'block_id': str(self.scope_ids.usage_id),
             'display_name': self.display_name_with_default,
             'type': self.CATEGORY,
             'text': self.text,
@@ -147,25 +145,20 @@ class SwipeBlock(
         for this.
         """
         if hasattr(self.runtime, 'replace_urls'):
-            url = self.runtime.replace_urls('"{}"'.format(url))[1:-1]
+            url = self.runtime.replace_urls(f'"{url}"')[1:-1]
         elif hasattr(self.runtime, 'course_id'):
             # edX Studio uses a different runtime for 'studio_view' than 'student_view',
             # and the 'studio_view' runtime doesn't provide the replace_urls API.
             from .platform_dependencies import replace_static_urls
             if replace_static_urls:
-                url = replace_static_urls('"{}"'.format(url), None, course_id=self.runtime.course_id)[1:-1]
+                url = replace_static_urls(f'"{url}"', None, course_id=self.runtime.course_id)[1:-1]
         return url
 
     def mentoring_view(self, context=None):
         """ Render the swipe image, text & whether it's correct within a mentoring block question. """
         return Fragment(
-            (
-                u'<img src="{img_url}" style="max-width: 100%;" />'
-                u'<p class="swipe-text">"{text}"</p>'
-            ).format(
-                img_url=self.expand_static_url(self.img_url),
-                text=self.text,
-            )
+            f'<img src="{self.expand_static_url(self.img_url)}" style="max-width: 100%;" />'
+            f'<p class="swipe-text">"{self.text}"</p>'
         )
 
     def student_view(self, context=None):

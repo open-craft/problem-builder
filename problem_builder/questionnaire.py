@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -20,15 +19,15 @@
 
 # Imports ###########################################################
 
-import pkg_resources
 import uuid
 
+import pkg_resources
 from django import utils
 from django.utils.safestring import mark_safe
 from lazy import lazy
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
-from xblock.fragment import Fragment
 from xblock.validation import ValidationMessage
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
@@ -94,17 +93,16 @@ class QuestionnaireAbstractBlock(
         return data.decode("utf8")
 
     def get_translation_content(self):
+        lang = utils.translation.to_locale(utils.translation.get_language())
         try:
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(
-                lang=utils.translation.to_locale(utils.translation.get_language()),
-            ))
-        except IOError:
+            return self.resource_string(f'public/js/translations/{lang}/textjs.js')
+        except OSError:
             return self.resource_string('public/js/translations/en/textjs.js')
 
     def student_view(self, context=None):
         name = getattr(self, "unmixed_class", self.__class__).__name__
 
-        template_path = 'templates/html/{}.html'.format(name.lower())
+        template_path = f'templates/html/{name.lower()}.html'
 
         context = context.copy() if context else {}
         context['self'] = self
@@ -116,6 +114,7 @@ class QuestionnaireAbstractBlock(
         # of questionnaire.[css/js] into the DOM. So we use the mentoring block here if possible.
         block_with_resources = self.get_parent()
         from .mentoring import MentoringBlock
+
         # We use an inline import here to avoid a circular dependency with the .mentoring module.
         if not isinstance(block_with_resources, MentoringBlock):
             block_with_resources = self
@@ -172,7 +171,7 @@ class QuestionnaireAbstractBlock(
         return submission
 
     def get_author_edit_view_fragment(self, context):
-        fragment = super(QuestionnaireAbstractBlock, self).author_edit_view(context)
+        fragment = super().author_edit_view(context)
         return fragment
 
     def author_edit_view(self, context):
@@ -208,20 +207,20 @@ class QuestionnaireAbstractBlock(
         All of this XBlock's fields should be found in "data", even if they aren't being changed
         or aren't even set (i.e. are defaults).
         """
-        super(QuestionnaireAbstractBlock, self).validate_field_data(validation, data)
+        super().validate_field_data(validation, data)
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
         if not data.name:
-            add_error(self._(u"A unique Question ID is required."))
+            add_error(self._("A unique Question ID is required."))
         elif ' ' in data.name:
-            add_error(self._(u"Question ID should not contain spaces."))
+            add_error(self._("Question ID should not contain spaces."))
 
     def validate(self):
         """
         Validates the state of this XBlock.
         """
-        validation = super(QuestionnaireAbstractBlock, self).validate()
+        validation = super().validate()
 
         def add_error(msg):
             validation.add(ValidationMessage(ValidationMessage.ERROR, msg))
@@ -230,13 +229,13 @@ class QuestionnaireAbstractBlock(
         all_choice_values = self.all_choice_values
         all_choice_values_set = set(all_choice_values)
         if len(all_choice_values) != len(all_choice_values_set):
-            add_error(self._(u"Some choice values are not unique."))
+            add_error(self._("Some choice values are not unique."))
         # Validate the tips:
         values_with_tips = set()
         for tip in self.get_tips():
             values = set(tip.values)
             if values & values_with_tips:
-                add_error(self._(u"Multiple tips configured for the same choice."))
+                add_error(self._("Multiple tips configured for the same choice."))
                 break
             values_with_tips.update(values)
         return validation

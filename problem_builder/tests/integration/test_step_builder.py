@@ -1,10 +1,9 @@
 import time
+from unittest.mock import patch
 
 from ddt import data, ddt, unpack
-from unittest.mock import patch
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
-
 from workbench.runtime import WorkbenchRuntime
 
 from .base_test import (CORRECT, INCORRECT, PARTIAL, GetChoices,
@@ -37,7 +36,7 @@ class MultipleSliderBlocksTestMixins():
     """ Mixins for testing slider blocks. Allows multiple slider blocks on the page. """
 
     def get_slider_value(self, slider_number):
-        print('SLIDER NUMBER: {}'.format(slider_number))
+        print(f'SLIDER NUMBER: {slider_number}')
         return int(
             self.browser.execute_script("return $('.pb-slider-range').eq(arguments[0]).val()", slider_number-1)
         )
@@ -52,7 +51,7 @@ class MultipleSliderBlocksTestMixins():
 class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixins):
 
     def setUp(self):
-        super(StepBuilderTest, self).setUp()
+        super().setUp()
 
         mock_submissions_api = ExtendedMockSubmissionsAPI()
         patches = (
@@ -117,7 +116,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.assertIn(self.question_text(number), step_builder.text)
         self.assertIn("What is your goal?", step_builder.text)
 
-        self.assertEquals(saved_value, answer.get_attribute("value"))
+        self.assertEqual(saved_value, answer.get_attribute("value"))
         if not saved_value:
             self.assert_disabled(controls.submit)
 
@@ -128,7 +127,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         answer.clear()
         answer.send_keys(text_input)
-        self.assertEquals(text_input, answer.get_attribute("value"))
+        self.assertEqual(text_input, answer.get_attribute("value"))
 
         self.assert_clickable(controls.submit)
         self.ending_controls(controls, last)
@@ -155,11 +154,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         choices = GetChoices(question)
         expected_state = {"Yes": False, "Maybe not": False, "I don't understand": False}
-        self.assertEquals(choices.state, expected_state)
+        self.assertEqual(choices.state, expected_state)
 
         choices.select(choice_name)
         expected_state[choice_name] = True
-        self.assertEquals(choices.state, expected_state)
+        self.assertEqual(choices.state, expected_state)
 
         self.selected_controls(controls, last)
 
@@ -186,10 +185,10 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             "5 - Extremely good": False,
             "I don't want to rate it": False,
         }
-        self.assertEquals(choices.state, expected_choices)
+        self.assertEqual(choices.state, expected_choices)
         choices.select(choice_name)
         expected_choices[choice_name] = True
-        self.assertEquals(choices.state, expected_choices)
+        self.assertEqual(choices.state, expected_choices)
 
         self.ending_controls(controls, last)
 
@@ -219,23 +218,23 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.assertListEqual([msg.text for msg in messages], messages_expected)
 
     def peek_at_review(self, step_builder, controls, expected, extended_feedback=False):
-        self.wait_until_text_in("You scored {percentage}% on this assessment.".format(**expected), step_builder)
+        self.wait_until_text_in(f"You scored {expected['percentage']}% on this assessment.", step_builder)
 
         # Check grade breakdown
         if expected["correct"] == 1:
-            self.assertIn("You answered 1 question correctly.".format(**expected), step_builder.text)
+            self.assertIn("You answered 1 question correctly.", step_builder.text)
         else:
-            self.assertIn("You answered {correct} questions correctly.".format(**expected), step_builder.text)
+            self.assertIn(f"You answered {expected['correct']} questions correctly.", step_builder.text)
 
         if expected["partial"] == 1:
             self.assertIn("You answered 1 question partially correctly.", step_builder.text)
         else:
-            self.assertIn("You answered {partial} questions partially correctly.".format(**expected), step_builder.text)
+            self.assertIn(f"You answered {expected['partial']} questions partially correctly.", step_builder.text)
 
         if expected["incorrect"] == 1:
             self.assertIn("You answered 1 question incorrectly.", step_builder.text)
         else:
-            self.assertIn("You answered {incorrect} questions incorrectly.".format(**expected), step_builder.text)
+            self.assertIn(f"You answered {expected['incorrect']} questions incorrectly.", step_builder.text)
 
         # Check presence of review links
         # - If unlimited attempts: no review links, no explanation
@@ -263,7 +262,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             elif expected["num_attempts"] == expected["max_attempts"]:
                 if extended_feedback:
                     for correctness in ['correct', 'incorrect', 'partial']:
-                        review_items = step_builder.find_elements_by_css_selector('.%s-list li' % correctness)
+                        review_items = step_builder.find_elements_by_css_selector(f'.{correctness}-list li')
                         self.assertEqual(len(review_items), expected[correctness])
                     self.assertTrue(review_links_explained)
                 else:
@@ -272,12 +271,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
         # Check if info about number of attempts used is correct
         if expected["max_attempts"] == 1:
-            self.assertIn("You have used {num_attempts} of 1 submission.".format(**expected), step_builder.text)
+            self.assertIn(f"You have used {expected['num_attempts']} of 1 submission.", step_builder.text)
         elif expected["max_attempts"] == 0:
             self.assertNotIn("You have used", step_builder.text)
         else:
             self.assertIn(
-                "You have used {num_attempts} of {max_attempts} submissions.".format(**expected),
+                f"You have used {expected['num_attempts']} of {expected['max_attempts']} submissions.",
                 step_builder.text
             )
 
@@ -287,7 +286,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.assert_hidden(controls.review)
         self.assert_hidden(controls.review_link)
 
-    def popup_check(self, step_builder, item_feedbacks, prefix='', do_submit=True):
+    def popup_check(self, step_builder, item_feedbacks, prefix='', do_submit=True):  # pylint: disable=arguments-renamed
         for index, expected_feedback in enumerate(item_feedbacks):
 
             self.wait_until_exists(prefix + " .choice")
@@ -416,22 +415,22 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             # Note that we can't use patched_method.assert_called_once_with here
             # because there is no way to obtain a reference to the block instance generated from the XML scenario
             self.assertTrue(patched_method.called)
-            self.assertEquals(len(patched_method.call_args_list), 2)
+            self.assertEqual(len(patched_method.call_args_list), 2)
 
             block_object = self.load_root_xblock()
 
             positional_args = patched_method.call_args_list[0][0]
             block, event, data = positional_args
 
-            self.assertEquals(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
-            self.assertEquals(event, 'grade')
-            self.assertEquals(data, {'value': 0.625, 'max_value': 1})
+            self.assertEqual(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
+            self.assertEqual(event, 'grade')
+            self.assertEqual(data, {'value': 0.625, 'max_value': 1})
 
             # test xblock.interaction is submitted
             block, event, data = patched_method.call_args_list[1][0]
-            self.assertEquals(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
-            self.assertEquals(event, 'xblock.interaction')
-            self.assertEquals(data, {
+            self.assertEqual(block.scope_ids.usage_id, block_object.scope_ids.usage_id)
+            self.assertEqual(event, 'xblock.interaction')
+            self.assertEqual(data, {
                 'attempts_max': max_attempts if max_attempts else 'unlimited', 'attempts_count': 1, 'score': 63
             })
 
@@ -542,7 +541,8 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def review_mcq(self, step_builder, choice_index, expected_feedback, correct):
         correctness = 'correct' if correct else 'incorrect'
-        mcq_link = step_builder.find_elements_by_css_selector('.{}-list li a'.format(correctness))[0]
+        mcq_link = step_builder.find_elements_by_css_selector(f'.{correctness}-list li a')[0]
+        time.sleep(1)  # give some time for changes
         mcq_link.click()
         mcq = step_builder.find_element_by_css_selector(".xblock-v1[data-name='mcq_1_1']")
         self.assert_choice_feedback(mcq, choice_index, expected_feedback, correct)
@@ -571,7 +571,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         result_label = choice_result.get_attribute('aria-label').strip()
         self.wait_until_visible(choice_result)
         self.assertIn(checkmark_class, result_classes)
-        self.assertEquals(checkmark_label, result_label)
+        self.assertEqual(checkmark_label, result_label)
 
     def test_review_tips(self):
         params = {
@@ -739,7 +739,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.wait_until_text_in(question_text, step_builder)
         self.assertIn(question, step_builder.text)
         choices = GetChoices(
-            step_builder, 'div[data-name="rating_{}_{}"] > .rating'.format(step_number, question_number)
+            step_builder, f'div[data-name="rating_{step_number}_{question_number}"] > .rating'
         )
         choices.select(choice_name)
 
@@ -790,7 +790,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
 
     def plot_empty(self, step_builder):
         points = step_builder.find_elements_by_css_selector("circle")
-        self.assertEquals(points, [])
+        self.assertEqual(points, [])
 
     def check_quadrant_labels(self, step_builder, plot_controls, hidden, labels=['Q1', 'Q2', 'Q3', 'Q4']):
         quadrant_labels = step_builder.find_elements_by_css_selector(".quadrant-label")
@@ -801,11 +801,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             plot_controls.quadrants_button.value_of_css_property('border-left-color'),
         ]
         if hidden:
-            self.assertEquals(quadrant_labels, [])
+            self.assertEqual(quadrant_labels, [])
             self.assertTrue(all(bc == HTMLColors.RED for bc in quadrants_button_border_colors))
         else:
-            self.assertEquals(len(quadrant_labels), 4)
-            self.assertEquals(set(label.text for label in quadrant_labels), set(labels))
+            self.assertEqual(len(quadrant_labels), 4)
+            self.assertEqual({label.text for label in quadrant_labels}, set(labels))
             self.assertTrue(all(bc == HTMLColors.GREEN for bc in quadrants_button_border_colors))
 
     def click_overlay_button(self, overlay_button, overlay_on, color_on=None, color_off=HTMLColors.GREY):
@@ -831,7 +831,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         self.click_overlay_button(plot_controls.average_button, overlay_on, color_on)
 
     def check_button_label(self, button, expected_value):
-        self.assertEquals(button.get_attribute('value'), expected_value)
+        self.assertEqual(button.get_attribute('value'), expected_value)
 
     def test_empty_plot(self):
         step_builder, controls = self.load_assessment_scenario("step_builder_plot_defaults.xml", {})
@@ -884,7 +884,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             # Check if correct number of points is present
             selector = 'circle' + overlay['selector']
             points = step_builder.find_elements_by_css_selector(selector)
-            self.assertEquals(len(points), overlay['num_points'])
+            self.assertEqual(len(points), overlay['num_points'])
             # Check point colors
             point_colors = [
                 point.value_of_css_property('fill') for point in points
@@ -894,12 +894,12 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             tooltips = {
                 point.get_attribute('data-tooltip') for point in points
             }
-            self.assertEquals(tooltips, set(overlay['tooltips']))
+            self.assertEqual(tooltips, set(overlay['tooltips']))
             # Check positions
             point_positions = {
                 (point.get_attribute('cx'), point.get_attribute('cy')) for point in points
             }
-            self.assertEquals(point_positions, set(overlay['positions']))
+            self.assertEqual(point_positions, set(overlay['positions']))
 
     def test_plot(self):
         step_builder, controls = self.load_assessment_scenario("step_builder_plot.xml", {})
@@ -1054,11 +1054,11 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
     def check_display_status(self, element, hidden):
         if hidden:
             display_status = element.value_of_css_property('display')
-            self.assertEquals(display_status, 'none')
+            self.assertEqual(display_status, 'none')
         else:
             # self.wait_until_visible(element)
             display_status = element.value_of_css_property('display')
-            self.assertEquals(display_status, 'block')
+            self.assertEqual(display_status, 'block')
 
     def check_plot_info(self, step_builder, hidden, visible_overlays=[], hidden_overlays=[]):
         # Check if plot info is present and visible
@@ -1073,15 +1073,15 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             citation = overlay['citation']
             if description is not None or citation is not None:
                 overlay_plot_label = overlay_info.find_element_by_css_selector('.overlay-plot-label')
-                self.assertEquals(overlay_plot_label.text, overlay['plot_label'])
+                self.assertEqual(overlay_plot_label.text, overlay['plot_label'])
                 text_color = overlay_plot_label.value_of_css_property('color')
-                self.assertEquals(text_color, overlay['plot_label_color'])
+                self.assertEqual(text_color, overlay['plot_label_color'])
                 if description is not None:
                     overlay_description = overlay_info.find_element_by_css_selector('.overlay-description')
-                    self.assertEquals(overlay_description.text, 'Description: ' + description)
+                    self.assertEqual(overlay_description.text, 'Description: ' + description)
                 if citation is not None:
                     overlay_citation = overlay_info.find_element_by_css_selector('.overlay-citation')
-                    self.assertEquals(overlay_citation.text, 'Source: ' + citation)
+                    self.assertEqual(overlay_citation.text, 'Source: ' + citation)
 
         # Check if info about hidden overlays is hidden
         for overlay in hidden_overlays:
@@ -1401,7 +1401,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
         textarea = current_question.find_element_by_css_selector("textarea")
         textarea.clear()
         textarea.send_keys(text_input)
-        self.assertEquals(textarea.get_attribute("value"), text_input)
+        self.assertEqual(textarea.get_attribute("value"), text_input)
 
     def submit_and_go_to_review_step(self, step_builder, controls, result):
         controls.submit.click()
@@ -1421,7 +1421,7 @@ class StepBuilderTest(MentoringAssessmentBaseTest, MultipleSliderBlocksTestMixin
             tolerance = 2
             return abs(scroll_top - step_builder_offset) <= tolerance
 
-        wait = WebDriverWait(self.browser, 5)
+        wait = WebDriverWait(self.browser, 20)
         wait.until(is_scrolled_to_top)
 
     def scroll_down(self):

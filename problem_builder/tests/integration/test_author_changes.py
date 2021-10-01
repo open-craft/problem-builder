@@ -12,7 +12,7 @@ class AuthorChangesTest(ProblemBuilderBaseTest):
     Test various scenarios involving author changes made to a block already in use by students
     """
     def setUp(self):
-        super(AuthorChangesTest, self).setUp()
+        super().setUp()
         self.load_scenario("author_changes.xml", {}, load_immediately=False)
         self.refresh_page()
 
@@ -38,8 +38,8 @@ class AuthorChangesTest(ProblemBuilderBaseTest):
 
     def submit_answers(self, q1_answer='yes', q2_answer='elegance', q3_answer="It's boring."):
         """ Answer all three questions in the 'author_changes.xml' scenario correctly """
-        self.pb_block_dom.find_element_by_css_selector('input[name=q1][value={}]'.format(q1_answer)).click()
-        self.pb_block_dom.find_element_by_css_selector('input[name=q2][value={}]'.format(q2_answer)).click()
+        self.pb_block_dom.find_element_by_css_selector(f'input[name=q1][value={q1_answer}]').click()
+        self.pb_block_dom.find_element_by_css_selector(f'input[name=q2][value={q2_answer}]').click()
         self.pb_block_dom.find_element_by_css_selector('textarea').send_keys(q3_answer)
         self.click_submit(self.pb_block_dom)
 

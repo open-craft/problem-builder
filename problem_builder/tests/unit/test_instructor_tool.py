@@ -2,9 +2,9 @@
 Unit tests for Instructor Tool block
 """
 import unittest
+from unittest.mock import Mock, patch
 
 import ddt
-from unittest.mock import Mock, patch
 from xblock.field_data import DictFieldData
 
 from problem_builder.instructor_tool import (COURSE_BLOCKS_API,
@@ -41,7 +41,7 @@ class TestInstructorToolBlock(unittest.TestCase):
         self.runtime_mock.get_block = self._get_block
         self.runtime_mock.course_id = self.course_id
         scope_ids_mock = Mock()
-        scope_ids_mock.usage_id = u'0'
+        scope_ids_mock.usage_id = '0'
         self.block = InstructorToolBlock(
             self.runtime_mock, field_data=DictFieldData({}), scope_ids=scope_ids_mock
         )
@@ -60,7 +60,7 @@ class TestInstructorToolBlock(unittest.TestCase):
         """
 
         with patch('problem_builder.instructor_tool.loader') as patched_loader:
-            patched_loader.render_django_template.return_value = u''
+            patched_loader.render_django_template.return_value = ''
             self.block.student_view()
             self.service_mock.i18n_service = Mock(return_value=None)
             patched_loader.render_django_template.assert_called_once_with('templates/html/instructor_tool.html', {

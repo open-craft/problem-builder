@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -237,9 +236,9 @@ class QuestionnaireBlockTest(MentoringBaseTest):
 
         # Ensure each questionnaire label contains the input item, and the expected option.
         labels = self._get_questionnaire_options(choices_list)
-        self.assertEquals(len(labels), len(expected_options))
+        self.assertEqual(len(labels), len(expected_options))
         for idx, label in enumerate(labels):
-            self.assertEquals(len(label.find_elements_by_tag_name('input')), 1)
+            self.assertEqual(len(label.find_elements_by_tag_name('input')), 1)
             self.assertIn(expected_options[idx], label.get_attribute('innerHTML').strip())
 
         self.assert_messages_empty(messages)
@@ -260,8 +259,8 @@ class QuestionnaireBlockTest(MentoringBaseTest):
 
     def _get_inner_height(self, elem):
         return elem.size['height'] - \
-            int(elem.value_of_css_property("padding-top").replace(u'px', u'')) - \
-            int(elem.value_of_css_property("padding-bottom").replace(u'px', u''))
+            int(elem.value_of_css_property("padding-top").replace('px', '')) - \
+            int(elem.value_of_css_property("padding-bottom").replace('px', ''))
 
     @ddt.unpack
     @ddt.data(
@@ -274,7 +273,7 @@ class QuestionnaireBlockTest(MentoringBaseTest):
         choices_list = mentoring.find_element_by_css_selector(".choices-list")
         submit = mentoring.find_element_by_css_selector('.submit input.input-main')
 
-        choice_input_css_selector = ".choice input[value={}]".format(choice_value)
+        choice_input_css_selector = f".choice input[value={choice_value}]"
         choice_input = choices_list.find_element_by_css_selector(choice_input_css_selector)
         choice_wrapper = choice_input.find_element_by_xpath("./ancestor::div[@class='choice']")
 

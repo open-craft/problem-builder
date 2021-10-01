@@ -7,6 +7,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from workbench.settings import *
+
 import os
 
 import yaml
@@ -33,11 +35,9 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = (
+INSTALLED_APPS += (
     'statici18n',
     'problem_builder',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
 )
 
 # Internationalization
@@ -66,8 +66,8 @@ LOCALE_PATHS = [
 # statici18n
 # http://django-statici18n.readthedocs.io/en/latest/settings.html
 
-with open(os.path.join(BASE_DIR, 'problem_builder/translations/config.yaml'), 'r') as locale_config_file:
-    locale_config = yaml.load(locale_config_file)
+with open(os.path.join(BASE_DIR, 'problem_builder/translations/config.yaml'), encoding='utf8') as locale_config_file:
+    locale_config = yaml.safe_load(locale_config_file)
 
     LANGUAGES = [
         (code, code,)
@@ -83,17 +83,3 @@ STATICI18N_PACKAGES = (
 )
 STATICI18N_ROOT = 'problem_builder/public/js'
 STATICI18N_OUTPUT_DIR = 'translations'
-
-PB_LANGUAGE_JS_DIRECTORY_MAP = {
-    'ar': 'ar',
-    'de-de': 'de_DE',
-    'en': 'en',
-    'es-419': 'es_419',
-    'fr': 'fr',
-    'fr-ca': 'fr_CA',
-    'ja-jp': 'ja_JP',
-    'pl': 'pl_PL',
-    'pt-br': 'pt_BR',
-    'zh-cn': 'zh_CN',
-    'ko-kr': 'ko_KR'
-}

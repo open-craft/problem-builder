@@ -8,7 +8,7 @@ help: ## display this help message
 	@echo "Please use \`make <target>' where <target> is one of"
 	@perl -nle'print $& if m{^[a-zA-Z_-]+:.*?## .*$$}' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m  %-25s\033[0m %s\n", $$1, $$2}'
 
-upgrade:
+upgrade: ## Upgrade test requirements
 	pip-compile --upgrade --output-file test_requirements.txt test_requirements.in
 
 extract_translations: ## extract strings to be translated, outputting .po files
@@ -24,7 +24,7 @@ compile_translations: ## compile translation files, outputting .mo files for eac
 	cd $(WORKING_DIR) && i18n_tool generate
 	python manage.py compilejsi18n --namespace ProblemBuilderXBlockI18N --output $(JS_TARGET)
 
-detect_changed_source_translations:
+detect_changed_source_translations: ## Detect changes in source code that affect translations
 	cd $(WORKING_DIR) && i18n_tool changed
 
 dummy_translations: ## generate dummy translation (.po) files

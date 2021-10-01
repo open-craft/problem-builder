@@ -1,20 +1,32 @@
 import json
 
 import pkg_resources
-import six
 import webob
 from django import utils
 from lazy import lazy
-from .settings import PB_LANGUAGE_JS_DIRECTORY_MAP
+from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import UNIQUE_ID, Boolean, Float, Scope, String
-from xblock.fragment import Fragment
 from xblockutils.helpers import child_isinstance
 from xblockutils.resources import ResourceLoader
 
 from problem_builder.tests.unit.utils import DateTimeEncoder
 
 loader = ResourceLoader(__name__)
+
+PB_LANGUAGE_JS_DIRECTORY_MAP = {
+    'ar': 'ar',
+    'de-de': 'de_DE',
+    'en': 'en',
+    'es-419': 'es_419',
+    'fr': 'fr',
+    'fr-ca': 'fr_CA',
+    'ja-jp': 'ja_JP',
+    'pl': 'pl_PL',
+    'pt-br': 'pt_BR',
+    'zh-cn': 'zh_CN',
+    'ko-kr': 'ko_KR'
+}
 
 
 # Make '_' a no-op so we can scrape strings
@@ -44,7 +56,7 @@ class XBlockWithTranslationServiceMixin:
 
 
 class EnumerableChildMixin(XBlockWithTranslationServiceMixin):
-    CAPTION = _(u"Child")
+    CAPTION = _("Child")
 
     show_title = Boolean(
         display_name=_("Show title"),
@@ -67,7 +79,7 @@ class EnumerableChildMixin(XBlockWithTranslationServiceMixin):
     @lazy
     def lonely_child(self):
         if _normalize_id(self.scope_ids.usage_id) not in self.siblings:
-            message = u"{child_caption}'s parent should contain {child_caption}".format(child_caption=self.CAPTION)
+            message = "{child_caption}'s parent should contain {child_caption}".format(child_caption=self.CAPTION)
             raise ValueError(message, self, self.siblings)
         return len(self.siblings) == 1
 
@@ -77,7 +89,7 @@ class EnumerableChildMixin(XBlockWithTranslationServiceMixin):
         if self.display_name:
             return self.display_name
         if not self.lonely_child:
-            return self._(u"{child_caption} {number}").format(
+            return self._("{child_caption} {number}").format(
                 child_caption=self.CAPTION, number=self.step_number
             )
         return self._(self.CAPTION)
@@ -109,7 +121,8 @@ class MessageParentMixin:
     """
 
     def get_message_content(self, message_type, or_default=False):
-        from problem_builder.message import MentoringMessageBlock  # Import here to avoid circular dependency
+        from problem_builder.message import \
+            MentoringMessageBlock  # Import here to avoid circular dependency
         for child_id in self.children:
             if child_isinstance(self, child_id, MentoringMessageBlock):
                 child = self.runtime.get_block(child_id)
@@ -121,7 +134,7 @@ class MessageParentMixin:
         if or_default:
             # Return the default value since no custom message is set.
             # Note the WYSIWYG editor usually wraps the .content HTML in a <p> tag so we do the same here.
-            return '<p>{}</p>'.format(MentoringMessageBlock.MESSAGE_TYPES[message_type]['default'])
+            return f'<p>{MentoringMessageBlock.MESSAGE_TYPES[message_type]["default"]}</p>'
 
 
 class QuestionMixin(EnumerableChildMixin):
@@ -130,7 +143,7 @@ class QuestionMixin(EnumerableChildMixin):
 
     A step is a question that the user can answer (as opposed to a read-only child).
     """
-    CAPTION = _(u"Question")
+    CAPTION = _("Question")
 
     has_author_view = True
 
@@ -175,7 +188,7 @@ class NoSettingsMixin:
 
     def studio_view(self, _context=None):
         """ Studio View """
-        return Fragment(u'<p>{}</p>'.format(self._("This XBlock does not have any settings.")))
+        return Fragment(f'<p>{self._("This XBlock does not have any settings.")}</p>')
 
 
 class StudentViewUserStateMixin:
@@ -206,7 +219,7 @@ class StudentViewUserStateMixin:
 
         result = {}
         transforms = self.transforms()
-        for _, field in six.iteritems(self.fields):
+        for _, field in self.fields.items():
             # Only insert fields if their scopes and field names match
             if field.scope in self.INCLUDE_SCOPES and field.name in self.USER_STATE_FIELDS:
                 transformer = transforms.get(field.name, lambda value: value)
@@ -311,6 +324,6 @@ class TranslationContentMixin:
             # i.e for polish language code is pl but js directory is pl_PL
             # to coup this behaviour PB_LANGUAGES_JS_DIRECTORY_MAP is added to get the desired directory.
             js_directory = PB_LANGUAGE_JS_DIRECTORY_MAP.get(language, 'en')
-            return self.resource_string('public/js/translations/{lang}/textjs.js'.format(lang=js_directory))
-        except IOError:
+            return self.resource_string(f'public/js/translations/{js_directory}/textjs.js')
+        except OSError:
             return self.resource_string('public/js/translations/en/textjs.js')

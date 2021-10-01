@@ -1,6 +1,6 @@
 import unittest
-
 from unittest.mock import Mock
+
 from xblock.field_data import DictFieldData
 
 from problem_builder.mixins import QuestionMixin, StepParentMixin
@@ -66,8 +66,8 @@ class TestQuestionMixin(unittest.TestCase):
         step2 = Step()
         block._set_children_for_test(step1, 1, "2", "Step", NotAStep(), False, step2, NotAStep())
 
-        self.assertEquals(step1.step_number, 1)
-        self.assertEquals(step2.step_number, 2)
+        self.assertEqual(step1.step_number, 1)
+        self.assertEqual(step2.step_number, 2)
 
     def test_the_number_does_not_represent_the_order_of_creation(self):
         block = Parent()
@@ -75,8 +75,8 @@ class TestQuestionMixin(unittest.TestCase):
         step2 = Step()
         block._set_children_for_test(step2, 1, "2", "Step", NotAStep(), False, step1, NotAStep())
 
-        self.assertEquals(step1.step_number, 2)
-        self.assertEquals(step2.step_number, 1)
+        self.assertEqual(step1.step_number, 2)
+        self.assertEqual(step2.step_number, 1)
 
     def test_lonely_child_is_true_for_stand_alone_steps(self):
         block = Parent()

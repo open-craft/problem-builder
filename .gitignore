@@ -1,11 +1,12 @@
 *~
 *.pyc
-/.coverage
+/.coverage*
 /xblock_problem_builder.egg-info
-/workbench.*
+/workbench*
 /dist
 /templates
 /var
+/src
 *.iml
 .idea/*
 dump.rdb

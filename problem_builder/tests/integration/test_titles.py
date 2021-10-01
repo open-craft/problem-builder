@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -21,9 +20,10 @@
 Test that the various title/display_name options for Answer and MCQ/MRQ/Ratings work.
 """
 
+from unittest.mock import patch
+
 # Imports ###########################################################
 import ddt
-from unittest.mock import patch
 from xblockutils.base_test import SeleniumXBlockTest
 
 # Classes ###########################################################
@@ -118,7 +118,7 @@ class StepTitlesTest(SeleniumXBlockTest):
     """
 
     def setUp(self):
-        super(StepTitlesTest, self).setUp()
+        super().setUp()
         # Disable asides for this test since the acid aside seems to cause Database errors
         # When we test multiple scenarios in one test method.
         patcher = patch(
@@ -136,8 +136,8 @@ class StepTitlesTest(SeleniumXBlockTest):
             for qtype in ("mcq", "mrq", "rating", "long_answer"):
                 template = getattr(self, qtype + "_template")
                 xml = template.format(
-                    display_name_attr='display_name="{}"'.format(display_name) if display_name is not None else "",
-                    show_title_attr='show_title="{}"'.format(show_title) if show_title is not None else "",
+                    display_name_attr=f'display_name="{display_name}"' if display_name is not None else "",
+                    show_title_attr=f'show_title="{show_title}"' if show_title is not None else "",
                 )
                 self.set_scenario_xml(xml)
                 pb_element = self.go_to_view()

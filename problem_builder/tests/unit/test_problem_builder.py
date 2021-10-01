@@ -1,8 +1,8 @@
 import unittest
 from random import random
+from unittest.mock import MagicMock, Mock, PropertyMock, patch
 
 import ddt
-from unittest.mock import MagicMock, Mock, PropertyMock, patch
 from xblock.field_data import DictFieldData
 from xblock.runtime import NullI18nService
 

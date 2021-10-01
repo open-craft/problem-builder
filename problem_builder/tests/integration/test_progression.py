@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -35,7 +34,7 @@ class MentoringProgressionTest(MentoringBaseTest):
         warning_link = warning_dom.find_element_by_xpath('./*')
         self.assertTrue(
             warning_link.get_attribute('href').endswith(link_href),
-            "expected link href '{}' to end with '{}'".format(warning_link.get_attribute('href'), link_href)
+            f"expected link href '{warning_link.get_attribute('href')}' to end with '{link_href}'"
         )
 
     def assert_warning_is_hidden(self, mentoring):

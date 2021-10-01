@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2014-2015 Harvard, edX & OpenCraft
 #
@@ -19,6 +18,7 @@
 #
 
 from unittest import mock
+
 from xblock.fields import String
 from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
 from xblockutils.resources import ResourceLoader
@@ -84,14 +84,14 @@ class ProblemBuilderBaseTest(SeleniumXBlockTest, PopupCheckMixin):
         Given the name of an XML file in the xml_templates folder, load it into the workbench.
         """
         params = params or {}
-        scenario = loader.render_django_template("xml_templates/{}".format(xml_file), params)
+        scenario = loader.render_django_template(f"xml_templates/{xml_file}", params)
         self.set_scenario_xml(scenario)
         if load_immediately:
             return self.go_to_view("student_view")
 
     def go_to_view(self, view_name):
         """ Eliminate errors that come from the Workbench banner overlapping elements """
-        element = super(ProblemBuilderBaseTest, self).go_to_view(view_name)
+        element = super().go_to_view(view_name)
         self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
         return element
 
@@ -152,13 +152,13 @@ class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
 
     def go_to_page(self, page_title, **kwargs):
         """ Eliminate errors that come from the Workbench banner overlapping elements """
-        element = super(MentoringBaseTest, self).go_to_page(page_title, **kwargs)
+        element = super().go_to_page(page_title, **kwargs)
         self.browser.execute_script('document.querySelectorAll("header.banner")[0].style.display="none";')
         return element
 
     @classmethod
     def setUpClass(cls):
-        super(MentoringBaseTest, cls).setUpClass()
+        super().setUpClass()
         cls.__asides_patch = mock.patch(
             "workbench.runtime.WorkbenchRuntime.applicable_aside_types",
             mock.Mock(return_value=[])
@@ -168,7 +168,7 @@ class MentoringBaseTest(SeleniumBaseTest, PopupCheckMixin):
     @classmethod
     def tearDownClass(cls):
         cls.__asides_patch.stop()
-        super(MentoringBaseTest, cls).tearDownClass()
+        super().tearDownClass()
 
 
 class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
@@ -178,14 +178,14 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
     @staticmethod
     def question_text(number):
         if number:
-            return "Question %s" % number
+            return f"Question {number}"
         else:
             return "Question"
 
     def load_assessment_scenario(self, xml_file, params=None):
         """ Loads an assessment scenario from an XML template """
         params = params or {}
-        scenario = loader.render_django_template("xml_templates/{}".format(xml_file), params)
+        scenario = loader.render_django_template(f"xml_templates/{xml_file}", params)
         self.set_scenario_xml(scenario)
         return self.go_to_assessment()
 
@@ -276,13 +276,13 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
             "Its gracefulness": False,
             "Its bugs": False,
         }
-        self.assertEquals(choices.state, expected_choices)
+        self.assertEqual(choices.state, expected_choices)
 
         for name in choice_names:
             choices.select(name)
             expected_choices[name] = True
 
-        self.assertEquals(choices.state, expected_choices)
+        self.assertEqual(choices.state, expected_choices)
 
         self.selected_controls(controls, last)
 
@@ -312,7 +312,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
     def answer_mcq(self, number, name, value, mentoring, controls, is_last=False):
         self.expect_question_visible(number, mentoring)
 
-        mentoring.find_element_by_css_selector('input[name={}][value={}]'.format(name, value)).click()
+        mentoring.find_element_by_css_selector(f'input[name={name}][value={value}]').click()
         controls.submit.click()
         if is_last:
             self.wait_until_clickable(controls.review)
@@ -328,7 +328,7 @@ class MentoringAssessmentBaseTest(ProblemBuilderBaseTest):
         states[result] += 1
 
         for name, count in states.items():
-            self.assertEqual(len(mentoring.find_elements_by_css_selector(".submit .checkmark-{}".format(name))), count)
+            self.assertEqual(len(mentoring.find_elements_by_css_selector(f".submit .checkmark-{name}")), count)
 
 
 class GetChoices:
@@ -354,4 +354,4 @@ class GetChoices:
         for choice in self._mcq.find_elements_by_css_selector(".choice"):
             if choice.text == text:
                 return choice
-        raise AssertionError("Expected selectable item present: {}".format(text))
+        raise AssertionError(f"Expected selectable item present: {text}")
