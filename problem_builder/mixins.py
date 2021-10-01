@@ -12,9 +12,21 @@ from xblockutils.resources import ResourceLoader
 
 from problem_builder.tests.unit.utils import DateTimeEncoder
 
-from .settings import PB_LANGUAGE_JS_DIRECTORY_MAP
-
 loader = ResourceLoader(__name__)
+
+PB_LANGUAGE_JS_DIRECTORY_MAP = {
+    'ar': 'ar',
+    'de-de': 'de_DE',
+    'en': 'en',
+    'es-419': 'es_419',
+    'fr': 'fr',
+    'fr-ca': 'fr_CA',
+    'ja-jp': 'ja_JP',
+    'pl': 'pl_PL',
+    'pt-br': 'pt_BR',
+    'zh-cn': 'zh_CN',
+    'ko-kr': 'ko_KR'
+}
 
 
 # Make '_' a no-op so we can scrape strings
