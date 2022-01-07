@@ -3,7 +3,7 @@ Celery task for CSV student answer export.
 """
 import time
 
-from celery.task import task
+from celery import shared_task
 from celery.utils.log import get_task_logger
 from django.contrib.auth.models import User
 from django.db.models import F
@@ -23,7 +23,7 @@ from .sub_api import sub_api
 logger = get_task_logger(__name__)
 
 
-@task()
+@shared_task()
 def export_data(course_id, source_block_id_str, block_types, user_ids, match_string):
     """
     Exports student answers to all supported questions to a CSV file.
