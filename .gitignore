@@ -12,6 +12,8 @@
 dump.rdb
 problem_builder.tests.*
 .tox
+geckodriver.log
+external/
 
 ### Internationalization artifacts
 *.prob

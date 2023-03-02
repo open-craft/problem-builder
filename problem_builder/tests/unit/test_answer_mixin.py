@@ -2,11 +2,11 @@
 Unit tests for AnswerMixin.
 """
 import json
-import pytest
 import unittest
 from collections import namedtuple
 from datetime import datetime
 
+import pytest
 from django.utils.crypto import get_random_string
 
 from problem_builder.answer import AnswerMixin

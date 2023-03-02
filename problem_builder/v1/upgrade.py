@@ -189,7 +189,7 @@ if __name__ == '__main__':
             print(f" ➔ Mentoring block {url_name} appears in the course in multiple places!")
             print(
                 f'   (display_name: "{block.display_name}", parent {block.parent}:'
-                f' "{block.get_parent().display_name)}")'
+                f' "{block.get_parent().display_name}")'
             )
             print('   To fix, you must delete the extra occurences.')
             stop = True

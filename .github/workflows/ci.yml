@@ -1,0 +1,62 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    services:
+      # Using SQLite3 for integration tests throws `django.db.utils.OperationalError: database table is locked: workbench_xblockstate`.
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: rootpw
+        ports:
+          - 3307:3306
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        python-version: [3.8]
+        toxenv: [py38-django32, integration, quality]
+
+    steps:
+    - name: checkout repo
+      uses: actions/checkout@v3
+
+    - name: setup python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Required System Packages
+      if: matrix.toxenv == 'integration'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb
+
+    - name: Install Dependencies
+      run: make requirements
+
+    - name: Run Tests
+      env:
+        TOXENV: ${{ matrix.toxenv }}
+      run: tox
+
+    - name: Run coverage
+      if: matrix.python-version == '3.8' && matrix.toxenv == 'py38-django32'
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        flags: unittests
+        fail_ci_if_error: true
