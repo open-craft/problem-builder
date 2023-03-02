@@ -1,0 +1,7 @@
+# Additional requirements for development of this application
+-c constraints.txt
+
+-r pip-tools.txt          # pip-tools and its dependencies, for managing requirements files
+-r quality.txt            # Core and quality check dependencies
+-r ci.txt                 # dependencies for setting up testing in CI
+-r workbench.txt          # workbench dependencies

@@ -1,0 +1,17 @@
+# Requirements copy-pasted from the workbench.
+-c constraints.txt
+
+-r test.txt               # Core and testing dependencies for this package
+
+bok-choy                  # integration tests
+selenium                  # integration tests
+mysqlclient               # for connecting to MySQL
+
+fs-s3fs
+lxml
+requests
+pypng
+simplejson
+web-fragments
+webob
+XBlock[django]

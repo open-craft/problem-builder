@@ -419,7 +419,7 @@ class MentoringBlock(
         if total_child_weight == 0:
             return Score(0, 0, [], [], [])
         points_earned = 0
-        for q_name, q_details in self.student_results:
+        for q_name, q_details in self.student_results:  # pylint: disable=unbalanced-dict-unpacking
             question = steps_map.get(q_name)
             if question:
                 points_earned += q_details['score'] * question.weight
