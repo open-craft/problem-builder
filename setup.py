@@ -169,6 +169,7 @@ setup(
     version=VERSION,
     description='XBlock - Problem Builder',
     long_description=README,
+    long_description_content_type='text/markdown',
     author='OpenCraft',
     url='https://github.com/open-craft/problem-builder',
     license='AGPL v3',
