@@ -19,7 +19,7 @@ asgiref==3.6.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-astroid==2.14.2
+astroid==2.15.0
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -41,12 +41,12 @@ boto==2.49.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-sdk
-boto3==1.26.82
+boto3==1.26.84
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.29.82
+botocore==1.29.84
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -271,7 +271,7 @@ pillow==9.4.0
     #   needle
 pip-tools==6.12.3
     # via -r requirements/pip-tools.txt
-platformdirs==3.0.0
+platformdirs==3.1.0
     # via
     #   -r requirements/ci.txt
     #   -r requirements/quality.txt
@@ -296,7 +296,7 @@ pycodestyle==2.10.0
     # via -r requirements/quality.txt
 pydocstyle==6.3.0
     # via -r requirements/quality.txt
-pylint==2.16.2
+pylint==2.16.3
     # via
     #   -r requirements/quality.txt
     #   edx-lint
@@ -330,7 +330,7 @@ pyproject-hooks==1.0.0
     # via
     #   -r requirements/pip-tools.txt
     #   build
-pytest==7.2.1
+pytest==7.2.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
