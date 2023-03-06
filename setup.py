@@ -177,7 +177,7 @@ setup(
         include=['problem_builder', 'problem_builder.*'],
         exclude=["*tests"],
     ),
-    include_package_data=True,
+    package_data=package_data("problem_builder", ["templates", "public", "translations"]),
     install_requires=load_requirements('requirements/base.in'),
     python_requires=">=3.8",
     keywords='Python edx',
