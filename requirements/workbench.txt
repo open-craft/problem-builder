@@ -30,11 +30,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.89
+boto3==1.26.94
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.89
+botocore==1.29.94
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -62,7 +62,7 @@ cookiecutter==2.1.1
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-coverage[toml]==7.2.1
+coverage[toml]==7.2.2
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -236,7 +236,7 @@ selenium==3.141.0
     #   -r requirements/workbench.in
     #   bok-choy
     #   needle
-simplejson==3.18.3
+simplejson==3.18.4
     # via
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
