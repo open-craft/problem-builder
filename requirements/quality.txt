@@ -32,11 +32,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.99
+boto3==1.26.104
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.99
+botocore==1.29.104
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -237,7 +237,7 @@ python-slugify==8.0.1
     #   -r requirements/test.txt
     #   code-annotations
     #   cookiecutter
-pytz==2023.2
+pytz==2023.3
     # via
     #   -r requirements/test.txt
     #   django
@@ -291,7 +291,7 @@ tomli==2.0.1
     #   coverage
     #   pylint
     #   pytest
-tomlkit==0.11.6
+tomlkit==0.11.7
     # via pylint
 typing-extensions==4.5.0
     # via

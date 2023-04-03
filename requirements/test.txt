@@ -20,9 +20,9 @@ binaryornot==0.4.4
     # via cookiecutter
 boto==2.49.0
     # via xblock-sdk
-boto3==1.26.99
+boto3==1.26.104
     # via fs-s3fs
-botocore==1.29.99
+botocore==1.29.104
     # via
     #   boto3
     #   s3transfer
@@ -143,7 +143,7 @@ python-slugify==8.0.1
     # via
     #   code-annotations
     #   cookiecutter
-pytz==2023.2
+pytz==2023.3
     # via
     #   -r requirements/base.txt
     #   django
