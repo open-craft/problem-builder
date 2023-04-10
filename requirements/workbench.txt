@@ -16,10 +16,6 @@ asgiref==3.6.0
     # via
     #   -r requirements/test.txt
     #   django
-attrs==22.2.0
-    # via
-    #   -r requirements/test.txt
-    #   pytest
 binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
@@ -30,11 +26,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.104
+boto3==1.26.109
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.104
+botocore==1.29.109
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -62,7 +58,7 @@ cookiecutter==2.1.1
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-coverage[toml]==7.2.2
+coverage[toml]==7.2.3
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -189,7 +185,7 @@ pypng==0.20220715.0
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
     #   xblock-sdk
-pytest==7.2.2
+pytest==7.3.0
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -236,7 +232,7 @@ selenium==3.141.0
     #   -r requirements/workbench.in
     #   bok-choy
     #   needle
-simplejson==3.18.4
+simplejson==3.19.1
     # via
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
