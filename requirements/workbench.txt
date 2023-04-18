@@ -26,11 +26,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.109
+boto3==1.26.119
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.109
+botocore==1.29.119
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -142,7 +142,7 @@ markupsafe==2.1.2
     #   jinja2
     #   mako
     #   xblock
-mock==5.0.1
+mock==5.0.2
     # via -r requirements/test.txt
 mysqlclient==2.1.1
     # via -r requirements/workbench.in
@@ -154,7 +154,7 @@ openedx-django-pyfs==3.2.1
     # via
     #   -r requirements/test.txt
     #   xblock
-packaging==23.0
+packaging==23.1
     # via
     #   -r requirements/test.txt
     #   pytest
@@ -185,7 +185,7 @@ pypng==0.20220715.0
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
     #   xblock-sdk
-pytest==7.3.0
+pytest==7.3.1
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -245,7 +245,7 @@ six==1.16.0
     #   fs
     #   fs-s3fs
     #   python-dateutil
-sqlparse==0.4.3
+sqlparse==0.4.4
     # via
     #   -r requirements/test.txt
     #   django

@@ -19,7 +19,7 @@ asgiref==3.6.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-astroid==2.15.2
+astroid==2.15.4
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -36,12 +36,12 @@ boto==2.49.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-sdk
-boto3==1.26.109
+boto3==1.26.119
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.29.109
+botocore==1.29.119
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -139,7 +139,7 @@ exceptiongroup==1.1.1
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   pytest
-filelock==3.11.0
+filelock==3.12.0
     # via
     #   -r requirements/ci.txt
     #   tox
@@ -221,7 +221,7 @@ mccabe==0.7.0
     # via
     #   -r requirements/quality.txt
     #   pylint
-mock==5.0.1
+mock==5.0.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -240,7 +240,7 @@ openedx-django-pyfs==3.2.1
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock
-packaging==23.0
+packaging==23.1
     # via
     #   -r requirements/pip-tools.txt
     #   -r requirements/workbench.txt
@@ -288,7 +288,7 @@ pycodestyle==2.10.0
     # via -r requirements/quality.txt
 pydocstyle==6.3.0
     # via -r requirements/quality.txt
-pylint==2.17.2
+pylint==2.17.3
     # via
     #   -r requirements/quality.txt
     #   edx-lint
@@ -322,7 +322,7 @@ pyproject-hooks==1.0.0
     # via
     #   -r requirements/pip-tools.txt
     #   build
-pytest==7.3.0
+pytest==7.3.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -399,7 +399,7 @@ snowballstemmer==2.2.0
     # via
     #   -r requirements/quality.txt
     #   pydocstyle
-sqlparse==0.4.3
+sqlparse==0.4.4
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -447,7 +447,7 @@ urllib3==1.26.15
     #   botocore
     #   requests
     #   selenium
-virtualenv==20.21.0
+virtualenv==20.22.0
     # via
     #   -r requirements/ci.txt
     #   tox
