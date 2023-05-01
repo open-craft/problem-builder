@@ -28,11 +28,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.119
+boto3==1.26.123
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.119
+botocore==1.29.123
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -66,7 +66,7 @@ cookiecutter==2.1.1
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-coverage[toml]==7.2.3
+coverage[toml]==7.2.5
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -177,7 +177,7 @@ pbr==5.11.1
     # via
     #   -r requirements/test.txt
     #   stevedore
-platformdirs==3.2.0
+platformdirs==3.5.0
     # via pylint
 pluggy==1.0.0
     # via
@@ -245,7 +245,7 @@ pyyaml==6.0
     #   cookiecutter
     #   edx-i18n-tools
     #   xblock
-requests==2.28.2
+requests==2.29.0
     # via
     #   -r requirements/test.txt
     #   cookiecutter
@@ -287,7 +287,7 @@ tomli==2.0.1
     #   coverage
     #   pylint
     #   pytest
-tomlkit==0.11.7
+tomlkit==0.11.8
     # via pylint
 typing-extensions==4.5.0
     # via
