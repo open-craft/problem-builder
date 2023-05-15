@@ -18,9 +18,9 @@ binaryornot==0.4.4
     # via cookiecutter
 boto==2.49.0
     # via xblock-sdk
-boto3==1.26.129
+boto3==1.26.133
     # via fs-s3fs
-botocore==1.29.129
+botocore==1.29.133
     # via
     #   boto3
     #   s3transfer
