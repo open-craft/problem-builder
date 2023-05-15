@@ -26,11 +26,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.129
+boto3==1.26.133
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.129
+botocore==1.29.133
     # via
     #   -r requirements/test.txt
     #   boto3
