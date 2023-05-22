@@ -42,7 +42,7 @@ six==1.16.0
     #   python-dateutil
 sqlparse==0.4.4
     # via django
-stevedore==5.0.0
+stevedore==5.1.0
     # via edx-opaque-keys
 web-fragments==2.0.0
     # via
