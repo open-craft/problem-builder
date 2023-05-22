@@ -26,11 +26,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.133
+boto3==1.26.137
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.133
+botocore==1.29.137
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -249,7 +249,7 @@ sqlparse==0.4.4
     # via
     #   -r requirements/test.txt
     #   django
-stevedore==5.0.0
+stevedore==5.1.0
     # via
     #   -r requirements/test.txt
     #   code-annotations
