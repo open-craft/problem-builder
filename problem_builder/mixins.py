@@ -295,8 +295,8 @@ class ExpandStaticURLMixin:
         if not text:
             return text
 
-        if hasattr(self.runtime, 'replace_urls'):
-            text = self.runtime.replace_urls(text)
+        if replace_urls := getattr(self.runtime, 'replace_urls', None):
+            text = replace_urls(text)
         elif hasattr(self.runtime, 'course_id'):
             # edX Studio uses a different runtime for 'studio_view' than 'student_view',
             # and the 'studio_view' runtime doesn't provide the replace_urls API.
