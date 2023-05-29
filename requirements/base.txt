@@ -6,7 +6,7 @@
 #
 appdirs==1.4.4
     # via fs
-asgiref==3.6.0
+asgiref==3.7.2
     # via django
 django==3.2.19
     # via -r requirements/base.in
@@ -44,6 +44,8 @@ sqlparse==0.4.4
     # via django
 stevedore==5.1.0
     # via edx-opaque-keys
+typing-extensions==4.6.2
+    # via asgiref
 web-fragments==2.0.0
     # via
     #   xblock
