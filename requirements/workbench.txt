@@ -26,11 +26,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.146
+boto3==1.26.151
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.146
+botocore==1.29.151
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -185,7 +185,7 @@ pypng==0.20220715.0
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
     #   xblock-sdk
-pytest==7.3.1
+pytest==7.3.2
     # via
     #   -r requirements/test.txt
     #   pytest-cov

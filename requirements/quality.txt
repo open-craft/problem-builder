@@ -28,11 +28,11 @@ boto==2.49.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-boto3==1.26.146
+boto3==1.26.151
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.146
+botocore==1.29.151
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -177,7 +177,7 @@ pbr==5.11.1
     # via
     #   -r requirements/test.txt
     #   stevedore
-platformdirs==3.5.1
+platformdirs==3.5.3
     # via pylint
 pluggy==1.0.0
     # via
@@ -213,7 +213,7 @@ pypng==0.20220715.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-pytest==7.3.1
+pytest==7.3.2
     # via
     #   -r requirements/test.txt
     #   pytest-cov

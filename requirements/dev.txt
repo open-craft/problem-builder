@@ -36,12 +36,12 @@ boto==2.49.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-sdk
-boto3==1.26.146
+boto3==1.26.151
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.29.146
+botocore==1.29.151
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -139,7 +139,7 @@ exceptiongroup==1.1.1
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   pytest
-filelock==3.12.0
+filelock==3.12.1
     # via
     #   -r requirements/ci.txt
     #   tox
@@ -263,7 +263,7 @@ pillow==9.5.0
     #   needle
 pip-tools==6.13.0
     # via -r requirements/pip-tools.txt
-platformdirs==3.5.1
+platformdirs==3.5.3
     # via
     #   -r requirements/ci.txt
     #   -r requirements/quality.txt
@@ -322,7 +322,7 @@ pyproject-hooks==1.0.0
     # via
     #   -r requirements/pip-tools.txt
     #   build
-pytest==7.3.1
+pytest==7.3.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
