@@ -54,7 +54,7 @@ webob==1.8.7
     # via xblock
 xblock==1.6.2
     # via xblock-utils
-xblock-utils==3.1.0
+xblock-utils==3.2.0
     # via -r requirements/base.in
 
 # The following packages are considered to be unsafe in a requirements file:
