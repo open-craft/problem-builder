@@ -22,11 +22,11 @@ binaryornot==0.4.4
     #   cookiecutter
 bok-choy==0.7.1
     # via -r requirements/workbench.in
-boto3==1.26.160
+boto3==1.26.165
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.160
+botocore==1.29.165
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -162,7 +162,7 @@ pbr==5.11.1
     # via
     #   -r requirements/test.txt
     #   stevedore
-pillow==9.5.0
+pillow==10.0.0
     # via needle
 pluggy==1.2.0
     # via
@@ -259,7 +259,7 @@ tomli==2.0.1
     #   -r requirements/test.txt
     #   coverage
     #   pytest
-typing-extensions==4.6.3
+typing-extensions==4.7.1
     # via
     #   -r requirements/test.txt
     #   asgiref
