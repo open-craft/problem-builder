@@ -24,11 +24,11 @@ binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
     #   cookiecutter
-boto3==1.26.160
+boto3==1.26.165
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.29.160
+botocore==1.29.165
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -285,7 +285,7 @@ tomli==2.0.1
     #   pytest
 tomlkit==0.11.8
     # via pylint
-typing-extensions==4.6.3
+typing-extensions==4.7.1
     # via
     #   -r requirements/test.txt
     #   asgiref

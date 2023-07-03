@@ -44,7 +44,7 @@ sqlparse==0.4.4
     # via django
 stevedore==5.1.0
     # via edx-opaque-keys
-typing-extensions==4.6.3
+typing-extensions==4.7.1
     # via asgiref
 web-fragments==2.0.0
     # via
