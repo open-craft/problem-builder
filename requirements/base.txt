@@ -9,7 +9,9 @@ appdirs==1.4.4
 asgiref==3.7.2
     # via django
 django==3.2.20
-    # via -r requirements/base.in
+    # via
+    #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
+    #   -r requirements/base.in
 edx-opaque-keys==2.3.0
     # via -r requirements/base.in
 fs==2.4.16
