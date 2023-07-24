@@ -34,7 +34,7 @@ pytz==2023.3
     # via
     #   django
     #   xblock
-pyyaml==6.0
+pyyaml==6.0.1
     # via xblock
 simplejson==3.19.1
     # via xblock-utils
