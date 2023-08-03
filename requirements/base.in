@@ -4,3 +4,5 @@
 xblock-utils
 edx-opaque-keys
 Django
+openedx-django-pyfs
+lazy
