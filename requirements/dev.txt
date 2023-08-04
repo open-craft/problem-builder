@@ -33,12 +33,12 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.28.18
+boto3==1.28.19
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.31.18
+botocore==1.31.19
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -82,7 +82,7 @@ code-annotations==1.5.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   edx-lint
-cookiecutter==2.2.3
+cookiecutter==2.3.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -203,6 +203,11 @@ mako==1.2.4
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-utils
+markdown-it-py==3.0.0
+    # via
+    #   -r requirements/quality.txt
+    #   -r requirements/workbench.txt
+    #   rich
 markupsafe==2.1.3
     # via
     #   -r requirements/quality.txt
@@ -214,6 +219,11 @@ mccabe==0.7.0
     # via
     #   -r requirements/quality.txt
     #   pylint
+mdurl==0.1.2
+    # via
+    #   -r requirements/quality.txt
+    #   -r requirements/workbench.txt
+    #   markdown-it-py
 mock==5.1.0
     # via
     #   -r requirements/quality.txt
@@ -284,6 +294,11 @@ pycodestyle==2.11.0
     # via -r requirements/quality.txt
 pydocstyle==6.3.0
     # via -r requirements/quality.txt
+pygments==2.15.1
+    # via
+    #   -r requirements/quality.txt
+    #   -r requirements/workbench.txt
+    #   rich
 pylint==2.17.5
     # via
     #   -r requirements/quality.txt
@@ -365,6 +380,11 @@ requests==2.31.0
     #   -r requirements/workbench.txt
     #   cookiecutter
     #   xblock-sdk
+rich==13.5.2
+    # via
+    #   -r requirements/quality.txt
+    #   -r requirements/workbench.txt
+    #   cookiecutter
 s3transfer==0.6.1
     # via
     #   -r requirements/quality.txt
@@ -443,6 +463,7 @@ typing-extensions==4.7.1
     #   asgiref
     #   astroid
     #   pylint
+    #   rich
 urllib3==1.26.16
     # via
     #   -r requirements/quality.txt

@@ -16,13 +16,10 @@ asgiref==3.7.2
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.28.18
+boto3==1.28.19
+    # via fs-s3fs
+botocore==1.31.19
     # via
-    #   -r requirements/base.txt
-    #   fs-s3fs
-botocore==1.31.18
-    # via
-    #   -r requirements/base.txt
     #   boto3
     #   s3transfer
 certifi==2023.7.22
@@ -37,7 +34,7 @@ click==8.1.6
     #   cookiecutter
 code-annotations==1.5.0
     # via -r requirements/test.in
-cookiecutter==2.2.3
+cookiecutter==2.3.0
     # via xblock-sdk
 coverage[toml]==7.2.7
     # via pytest-cov
@@ -69,7 +66,6 @@ fs==2.4.16
     #   xblock
 fs-s3fs==1.1.1
     # via
-    #   -r requirements/base.txt
     #   openedx-django-pyfs
     #   xblock-sdk
 idna==3.4
@@ -82,11 +78,10 @@ jinja2==3.1.2
     #   cookiecutter
 jmespath==1.0.1
     # via
-    #   -r requirements/base.txt
     #   boto3
     #   botocore
 lazy==1.5
-    # via -r requirements/base.txt
+    # via xblock
 lxml==4.9.3
     # via
     #   -r requirements/base.txt
@@ -96,16 +91,20 @@ mako==1.2.4
     # via
     #   -r requirements/base.txt
     #   xblock-utils
+markdown-it-py==3.0.0
+    # via rich
 markupsafe==2.1.3
     # via
     #   -r requirements/base.txt
     #   jinja2
     #   mako
     #   xblock
+mdurl==0.1.2
+    # via markdown-it-py
 mock==5.1.0
     # via -r requirements/test.in
 openedx-django-pyfs==3.4.0
-    # via -r requirements/base.txt
+    # via xblock
 packaging==23.1
     # via pytest
 path==16.7.1
@@ -118,6 +117,8 @@ pluggy==1.2.0
     # via pytest
 polib==1.2.0
     # via edx-i18n-tools
+pygments==2.15.1
+    # via rich
 pymongo==3.13.0
     # via
     #   -r requirements/base.txt
@@ -158,10 +159,10 @@ requests==2.31.0
     # via
     #   cookiecutter
     #   xblock-sdk
+rich==13.5.2
+    # via cookiecutter
 s3transfer==0.6.1
-    # via
-    #   -r requirements/base.txt
-    #   boto3
+    # via boto3
 simplejson==3.19.1
     # via
     #   -r requirements/base.txt
@@ -192,9 +193,9 @@ typing-extensions==4.7.1
     # via
     #   -r requirements/base.txt
     #   asgiref
+    #   rich
 urllib3==1.26.16
     # via
-    #   -r requirements/base.txt
     #   botocore
     #   requests
 web-fragments==2.1.0
@@ -208,9 +209,10 @@ webob==1.8.7
     #   -r requirements/base.txt
     #   xblock
     #   xblock-sdk
-xblock==1.7.0
+xblock[django]==1.7.0
     # via
     #   -r requirements/base.txt
+    #   -r requirements/test.in
     #   xblock-sdk
     #   xblock-utils
 xblock-sdk==0.7.0

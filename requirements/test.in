@@ -12,3 +12,4 @@ mock                      # required by the workbench
 ddt                       # data-driven tests
 
 django-statici18n
+XBlock[django]
