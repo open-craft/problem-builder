@@ -40,7 +40,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Install Required System Packages
-      if: (matrix.toxenv == 'integration32') || (matrix.toxenv == 'integration42')
+      if: ${{ startsWith(matrix.toxenv, 'integration') }}
       run: |
         sudo apt-get update
         sudo apt-get install -y xvfb
