@@ -34,7 +34,7 @@ pytz==2023.3
     # via
     #   django
     #   xblock
-pyyaml==6.0
+pyyaml==6.0.1
     # via xblock
 simplejson==3.19.1
     # via xblock-utils
@@ -48,15 +48,15 @@ stevedore==5.1.0
     # via edx-opaque-keys
 typing-extensions==4.7.1
     # via asgiref
-web-fragments==2.0.0
+web-fragments==2.1.0
     # via
     #   xblock
     #   xblock-utils
 webob==1.8.7
     # via xblock
-xblock==1.6.2
+xblock==1.7.0
     # via xblock-utils
-xblock-utils==3.2.0
+xblock-utils==3.3.0
     # via -r requirements/base.in
 
 # The following packages are considered to be unsafe in a requirements file:

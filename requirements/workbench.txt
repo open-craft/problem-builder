@@ -24,20 +24,20 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.in
-boto3==1.28.3
+boto3==1.28.19
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.31.3
+botocore==1.31.19
     # via
     #   -r requirements/test.txt
     #   boto3
     #   s3transfer
-certifi==2023.5.7
+certifi==2023.7.22
     # via
     #   -r requirements/test.txt
     #   requests
-chardet==5.1.0
+chardet==5.2.0
     # via
     #   -r requirements/test.txt
     #   binaryornot
@@ -45,14 +45,14 @@ charset-normalizer==3.2.0
     # via
     #   -r requirements/test.txt
     #   requests
-click==8.1.5
+click==8.1.6
     # via
     #   -r requirements/test.txt
     #   code-annotations
     #   cookiecutter
-code-annotations==1.3.0
+code-annotations==1.5.0
     # via -r requirements/test.txt
-cookiecutter==2.2.3
+cookiecutter==2.3.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
@@ -62,7 +62,6 @@ coverage[toml]==7.2.7
     #   pytest-cov
 ddt==1.6.0
     # via -r requirements/test.txt
-django==3.2.20
     # via
     #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   -r requirements/test.txt
@@ -75,9 +74,9 @@ django-appconf==1.0.5
     # via
     #   -r requirements/test.txt
     #   django-statici18n
-django-statici18n==2.3.1
+django-statici18n==2.4.0
     # via -r requirements/test.txt
-edx-i18n-tools==1.0.0
+edx-i18n-tools==1.1.0
     # via -r requirements/test.txt
 edx-opaque-keys==2.3.0
     # via -r requirements/test.txt
@@ -130,12 +129,20 @@ mako==1.2.4
     # via
     #   -r requirements/test.txt
     #   xblock-utils
+markdown-it-py==3.0.0
+    # via
+    #   -r requirements/test.txt
+    #   rich
 markupsafe==2.1.3
     # via
     #   -r requirements/test.txt
     #   jinja2
     #   mako
     #   xblock
+mdurl==0.1.2
+    # via
+    #   -r requirements/test.txt
+    #   markdown-it-py
 mock==5.1.0
     # via -r requirements/test.txt
 mysqlclient==2.2.0
@@ -170,6 +177,10 @@ polib==1.2.0
     # via
     #   -r requirements/test.txt
     #   edx-i18n-tools
+pygments==2.15.1
+    # via
+    #   -r requirements/test.txt
+    #   rich
 pymongo==3.13.0
     # via
     #   -r requirements/test.txt
@@ -204,7 +215,7 @@ pytz==2023.3
     #   -r requirements/test.txt
     #   django
     #   xblock
-pyyaml==6.0
+pyyaml==6.0.1
     # via
     #   -r requirements/test.txt
     #   code-annotations
@@ -217,6 +228,10 @@ requests==2.31.0
     #   -r requirements/workbench.in
     #   cookiecutter
     #   xblock-sdk
+rich==13.5.2
+    # via
+    #   -r requirements/test.txt
+    #   cookiecutter
 s3transfer==0.6.1
     # via
     #   -r requirements/test.txt
@@ -261,13 +276,14 @@ typing-extensions==4.7.1
     # via
     #   -r requirements/test.txt
     #   asgiref
+    #   rich
 urllib3==1.26.16
     # via
     #   -r requirements/test.txt
     #   botocore
     #   requests
     #   selenium
-web-fragments==2.0.0
+web-fragments==2.1.0
     # via
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
@@ -280,15 +296,14 @@ webob==1.8.7
     #   -r requirements/workbench.in
     #   xblock
     #   xblock-sdk
-xblock[django]==1.6.2
+xblock[django]==1.7.0
     # via
     #   -r requirements/test.txt
-    #   -r requirements/workbench.in
     #   xblock-sdk
     #   xblock-utils
-xblock-sdk==0.6.0
+xblock-sdk==0.7.0
     # via -r requirements/test.txt
-xblock-utils==3.2.0
+xblock-utils==3.3.0
     # via -r requirements/test.txt
 
 # The following packages are considered to be unsafe in a requirements file:

@@ -102,6 +102,6 @@ upgrade: ## update the requirements/*.txt files with the latest packages satisfy
 	$(PIP_COMPILE) -o requirements/quality.txt requirements/quality.in
 	$(PIP_COMPILE) -o requirements/ci.txt requirements/ci.in
 	$(PIP_COMPILE) -o requirements/dev.txt requirements/dev.in
-	# Let tox control the Django version for tests
-	sed '/^[dD]jango==/d' requirements/test.txt > requirements/test.tmp
-	mv requirements/test.tmp requirements/test.txt
+	# Let tox control the Django version for tests & integration
+	sed -i '/^[dD]jango==/d' requirements/test.txt
+	sed -i '/^[dD]jango==/d' requirements/workbench.txt

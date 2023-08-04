@@ -25,7 +25,7 @@ class TestAnswerMixin(unittest.TestCase):
 
     def make_answer_mixin(self, name=None, course_id=None, student_id=None):
         if name is None:
-            name = get_random_string()
+            name = get_random_string(12)
         if course_id is None:
             course_id = self.course_id
         if student_id is None:

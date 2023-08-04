@@ -156,7 +156,7 @@ class ColorRule:
             elif isinstance(node, ast.Name) and node.id == "x":
                 return x
             elif isinstance(node, ast.BoolOp):  # Boolean operator: either "and" or "or" with two or more values
-                if type(node.op) == ast.And:
+                if isinstance(node.op, ast.And):
                     return all(eval_(val) for val in node.values)
                 else:  # Or:
                     for val in node.values:
