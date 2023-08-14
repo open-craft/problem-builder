@@ -16,9 +16,9 @@ asgiref==3.7.2
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.28.20
+boto3==1.28.25
     # via fs-s3fs
-botocore==1.31.20
+botocore==1.31.25
     # via
     #   boto3
     #   s3transfer
@@ -36,7 +36,7 @@ code-annotations==1.5.0
     # via -r requirements/test.in
 cookiecutter==2.3.0
     # via xblock-sdk
-coverage[toml]==7.2.7
+coverage[toml]==7.3.0
     # via pytest-cov
 ddt==1.6.0
     # via -r requirements/test.in
@@ -54,7 +54,7 @@ django-statici18n==2.4.0
     # via -r requirements/test.in
 edx-i18n-tools==1.1.0
     # via -r requirements/test.in
-edx-opaque-keys==2.3.0
+edx-opaque-keys==2.4.0
     # via -r requirements/base.txt
 exceptiongroup==1.1.2
     # via pytest
@@ -217,7 +217,7 @@ xblock[django]==1.7.0
     #   xblock-utils
 xblock-sdk==0.7.0
     # via -r requirements/test.in
-xblock-utils==3.3.0
+xblock-utils==3.4.0
     # via -r requirements/base.txt
 
 # The following packages are considered to be unsafe in a requirements file:
