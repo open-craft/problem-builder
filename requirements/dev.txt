@@ -33,18 +33,18 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.28.40
+boto3==1.28.44
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.31.40
+botocore==1.31.44
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   boto3
     #   s3transfer
-build==1.0.0
+build==1.0.3
     # via
     #   -r requirements/pip-tools.txt
     #   pip-tools
@@ -87,7 +87,7 @@ cookiecutter==2.3.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-sdk
-coverage[toml]==7.3.0
+coverage[toml]==7.3.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -104,7 +104,7 @@ distlib==0.3.7
     # via
     #   -r requirements/ci.txt
     #   virtualenv
-django==3.2.20
+django==3.2.21
     # via
     #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   -r requirements/quality.txt
@@ -337,7 +337,7 @@ pyproject-hooks==1.0.0
     # via
     #   -r requirements/pip-tools.txt
     #   build
-pytest==7.4.1
+pytest==7.4.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -364,7 +364,7 @@ python-slugify==8.0.1
     #   -r requirements/workbench.txt
     #   code-annotations
     #   cookiecutter
-pytz==2023.3
+pytz==2023.3.post1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -478,7 +478,7 @@ urllib3==1.26.16
     #   botocore
     #   requests
     #   selenium
-virtualenv==20.24.4
+virtualenv==20.24.5
     # via
     #   -r requirements/ci.txt
     #   tox
