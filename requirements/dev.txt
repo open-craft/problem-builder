@@ -19,7 +19,7 @@ asgiref==3.7.2
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-astroid==2.15.6
+astroid==2.15.7
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -33,12 +33,12 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.28.49
+boto3==1.28.53
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.31.49
+botocore==1.31.53
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -82,7 +82,7 @@ code-annotations==1.5.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   edx-lint
-cookiecutter==2.3.0
+cookiecutter==2.3.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -129,7 +129,7 @@ edx-i18n-tools==1.2.0
     #   -r requirements/workbench.txt
 edx-lint==5.3.4
     # via -r requirements/quality.txt
-edx-opaque-keys==2.5.0
+edx-opaque-keys==2.5.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -460,7 +460,7 @@ tox==3.28.0
     #   tox-battery
 tox-battery==0.6.2
     # via -r requirements/ci.txt
-typing-extensions==4.7.1
+typing-extensions==4.8.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -515,7 +515,7 @@ xblock-utils==3.4.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-zipp==3.16.2
+zipp==3.17.0
     # via
     #   -r requirements/pip-tools.txt
     #   importlib-metadata
