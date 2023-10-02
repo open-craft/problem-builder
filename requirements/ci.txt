@@ -10,7 +10,7 @@ filelock==3.12.4
     # via
     #   tox
     #   virtualenv
-packaging==23.1
+packaging==23.2
     # via tox
 platformdirs==3.10.0
     # via virtualenv
