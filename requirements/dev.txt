@@ -33,12 +33,12 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.28.62
+boto3==1.28.63
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.31.62
+botocore==1.31.63
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -91,6 +91,7 @@ coverage[toml]==7.3.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
+    #   coverage
     #   pytest-cov
 ddt==1.6.0
     # via
@@ -268,7 +269,7 @@ pbr==5.11.1
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   stevedore
-pillow==10.0.1
+pillow==10.1.0
     # via
     #   -r requirements/workbench.txt
     #   needle
@@ -296,7 +297,7 @@ py==1.11.0
     # via
     #   -r requirements/ci.txt
     #   tox
-pycodestyle==2.11.0
+pycodestyle==2.11.1
     # via -r requirements/quality.txt
 pydocstyle==6.3.0
     # via -r requirements/quality.txt
@@ -513,6 +514,7 @@ xblock[django]==1.8.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
+    #   xblock
     #   xblock-sdk
     #   xblock-utils
 xblock-sdk==0.7.0

@@ -16,11 +16,11 @@ asgiref==3.7.2
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.28.62
+boto3==1.28.63
     # via
     #   -r requirements/base.txt
     #   fs-s3fs
-botocore==1.31.62
+botocore==1.31.63
     # via
     #   -r requirements/base.txt
     #   boto3
@@ -40,7 +40,9 @@ code-annotations==1.5.0
 cookiecutter==2.4.0
     # via xblock-sdk
 coverage[toml]==7.3.2
-    # via pytest-cov
+    # via
+    #   coverage
+    #   pytest-cov
 ddt==1.6.0
     # via -r requirements/test.in
     # via
@@ -231,6 +233,7 @@ xblock[django]==1.8.1
     # via
     #   -r requirements/base.txt
     #   -r requirements/test.in
+    #   xblock
     #   xblock-sdk
     #   xblock-utils
 xblock-sdk==0.7.0
