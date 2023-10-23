@@ -19,7 +19,7 @@ asgiref==3.7.2
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-astroid==2.15.8
+astroid==3.0.1
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -33,12 +33,12 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.28.63
+boto3==1.28.68
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.31.63
+botocore==1.31.68
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -58,7 +58,7 @@ chardet==5.2.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   binaryornot
-charset-normalizer==3.3.0
+charset-normalizer==3.3.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -193,10 +193,6 @@ lazy==1.6
     #   -r requirements/workbench.txt
     #   bok-choy
     #   xblock
-lazy-object-proxy==1.9.0
-    # via
-    #   -r requirements/quality.txt
-    #   astroid
 lxml==4.9.3
     # via
     #   -r requirements/quality.txt
@@ -306,7 +302,7 @@ pygments==2.16.1
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   rich
-pylint==2.17.7
+pylint==3.0.2
     # via
     #   -r requirements/quality.txt
     #   edx-lint
@@ -317,7 +313,7 @@ pylint-celery==0.3
     # via
     #   -r requirements/quality.txt
     #   edx-lint
-pylint-django==2.5.3
+pylint-django==2.5.4
     # via
     #   -r requirements/quality.txt
     #   edx-lint
@@ -478,7 +474,7 @@ typing-extensions==4.8.0
     #   edx-opaque-keys
     #   pylint
     #   rich
-urllib3==1.26.17
+urllib3==1.26.18
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -506,10 +502,6 @@ wheel==0.41.2
     # via
     #   -r requirements/pip-tools.txt
     #   pip-tools
-wrapt==1.15.0
-    # via
-    #   -r requirements/quality.txt
-    #   astroid
 xblock[django]==1.8.1
     # via
     #   -r requirements/quality.txt
