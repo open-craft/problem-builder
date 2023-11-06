@@ -16,11 +16,11 @@ asgiref==3.7.2
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.28.68
+boto3==1.28.78
     # via
     #   -r requirements/base.txt
     #   fs-s3fs
-botocore==1.31.68
+botocore==1.31.78
     # via
     #   -r requirements/base.txt
     #   boto3
@@ -29,7 +29,7 @@ certifi==2023.7.22
     # via requests
 chardet==5.2.0
     # via binaryornot
-charset-normalizer==3.3.1
+charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via
@@ -138,13 +138,13 @@ pymongo==3.13.0
     #   edx-opaque-keys
 pypng==0.20220715.0
     # via xblock-sdk
-pytest==7.4.2
+pytest==7.4.3
     # via
     #   pytest-cov
     #   pytest-django
 pytest-cov==4.1.0
     # via -r requirements/test.in
-pytest-django==4.5.2
+pytest-django==4.6.0
     # via -r requirements/test.in
 python-dateutil==2.8.2
     # via
