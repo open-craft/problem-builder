@@ -24,16 +24,16 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.in
-boto3==1.28.78
+boto3==1.29.3
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.31.78
+botocore==1.32.3
     # via
     #   -r requirements/test.txt
     #   boto3
     #   s3transfer
-certifi==2023.7.22
+certifi==2023.11.17
     # via
     #   -r requirements/test.txt
     #   requests
@@ -61,7 +61,7 @@ coverage[toml]==7.3.2
     #   -r requirements/test.txt
     #   coverage
     #   pytest-cov
-ddt==1.6.0
+ddt==1.7.0
     # via -r requirements/test.txt
     # via
     #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
@@ -127,7 +127,7 @@ lxml==4.9.3
     #   edx-i18n-tools
     #   xblock
     #   xblock-sdk
-mako==1.2.4
+mako==1.3.0
     # via
     #   -r requirements/test.txt
     #   xblock
@@ -166,7 +166,7 @@ path==16.7.1
     # via
     #   -r requirements/test.txt
     #   edx-i18n-tools
-pbr==5.11.1
+pbr==6.0.0
     # via
     #   -r requirements/test.txt
     #   stevedore
@@ -180,7 +180,7 @@ polib==1.2.0
     # via
     #   -r requirements/test.txt
     #   edx-i18n-tools
-pygments==2.16.1
+pygments==2.17.1
     # via
     #   -r requirements/test.txt
     #   rich
@@ -200,7 +200,7 @@ pytest==7.4.3
     #   pytest-django
 pytest-cov==4.1.0
     # via -r requirements/test.txt
-pytest-django==4.6.0
+pytest-django==4.7.0
     # via -r requirements/test.txt
 python-dateutil==2.8.2
     # via
@@ -231,7 +231,7 @@ requests==2.31.0
     #   -r requirements/workbench.in
     #   cookiecutter
     #   xblock-sdk
-rich==13.6.0
+rich==13.7.0
     # via
     #   -r requirements/test.txt
     #   cookiecutter
