@@ -4,6 +4,8 @@
 #
 #    make upgrade
 #
+annotated-types==0.6.0
+    # via pydantic
 appdirs==1.4.4
     # via
     #   -r requirements/test.txt
@@ -24,15 +26,17 @@ binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
     #   cookiecutter
-boto3==1.33.6
+boto3==1.33.11
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.33.6
+botocore==1.33.11
     # via
     #   -r requirements/test.txt
     #   boto3
     #   s3transfer
+cerberus==1.3.5
+    # via plette
 certifi==2023.11.17
     # via
     #   -r requirements/test.txt
@@ -71,6 +75,8 @@ ddt==1.7.0
     # via -r requirements/test.txt
 dill==0.3.7
     # via pylint
+distlib==0.3.7
+    # via requirementslib
 django==3.2.23
     # via
     #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
@@ -86,6 +92,8 @@ django-appconf==1.0.6
     #   django-statici18n
 django-statici18n==2.4.0
     # via -r requirements/test.txt
+docopt==0.6.2
+    # via pipreqs
 edx-i18n-tools==1.3.0
     # via -r requirements/test.txt
 edx-lint==5.3.6
@@ -115,7 +123,7 @@ iniconfig==2.0.0
     # via
     #   -r requirements/test.txt
     #   pytest
-isort==5.12.0
+isort==5.13.0
     # via
     #   -r requirements/quality.in
     #   pylint
@@ -170,7 +178,7 @@ packaging==23.2
     # via
     #   -r requirements/test.txt
     #   pytest
-path==16.7.1
+path==16.9.0
     # via
     #   -r requirements/test.txt
     #   edx-i18n-tools
@@ -178,10 +186,18 @@ pbr==6.0.0
     # via
     #   -r requirements/test.txt
     #   stevedore
-platformdirs==3.11.0
+pep517==0.13.1
+    # via requirementslib
+pip-api==0.0.30
+    # via isort
+pipreqs==0.4.13
+    # via isort
+platformdirs==4.1.0
     # via
-    #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   pylint
+    #   requirementslib
+plette[validation]==0.4.4
+    # via requirementslib
 pluggy==1.3.0
     # via
     #   -r requirements/test.txt
@@ -192,6 +208,10 @@ polib==1.2.0
     #   edx-i18n-tools
 pycodestyle==2.11.1
     # via -r requirements/quality.in
+pydantic==2.5.2
+    # via requirementslib
+pydantic-core==2.14.5
+    # via pydantic
 pydocstyle==6.3.0
     # via -r requirements/quality.in
 pygments==2.17.2
@@ -256,7 +276,11 @@ requests==2.31.0
     # via
     #   -r requirements/test.txt
     #   cookiecutter
+    #   requirementslib
     #   xblock-sdk
+    #   yarg
+requirementslib==3.0.0
+    # via isort
 rich==13.7.0
     # via
     #   -r requirements/test.txt
@@ -297,20 +321,27 @@ tomli==2.0.1
     # via
     #   -r requirements/test.txt
     #   coverage
+    #   pep517
     #   pylint
     #   pytest
 tomlkit==0.12.3
-    # via pylint
+    # via
+    #   plette
+    #   pylint
+    #   requirementslib
 types-python-dateutil==2.8.19.14
     # via
     #   -r requirements/test.txt
     #   arrow
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via
     #   -r requirements/test.txt
+    #   annotated-types
     #   asgiref
     #   astroid
     #   edx-opaque-keys
+    #   pydantic
+    #   pydantic-core
     #   pylint
     #   rich
 urllib3==1.26.18
@@ -339,6 +370,9 @@ xblock-sdk==0.7.0
     # via -r requirements/test.txt
 xblock-utils==4.0.0
     # via -r requirements/test.txt
+yarg==0.1.9
+    # via pipreqs
 
 # The following packages are considered to be unsafe in a requirements file:
+# pip
 # setuptools
