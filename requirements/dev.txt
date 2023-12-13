@@ -19,7 +19,7 @@ asgiref==3.7.2
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-astroid==3.0.1
+astroid==3.0.2
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -33,12 +33,12 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.33.6
+boto3==1.33.13
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.33.6
+botocore==1.33.13
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -101,7 +101,7 @@ dill==0.3.7
     # via
     #   -r requirements/quality.txt
     #   pylint
-distlib==0.3.7
+distlib==0.3.8
     # via
     #   -r requirements/ci.txt
     #   virtualenv
@@ -171,7 +171,7 @@ iniconfig==2.0.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   pytest
-isort==5.12.0
+isort==5.13.1
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -231,7 +231,7 @@ mock==5.1.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-mysqlclient==2.2.0
+mysqlclient==2.2.1
     # via -r requirements/workbench.txt
 needle==0.5.0
     # via
@@ -255,7 +255,7 @@ packaging==23.2
     #   build
     #   pytest
     #   tox
-path==16.7.1
+path==16.9.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -271,9 +271,8 @@ pillow==10.1.0
     #   needle
 pip-tools==7.3.0
     # via -r requirements/pip-tools.txt
-platformdirs==3.11.0
+platformdirs==4.1.0
     # via
-    #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   -r requirements/ci.txt
     #   -r requirements/quality.txt
     #   pylint
@@ -303,7 +302,7 @@ pygments==2.17.2
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   rich
-pylint==3.0.2
+pylint==3.0.3
     # via
     #   -r requirements/quality.txt
     #   edx-lint
@@ -465,7 +464,7 @@ types-python-dateutil==2.8.19.14
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   arrow
-typing-extensions==4.8.0
+typing-extensions==4.9.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
