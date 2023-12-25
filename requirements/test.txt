@@ -16,11 +16,11 @@ asgiref==3.7.2
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.34.2
+boto3==1.34.7
     # via
     #   -r requirements/base.txt
     #   fs-s3fs
-botocore==1.34.2
+botocore==1.34.7
     # via
     #   -r requirements/base.txt
     #   boto3
@@ -39,7 +39,7 @@ code-annotations==1.5.0
     # via -r requirements/test.in
 cookiecutter==2.5.0
     # via xblock-sdk
-coverage[toml]==7.3.3
+coverage[toml]==7.3.4
     # via
     #   coverage
     #   pytest-cov
@@ -91,7 +91,7 @@ lazy==1.6
     # via
     #   -r requirements/base.txt
     #   xblock
-lxml==4.9.3
+lxml==4.9.4
     # via
     #   -r requirements/base.txt
     #   edx-i18n-tools
@@ -174,7 +174,7 @@ requests==2.31.0
     #   xblock-sdk
 rich==13.7.0
     # via cookiecutter
-s3transfer==0.9.0
+s3transfer==0.10.0
     # via
     #   -r requirements/base.txt
     #   boto3
