@@ -33,12 +33,12 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.34.7
+boto3==1.34.11
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.34.7
+botocore==1.34.11
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -87,7 +87,7 @@ cookiecutter==2.5.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-sdk
-coverage[toml]==7.3.4
+coverage[toml]==7.4.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -193,7 +193,7 @@ lazy==1.6
     #   -r requirements/workbench.txt
     #   bok-choy
     #   xblock
-lxml==4.9.4
+lxml==5.0.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -336,7 +336,7 @@ pyproject-hooks==1.0.0
     # via
     #   -r requirements/pip-tools.txt
     #   build
-pytest==7.4.3
+pytest==7.4.4
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
