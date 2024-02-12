@@ -24,11 +24,11 @@ binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
     #   cookiecutter
-boto3==1.34.34
+boto3==1.34.39
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.34.34
+botocore==1.34.39
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -71,7 +71,7 @@ ddt==1.7.1
     # via -r requirements/test.txt
 dill==0.3.8
     # via pylint
-django==3.2.23
+django==3.2.24
     # via
     #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   -r requirements/test.txt
@@ -233,7 +233,7 @@ python-dateutil==2.8.2
     #   arrow
     #   botocore
     #   xblock
-python-slugify==8.0.3
+python-slugify==8.0.4
     # via
     #   -r requirements/test.txt
     #   code-annotations
