@@ -16,11 +16,11 @@ asgiref==3.7.2
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.34.39
+boto3==1.34.44
     # via
     #   -r requirements/base.txt
     #   fs-s3fs
-botocore==1.34.39
+botocore==1.34.44
     # via
     #   -r requirements/base.txt
     #   boto3
@@ -40,9 +40,7 @@ code-annotations==1.6.0
 cookiecutter==2.5.0
     # via xblock-sdk
 coverage[toml]==7.4.1
-    # via
-    #   coverage
-    #   pytest-cov
+    # via pytest-cov
 ddt==1.7.1
     # via -r requirements/test.in
     # via
@@ -114,7 +112,7 @@ mdurl==0.1.2
     # via markdown-it-py
 mock==5.1.0
     # via -r requirements/test.in
-openedx-django-pyfs==3.4.1
+openedx-django-pyfs==3.5.0
     # via
     #   -r requirements/base.txt
     #   xblock
@@ -138,7 +136,7 @@ pymongo==3.13.0
     #   edx-opaque-keys
 pypng==0.20220715.0
     # via xblock-sdk
-pytest==8.0.0
+pytest==8.0.1
     # via
     #   pytest-cov
     #   pytest-django
@@ -233,7 +231,6 @@ xblock[django]==1.10.0
     # via
     #   -r requirements/base.txt
     #   -r requirements/test.in
-    #   xblock
     #   xblock-sdk
     #   xblock-utils
 xblock-sdk==0.7.0
