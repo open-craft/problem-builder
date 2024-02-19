@@ -24,11 +24,11 @@ binaryornot==0.4.4
     # via
     #   -r requirements/test.txt
     #   cookiecutter
-boto3==1.34.39
+boto3==1.34.44
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.34.39
+botocore==1.34.44
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -65,7 +65,6 @@ cookiecutter==2.5.0
 coverage[toml]==7.4.1
     # via
     #   -r requirements/test.txt
-    #   coverage
     #   pytest-cov
 ddt==1.7.1
     # via -r requirements/test.txt
@@ -162,7 +161,7 @@ mdurl==0.1.2
     #   markdown-it-py
 mock==5.1.0
     # via -r requirements/test.txt
-openedx-django-pyfs==3.4.1
+openedx-django-pyfs==3.5.0
     # via
     #   -r requirements/test.txt
     #   xblock
@@ -218,7 +217,7 @@ pypng==0.20220715.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-pytest==8.0.0
+pytest==8.0.1
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -330,7 +329,6 @@ webob==1.8.7
 xblock[django]==1.10.0
     # via
     #   -r requirements/test.txt
-    #   xblock
     #   xblock-sdk
     #   xblock-utils
 xblock-sdk==0.7.0
