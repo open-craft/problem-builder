@@ -24,11 +24,11 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.in
-boto3==1.34.44
+boto3==1.34.49
     # via
     #   -r requirements/test.txt
     #   fs-s3fs
-botocore==1.34.44
+botocore==1.34.49
     # via
     #   -r requirements/test.txt
     #   boto3
@@ -52,11 +52,11 @@ click==8.1.7
     #   cookiecutter
 code-annotations==1.6.0
     # via -r requirements/test.txt
-cookiecutter==2.5.0
+cookiecutter==2.6.0
     # via
     #   -r requirements/test.txt
     #   xblock-sdk
-coverage[toml]==7.4.1
+coverage[toml]==7.4.3
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -192,7 +192,7 @@ pypng==0.20220715.0
     #   -r requirements/test.txt
     #   -r requirements/workbench.in
     #   xblock-sdk
-pytest==8.0.1
+pytest==8.0.2
     # via
     #   -r requirements/test.txt
     #   pytest-cov
@@ -261,7 +261,7 @@ sqlparse==0.4.4
     # via
     #   -r requirements/test.txt
     #   django
-stevedore==5.1.0
+stevedore==5.2.0
     # via
     #   -r requirements/test.txt
     #   code-annotations
@@ -279,7 +279,7 @@ types-python-dateutil==2.8.19.20240106
     # via
     #   -r requirements/test.txt
     #   arrow
-typing-extensions==4.9.0
+typing-extensions==4.10.0
     # via
     #   -r requirements/test.txt
     #   asgiref
