@@ -6,11 +6,11 @@
 #
 distlib==0.3.8
     # via virtualenv
-filelock==3.13.1
+filelock==3.13.3
     # via
     #   tox
     #   virtualenv
-packaging==23.2
+packaging==24.0
     # via
     #   pyproject-api
     #   tox
