@@ -6,19 +6,19 @@
 #
 distlib==0.3.8
     # via virtualenv
-filelock==3.13.1
+filelock==3.14.0
     # via
     #   tox
     #   virtualenv
-packaging==23.2
+packaging==24.0
     # via
     #   pyproject-api
     #   tox
-platformdirs==4.2.0
+platformdirs==4.2.1
     # via
     #   tox
     #   virtualenv
-pluggy==1.4.0
+pluggy==1.5.0
     # via tox
 py==1.11.0
     # via tox
@@ -34,5 +34,5 @@ tox==3.28.0
     #   tox-battery
 tox-battery==0.6.2
     # via -r requirements/ci.in
-virtualenv==20.25.1
+virtualenv==20.26.1
     # via tox
