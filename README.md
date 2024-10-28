@@ -1,3 +1,12 @@
+> [!WARNING]
+> Problem Builder is no longer being developed by OpenCraft.
+> It will be supported with compatibility and security fixes
+> till the Teak release after which this repository will be
+> stop receiving further updates and be archived.
+> A simplified XBlock with some of the key features of this
+> block is being investigated at OpenCraft.
+
+
 ## Problem Builder and Step Builder
 
 [![Circle CI](https://circleci.com/gh/open-craft/problem-builder.svg?style=svg)](https://circleci.com/gh/open-craft/problem-builder)

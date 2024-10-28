@@ -167,7 +167,13 @@ BLOCKS = [
 setup(
     name='xblock-problem-builder',
     version=VERSION,
-    description='XBlock - Problem Builder',
+    description='XBlock - Problem Builder [deprecated]',
+    classifiers=[
+        "Development Status :: 7 - Inactive",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.11",
+    ],
     long_description=README,
     long_description_content_type='text/markdown',
     author='OpenCraft',
