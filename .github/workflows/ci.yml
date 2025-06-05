@@ -57,5 +57,6 @@ jobs:
       if: matrix.python-version == '3.8' && matrix.toxenv == 'py38-django42'
       uses: codecov/codecov-action@v5
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         flags: unittests
         fail_ci_if_error: true
