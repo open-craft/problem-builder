@@ -70,7 +70,7 @@ def upgrade_block(store, block, from_version="v1"):
         pass  # Perhaps HtmlModule has been converted to an XBlock?
     else:
         @classmethod
-        def parse_xml_for_HtmlDescriptor(cls, node, runtime, keys, id_generator):
+        def parse_xml_for_HtmlDescriptor(cls, node, runtime, keys):
             block = runtime.construct_xblock_from_class(cls, keys)
             block.data = node.text if node.text else ""
             for child in list(node):

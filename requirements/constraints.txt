@@ -12,3 +12,4 @@
 -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
 
 bok-choy==0.7.1
+XBlock[django]==2.0.0
