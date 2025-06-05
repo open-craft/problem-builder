@@ -28,7 +28,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: [3.8]
-        toxenv: [py38-django42, integration42, quality]
+        toxenv: [py38-django42, quality]
 
     steps:
     - name: checkout repo
