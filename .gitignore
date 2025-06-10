@@ -1,6 +1,8 @@
 *~
 *.pyc
-/.coverage*
+.coverage
+.coverage.*
+coverage.xml
 /xblock_problem_builder.egg-info
 /workbench*
 /dist

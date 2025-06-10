@@ -179,7 +179,7 @@ setup(
     ),
     package_data=package_data("problem_builder", ["templates", "public", "translations"]),
     install_requires=load_requirements('requirements/base.in'),
-    python_requires=">=3.8",
+    python_requires=">=3.11",
     keywords='Python edx',
     entry_points={
         'xblock.v1': BLOCKS,
