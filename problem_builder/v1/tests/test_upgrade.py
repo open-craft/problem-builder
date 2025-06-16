@@ -88,7 +88,7 @@ class TestUpgrade(unittest.TestCase):
         usage_id = self.runtime.id_generator.create_usage(def_id)
         keys = ScopeIds(None, block_type, def_id, usage_id)
         block_class = self.runtime.mixologist.mix(self.runtime.load_block_type(block_type))
-        block = block_class.parse_xml(node, self.runtime, keys, self.runtime.id_generator)
+        block = block_class.parse_xml(node, self.runtime, keys)
         block.save()
         return block
 

@@ -59,7 +59,7 @@ test.unit: ## run all unit tests
 	tox -- $(TEST)
 
 test.integration: ## run all integration tests
-	tox -e integration -- $(TEST)
+	tox -e integration42 -- $(TEST)
 
 test: test.unit test.integration test.quality ## Run all tests
 
