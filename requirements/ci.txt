@@ -4,7 +4,7 @@
 #
 #    make upgrade
 #
-distlib==0.3.9
+distlib==0.4.0
     # via virtualenv
 filelock==3.18.0
     # via
@@ -30,5 +30,5 @@ tox==3.28.0
     #   tox-battery
 tox-battery==0.6.2
     # via -r requirements/ci.in
-virtualenv==20.31.2
+virtualenv==20.32.0
     # via tox
