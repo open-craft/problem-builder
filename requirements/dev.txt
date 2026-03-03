@@ -9,17 +9,17 @@ appdirs==1.4.4
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs
-arrow==1.3.0
+arrow==1.4.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   cookiecutter
-asgiref==3.8.1
+asgiref==3.11.1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-astroid==3.3.10
+astroid==4.0.4
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -33,37 +33,37 @@ bok-choy==0.7.1
     # via
     #   -c requirements/constraints.txt
     #   -r requirements/workbench.txt
-boto3==1.38.37
+boto3==1.42.59
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   fs-s3fs
-botocore==1.38.37
+botocore==1.42.59
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   boto3
     #   s3transfer
-build==1.2.2.post1
+build==1.4.0
     # via
     #   -r requirements/pip-tools.txt
     #   pip-tools
-certifi==2025.6.15
+certifi==2026.2.25
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   requests
-chardet==5.2.0
+chardet==6.0.0.post1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   binaryornot
-charset-normalizer==3.4.2
+charset-normalizer==3.4.4
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   requests
-click==8.2.1
+click==8.3.1
     # via
     #   -r requirements/pip-tools.txt
     #   -r requirements/quality.txt
@@ -77,17 +77,17 @@ click-log==0.4.0
     # via
     #   -r requirements/quality.txt
     #   edx-lint
-code-annotations==2.3.0
+code-annotations==2.3.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   edx-lint
-cookiecutter==2.6.0
+cookiecutter==2.7.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock-sdk
-coverage[toml]==7.9.1
+coverage[toml]==7.13.4
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -96,15 +96,15 @@ ddt==1.7.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-dill==0.4.0
+dill==0.4.1
     # via
     #   -r requirements/quality.txt
     #   pylint
-distlib==0.3.9
+distlib==0.4.0
     # via
     #   -r requirements/ci.txt
     #   virtualenv
-django==4.2.23
+django==5.2.11
     # via
     #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   -r requirements/quality.txt
@@ -114,7 +114,7 @@ django==4.2.23
     #   edx-i18n-tools
     #   openedx-django-pyfs
     #   xblock-sdk
-django-appconf==1.1.0
+django-appconf==1.2.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -123,7 +123,7 @@ django-statici18n==2.6.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-dnspython==2.7.0
+dnspython==2.8.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -134,13 +134,14 @@ edx-i18n-tools==1.9.0
     #   -r requirements/workbench.txt
 edx-lint==5.6.0
     # via -r requirements/quality.txt
-edx-opaque-keys==3.0.0
+edx-opaque-keys==3.1.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-filelock==3.18.0
+filelock==3.25.0
     # via
     #   -r requirements/ci.txt
+    #   python-discovery
     #   tox
     #   virtualenv
 fs==2.4.16
@@ -156,17 +157,17 @@ fs-s3fs==1.1.1
     #   -r requirements/workbench.txt
     #   openedx-django-pyfs
     #   xblock-sdk
-idna==3.10
+idna==3.11
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   requests
-iniconfig==2.1.0
+iniconfig==2.3.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   pytest
-isort==6.0.1
+isort==8.0.1
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -176,7 +177,7 @@ jinja2==3.1.6
     #   -r requirements/workbench.txt
     #   code-annotations
     #   cookiecutter
-jmespath==1.0.1
+jmespath==1.1.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -188,7 +189,7 @@ lazy==1.6
     #   -r requirements/workbench.txt
     #   bok-choy
     #   xblock
-lxml[html-clean]==5.4.0
+lxml[html-clean]==6.0.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -196,7 +197,7 @@ lxml[html-clean]==5.4.0
     #   lxml-html-clean
     #   xblock
     #   xblock-sdk
-lxml-html-clean==0.4.2
+lxml-html-clean==0.4.4
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -207,12 +208,12 @@ mako==1.3.10
     #   -r requirements/workbench.txt
     #   xblock
     #   xblock-utils
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   rich
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -232,7 +233,7 @@ mock==5.2.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-mysqlclient==2.2.7
+mysqlclient==2.2.8
     # via -r requirements/workbench.txt
 needle==0.5.0
     # via
@@ -247,7 +248,7 @@ openedx-django-pyfs==3.8.0
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock
-packaging==25.0
+packaging==26.0
     # via
     #   -r requirements/ci.txt
     #   -r requirements/pip-tools.txt
@@ -256,27 +257,24 @@ packaging==25.0
     #   build
     #   pytest
     #   tox
+    #   wheel
 path==16.16.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   edx-i18n-tools
-pbr==6.1.1
-    # via
-    #   -r requirements/quality.txt
-    #   -r requirements/workbench.txt
-    #   stevedore
-pillow==11.2.1
+pillow==12.1.1
     # via
     #   -r requirements/workbench.txt
     #   needle
-pip-tools==7.4.1
+pip-tools==7.5.3
     # via -r requirements/pip-tools.txt
-platformdirs==4.3.8
+platformdirs==4.9.2
     # via
     #   -r requirements/ci.txt
     #   -r requirements/quality.txt
     #   pylint
+    #   python-discovery
     #   virtualenv
 pluggy==1.6.0
     # via
@@ -295,17 +293,17 @@ py==1.11.0
     # via
     #   -r requirements/ci.txt
     #   tox
-pycodestyle==2.13.0
+pycodestyle==2.14.0
     # via -r requirements/quality.txt
 pydocstyle==6.3.0
     # via -r requirements/quality.txt
-pygments==2.19.1
+pygments==2.19.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   pytest
     #   rich
-pylint==3.3.7
+pylint==4.0.5
     # via
     #   -r requirements/quality.txt
     #   edx-lint
@@ -316,16 +314,16 @@ pylint-celery==0.3
     # via
     #   -r requirements/quality.txt
     #   edx-lint
-pylint-django==2.6.1
+pylint-django==2.7.0
     # via
     #   -r requirements/quality.txt
     #   edx-lint
-pylint-plugin-utils==0.8.2
+pylint-plugin-utils==0.9.0
     # via
     #   -r requirements/quality.txt
     #   pylint-celery
     #   pylint-django
-pymongo==4.13.2
+pymongo==4.16.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -340,17 +338,17 @@ pyproject-hooks==1.2.0
     #   -r requirements/pip-tools.txt
     #   build
     #   pip-tools
-pytest==8.4.0
+pytest==9.0.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   pytest-cov
     #   pytest-django
-pytest-cov==6.2.1
+pytest-cov==7.0.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
-pytest-django==4.11.1
+pytest-django==4.12.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -361,18 +359,22 @@ python-dateutil==2.9.0.post0
     #   arrow
     #   botocore
     #   xblock
+python-discovery==1.1.0
+    # via
+    #   -r requirements/ci.txt
+    #   virtualenv
 python-slugify==8.0.4
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   code-annotations
     #   cookiecutter
-pytz==2025.2
+pytz==2026.1.post1
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   xblock
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -380,18 +382,18 @@ pyyaml==6.0.2
     #   cookiecutter
     #   edx-i18n-tools
     #   xblock
-requests==2.32.4
+requests==2.32.5
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   cookiecutter
     #   xblock-sdk
-rich==14.0.0
+rich==14.3.3
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   cookiecutter
-s3transfer==0.13.0
+s3transfer==0.16.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -401,7 +403,7 @@ selenium==3.141.0
     #   -r requirements/workbench.txt
     #   bok-choy
     #   needle
-simplejson==3.20.1
+simplejson==3.20.2
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -423,12 +425,12 @@ snowballstemmer==3.0.1
     # via
     #   -r requirements/quality.txt
     #   pydocstyle
-sqlparse==0.5.3
+sqlparse==0.5.5
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   django
-stevedore==5.4.1
+stevedore==5.7.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
@@ -439,7 +441,7 @@ text-unidecode==1.3
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   python-slugify
-tomlkit==0.13.3
+tomlkit==0.14.0
     # via
     #   -r requirements/quality.txt
     #   pylint
@@ -449,25 +451,24 @@ tox==3.28.0
     #   tox-battery
 tox-battery==0.6.2
     # via -r requirements/ci.txt
-types-python-dateutil==2.9.0.20250516
-    # via
-    #   -r requirements/quality.txt
-    #   -r requirements/workbench.txt
-    #   arrow
-typing-extensions==4.14.0
+typing-extensions==4.15.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   edx-opaque-keys
-urllib3==2.2.3
+tzdata==2025.3
     # via
-    #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
+    #   -r requirements/quality.txt
+    #   -r requirements/workbench.txt
+    #   arrow
+urllib3==2.6.3
+    # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt
     #   botocore
     #   requests
     #   selenium
-virtualenv==20.31.2
+virtualenv==21.1.0
     # via
     #   -r requirements/ci.txt
     #   tox
@@ -484,11 +485,11 @@ webob==1.8.9
     #   -r requirements/workbench.txt
     #   xblock
     #   xblock-sdk
-wheel==0.45.1
+wheel==0.46.3
     # via
     #   -r requirements/pip-tools.txt
     #   pip-tools
-xblock[django]==5.2.0
+xblock[django]==5.3.0
     # via
     #   -r requirements/quality.txt
     #   -r requirements/workbench.txt

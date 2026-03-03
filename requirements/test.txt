@@ -8,38 +8,38 @@ appdirs==1.4.4
     # via
     #   -r requirements/base.txt
     #   fs
-arrow==1.3.0
+arrow==1.4.0
     # via cookiecutter
-asgiref==3.8.1
+asgiref==3.11.1
     # via
     #   -r requirements/base.txt
     #   django
 binaryornot==0.4.4
     # via cookiecutter
-boto3==1.38.37
+boto3==1.42.59
     # via
     #   -r requirements/base.txt
     #   fs-s3fs
-botocore==1.38.37
+botocore==1.42.59
     # via
     #   -r requirements/base.txt
     #   boto3
     #   s3transfer
-certifi==2025.6.15
+certifi==2026.2.25
     # via requests
-chardet==5.2.0
+chardet==6.0.0.post1
     # via binaryornot
-charset-normalizer==3.4.2
+charset-normalizer==3.4.4
     # via requests
-click==8.2.1
+click==8.3.1
     # via
     #   code-annotations
     #   cookiecutter
-code-annotations==2.3.0
+code-annotations==2.3.2
     # via -r requirements/test.in
-cookiecutter==2.6.0
+cookiecutter==2.7.0
     # via xblock-sdk
-coverage[toml]==7.9.1
+coverage[toml]==7.13.4
     # via pytest-cov
 ddt==1.7.2
     # via -r requirements/test.in
@@ -51,17 +51,17 @@ ddt==1.7.2
     #   edx-i18n-tools
     #   openedx-django-pyfs
     #   xblock-sdk
-django-appconf==1.1.0
+django-appconf==1.2.0
     # via django-statici18n
 django-statici18n==2.6.0
     # via -r requirements/test.in
-dnspython==2.7.0
+dnspython==2.8.0
     # via
     #   -r requirements/base.txt
     #   pymongo
 edx-i18n-tools==1.9.0
     # via -r requirements/test.in
-edx-opaque-keys==3.0.0
+edx-opaque-keys==3.1.0
     # via -r requirements/base.txt
 fs==2.4.16
     # via
@@ -74,15 +74,15 @@ fs-s3fs==1.1.1
     #   -r requirements/base.txt
     #   openedx-django-pyfs
     #   xblock-sdk
-idna==3.10
+idna==3.11
     # via requests
-iniconfig==2.1.0
+iniconfig==2.3.0
     # via pytest
 jinja2==3.1.6
     # via
     #   code-annotations
     #   cookiecutter
-jmespath==1.0.1
+jmespath==1.1.0
     # via
     #   -r requirements/base.txt
     #   boto3
@@ -91,23 +91,23 @@ lazy==1.6
     # via
     #   -r requirements/base.txt
     #   xblock
-lxml[html-clean]==5.4.0
+lxml[html-clean]==6.0.2
     # via
     #   -r requirements/base.txt
     #   edx-i18n-tools
     #   lxml-html-clean
     #   xblock
     #   xblock-sdk
-lxml-html-clean==0.4.2
+lxml-html-clean==0.4.4
     # via lxml
 mako==1.3.10
     # via
     #   -r requirements/base.txt
     #   xblock
     #   xblock-utils
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
     # via rich
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via
     #   -r requirements/base.txt
     #   jinja2
@@ -121,37 +121,33 @@ openedx-django-pyfs==3.8.0
     # via
     #   -r requirements/base.txt
     #   xblock
-packaging==25.0
+packaging==26.0
     # via pytest
 path==16.16.0
     # via edx-i18n-tools
-pbr==6.1.1
-    # via
-    #   -r requirements/base.txt
-    #   stevedore
 pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
 polib==1.2.0
     # via edx-i18n-tools
-pygments==2.19.1
+pygments==2.19.2
     # via
     #   pytest
     #   rich
-pymongo==4.13.2
+pymongo==4.16.0
     # via
     #   -r requirements/base.txt
     #   edx-opaque-keys
 pypng==0.20220715.0
     # via xblock-sdk
-pytest==8.4.0
+pytest==9.0.2
     # via
     #   pytest-cov
     #   pytest-django
-pytest-cov==6.2.1
+pytest-cov==7.0.0
     # via -r requirements/test.in
-pytest-django==4.11.1
+pytest-django==4.12.0
     # via -r requirements/test.in
 python-dateutil==2.9.0.post0
     # via
@@ -163,28 +159,28 @@ python-slugify==8.0.4
     # via
     #   code-annotations
     #   cookiecutter
-pytz==2025.2
+pytz==2026.1.post1
     # via
     #   -r requirements/base.txt
     #   xblock
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via
     #   -r requirements/base.txt
     #   code-annotations
     #   cookiecutter
     #   edx-i18n-tools
     #   xblock
-requests==2.32.4
+requests==2.32.5
     # via
     #   cookiecutter
     #   xblock-sdk
-rich==14.0.0
+rich==14.3.3
     # via cookiecutter
-s3transfer==0.13.0
+s3transfer==0.16.0
     # via
     #   -r requirements/base.txt
     #   boto3
-simplejson==3.20.1
+simplejson==3.20.2
     # via
     #   -r requirements/base.txt
     #   xblock
@@ -196,26 +192,25 @@ six==1.17.0
     #   fs
     #   fs-s3fs
     #   python-dateutil
-sqlparse==0.5.3
+sqlparse==0.5.5
     # via
     #   -r requirements/base.txt
     #   django
-stevedore==5.4.1
+stevedore==5.7.0
     # via
     #   -r requirements/base.txt
     #   code-annotations
     #   edx-opaque-keys
 text-unidecode==1.3
     # via python-slugify
-types-python-dateutil==2.9.0.20250516
-    # via arrow
-typing-extensions==4.14.0
+typing-extensions==4.15.0
     # via
     #   -r requirements/base.txt
     #   edx-opaque-keys
-urllib3==2.2.3
+tzdata==2025.3
+    # via arrow
+urllib3==2.6.3
     # via
-    #   -c https://raw.githubusercontent.com/edx/edx-lint/master/edx_lint/files/common_constraints.txt
     #   -r requirements/base.txt
     #   botocore
     #   requests
@@ -230,7 +225,7 @@ webob==1.8.9
     #   -r requirements/base.txt
     #   xblock
     #   xblock-sdk
-xblock[django]==5.2.0
+xblock[django]==5.3.0
     # via
     #   -r requirements/base.txt
     #   -r requirements/test.in
