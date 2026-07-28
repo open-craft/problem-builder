@@ -1,8 +1,8 @@
 > [!WARNING]
-> Problem Builder is no longer being developed by OpenCraft.
-> It will be supported with compatibility and security fixes
-> till the Ulmo release, after which this repository will be
-> stop receiving further updates and eventually be archived.
+> Problem Builder is unmaintained.
+> There will be no further updates, and eventually this repository will be archived.
+> This may no longer work correctly on Open edX platform releases newer than Ulmo.
+> See https://discuss.openedx.org/t/deprecation-removal-problem-builder-repository/13664 for more information.
 
 
 ## Problem Builder and Step Builder
