@@ -7,8 +7,8 @@ from lazy import lazy
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import UNIQUE_ID, Boolean, Float, Scope, String
-from xblockutils.helpers import child_isinstance
-from xblockutils.resources import ResourceLoader
+from xblock.utils.helpers import child_isinstance
+from xblock.utils.resources import ResourceLoader
 
 from problem_builder.tests.unit.utils import DateTimeEncoder
 

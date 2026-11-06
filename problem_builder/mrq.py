@@ -23,7 +23,7 @@ import logging
 
 from xblock.fields import Boolean, List, Scope, String
 from xblock.validation import ValidationMessage
-from xblockutils.resources import ResourceLoader
+from xblock.utils.resources import ResourceLoader
 
 from problem_builder.mixins import (ExpandStaticURLMixin,
                                     StudentViewUserStateMixin)

@@ -36,9 +36,9 @@ from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Boolean, Dict, List, Scope, String
 from xblock.validation import ValidationMessage
-from xblockutils.helpers import child_isinstance
-from xblockutils.resources import ResourceLoader
-from xblockutils.studio_editable import StudioEditableXBlockMixin
+from xblock.utils.helpers import child_isinstance
+from xblock.utils.resources import ResourceLoader
+from xblock.utils.studio_editable import StudioEditableXBlockMixin
 
 from .dashboard_visual import DashboardVisualData
 from .mcq import MCQBlock
