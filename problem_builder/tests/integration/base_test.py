@@ -21,7 +21,7 @@ from unittest import mock
 
 from xblock.fields import String
 from xblockutils.base_test import SeleniumBaseTest, SeleniumXBlockTest
-from xblockutils.resources import ResourceLoader
+from xblock.utils.resources import ResourceLoader
 
 # Studio adds a url_name property to each XBlock but Workbench doesn't.
 # Since we rely on it, we need to mock url_name support so it can be set via XML and

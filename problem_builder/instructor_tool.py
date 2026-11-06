@@ -28,7 +28,7 @@ from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError
 from xblock.fields import Dict, List, Scope, String
-from xblockutils.resources import ResourceLoader
+from xblock.utils.resources import ResourceLoader
 
 from .mixins import TranslationContentMixin, XBlockWithTranslationServiceMixin
 from .utils import I18NService

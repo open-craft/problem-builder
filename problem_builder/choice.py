@@ -26,7 +26,7 @@ from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
 from xblock.validation import ValidationMessage
-from xblockutils.studio_editable import (StudioEditableXBlockMixin,
+from xblock.utils.studio_editable import (StudioEditableXBlockMixin,
                                          XBlockWithPreviewMixin)
 
 from problem_builder.mixins import (ExpandStaticURLMixin,

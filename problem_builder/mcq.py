@@ -24,7 +24,7 @@ import logging
 from web_fragments.fragment import Fragment
 from xblock.fields import List, Scope, String
 from xblock.validation import ValidationMessage
-from xblockutils.resources import ResourceLoader
+from xblock.utils.resources import ResourceLoader
 
 from problem_builder.mixins import (ExpandStaticURLMixin,
                                     StudentViewUserStateMixin)
