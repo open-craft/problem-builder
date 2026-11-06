@@ -25,9 +25,9 @@ from lxml import etree
 from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.fields import Scope, String
+from xblock.utils.studio_editable import (StudioEditableXBlockMixin,
+                                          XBlockWithPreviewMixin)
 from xblock.validation import ValidationMessage
-from xblockutils.studio_editable import (StudioEditableXBlockMixin,
-                                         XBlockWithPreviewMixin)
 
 from problem_builder.mixins import (ExpandStaticURLMixin,
                                     StudentViewUserStateMixin,
