@@ -30,13 +30,13 @@ from web_fragments.fragment import Fragment
 from xblock.core import XBlock
 from xblock.exceptions import JsonHandlerError, NoSuchViewError
 from xblock.fields import Boolean, Float, Integer, List, Scope, String
+from xblock.utils.helpers import child_isinstance
+from xblock.utils.resources import ResourceLoader
+from xblock.utils.settings import XBlockWithSettingsMixin
+from xblock.utils.studio_editable import (
+    NestedXBlockSpec, StudioContainerWithNestedXBlocksMixin,
+    StudioEditableXBlockMixin)
 from xblock.validation import ValidationMessage
-from xblockutils.helpers import child_isinstance
-from xblockutils.resources import ResourceLoader
-from xblockutils.settings import XBlockWithSettingsMixin
-from xblockutils.studio_editable import (NestedXBlockSpec,
-                                         StudioContainerWithNestedXBlocksMixin,
-                                         StudioEditableXBlockMixin)
 
 from problem_builder.answer import AnswerBlock, AnswerRecapBlock
 from problem_builder.completion import CompletionBlock
